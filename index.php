@@ -1,632 +1,315 @@
-
-<!-- Head -->
-<?php include("head.php"); ?>
-
-<!-- Header -->
-<?php include("header.php"); ?>
-
-<!-- Menu -->
-<?php include("menu.php"); ?>
-
-            <section id="content">
-                <div class="container">
-                    <div class="c-analytics row hidden-xs">
-
-                        <div class="btn-group btn-group-justified" role="group" aria-label="...">
-
-                            <div class="btn-group" role="group">
-                                <button type="button" class="btn btn-default">New Page</button>
-                            </div>
-
-                            <div class="btn-group" role="group">
-                                <button type="button" class="btn btn-info">Theme Customization</button>
-                            </div>
-
-                            <div class="btn-group" role="group">
-                                <button type="button" class="btn btn-warning">Site Settings</button>
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                    <div class="row dash-margin">
-                        <div class="col-md-3">
-                            <div class="core-text">
-                                <h1>Dashboard  |</h1>
-                            </div>
-                        </div>
-                        <div class="col-md-9">
-                            <div class="">
-                                <div class="alert alert-info dash-notify" role="alert">
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                    Heads up! This alert needs your attention, but it's not super important.
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="">
-                        <div class="alert alert-default alert-dismissible alert-core-1" role="alert">
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            Well done! You successfully read this important alert message.
-                        </div>
-                    </div>
-
-                    <div id="c-grid" class="clearfix" data-columns>
-                        <div class="card c-dark palette-Blue-Grey bg">
-                            <div class="card-header pad-btm-0">
-                                <h2>Overview <small>Jump to manager on click</small></h2>
-                            </div>
-                            <hr>
-                            <div class="row card-body card-padding core-overview">
-                                <div class="col-md-6">
-                                    <span>
-                                        <i class="zmdi zmdi-format-color-text"></i> <a href=""> 2 Post</a>
-                                    </span>
-                                </div>
-                                <div class="col-md-6">
-                                    <span>
-                                        <i class="zmdi zmdi-comment-list"></i> <a href=""> 1 Comment</a>
-                                    </span>
-                                </div>
-                                <div class="col-md-6">
-                                    <span>
-                                        <i class="zmdi zmdi-file-plus"></i> <a href=""> 3 Page</a>
-                                    </span>
-                                </div>
-                                <div class="col-md-6">
-                                    <span>
-                                        <i class="zmdi zmdi-plus-circle-o-duplicate"></i> <a href=""> 2 Content</a>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="card ">
-                            <div class="card-header ch-alt">
-                                <h2>Blog Draft <small>Draft a post</small></h2>
-                            </div>
-
-                            <div class="card-body card-padding">
-
-                                <form enctype="">
-
-                                    <div class="form-group fg-float m-b-30">
-                                        <div class="fg-line">
-                                            <input type="text" placeholder="Post Title" class="form-control input-sm">
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group fg-float">
-                                        <div class="fg-line">
-                                            <textarea class="form-control" placeholder="Write a quick blog post draft/memo" rows="6"></textarea>
-                                        </div>
-                                    </div>
-
-                                    <div class="m-t-20">
-                                        <button type="button" class="btn btn-info">Save as Draft</button>
-                                    </div>
-
-                                </form>
-
-                                <div class="clearfix"></div>
-
-                                <div class="pad-top-5">
-                                    <p> <a href=""> <i class="zmdi zmdi-more-vert"></i> 2 Draft Post ... </a></p>
-                                    <p>All Drafted post wont be published directely, you have to <a href="">open draft</a> and publish them. </p>
-                                </div>
-
-                            </div>
-                        </div>
-
-                        <div class="card c-dark palette-Blue-Only bg">
-                            <div class="card-header pad-btm-0">
-                                <h2>Controls <small>Theme &amp; Layout Settings</small></h2>
-                            </div>
-                            <hr>
-                            <div class="row card-body card-padding core-overview core-overview-two">
-                                <div class="col-md-4">
-                                    <span>
-                                        <i class="zmdi zmdi-money"></i> <a href=""> Visit Store</a>
-                                    </span>
-                                </div>
-                                <div class="col-md-4">
-                                    <span>
-                                        <i class="zmdi zmdi-star-half"></i> <a href=""> Widgets</a>
-                                    </span>
-                                </div>
-                                <div class="col-md-4">
-                                    <span>
-                                        <i class="zmdi zmdi-puzzle-piece"></i> <a href=""> Extensions</a>
-                                    </span>
-                                </div>
-                                <div class="col-md-6">
-                                    <span>
-                                        <i class="zmdi zmdi-menu"></i> <a href=""> Menu Manager</a>
-                                    </span>
-                                </div>
-                                <div class="col-md-6">
-                                    <span>
-                                        <i class="zmdi zmdi-flower"></i> <a href=""> Theme Customize</a>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="card popular-post">
-                            <div class="card-header ch-img" style="background-image: url(img/headers/4.png); height: 150px;">
-                                <h2>Recent Posts <small>Venenatis Sollicitudin Ipsum</small></h2>
-
-                                <button class="btn palette-Light-Green bg btn-float waves-effect waves-circle waves-float"><i class="zmdi zmdi-plus"></i></button>
-                            </div>
-                            <div class="card-body m-t-20">
-                                <div class="list-group lg-alt">
-                                    <a href="#" class="list-group-item media">
-                                        <div class="pull-left">
-                                            <img class="avatar-img" src="img/profile-pics/1.jpg" alt="">
-                                        </div>
-
-                                        <div class="media-body">
-                                            <div class="lgi-heading">David Villa Jacobs</div>
-                                            <small class="lgi-text">Sorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam mattis lobortis sapien non posuere</small>
-                                        </div>
-                                    </a>
-
-                                    <a href="#" class="list-group-item media">
-                                        <div class="pull-left">
-                                            <img class="avatar-img" src="img/profile-pics/5.jpg" alt="">
-                                        </div>
-                                        <div class="media-body">
-                                            <div class="lgi-heading">Candice Barnes</div>
-                                            <small class="lgi-text">Quisque non tortor ultricies, posuere elit id, lacinia purus curabitur.</small>
-                                        </div>
-                                    </a>
-
-                                    <a href="#" class="list-group-item media">
-                                        <div class="pull-left">
-                                            <img class="avatar-img" src="img/profile-pics/3.jpg" alt="">
-                                        </div>
-                                        <div class="media-body">
-                                            <div class="lgi-heading">Jeannette Lawson</div>
-                                            <small class="lgi-text">Donec congue tempus ligula, varius hendrerit mi hendrerit sit amet. Duis ac quam sit amet leo feugiat iaculis</small>
-                                        </div>
-                                    </a>
-
-                                    <a href="#" class="list-group-item media">
-                                        <div class="pull-left">
-                                            <img class="avatar-img" src="img/profile-pics/4.jpg" alt="">
-                                        </div>
-                                        <div class="media-body">
-                                            <div class="lgi-heading">Darla Mckinney</div>
-                                            <small class="lgi-text">Duis tincidunt augue nec sem dignissim scelerisque. Vestibulum rhoncus sapien sed nulla aliquam lacinia</small>
-                                        </div>
-                                    </a>
-
-                                    <a href="#" class="list-group-item media">
-                                        <div class="pull-left">
-                                            <img class="avatar-img" src="img/profile-pics/2.jpg" alt="">
-                                        </div>
-                                        <div class="media-body">
-                                            <div class="lgi-heading">Rudolph Perez</div>
-                                            <small class="lgi-text">Phasellus a ullamcorper lectus, sit amet viverra quam. In luctus tortor vel nulla pharetra bibendum</small>
-                                        </div>
-                                    </a>
-
-                                    <a href="#" class="list-group-item view-more">
-                                        <i class="zmdi zmdi-long-arrow-right"></i> View all
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="card palette-Cyan bg">
-                            <ul class="actions a-alt">
-                                <li class="dropdown">
-                                    <a href="#" data-toggle="dropdown">
-                                        <i class="zmdi zmdi-more-vert"></i>
-                                    </a>
-
-                                    <ul class="dropdown-menu dropdown-menu-right">
-                                        <li>
-                                            <a href="#">Select City</a>
-                                        </li>
-                                        <li>
-                                            <a href="#">Settings</a>
-                                        </li>
-                                    </ul>
-                                </li>
-                            </ul>
-
-                            <div id="c-weather"></div>
-                        </div>
-
-                        <div class="card palette-Red-400 bg">
-                            <div class="pie-grid clearfix text-center">
-                                <div class="col-xs-4 col-sm-6 col-md-4 pg-item">
-                                    <div class="easy-pie-2 easy-pie" data-percent="92">
-                                        <span class="ep-value">92</span>
-                                    </div>
-                                    <div class="pgi-title">Email<br> Scheduled</div>
-                                </div>
-                                <div class="col-xs-4 col-sm-6 col-md-4 pg-item">
-                                    <div class="easy-pie-3 easy-pie" data-percent="11">
-                                        <span class="ep-value">11</span>
-                                    </div>
-                                    <div class="pgi-title">Email<br> Bounced</div>
-                                </div>
-                                <div class="col-xs-4 col-sm-6 col-md-4 pg-item">
-                                    <div class="easy-pie-4 easy-pie" data-percent="52">
-                                        <span class="ep-value">52</span>
-                                    </div>
-                                    <div class="pgi-title">Email<br> Opened</div>
-                                </div>
-                                <div class="col-xs-4 col-sm-6 col-md-4 pg-item">
-                                    <div class="easy-pie-2 easy-pie" data-percent="44">
-                                        <span class="ep-value">44</span>
-                                    </div>
-                                    <div class="pgi-title">Storage<br>Remaining</div>
-                                </div>
-                                <div class="col-xs-4 col-sm-6 col-md-4 pg-item">
-                                    <div class="easy-pie-3 easy-pie" data-percent="78">
-                                        <span class="ep-value">78</span>
-                                    </div>
-                                    <div class="pgi-title">Web Page<br> Views</div>
-                                </div>
-                                <div class="col-xs-4 col-sm-6 col-md-4 pg-item">
-                                    <div class="easy-pie-4 easy-pie" data-percent="32">
-                                        <span class="ep-value">32</span>
-                                    </div>
-                                    <div class="pgi-title">Server<br> Processing</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="card c-dark palette-Amber bg">
-                            <div class="card-header p-b-0">
-                                <h2>For the past 30 days <small>Tortor Magna Parturient</small></h2>
-                                <ul class="actions a-alt">
-                                    <li class="dropdown">
-                                        <a href="#" data-toggle="dropdown">
-                                            <i class="zmdi zmdi-more-vert"></i>
-                                        </a>
-
-                                        <ul class="dropdown-menu dropdown-menu-right">
-                                            <li>
-                                                <a href="#">Change Date Range</a>
-                                            </li>
-                                            <li>
-                                                <a href="#">Change Graph Type</a>
-                                            </li>
-                                            <li>
-                                                <a href="#">Other Settings</a>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="card-body">
-                                <div class="chart-edge">
-                                    <div class="ns-chart flot-chart m-b-20" id="number-stats-chart"></div>
-                                </div>
-
-                                <div class="list-group lg-alt lg-even-white">
-                                    <div class="list-group-item media">
-                                        <div class="pull-right hidden-sm">
-                                            <div class="sparkline-bar-1"></div>
-                                        </div>
-
-                                        <div class="media-body ns-item">
-                                            <small>Page Views</small>
-                                            <h3>47,896,536</h3>
-                                        </div>
-                                    </div>
-
-                                    <div class="list-group-item media">
-                                        <div class="pull-right hidden-sm">
-                                            <div class="sparkline-bar-2"></div>
-                                        </div>
-
-                                        <div class="media-body ns-item">
-                                            <small>Site Visitors</small>
-                                            <h3>24,456,799</h3>
-                                        </div>
-                                    </div>
-
-                                    <div class="list-group-item media">
-                                        <div class="pull-right hidden-sm">
-                                            <div class="sparkline-bar-3"></div>
-                                        </div>
-
-                                        <div class="media-body ns-item">
-                                            <small>Total Clicks</small>
-                                            <h3>13,965</h3>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="p-5"></div>
-                            </div>
-                        </div>
-
-
-
-                        <div class="card">
-                            <div class="card-header ch-dark palette-Purple-300 bg">
-                                <h2>Todo lists <small>Mattis Malesuada Risus</small></h2>
-
-                                <ul class="actions a-alt">
-                                    <li class="dropdown">
-                                        <a href="#" data-toggle="dropdown">
-                                            <i class="zmdi zmdi-more-vert"></i>
-                                        </a>
-
-                                        <ul class="dropdown-menu dropdown-menu-right">
-                                            <li>
-                                                <a href="#">Change Date Range</a>
-                                            </li>
-                                            <li>
-                                                <a href="#">Change Graph Type</a>
-                                            </li>
-                                            <li>
-                                                <a href="#">Other Settings</a>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                </ul>
-                            </div>
-
-                            <div class="card-body">
-                                <div class="list-group lg-alt">
-                                    <div class="list-group-item-header palette-Purple text">Today</div>
-
-                                    <a href="#" class="list-group-item media">
-                                        <div class="pull-left">
-                                            <div class="avatar-char palette-Purple-300 bg">C</div>
-                                        </div>
-
-                                        <div class="media-body">
-                                            <div class="lgi-heading">Consectetur Sem Sollicitudin</div>
-                                            <small class="lgi-text">08:55 AM</small>
-                                        </div>
-                                    </a>
-
-                                    <a href="#" class="list-group-item media">
-                                        <div class="pull-left">
-                                            <div class="avatar-char palette-Purple-300 bg">E</div>
-                                        </div>
-                                        <div class="media-body">
-                                            <div class="lgi-heading">Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</div>
-                                            <small class="lgi-text">07:32 AM</small>
-                                        </div>
-                                    </a>
-
-                                    <div class="list-group-item-header palette-Light-Blue text">Tomorrow</div>
-
-                                    <a href="#" class="list-group-item media">
-                                        <div class="pull-left">
-                                            <div class="avatar-char palette-Light-Blue bg">P</div>
-                                        </div>
-                                        <div class="media-body">
-                                            <div class="lgi-heading">Porta Venenatis Quam</div>
-                                            <small class="lgi-text">10:30 P</small>
-                                        </div>
-                                    </a>
-
-                                    <a href="#" class="list-group-item media">
-                                        <div class="pull-left">
-                                            <div class="avatar-char palette-Light-Blue bg">N</div>
-                                        </div>
-                                        <div class="media-body">
-                                            <div class="lgi-heading">Nullam quis risus eget urna mollis ornare vel eu leo</div>
-                                            <small class="lgi-text">11:02 PM</small>
-                                        </div>
-                                    </a>
-
-                                    <a href="#" class="list-group-item view-more">
-                                        <i class="zmdi zmdi-long-arrow-right"></i> View all
-                                    </a>
-                                </div>
-
-                                <button class="btn palette-Purple-300 bg btn-float waves-effect waves-circle waves-float"><i class="zmdi zmdi-plus"></i></button>
-                            </div>
-                        </div>
-
-
-
-                        <div class="card c-dark palette-Grey bg recent-signups">
-                            <div class="card-header p-b-0">
-                                <h2>Most Recent Signups <small>Magna Cursus Malesuada</small></h2>
-                                <ul class="actions a-alt">
-                                    <li class="dropdown">
-                                        <a href="#" data-toggle="dropdown">
-                                            <i class="zmdi zmdi-more-vert"></i>
-                                        </a>
-
-                                        <ul class="dropdown-menu dropdown-menu-right">
-                                            <li>
-                                                <a href="#">Change Date Range</a>
-                                            </li>
-                                            <li>
-                                                <a href="#">Change Graph Type</a>
-                                            </li>
-                                            <li>
-                                                <a href="#">Other Settings</a>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                </ul>
-                            </div>
-
-                            <div class="card-body">
-                                <div class="sparkline-1 p-30"></div>
-
-                                <ul class="rs-list">
-                                    <li>
-                                        <a href="#">
-                                            <div class="avatar-char">B</div>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <img class="avatar-img" src="img/profile-pics/5.jpg" alt="">
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <div class="avatar-char">L</div>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <div class="avatar-char">A</div>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <img class="avatar-img" src="img/profile-pics/4.jpg" alt="">
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <div class="avatar-char">Z</div>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <div class="avatar-char">I</div>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <div class="avatar-char">S</div>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <div class="avatar-char">C</div>
-                                        </a>
-                                    </li>
-                                     <li>
-                                        <a href="#">
-                                            <div class="avatar-char">W</div>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <img class="avatar-img" src="img/profile-pics/3.jpg" alt="">
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <div class="avatar-char">A</div>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <img class="avatar-img" src="img/profile-pics/9.jpg" alt="">
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <div class="avatar-char">N</div>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <div class="avatar-char">X</div>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <div class="avatar-char">V</div>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <img class="avatar-img" src="img/profile-pics/7.jpg" alt="">
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <img class="avatar-img" src="img/profile-pics/6.jpg" alt="">
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <img class="avatar-img" src="img/profile-pics/8.jpg" alt="">
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <div class="avatar-char">F</div>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <div class="avatar-char">E</div>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <div class="avatar-char">A</div>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <div class="avatar-char">A</div>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <div class="avatar-char">M</div>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <div class="avatar-char">O</div>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <div class="avatar-char">I</div>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="card" id="calendar-widget">
-                            <div class="card-header cw-header palette-Teal-400 bg">
-                                <div class="cwh-year"></div>
-                                <div class="cwh-day"></div>
-
-                                <button class="btn palette-Light-Green bg btn-float waves-effect waves-circle waves-float"><i class="zmdi zmdi-plus"></i></button>
-                            </div>
-
-                            <div class="card-body card-padding-sm">
-                                <div id="cw-body"></div>
-                            </div>
-
-                        </div>
-
-                        <div class="card">
-                            <div class="card-header ch-img" style="background-image: url(img/demo/note5.html); height: 250px;"></div>
-                            <div class="card-header">
-                                <h2>
-                                    Pellentesque Ligula Fringilla
-
-                                    <small>by Malinda Hollaway on 19th June 2015 at 09:10 AM</small>
-                                </h2>
-                            </div>
-                            <div class="card-body card-padding">
-                                <p>Donec ullamcorper nulla non metus auctor fringilla. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Vestibulum id ligula porta felis euismod semper. Nulla vitae elit libero, a pharetra </p>
-
-                                <a href="#" class="view-more"><i class="zmdi zmdi-long-arrow-right"></i> View Article...</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-<!-- Footer -->
-<?php include("footer.php"); ?>
+<?php
+/**
+ * CodeIgniter
+ *
+ * An open source application development framework for PHP
+ *
+ * This content is released under the MIT License (MIT)
+ *
+ * Copyright (c) 2014 - 2018, British Columbia Institute of Technology
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ *
+ * @package	CodeIgniter
+ * @author	EllisLab Dev Team
+ * @copyright	Copyright (c) 2008 - 2014, EllisLab, Inc. (https://ellislab.com/)
+ * @copyright	Copyright (c) 2014 - 2018, British Columbia Institute of Technology (http://bcit.ca/)
+ * @license	http://opensource.org/licenses/MIT	MIT License
+ * @link	https://codeigniter.com
+ * @since	Version 1.0.0
+ * @filesource
+ */
+
+/*
+ *---------------------------------------------------------------
+ * APPLICATION ENVIRONMENT
+ *---------------------------------------------------------------
+ *
+ * You can load different configurations depending on your
+ * current environment. Setting the environment also influences
+ * things like logging and error reporting.
+ *
+ * This can be set to anything, but default usage is:
+ *
+ *     development
+ *     testing
+ *     production
+ *
+ * NOTE: If you change these, also change the error_reporting() code below
+ */
+	define('ENVIRONMENT', isset($_SERVER['CI_ENV']) ? $_SERVER['CI_ENV'] : 'development');
+
+/*
+ *---------------------------------------------------------------
+ * ERROR REPORTING
+ *---------------------------------------------------------------
+ *
+ * Different environments will require different levels of error reporting.
+ * By default development will show errors but testing and live will hide them.
+ */
+switch (ENVIRONMENT)
+{
+	case 'development':
+		error_reporting(-1);
+		ini_set('display_errors', 1);
+	break;
+
+	case 'testing':
+	case 'production':
+		ini_set('display_errors', 0);
+		if (version_compare(PHP_VERSION, '5.3', '>='))
+		{
+			error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT & ~E_USER_NOTICE & ~E_USER_DEPRECATED);
+		}
+		else
+		{
+			error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT & ~E_USER_NOTICE);
+		}
+	break;
+
+	default:
+		header('HTTP/1.1 503 Service Unavailable.', TRUE, 503);
+		echo 'The application environment is not set correctly.';
+		exit(1); // EXIT_ERROR
+}
+
+/*
+ *---------------------------------------------------------------
+ * SYSTEM DIRECTORY NAME
+ *---------------------------------------------------------------
+ *
+ * This variable must contain the name of your "system" directory.
+ * Set the path if it is not in the same directory as this file.
+ */
+	$system_path = 'system';
+
+/*
+ *---------------------------------------------------------------
+ * APPLICATION DIRECTORY NAME
+ *---------------------------------------------------------------
+ *
+ * If you want this front controller to use a different "application"
+ * directory than the default one you can set its name here. The directory
+ * can also be renamed or relocated anywhere on your server. If you do,
+ * use an absolute (full) server path.
+ * For more info please see the user guide:
+ *
+ * https://codeigniter.com/user_guide/general/managing_apps.html
+ *
+ * NO TRAILING SLASH!
+ */
+	$application_folder = 'application';
+
+/*
+ *---------------------------------------------------------------
+ * VIEW DIRECTORY NAME
+ *---------------------------------------------------------------
+ *
+ * If you want to move the view directory out of the application
+ * directory, set the path to it here. The directory can be renamed
+ * and relocated anywhere on your server. If blank, it will default
+ * to the standard location inside your application directory.
+ * If you do move this, use an absolute (full) server path.
+ *
+ * NO TRAILING SLASH!
+ */
+	$view_folder = '';
+
+
+/*
+ * --------------------------------------------------------------------
+ * DEFAULT CONTROLLER
+ * --------------------------------------------------------------------
+ *
+ * Normally you will set your default controller in the routes.php file.
+ * You can, however, force a custom routing by hard-coding a
+ * specific controller class/function here. For most applications, you
+ * WILL NOT set your routing here, but it's an option for those
+ * special instances where you might want to override the standard
+ * routing in a specific front controller that shares a common CI installation.
+ *
+ * IMPORTANT: If you set the routing here, NO OTHER controller will be
+ * callable. In essence, this preference limits your application to ONE
+ * specific controller. Leave the function name blank if you need
+ * to call functions dynamically via the URI.
+ *
+ * Un-comment the $routing array below to use this feature
+ */
+	// The directory name, relative to the "controllers" directory.  Leave blank
+	// if your controller is not in a sub-directory within the "controllers" one
+	// $routing['directory'] = '';
+
+	// The controller class file name.  Example:  mycontroller
+	// $routing['controller'] = '';
+
+	// The controller function you wish to be called.
+	// $routing['function']	= '';
+
+
+/*
+ * -------------------------------------------------------------------
+ *  CUSTOM CONFIG VALUES
+ * -------------------------------------------------------------------
+ *
+ * The $assign_to_config array below will be passed dynamically to the
+ * config class when initialized. This allows you to set custom config
+ * items or override any default config values found in the config.php file.
+ * This can be handy as it permits you to share one application between
+ * multiple front controller files, with each file containing different
+ * config values.
+ *
+ * Un-comment the $assign_to_config array below to use this feature
+ */
+	// $assign_to_config['name_of_config_item'] = 'value of config item';
+
+
+
+// --------------------------------------------------------------------
+// END OF USER CONFIGURABLE SETTINGS.  DO NOT EDIT BELOW THIS LINE
+// --------------------------------------------------------------------
+
+/*
+ * ---------------------------------------------------------------
+ *  Resolve the system path for increased reliability
+ * ---------------------------------------------------------------
+ */
+
+	// Set the current directory correctly for CLI requests
+	if (defined('STDIN'))
+	{
+		chdir(dirname(__FILE__));
+	}
+
+	if (($_temp = realpath($system_path)) !== FALSE)
+	{
+		$system_path = $_temp.DIRECTORY_SEPARATOR;
+	}
+	else
+	{
+		// Ensure there's a trailing slash
+		$system_path = strtr(
+			rtrim($system_path, '/\\'),
+			'/\\',
+			DIRECTORY_SEPARATOR.DIRECTORY_SEPARATOR
+		).DIRECTORY_SEPARATOR;
+	}
+
+	// Is the system path correct?
+	if ( ! is_dir($system_path))
+	{
+		header('HTTP/1.1 503 Service Unavailable.', TRUE, 503);
+		echo 'Your system folder path does not appear to be set correctly. Please open the following file and correct this: '.pathinfo(__FILE__, PATHINFO_BASENAME);
+		exit(3); // EXIT_CONFIG
+	}
+
+/*
+ * -------------------------------------------------------------------
+ *  Now that we know the path, set the main path constants
+ * -------------------------------------------------------------------
+ */
+	// The name of THIS file
+	define('SELF', pathinfo(__FILE__, PATHINFO_BASENAME));
+
+	// Path to the system directory
+	define('BASEPATH', $system_path);
+
+	// Path to the front controller (this file) directory
+	define('FCPATH', dirname(__FILE__).DIRECTORY_SEPARATOR);
+
+	// Name of the "system" directory
+	define('SYSDIR', basename(BASEPATH));
+
+	// The path to the "application" directory
+	if (is_dir($application_folder))
+	{
+		if (($_temp = realpath($application_folder)) !== FALSE)
+		{
+			$application_folder = $_temp;
+		}
+		else
+		{
+			$application_folder = strtr(
+				rtrim($application_folder, '/\\'),
+				'/\\',
+				DIRECTORY_SEPARATOR.DIRECTORY_SEPARATOR
+			);
+		}
+	}
+	elseif (is_dir(BASEPATH.$application_folder.DIRECTORY_SEPARATOR))
+	{
+		$application_folder = BASEPATH.strtr(
+			trim($application_folder, '/\\'),
+			'/\\',
+			DIRECTORY_SEPARATOR.DIRECTORY_SEPARATOR
+		);
+	}
+	else
+	{
+		header('HTTP/1.1 503 Service Unavailable.', TRUE, 503);
+		echo 'Your application folder path does not appear to be set correctly. Please open the following file and correct this: '.SELF;
+		exit(3); // EXIT_CONFIG
+	}
+
+	define('APPPATH', $application_folder.DIRECTORY_SEPARATOR);
+
+	// The path to the "views" directory
+	if ( ! isset($view_folder[0]) && is_dir(APPPATH.'views'.DIRECTORY_SEPARATOR))
+	{
+		$view_folder = APPPATH.'views';
+	}
+	elseif (is_dir($view_folder))
+	{
+		if (($_temp = realpath($view_folder)) !== FALSE)
+		{
+			$view_folder = $_temp;
+		}
+		else
+		{
+			$view_folder = strtr(
+				rtrim($view_folder, '/\\'),
+				'/\\',
+				DIRECTORY_SEPARATOR.DIRECTORY_SEPARATOR
+			);
+		}
+	}
+	elseif (is_dir(APPPATH.$view_folder.DIRECTORY_SEPARATOR))
+	{
+		$view_folder = APPPATH.strtr(
+			trim($view_folder, '/\\'),
+			'/\\',
+			DIRECTORY_SEPARATOR.DIRECTORY_SEPARATOR
+		);
+	}
+	else
+	{
+		header('HTTP/1.1 503 Service Unavailable.', TRUE, 503);
+		echo 'Your view folder path does not appear to be set correctly. Please open the following file and correct this: '.SELF;
+		exit(3); // EXIT_CONFIG
+	}
+
+	define('VIEWPATH', $view_folder.DIRECTORY_SEPARATOR);
+
+/*
+ * --------------------------------------------------------------------
+ * LOAD THE BOOTSTRAP FILE
+ * --------------------------------------------------------------------
+ *
+ * And away we go...
+ */
+require_once BASEPATH.'core/CodeIgniter.php';
