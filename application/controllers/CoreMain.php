@@ -7,10 +7,10 @@ class CoreMain extends CI_Controller {
 	*
 	* The main controller for Administrator Backend
 	* -> The controller require user to login as Administrator
-	*
-	* Functions
+	*/
+
+	/* Functions
 	* -> __construct () = Load the most required operations E.g Class Module
-	* 
 	* 
 	*/
 	public function __construct()
@@ -19,6 +19,7 @@ class CoreMain extends CI_Controller {
 
 		//Libraries
 		$this->load->library('form_validation');
+
 		//Helpers
 		
         //Models
@@ -27,8 +28,10 @@ class CoreMain extends CI_Controller {
 
 	/*
 	*
-	* Access Requred pre loaded data
-	* The additional Model based data are applied here from passed function you can join them
+	* Access Requred pre-loaded data
+	* The additional Model based data are applied here from passed function and join with load function
+	* The page variable can be left as null if you do not wish to access Meta Data values
+	* Initially what is passed is a pageID or Page Template Name
 	* 
 	*/
 	public function load($page=null)
@@ -48,6 +51,7 @@ class CoreMain extends CI_Controller {
 	*
 	* Load the model/controller based data here
 	* The data loaded here does not affect the other models/controller/views
+	* It only can reach and expand to this controller only
 	* 
 	*/
 	public function passed($values=null)
@@ -63,7 +67,7 @@ class CoreMain extends CI_Controller {
 	/*
 	*
 	* This is one of the most important functions in your project
-	* All pages used by this controller should be opened using pages controller
+	* All pages used by this controller should be opened using pages function
 	* 1: The first passed data is an array containing all pre-loaded data N.B it can't be empty becuase page name is passed through it
 	* 2: Layout -> this can be set to default so it can open a particular layout always | also you can pass other layout N.B can't be empty
 	*
@@ -122,12 +126,12 @@ class CoreMain extends CI_Controller {
     * 	* You can also set Page ID as actual pageName found in your view N:B do not put .php E.g home.php it should just be 'home'
     * 	* Set Page template 
     * 	* Set Notification here
-    * 	Custom notification message can be set/passed via $message
     * 	PageName / ID can be passed via $pageID
+    * 	Custom notification message can be set/passed via $message
     * 	Page layout can be passed via $layout
 	* 
     */
-	public function open($message=null,$pageID=null,$layout=null)
+	public function open($pageID,$message=null,$layout=null)
 	{
 
 		//Model Query
