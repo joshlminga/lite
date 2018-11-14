@@ -12,7 +12,8 @@
         <link href="<?= base_url($assets); ?>/vendors/bower_components/fullcalendar/dist/fullcalendar.min.css" rel="stylesheet">
         <link href="<?= base_url($assets); ?>/vendors/bower_components/animate.css/animate.min.css" rel="stylesheet">
         <link href="<?= base_url($assets); ?>/vendors/bower_components/material-design-iconic-font/dist/css/material-design-iconic-font.min.css" rel="stylesheet">
-        <link href="<?= base_url($assets); ?>/vendors/bower_components/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.min.css" rel="stylesheet">        
+        <link href="<?= base_url($assets); ?>/vendors/bower_components/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.min.css" rel="stylesheet">    
+        <link href="<?= base_url($assets); ?>/vendors/bootgrid/jquery.bootgrid.min.css" rel="stylesheet">
         <link href="<?= base_url($assets); ?>/vendors/bower_components/google-material-color/dist/palette.css" rel="stylesheet">
         
         <!-- CSS -->
@@ -26,8 +27,6 @@
         <script src="https://use.fontawesome.com/36d9a607df.js"></script>
 
     </head>
-
-
 
     <body data-ma-header="teal">
         <header id="header" class="media">
