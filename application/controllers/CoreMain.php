@@ -30,17 +30,17 @@ class CoreMain extends CI_Controller {
 	*
 	* Access Requred pre-loaded data
 	* The additional Model based data are applied here from passed function and join with load function
-	* The page variable can be left as null if you do not wish to access Meta Data values
+	* The pageID variable can be left as null if you do not wish to access Meta Data values
 	* Initially what is passed is a pageID or Page Template Name
 	* 
 	*/
-	public function load($page=null)
+	public function load($pageID=null)
 	{
 
 		//Model
 
 		//Model Query
-		$data = $this->CoreLoad->open($page);
+		$data = $this->CoreLoad->open($pageID);
 		$passed = $this->passed();
 		$data = array_merge($data,$passed);
 

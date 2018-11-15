@@ -222,6 +222,21 @@ div.core-overview-two span > i {
     font-size: 16px !important;    
 }
 
+/* MARGIN */
+.mag-0 {
+    
+    margin: 0 !important;
+}
+
+.mag-top-5 {
+
+    margin-top: 5px !important;
+}
+
+.mag-btm-5 {
+
+    margin-bottom: 5px !important;
+}
 
 /* PADDING */
 .pad-top-5 {
@@ -232,6 +247,52 @@ div.core-overview-two span > i {
 .pad-btm-0 {
 
     padding-bottom: 0px !important;
+}
+
+/* FLOAT */
+.flt-left {
+
+    float: left !important;
+}
+
+.flt-right {
+
+    float: right !important;
+}
+
+/* Bulk Action */
+.buld-action {
+
+    position: relative;
+    padding: 0px 30px 5px 27px;
+    border-radius: 2px 2px 0 0;
+}
+
+/* Border Radius */
+.brd-20 {
+
+    border-radius: 20px !important;
+}
+
+/* Card Form box*/
+.card {
+
+    background: rgb(253, 253, 253) !important;
+}
+
+.card-header h2 {
+
+    font-size: 30px !important;
+}
+
+.card-header h2 small {
+
+    font-size: 14px !important;
+}
+
+/* Other */
+.no-display {
+    display: none !important;
 }
 
 /* Placeholder */

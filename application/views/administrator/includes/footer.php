@@ -38,28 +38,11 @@
 
         <script src="<?= base_url($assets); ?>/js/functions.js"></script>
         <script src="<?= base_url($assets); ?>/js/actions.js"></script>
-        <script src="<?= base_url($assets); ?>/js/demo.js"></script>
+
+        <!--<script src="<?= base_url($assets); ?>/js/demo.js"></script>-->
+
         <script src="<?= base_url($assets); ?>/custom/custom.js"></script>
-
-
-        <!-- Javascript Libraries -->
-        <script src="vendors/bower_components/jquery/dist/jquery.min.js"></script>
-        <script src="vendors/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
         
-        <script src="vendors/bower_components/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.concat.min.js"></script>
-        <script src="vendors/bower_components/Waves/dist/waves.min.js"></script>
-        <script src="vendors/bootstrap-growl/bootstrap-growl.min.js"></script>
-        <script src="vendors/bootgrid/jquery.bootgrid.updated.min.js"></script>
-        
-        <!-- Placeholder for IE9 -->
-        <!--[if IE 9 ]>
-            <script src="vendors/bower_components/jquery-placeholder/jquery.placeholder.min.js"></script>
-        <![endif]-->
-        
-        <script src="js/functions.js"></script>
-        <script src="js/actions.js"></script>
-        <script src="js/demo.js"></script>
-
         <!-- Data Table -->
         <script type="text/javascript">
             $(document).ready(function(){
@@ -99,16 +82,60 @@
                         iconUp: 'zmdi-expand-less'
                     },
                     formatters: {
-                        "commands": function(column, row) {
-                            return "<button type=\"button\" class=\"btn btn-icon command-edit waves-effect waves-circle\" data-row-id=\"" + row.id + "\"><span class=\"zmdi zmdi-edit\"></span></button> " + 
-                                "<button type=\"button\" class=\"btn btn-icon command-delete waves-effect waves-circle\" data-row-id=\"" + row.id + "\"><span class=\"zmdi zmdi-delete\"></span></button>";
+                        "commands": function(column, row) {  
+                            return "<a onclick=\"actionSingle(\'edit,"+ row.id +"\');\" class=\"btn btn-icon command-edit waves-effect waves-circle\" data-row-id=\"" + row.id + "\"><span class=\"zmdi zmdi-edit\"></span></a> " + 
+                                "<a onclick=\"actionSingle(\'delete,"+ row.id +"\');\" class=\"btn btn-icon command-delete waves-effect waves-circle\" data-row-id=\"" + row.id + "\"><span class=\"zmdi zmdi-delete\"></span></a>";
                         }
-                    }
+                    },
+                    selection: true,
+                    multiSelect: true,
+                    rowSelect: true,
+                    keepSelection: true
                 });
             });
         </script>
 
+        <script type="text/javascript">
+            //Manage Bulk Action
+            function actionBulk(argument) {
+                
+                //Set Counter Variable and Array
+                var i = 0, sThisVal = {};
 
+                //Set Data
+                $('input[name=select-inputs]:checked').each(function () {                    
+                    if($(this).val() != 'all'){
+
+                        sThisVal[i] = $(this).val();
+                        i++;
+                    }
+                }); 
+
+                //Get Data In Json Format  
+                var selectedData = JSON.stringify(sThisVal);
+
+                //base URL as found in config-base URL
+                var base_url = "<?= site_url(strtolower($Module)) ?>";
+                //Action and Element ID/Name/Data
+                var action_id = '/multiple/' + '?action=' + argument + '&name_id_data=' + selectedData;
+                //Url to Action
+                var action_url = base_url+action_id;
+                window.location.href =action_url;
+            }
+
+            //Edit / Delete One
+            function actionSingle(argument) {
+                var dataSelected = argument.split(",");
+
+                //base URL as found in config-base URL
+                var base_url = "<?= site_url(strtolower($Module)) ?>";
+                //Action and Element ID/Name/Data
+                var action_id = '/' + dataSelected[0] + '?name_id_data=' + dataSelected[1];
+                //Url to Action
+                var action_url = base_url+action_id;
+                window.location.href =action_url;
+            }
+        </script>
 
     </body>
   

@@ -154,7 +154,14 @@
 
                 <ul class="main-menu">
                     <li class="dashboard">
-                        <a href="index.php"><i class="zmdi zmdi-input-composite"></i> Dashboard</a>
+                        <a href="<?= site_url('dashboard') ?>"><i class="zmdi zmdi-input-composite"></i> Dashboard</a>
+                    </li>
+                    <li class="sub-menu"> <!-- active -->
+                        <a href="#" data-ma-action="submenu-toggle"><i class="zmdi zmdi-accounts-alt"></i> User </a>
+                        <ul>
+                            <li class=""><a href="">New</a></li>
+                            <li class=""><a href="<?= site_url('users') ?>">Manage</a></li> <!--active -->
+                        </ul>
                     </li>
                     <li class="sub-menu" style="display: none;"> <!-- active -->
                         <a href="#" data-ma-action="submenu-toggle">
