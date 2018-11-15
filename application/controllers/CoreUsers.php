@@ -9,7 +9,8 @@ class CoreUsers extends CI_Controller {
 	* -> The controller require user to login as Administrator
 	*/
 
-	private $Module = 'user';
+	private $Module = 'setting';
+	private $Ignore = 'id,flg,default';
 
 	/* Functions
 	* -> __construct () = Load the most required operations E.g Class Module
@@ -21,6 +22,7 @@ class CoreUsers extends CI_Controller {
 
 		//Libraries
 		$this->load->library('form_validation');
+		$this->load->model('CoreCrud');
 
 		//Helpers
 		
@@ -62,7 +64,7 @@ class CoreUsers extends CI_Controller {
 		//Time Zone
 		date_default_timezone_set('Africa/Nairobi');
 		$data['str_to_time'] = strtotime(date('Y-m-d, H:i:s'));
-		$data['Module'] = $this->Module; //Module Show
+		$data['Module'] = $this->plural->pluralize($this->Module);//Module Show
 
 		return $data;
 	}
@@ -109,14 +111,20 @@ class CoreUsers extends CI_Controller {
     */
 	public function index($notifyMessage=null)
 	{
+		//Pluralize Module
+		$module = $this->plural->pluralize($this->Module);
 
 		//Model Query
-		$data = $this->load($this->Module ."s/list");
+		$data = $this->load($module."/list");
+
+		//Table Select & Clause
+		$where = array('flg'=>1);
+   		$columns = null;
+		$data['dataList'] = $this->CoreCrud->selectCRUD($module,$where,$columns);
 
 		//Notification
 		$notify = $this->Notify->notify();
 		$data['notify'] = $this->Notify->$notify($notifyMessage);
-		$data['dataList'] = $this->db->get($this->Module.'s')->result();
 
 		//Open Page
 		$this->pages($data);		
@@ -135,10 +143,14 @@ class CoreUsers extends CI_Controller {
     * 	Page layout can be passed via $layout
 	* 
     */
-	public function open($message=null,$pageID=null,$layout=null)
+	public function open($pageID,$message=null,$layout='main')
 	{
 
+		//Pluralize Module
+		$module = $this->plural->pluralize($this->Module);
+
 		//Model Query
+		$pageID = (is_numeric($pageID)) ? $pageID : $module."/".$pageID;
 		$data = $this->load($pageID);
 
 		//Notification
@@ -147,6 +159,65 @@ class CoreUsers extends CI_Controller {
 
 		//Open Page
 		$this->pages($data,$layout);
+	}
+
+	/*
+	*
+	*  This function is to be called when you want to pass the Edit form
+    * In here we can call the load function and pass data to passed as an array inorder to manupulate it inside passed function
+    * 	* Set your Page name/ID here N:B Page ID can be a number if you wish to access other values linked to the page opened E.g Meta Data
+    * 	* You can also set Page ID as actual pageName found in your view N:B do not put .php E.g home.php it should just be 'home'
+    * 	* Set Page template 
+    * 	* Set Notification here
+    * 	Custom notification message can be set/passed via $message
+    * 	PageName / ID can be passed via $pageID
+    * 	Page layout can be passed via $layout
+    *
+    * 	For inputTYPE and inputID
+    *
+    * 	--> inputTYPE
+    * 	  This is the name of the column you wish to select, most of the time is coumn name 
+    * 	  Remember to Pass ID or Pass data via GET request using variable inputTYPE 
+    * 	  
+    * 	--> inputID
+    * 	  This is the value of the column you wish to match
+    * 	  Remember to Pass Value or Pass data via GET request using variable inputID 
+    *
+    *  If either inputTYPE or inputID is not passed error message will be generated
+	* 
+	*/
+	public function edit($pageID,$inputTYPE=null,$inputID=null,$message=null,$layout='main')
+	{
+		//Pluralize Module
+		$module = $this->plural->pluralize($this->Module);
+
+		//Model Query
+		$pageID = (is_numeric($pageID)) ? $pageID : $module."/".$pageID;
+		$data = $this->load($pageID);
+
+		$inputTYPE = (is_null($inputTYPE)) ? $this->CoreLoad->input('inputTYPE','GET') : $inputTYPE; //Access Value
+		$inputID = (is_null($inputID)) ? $this->CoreLoad->input('inputID','GET') : $inputID; //Access Value
+
+		if (!is_null($inputTYPE) || !is_null($inputID)) {
+			//Table Select & Clause
+			$where = array($inputTYPE =>$inputID);
+	   		$columns = array('id','name','email','logname as username');
+			$data['resultList'] = $this->CoreCrud->selectCRUD($module,$where,$columns);
+
+			//Notification
+			$notify = $this->Notify->notify();
+			$data['notify'] = $this->Notify->$notify($message);
+
+			//Open Page
+			$this->pages($data,$layout);
+		}else{
+
+			//Notification
+			$this->session->set_flashdata('notification','error');
+
+			//Error Edit | Load the Manage Page
+			$this->open('list',$message='System could not find the detail ID');
+		}
 	}
 
 	/*

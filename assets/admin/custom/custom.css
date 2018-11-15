@@ -329,3 +329,16 @@ div.core-overview-two span > i {
 .palette-Blue-Only.bg {
     background-color: #1b397b !important;
 }
+
+/* Colors */
+.color-red {
+  color: #c70000 !important;
+}
+
+/* Error */
+.core-error {
+  color: #c70000 !important;
+  font-size: 10px !important;
+  font-family: cursive;
+  font-weight: 800;
+}
