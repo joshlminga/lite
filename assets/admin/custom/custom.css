@@ -342,3 +342,9 @@ div.core-overview-two span > i {
   font-family: cursive;
   font-weight: 800;
 }
+
+/* Form Label */
+label, label.form-label {
+    color: #455865d9 !important;
+    font-weight: bold !important;
+}

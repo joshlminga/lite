@@ -159,7 +159,7 @@
                     <li class="sub-menu"> <!-- active -->
                         <a href="#" data-ma-action="submenu-toggle"><i class="zmdi zmdi-accounts-alt"></i> User </a>
                         <ul>
-                            <li class=""><a href="">New</a></li>
+                            <li class=""><a href="<?= site_url('users/new') ?>">New</a></li>
                             <li class=""><a href="<?= site_url('users') ?>">Manage</a></li> <!--active -->
                         </ul>
                     </li>

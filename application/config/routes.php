@@ -55,6 +55,7 @@ $route['404_override'] = '';
 // Administrator
 $route['dashboard'] = 'CoreMain/index';
 $route['users'] = 'CoreUsers/index';
+$route['users/new'] = 'CoreUsers/open/add';
 $route['users/multiple'] = 'CoreUsers/valid/bulk';
 $route['users/edit'] = 'CoreUsers/valid/update';
 $route['users/delete'] = 'CoreUsers/valid/delete';

@@ -9,7 +9,7 @@ class CoreUsers extends CI_Controller {
 	* -> The controller require user to login as Administrator
 	*/
 
-	private $Module = 'setting';
+	private $Module = 'user';
 	private $Ignore = 'id,flg,default';
 
 	/* Functions
@@ -148,6 +148,7 @@ class CoreUsers extends CI_Controller {
 
 		//Pluralize Module
 		$module = $this->plural->pluralize($this->Module);
+		$this->load->model('CoreForm');
 
 		//Model Query
 		$pageID = (is_numeric($pageID)) ? $pageID : $module."/".$pageID;
@@ -156,6 +157,7 @@ class CoreUsers extends CI_Controller {
 		//Notification
 		$notify = $this->Notify->notify();
 		$data['notify'] = $this->Notify->$notify($message);
+		$data['list'] = $this->CoreForm->form_auto_generate($module);
 
 		//Open Page
 		$this->pages($data,$layout);
