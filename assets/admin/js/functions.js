@@ -667,6 +667,26 @@ $(document).ready(function(){
         });
     }
 
+     if($('#parent')[0]) {
+
+        var parentArray = $('#dataParent').val().split(',');
+        var parent = new Bloodhound({
+            datumTokenizer: Bloodhound.tokenizers.whitespace,
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            local: parentArray
+        });
+
+        $('#parent').typeahead({
+            hint: true,
+            highlight: true,
+            minLength: 1
+        },
+        {
+          name: 'parent',
+          source: parent
+        });
+    }
+
 
     /*
      * Wall

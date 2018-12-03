@@ -33,7 +33,7 @@ class Notify extends CI_Model {
     public function blank($value=null)
     {
     	//Empty Notifiaction
-    	return $value;
+    	return "<small></small>";
     }
 
     /*

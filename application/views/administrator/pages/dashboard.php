@@ -29,7 +29,7 @@
                             </div>
                         </div>
                         <div class="col-md-9">
-                            <div class="">
+                            <div class="" style="display: none;">
                                 <div class="alert alert-info dash-notify" role="alert">
                                     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                                     Heads up! This alert needs your attention, but it's not super important.
@@ -38,7 +38,7 @@
                         </div>
                     </div>
 
-                    <div class="">
+                    <div class="" style="display: none;">
                         <div class="alert alert-default alert-dismissible alert-core-1" role="alert">
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                             Well done! You successfully read this important alert message.

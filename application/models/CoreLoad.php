@@ -48,25 +48,42 @@ class CoreLoad extends CI_Model {
     * This function help the system to load the values needed for a particular page to oparate
     * Thing like page articles, page templates etc are loaded here
     * It accept value page ID/ page Template (if you do not wish to load other page assest)
+    * 
     */
    	public function open($pageSET=null)
    	{
 
 		//Call Requred Site Data
 		$data = $this->load();
-
    		//Check Page Type
    		if (is_numeric($pageSET)) {
-
 	    	//Values
    		}else{
-
 	    	//Page Name
 	    	$data['site_page'] = $pageSET;
    		}
-
    		//returned DATA
    		return $data;
+   	}
+
+   	/*
+   	*
+   	* This Function is for checking if the system is set to be online.
+   	* When this function is called it will check if site_status on settings table is set to be online
+   	* if is online it will return TRUE else it will return FALSE
+   	* 
+   	*/
+   	public function site_status()
+   	{
+   		//Site Status
+		$status = $this->db->select('setting_value')->where('setting_title','site_status')->get('settings')->row()->setting_value;
+
+		//Check if is online
+		if (strtolower($status) == 'online') {
+			return TRUE; //Site is online
+		}else{
+			return FALSE; //Site is offline
+		}
    	}
 
     /*
@@ -85,7 +102,6 @@ class CoreLoad extends CI_Model {
 	    for ($i = 0; $i < $length; ++$i) {
 	        $pieces []= $keyspace[random_int(0, $max)];
 	    }
-
    		//returned DATA
 	    return implode('', $pieces);
     }
@@ -109,18 +125,14 @@ class CoreLoad extends CI_Model {
     {
     	//Set the rule to lower string
 		$rule = strtolower($rule);
-
     	//Input Value
 		if (is_null($value)) {
-
 			//Check the whole Post/Get Array
 			$input = $this->db->escape_str($this->input->$rule());
 		}else{
-
 			//Check specific value in Post/Get Array
 			$input = $this->db->escape_str($this->input->$rule($value));
 		}
-
    		//returned DATA
 		return $input;
     }
@@ -163,29 +175,66 @@ class CoreLoad extends CI_Model {
 	*   -> If all permission are true/valid it will return TRUE
 	* 
 	*/
-	public function auth($module='',$level=null)
+	public function auth($module,$level=null)
 	{
-		//Get Login session
-		$logged = $this->session->logged_in;
+		//Check If Loged In
+		if ($this->session->logged) {
+			$level = (is_null($level))? $this->session->level : $level; //Access Level	
 
-		if ($logged) {
+			$module = $this->plural->singularize($module); //Module Name
+			$modules_list = $this->db->select('level_module')->where('level_name',$level)->get('levels')->row()->level_module; //Module List
+			$modules = explode(",",strtolower($modules_list)); //Allowed Modules
 
-			if (is_null($level)) {
-				$level = $this->session->level; //Level
-			}
-			$modules = explode(",",strtolower($module)); //Allowed Modules
-
-			if (in_array(strtolower($level), $modules)) { 
-				
+			if (in_array(strtolower($module), $modules)) { 
+				return true;//Auth Allowed
+			}elseif (strtolower($level) == 'admin') {
 				return true;//Auth Allowed
 			}else{
-				$this->notAllowed();//Auth Not Allowed
+				return false;//Auth Not Allowed
 			}
-
 		}else{
-
 			return false;//User Not Logged In
 		}
+	}
+
+	/*
+	*
+	* This function is a substute to AUTH
+	* The function checks if user has logged in Only
+	* The function should only be used to the pages that does not require access level
+	*
+	* Remember you can do this direct by just checking with if statement $this->session->logged
+	* This function does not accept paramenters
+	*/
+	public function logged()
+	{
+		//Check If Logged In
+		if ($this->session->logged) {
+			return true; //Logged IN
+		}else{
+			return false; //Not logged In
+		}
+		
+	}
+
+	/*
+	*
+	* This function is a substute to AUTH
+	* The function checks if user access level Only
+	* The function should only be used to the pages that require access level
+	*
+	* Remember you can do this direct by just checking with if statement $this->session->level
+	* This function does not accept paramenters
+	*/
+	public function level()
+	{
+		//Check If Logged In
+		if ($this->session->level) {
+			return true; //Logged IN
+		}else{
+			return false; //Not logged In
+		}
+		
 	}
 
 	/*
@@ -212,7 +261,6 @@ class CoreLoad extends CI_Model {
 			return $passedData; //Remaining Data AFter Unset
 		}
 		else{
-
 			return $passedData; //All Data Without Unset
 		}
 	}
@@ -242,7 +290,7 @@ class CoreLoad extends CI_Model {
 	public function notAllowed($error=null)
 	{
 		//Quick Load
-		$invalidAccessMessage = 'You are not allowed';
+		$invalidAccessMessage = 'You are not allowed To Access This Page';
 
 		//Message
 		$htmlDetails = htmlspecialchars_decode($invalidAccessMessage);

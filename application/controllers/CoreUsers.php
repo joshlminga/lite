@@ -9,8 +9,19 @@ class CoreUsers extends CI_Controller {
 	* -> The controller require user to login as Administrator
 	*/
 
-	private $Module = 'user';
-	private $Ignore = 'id,flg,default';
+	private $Core = 'core'; //Core Lite Base Name | Change this if your Controller Name does not start with word Core
+	private $Module = 'user'; //Module
+	private $Folder = 'user'; //Set Default Folder For html files
+	private $SubFolder = ''; //Set Default Sub Folder For html files and Front End Use Start with /
+	private $Escape = 'id,stamp,flg'; // Escape Column
+	private $Require = 'level,password,name,emal'; // Required Column
+	private $Unique = 'logname'; // Unique & Required Values
+
+	private $Route = null; //If you have different route Name to Module name State it here |This wont be pluralized | set it null to use default
+
+	private $New = 'users/new'; //New User
+	private $Save = 'users/save'; //Add New User
+	private $Edit = 'users/update'; //Update User
 
 	/* Functions
 	* -> __construct () = Load the most required operations E.g Class Module
@@ -23,9 +34,11 @@ class CoreUsers extends CI_Controller {
 		//Libraries
 		$this->load->library('form_validation');
 		$this->load->model('CoreCrud');
+		$this->load->model('CoreForm');
 
 		//Helpers
-		
+		date_default_timezone_set('Africa/Nairobi');
+
         //Models
         
 	}
@@ -64,7 +77,15 @@ class CoreUsers extends CI_Controller {
 		//Time Zone
 		date_default_timezone_set('Africa/Nairobi');
 		$data['str_to_time'] = strtotime(date('Y-m-d, H:i:s'));
-		$data['Module'] = $this->plural->pluralize($this->Module);//Module Show
+		$data['Module'] = $this->plural->pluralize($this->Folder);//Module Show
+		$data['routeURL'] = (is_null($this->Route)) ? $this->plural->pluralize($this->Folder) : $this->Route;
+
+		//User Levels
+		$data['level'] = $this->db->select('level_name')->where('level_flg',1)->get('levels')->result();
+		//Form Submit URLs
+		$data['form_new'] = $this->New;
+		$data['form_save'] = $this->Save;
+		$data['form_edit'] = $this->Edit;
 
 		return $data;
 	}
@@ -82,19 +103,18 @@ class CoreUsers extends CI_Controller {
 	*/
     public function pages($data,$layout='main')
     {
-
-    	//Chech allowed Access
-		// $auth = 'check if authentication is true'; //Authentication
-
-		// if ($this->CoreLoad->auth($module='admin')) {
-
-			//Layout
-			$this->load->view("administrator/layouts/$layout",$data);
-
-		// }else{
-
-		// 	echo 'if failed say not allowed';
-		// }
+    	//Check if site is online
+    	if ($this->CoreLoad->site_status() == TRUE) {
+	    	//Chech allowed Access
+			if ($this->CoreLoad->auth($this->Module)) { //Authentication
+				//Layout
+				$this->load->view("administrator/layouts/$layout",$data);
+			}else{
+    			$this->CoreLoad->notAllowed(); //Not Allowed To Access
+			}
+    	}else{
+    		$this->CoreLoad->siteOffline(); //Site is offline
+    	}
     }
 
     /*
@@ -115,11 +135,11 @@ class CoreUsers extends CI_Controller {
 		$module = $this->plural->pluralize($this->Module);
 
 		//Model Query
-		$data = $this->load($module."/list");
+		$data = $this->load($this->plural->pluralize($this->Folder).$this->SubFolder."/list");
 
 		//Table Select & Clause
-		$where = array('flg'=>1);
-   		$columns = null;
+		$where = array('level !=' => 'customer');
+	   	$columns = array('id,level as level,logname as username,name as full_name,email as email,flg as status');
 		$data['dataList'] = $this->CoreCrud->selectCRUD($module,$where,$columns);
 
 		//Notification
@@ -148,16 +168,14 @@ class CoreUsers extends CI_Controller {
 
 		//Pluralize Module
 		$module = $this->plural->pluralize($this->Module);
-		$this->load->model('CoreForm');
 
 		//Model Query
-		$pageID = (is_numeric($pageID)) ? $pageID : $module."/".$pageID;
+		$pageID = (is_numeric($pageID)) ? $pageID : $this->plural->pluralize($this->Folder).$this->SubFolder."/".$pageID;
 		$data = $this->load($pageID);
 
 		//Notification
 		$notify = $this->Notify->notify();
 		$data['notify'] = $this->Notify->$notify($message);
-		$data['list'] = $this->CoreForm->form_auto_generate($module);
 
 		//Open Page
 		$this->pages($data,$layout);
@@ -188,22 +206,24 @@ class CoreUsers extends CI_Controller {
     *  If either inputTYPE or inputID is not passed error message will be generated
 	* 
 	*/
-	public function edit($pageID,$inputTYPE=null,$inputID=null,$message=null,$layout='main')
+	public function edit($pageID,$inputTYPE='id',$inputID=null,$message=null,$layout='main')
 	{
 		//Pluralize Module
 		$module = $this->plural->pluralize($this->Module);
 
 		//Model Query
-		$pageID = (is_numeric($pageID)) ? $pageID : $module."/".$pageID;
+		$pageID = (is_numeric($pageID)) ? $pageID : $this->plural->pluralize($this->Folder).$this->SubFolder."/".$pageID;
 		$data = $this->load($pageID);
 
 		$inputTYPE = (is_null($inputTYPE)) ? $this->CoreLoad->input('inputTYPE','GET') : $inputTYPE; //Access Value
+
 		$inputID = (is_null($inputID)) ? $this->CoreLoad->input('inputID','GET') : $inputID; //Access Value
+
 
 		if (!is_null($inputTYPE) || !is_null($inputID)) {
 			//Table Select & Clause
 			$where = array($inputTYPE =>$inputID);
-	   		$columns = array('id','name','email','logname as username');
+	   		$columns = array('id as id,name as name,email as email,level as level,logname as logname');
 			$data['resultList'] = $this->CoreCrud->selectCRUD($module,$where,$columns);
 
 			//Notification
@@ -235,39 +255,119 @@ class CoreUsers extends CI_Controller {
 	public function valid($type)
 	{
 
+		//Pluralize Module
+		$module = $this->plural->pluralize($this->Module);
+		$coreModule = ucwords($this->Core).ucwords($module);
+		$routeURL = (is_null($this->Route)) ? $module : $this->Route;
+
 		//Check Validation
 		if ($type == 'save') {
-			# code...
+
+			$formData = $this->CoreLoad->input(); //Input Data
+
+			//Form Validation
+			if ($this->validation($formData) == TRUE) {
+				if ($this->create($formData)) {
+					$this->session->set_flashdata('notification','success'); //Notification Type
+					redirect($this->New, 'refresh');//Redirect to Page
+				}else{
+					$this->session->set_flashdata('notification','error'); //Notification Type
+					$this->open('add');//Open Page
+				}
+			}else{
+				$this->session->set_flashdata('notification','error'); //Notification Type
+				$message = 'Please check the fields, and try again'; //Notification Message				
+				$this->open('add',$message);//Open Page
+			}			
 		}
 		elseif ($type == 'bulk') {
 
-			$action = $this->input->get('action');
-			$all_data = json_decode($this->input->get('name_id_data'), true);
+			$action = $this->input->get('action'); //Get Action
+			$selectedData = json_decode($this->input->get('inputID'), true); //Get Selected Data
+			$column_id = strtolower($this->CoreForm->get_column_name($this->Module,'id')); //column name Reference column
+			$column_flg = strtolower($this->CoreForm->get_column_name($this->Module,'flg')); //Column name of Updated Input
 
-			echo "$action <br />";
-			echo "<pre>";
-				print_r($all_data);
-			echo "</pre>";
+			//Check If Selection has Value
+			if (!empty($selectedData)) {
+				//Check Action
+				if (strtolower($action) == 'edit') {
+					$this->session->set_flashdata('notification','notify'); //Notification Type
+					$this->edit('edit','id',$selectedData[0]);//Open Page
+				}else{
+					for($i = 0; $i < count($selectedData); $i++){ //Loop through all submitted elements
+						$value_id = $selectedData[$i]; //Select Value To Update with
+						if (strtolower($action) == 'activate') { //Item/Data Activation
+							$this->update(array($column_flg =>1),array($column_id =>$value_id)); //Call Update Function
+						}elseif (strtolower($action) == 'deactivate'){ //Item/Data Deactivation
+							$this->update(array($column_flg =>0),array($column_id =>$value_id)); //Call Update Function
+						}elseif (strtolower($action) == 'delete'){ //Item/Data Deletion
+							$this->delete(array($column_id => $value_id)); //Call Delete Function
+						}else{
+							$this->session->set_flashdata('notification','error'); //Notification Type
+							$message = 'Wrong data sequence received'; //Notification Message				
+							$this->index($message);//Open Page
+						}
+					}
+					$this->session->set_flashdata('notification','success'); //Notification Type
+					redirect($routeURL, 'refresh'); //Redirect Index Module
+				}			
+			}else{
+				$this->session->set_flashdata('notification','error'); //Notification Type
+				$message = 'Please make a selection first, and try again'; //Notification Message				
+				$this->index($message);//Open Page
+			}
 		}
 		elseif ($type == 'update') {
-			echo $this->input->get('name_id_data');
+
+			$updateData = $this->CoreLoad->input(); //Input Data		
+			$column_password = strtolower($this->CoreForm->get_column_name($this->Module,'password'));//Column Password
+			$column_id = strtolower($this->CoreForm->get_column_name($this->Module,'id'));//Column ID
+			$value_id = $this->CoreLoad->input('id'); //Input Value
+
+			//Select Value To Unset && Check If Password Requested
+			if (array_key_exists("$column_password",$updateData)) {
+				if (!empty($this->input->post($column_password))) {	$unsetData= array('id');/*valude To Unset */}
+				else{ $unsetData= array('id',$column_password);/*Unset Value*/	}
+			}else{$unsetData= array('id');/*valude To Unset*/}
+
+			//Form Validation
+			if ($this->validation($updateData,false,array($column_password)) == TRUE) {
+				//Update Table
+				if ($this->update($updateData,array($column_id =>$value_id),$unsetData)) {
+					$this->session->set_flashdata('notification','success'); //Notification Type
+					$message = 'Data was saved successful'; //Notification Message				
+					$this->edit('edit','id',$value_id);//Open Page
+				}else{
+					$this->session->set_flashdata('notification','error'); //Notification Type
+					$this->edit('edit','id',$value_id);//Open Page
+				}								
+			}else{
+				$this->session->set_flashdata('notification','error'); //Notification Type
+				$message = 'Please check the fields, and try again'; //Notification Message				
+				$this->edit('edit','id',$value_id,$message);//Open Page
+			}		
 		}
 		elseif ($type == 'delete') {
-			echo "Delete <br />";
-			echo $this->input->get('name_id_data');
+			$value_id = $this->input->get('inputID'); //Get Selected Data
+			$column_id = strtolower($this->CoreForm->get_column_name($this->Module,'id'));
+
+			if ($this->delete(array($column_id => $value_id)) == TRUE) { //Call Delete Function
+				$this->session->set_flashdata('notification','success'); //Notification Type
+				redirect($routeURL, 'refresh'); //Redirect Index Module
+			}else{
+				$this->session->set_flashdata('notification','error'); //Notification Type
+				redirect($routeURL, 'refresh'); //Redirect Index Module
+			}
 		}
 		else{
-
-			//Open Index
-			//redirect('Main','refresh');
-			echo "here";
+			$this->session->set_flashdata('notification','notify'); //Notification Type
+			redirect($routeURL, 'refresh'); //Redirect Index Module
 		}
 	}
 
 	/*
 	* The function is used to save/insert data into table
-	* The first parameter needed is Table Name
-	* Second one is the data to be inserted 
+	* First is the data to be inserted 
 	*  N:B the data needed to be in an associative array form E.g $data = array('name' => 'theName');
 	*      the array key will be used as column name and the value as inputted Data
 	*  For colum default/details convert data to JSON on valid() method level
@@ -275,10 +375,30 @@ class CoreUsers extends CI_Controller {
 	* Third is the data to be unset | Unset is to be used if some of the input you wish to be removed
 	* 
 	*/
-	public function create($tableName,$insertData,$unsetData=null)
+	public function create($insertData,$unsetData=null)
 	{
-		
+		//Pluralize Module
+		$tableName = $this->plural->pluralize($this->Module);
+
+		//Column Stamp
+		$stamp = strtolower($this->CoreForm->get_column_name($this->Module,'stamp'));
+		$insertData["$stamp"] = date('Y-m-d H:i:s',time());
+		//Column Flg
+		$flg = strtolower($this->CoreForm->get_column_name($this->Module,'flg'));
+		$insertData["$flg"] = 1;
+
+		//Column Password
+		$column_password = strtolower($this->CoreForm->get_column_name($this->Module,'password'));
+
 		$insertData = $this->CoreLoad->unsetData($insertData,$unsetData); //Unset Data
+
+		//Check IF there is Password
+		if (array_key_exists($column_password,$insertData)) {
+			$insertData[$column_password] = sha1($this->config->item($insertData["$stamp"]).$insertData[$column_password]);
+		}
+
+		$details = strtolower($this->CoreForm->get_column_name($this->Module,'details'));
+		$insertData["$details"] = json_encode($insertData);
 
 		//Insert Data Into Table
 		$this->db->insert($tableName, $insertData);
@@ -293,8 +413,7 @@ class CoreUsers extends CI_Controller {
 
 	/*
 	* The function is used to update data in the table
-	* The first parameter needed is Table Name
-	* Second one is the data to be updated 
+	* First parameter is the data to be updated 
 	*  N:B the data needed to be in an associative array form E.g $data = array('name' => 'theName');
 	*      the array key will be used as column name and the value as inputted Data
 	*  For colum default/details convert data to JSON on valid() method level
@@ -302,10 +421,33 @@ class CoreUsers extends CI_Controller {
 	* Fourth is the data to be unset | Unset is to be used if some of the input you wish to be removed
 	* 
 	*/
-	public function update($tableName,$updateData,$valueWhere,$unsetData=null)
+	public function update($updateData,$valueWhere,$unsetData=null)
 	{
-		
+	
+		//Pluralize Module
+		$tableName = $this->plural->pluralize($this->Module);
+
+		//Column Stamp
+		$stamp = $this->CoreForm->get_column_name($this->Module,'stamp');
+		$updateData["$stamp"] = date('Y-m-d H:i:s',time());
+
+		//Column Password
+		$column_password = strtolower($this->CoreForm->get_column_name($this->Module,'password'));
+
 		$updateData = $this->CoreLoad->unsetData($updateData,$unsetData); //Unset Data
+
+		//Check IF there is Password
+		if (array_key_exists($column_password,$updateData)) {
+			$updateData[$column_password] = sha1($this->config->item($updateData["$stamp"]).$updateData[$column_password]);
+		}
+
+		//Details Column Update
+		$details = strtolower($this->CoreForm->get_column_name($this->Module,'details'));
+		foreach ($valueWhere as $key => $value) {	$whereData = array($key => $value); /* Where Clause */ 	}
+
+		$current_details = json_decode($this->db->select($details)->where($whereData)->get($tableName)->row()->$details, true);
+		foreach ($updateData as $key => $value) { $current_details["$key"] = $value; /* Update -> Details */ }
+		$updateData["$details"] = json_encode($current_details);
 
 		//Update Data In The Table
 		$this->db->update($tableName, $updateData, $valueWhere);
@@ -320,12 +462,14 @@ class CoreUsers extends CI_Controller {
 
 	/*
 	* The function is used to delete data in the table
-	* The first parameter needed is Table Name
-	* Second is the values to be passed in where clause N:B the data needed to be in an associative array form E.g $data = array('column' => 'value');
+	* First parameter is the values to be passed in where clause N:B the data needed to be in an associative array form E.g $data = array('column' => 'value');
 	* 
 	*/
-	public function delete($tableName,$valueWhere)
+	public function delete($valueWhere)
 	{
+
+		//Pluralize Module
+		$tableName = $this->plural->pluralize($this->Module);
 
 		//Deleted Data In The Table
 		$this->db->delete($tableName, $valueWhere);
@@ -335,6 +479,55 @@ class CoreUsers extends CI_Controller {
 		}else{
 
 			return false; //Data Deletion Failed
+		}
+	}
+
+	/*
+	*
+	* This Fuction is used to validate Input Data
+	* The fuctntion accept three parameters
+	* 1: The Form Data (Remember to pass them trought CoreLoad->input First)
+	* 2: Should Email considered Unique or not
+	* 3: Skip Deep Validation
+	* 
+	*/
+	public function validation($formData,$email=TRUE,$skip=array())
+	{
+		//Pluralize Module
+		$module = $this->plural->pluralize($this->Module);
+
+		//Validation
+		foreach ($formData as $key => $value) {
+			$label = $this->CoreForm->get_column_label_name($key); // Label Name
+			$input = $this->CoreForm->get_label_name($key); // Input Processed
+			//Check Skip
+			if (in_array(strtolower($key),$skip)) {				
+				$this->form_validation->set_rules($key, $label, "trim|max_length[100]"); //Validate Input
+			}else{
+				if (strtolower($input) == 'email') {
+					if ($email == TRUE) {
+						$this->form_validation->set_rules($key, $label, "trim|required|max_length[100]|valid_email|is_unique[$module.$key]"); //Validate Email
+					}else{
+						$this->form_validation->set_rules($key, $label, "trim|required|max_length[100]|valid_email"); //Validate Email
+					}
+				}else{
+					$required = explode(',',strtolower($this->Require)); //Required Columns
+					$unique = explode(',',strtolower($this->Unique)); //Unique Columns
+					if (in_array($input, $required)) {
+						$this->form_validation->set_rules($key, $label, "trim|required|min_length[1]"); //Validate Required
+					}elseif (in_array($input, $unique)) {
+						$this->form_validation->set_rules($key, $label, "trim|required|min_length[1]|is_unique[$module.$key]"); //Validate Required
+					}else{
+						$this->form_validation->set_rules($key, $label, "trim");//Clean None Required Values
+					}
+				}
+			}
+		}
+		//Check If Validation was successful
+		if ($this->form_validation->run() == TRUE) {
+			return true;
+		}else{
+			return false;
 		}
 	}
 

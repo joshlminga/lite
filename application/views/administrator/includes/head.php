@@ -15,7 +15,14 @@
         <link href="<?= base_url($assets); ?>/vendors/bower_components/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.min.css" rel="stylesheet">    
         <link href="<?= base_url($assets); ?>/vendors/bootgrid/jquery.bootgrid.min.css" rel="stylesheet">
         <link href="<?= base_url($assets); ?>/vendors/bower_components/google-material-color/dist/palette.css" rel="stylesheet">
-        
+
+        <link href="<?= base_url($assets); ?>/vendors/bower_components/bootstrap-select/dist/css/bootstrap-select.css" rel="stylesheet">
+        <link href="<?= base_url($assets); ?>/vendors/bower_components/nouislider/distribute/jquery.nouislider.min.css" rel="stylesheet">
+        <link href="<?= base_url($assets); ?>/vendors/bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+        <link href="<?= base_url($assets); ?>/vendors/farbtastic/farbtastic.css" rel="stylesheet">
+        <link href="<?= base_url($assets); ?>/vendors/bower_components/chosen/chosen.min.css" rel="stylesheet">
+        <link href="<?= base_url($assets); ?>/vendors/summernote/dist/summernote.css" rel="stylesheet">
+
         <!-- CSS -->
         <link href="<?= base_url($assets); ?>/css/app.min.1.css" rel="stylesheet">
         <link href="<?= base_url($assets); ?>/css/app.min.2.css" rel="stylesheet"> 
@@ -27,6 +34,9 @@
         <script src="https://use.fontawesome.com/36d9a607df.js"></script>
 
     </head>
+
+
+
 
     <body data-ma-header="teal">
         <header id="header" class="media">
@@ -121,7 +131,7 @@
                             <a href="#"><i class="zmdi zmdi-settings"></i> Settings</a>
                         </li>
                         <li>
-                            <a href="#"><i class="zmdi zmdi-time-restore"></i> Logout</a>
+                            <a href='<?= site_url("admin/logout");?>'><i class="zmdi zmdi-time-restore"></i> Logout</a>
                         </li>
                     </ul>
                 </li>
@@ -156,13 +166,6 @@
                     <li class="dashboard">
                         <a href="<?= site_url('dashboard') ?>"><i class="zmdi zmdi-input-composite"></i> Dashboard</a>
                     </li>
-                    <li class="sub-menu"> <!-- active -->
-                        <a href="#" data-ma-action="submenu-toggle"><i class="zmdi zmdi-accounts-alt"></i> User </a>
-                        <ul>
-                            <li class=""><a href="<?= site_url('users/new') ?>">New</a></li>
-                            <li class=""><a href="<?= site_url('users') ?>">Manage</a></li> <!--active -->
-                        </ul>
-                    </li>
                     <li class="sub-menu" style="display: none;"> <!-- active -->
                         <a href="#" data-ma-action="submenu-toggle">
                             <i class="zmdi zmdi-format-color-text green_less"></i> Blog 
@@ -182,6 +185,44 @@
                             <li class=""><a href="#">Manage</a></li>
                         </ul>
                     </li>
+                    <?php if ($this->CoreLoad->auth('user')): ?>
+                    <li class="sub-menu"> <!-- active -->
+                        <a href="#" data-ma-action="submenu-toggle"><i class="zmdi zmdi-accounts-alt"></i> User </a>
+                        <ul>
+                            <li class=""><a href="<?= site_url('users/new') ?>">New</a></li>
+                            <li class=""><a href="<?= site_url('users') ?>">Manage</a></li> <!--active -->
+                        </ul>
+                    </li>
+                    <?php endif ?>
+                    <?php if ($this->CoreLoad->auth('customer')): ?>
+                    <li class="sub-menu"> <!-- active -->
+                        <a href="#" data-ma-action="submenu-toggle"><i class="zmdi zmdi-pin-account zmdi-hc-fw"></i> Customer </a>
+                        <ul>
+                            <li class=""><a href="<?= site_url('customers/new') ?>">New</a></li>
+                            <li class=""><a href="<?= site_url('customers') ?>">Manage</a></li> <!--active -->
+                        </ul>
+                    </li>
+                    <?php endif ?>
+                    <?php if ($this->CoreLoad->auth('company')): ?>
+                    <li class="sub-menu"> <!-- active -->
+                        <a href="#" data-ma-action="submenu-toggle"><i class="zmdi zmdi-local-convenience-store zmdi-hc-fw blue"></i> Companies </a>
+                        <ul>
+                            <li class=""><a href="<?= site_url('companies/new') ?>">New</a></li>
+                            <li class=""><a href="<?= site_url('companies') ?>">Manage</a></li> <!--active -->
+                        </ul>
+                    </li>
+                    <?php endif ?>
+                    <?php if ($this->CoreLoad->auth('listing')): ?>
+                    <!-- Listing -->
+                    <li class="sub-menu"> <!-- active -->
+                        <a href="#" data-ma-action="submenu-toggle"><i class="zmdi zmdi-plus-circle-o-duplicate purple"></i> Listing Plus </a>
+                        <ul>
+                            <li class=""><a href="<?= site_url('listing_companies') ?>">Companies</a></li>
+                            <li class=""><a href="<?= site_url('listing_configs') ?>">Config</a></li>
+                        </ul>
+                    </li>
+                    <!-- End Listing -->
+                    <?php endif ?>
                     <li class="" style="display: none;"><a href="#"><i class="zmdi zmdi-plus-circle-o-duplicate purple"></i> Content Plus </a></li>
                     <!-- Extensions -->
                     <li class="sub-menu" style="display: none;"> <!-- active -->
@@ -193,12 +234,14 @@
                     </li>
                     <!-- End Extensions -->
 
-                    <li class="sub-menu" style="display: none;"> <!-- active -->
+                    <li class="sub-menu"> <!-- active -->
                         <a href="#" data-ma-action="submenu-toggle"><i class="zmdi zmdi-settings red_less"></i> Controls </a>
                         <ul>
-                            <li class=""><a href="#">Store</a></li>
-                            <li class=""><a href="#">Import</a></li>
-                            <li class=""><a href="#">Export</a></li>
+                            <li class="" style="display: none;"><a href="#">Store</a></li>
+                            <li class="" style="display: none;"><a href="#">Import</a></li>
+                            <li class="" style="display: none;"><a href="#">Export</a></li>
+                            <li class=""><a href="<?= site_url('fieldcustoms') ?>">Manage Field</a></li>
+                            <li class=""><a href="<?= site_url('customfields') ?>">Custom Fields</a></li>
                         </ul>
                     </li>
 

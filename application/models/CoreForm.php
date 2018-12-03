@@ -29,7 +29,7 @@ class CoreForm extends CI_Model {
     * 
     * 
     */
-    public function form_auto_generate($module,$excluded='id,flg,level,details,logname,password',$order=null,$col_class=null,$input_type=null,$input_class=null)
+    public function form_auto_generate($module,$excluded='id,flg,level,details,logname,password')
     {
         //Get The Table Columns Name & Type
         $column_name_type = $this->get_column_data($module);
@@ -45,7 +45,24 @@ class CoreForm extends CI_Model {
         //Get Column Type
         $type = $this->get_columns_types($columns_type);
 
-        return $type;
+        /*
+        * Input Type Generator 
+        */
+        $input_type = $this->form_input_type_auto($type);
+        
+        for($i = 0; $i < count($columns_names); $i++){
+            
+            $name = $columns_names[$i]; //Input Name
+            foreach ($input_type[$i] as $key => $value) {
+                $type = $key; // Input Type
+                $col_class = $value; // Column Class
+            }
+            
+            $form[$i] = $this->input_text($name,$type,null,$col_class,$id=null);
+
+        }
+
+        return $form;
     }
 
     /*
@@ -152,6 +169,16 @@ class CoreForm extends CI_Model {
         return $column_list;
     }
 
+    //One Column
+    public function get_column_name($module,$column)
+    {
+        //Singularize Module
+        $module = $this->plural->singularize($module);
+        $column_name = $module.'_'.$column; //Column Name
+
+        return $column_name;
+    }
+
     /*
     *
     * Function to remove column Name and Return Label Name
@@ -176,6 +203,24 @@ class CoreForm extends CI_Model {
 
         //Return Label List
         return $label;
+    }
+
+    //Quick Get Input Label
+    public function get_label_name($column)
+    {
+        //Column Get
+        $label =  substr($column,strpos($column, "_") +1); //Get Current Label Name
+
+        return $label;
+    }
+
+    //Quick Get Column Name without UnderScore
+    public function get_column_label_name($column)
+    {
+        //Get Label Name
+        $label = ucwords(str_replace('_',' ',$column));
+
+        return $label; //Label Name
     }
 
     /*
@@ -223,7 +268,207 @@ class CoreForm extends CI_Model {
     {
         # code...
     }
+
+    /*
+    *
+    * The Function provide input type of different table data
+    * Function accept:
+    * Input Data Type
+    * 
+    */
+    public function form_input_type_auto($input_types)
+    {
+
+        $inputs = array();
+
+        //Check Inputs And the lenght
+        for($i = 0; $i < count($input_types); $i++){
+
+            //Get Array and access Key => Value
+            $current = $input_types[$i];
+            foreach ($current as $key => $value) {
+
+                //Get Input Bootstrap Class
+                $class = $this->get_bootstrap_class($value); 
+                $type = $this->get_form_input_type($key); 
+
+                //chek the passed key
+                if (strtolower($key) == 'varchar') {
+                    $inputs[$i] = array('text' => "$class $type-$i");
+                }
+                elseif (strtolower($key) == 'datetime') {
+                    $inputs[$i] = array('text' => "$class $type-$i");
+                }else{
+                    $inputs[$i] = array('text' => "$class $type-$i");
+                }
+            }
+        }
+
+        //Return Input Types
+        return $inputs;
+    }
+
+    /*
+    *
+    * Get the form input Type
+    * FUnction accpet the table data type
+    * 
+    */
+    public function get_form_input_type($type='varchar')
+    {
+        //Check the input type
+        if (strtolower($type) >= 'varchar') {
+            $input_type = 'text'; //Input Type
+        }
+        elseif (strtolower($type) >= 'datetime') {
+            $input_type = 'date'; //Input Type
+        }
+        else{
+            $input_type = 'text'; //Input Type
+        }
+
+        return $input_type; // Selected Type
+    }
+
+    /*
+    *
+    * Get the input bootstrap class lenght
+    * Pass the Data Type Lenght
+    * 
+    */
+    public function get_bootstrap_class($lenght=20)
+    {
+        //Check the input lenght
+        if ($lenght >= 120) {
+            $class = 'col-md-12 col-sm-12'; //Data Class
+        }
+        elseif ($lenght >= 100 && $lenght < 120 ) {
+            $class = 'col-md-10 col-sm-12'; //Data Class
+        }
+        elseif ($lenght >= 80 && $lenght < 100 ) {
+            $class = 'col-md-8 col-sm-12'; //Data Class
+        }
+        elseif ($lenght >= 50 && $lenght < 80 ) {
+            $class = 'col-md-6 col-sm-12'; //Data Class
+        }
+        elseif ($lenght >= 20 && $lenght < 50 ) {
+            $class = 'col-md-4 col-sm-12'; //Data Class
+        }
+        elseif ($lenght >= 10 && $lenght < 20 ) {
+            $class = 'col-md-2 col-sm-12'; //Data Class
+        }
+        else{
+            $class = 'col-md-4 col-sm-12'; //Data Class
+        }
+
+        return $class; // Selected Class
+    }
+
+    /*
+    *
+    * Form Inputs List
+    *  -> Text
+    *  -> CheckBox
+    *  -> Radio Button
+    *  -> Button
+    * 
+    */
+    public function input_text($input_name,$input_type='text',$input_label=null,$col_class='col-md-4 col-sm-12',$id=null)
+    {
+        //Label
+        $label = ucwords((is_null($input_label))? $this->get_label_name($input_name) : $input_label);
+
+        $input ="
+                <div class='$col_class'>
+                    <div class='form-group'>
+                        <div class='fg-line'>
+                            <label>$label</label>
+                            <input type='$input_type' class='form-control' name='$input_name' id='$id'>
+                        </div>
+                    </div>
+                </div>
+        ";
+
+        return $input;
+    }
+
+    public function input_checkbox($input_name,$value,$input_label=null,$class='check_box_class',$id=null)
+    {
+        //Label
+        $label = ucwords( (is_null($input_label))? $this->get_label_name($input_name) : $input_label);
+
+        $input ="
+            <label class='checkbox checkbox-inline m-r-20'>
+                <input type='checkbox' value='$value' name='$input_name' class='$class' id='$id'>
+                <i class='input-helper'></i>
+                $label
+            </label>
+        ";
+
+        return $input;
+    }
+
+   public function input_radio($input_name,$value,$input_label=null,$class='radio_box_class',$id=null)
+   {
+        //Label
+        $label = ucwords( (is_null($input_label))? $this->get_label_name($input_name) : $input_label);
+        
+        $input ="
+            <label class='radio radio-inline m-r-20'>
+                <input type='radio' name='$input_name' value='$value' class='$class' id='$id'>
+                <i class='input-helper'></i>
+                $label
+            </label>
+        ";
+
+        return $input;
+   }
+
+   public function input_button($input_name='submit',$class='palette-Blue',$size='bg')
+   {
+        //Label
+        $label = ucwords($input_name);
+        
+        $input ="
+                <div class='$col_class'>
+                    <button type='submit' class='btn $class $size'>$label</button>
+                </div>
+        ";
+
+        return $input;
+   }
+
+   /////////////////////////////////////////////////////////////////////////////////////////////
+   //////////////////////////////  Quick Generated Form             ///////////////////////////
+   ///////////////////////////////////////////////////////////////////////////////////////////
    
+   /*
+   *
+   *    Input Text 
+   * 
+   */
+   public function text_input($variable = array('div_class' =>'col-md-4 col-sm-12','div_id' =>'','label' =>'','icon' =>'','type'=>'',
+                                                'field_class'=>'','field_name'=>'','field_id'=>''))
+   {
+        foreach ($variable as $key => $value) { $$key = $value; } //Data Values
+
+        $input ='   
+            <div class="$div_class" id="$div_id">
+                <div class="form-group">
+                    <div class="fg-line">
+                        <label> $label;  $icon </label>
+                        <input type="$type" class="form-control $field_class" name="$field_name" id="$field_id" autocomplete="off" 
+                        value="set_value($field_name)">
+                    </div>
+                    <span class="error">form_error($field_name)</span>
+                </div>
+            </div>
+        ';
+
+        //Return Input
+        return $input;
+   }
+
 }
 
 /* End of file CoreForm.php */

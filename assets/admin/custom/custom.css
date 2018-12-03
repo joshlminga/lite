@@ -18,6 +18,11 @@ body{
     background-color: rgba(19, 86, 125, 0.94) !important;
 }
 
+.palette-Blue-Grey.bg {
+    
+    background-color: #607D8B !important;
+}
+
 /*-------------------------
             Visits
 --------------------------*/
@@ -140,7 +145,6 @@ div.btn-group-justified > div.btn-group > button {
 }
 
 /* Text */
-
 div.core-text > h1 {
 
     color: #fff !important;
@@ -150,7 +154,6 @@ div.core-text > h1 {
 }
 
 /* Alert */
-
 .alert-core-1{
     padding: 1% 3% !important;
 }
@@ -180,7 +183,6 @@ div.core-alert > div {
 }
 
 /* CORE */
-
 div.core-box-grey {
 
     background-color: #d8d4d4 !important;
@@ -271,8 +273,16 @@ div.core-overview-two span > i {
 /* Border Radius */
 .brd-20 {
 
-    border-radius: 20px !important;
+    /* border-radius: 20px !important; */
+    border-radius: 5px !important;
+
 }
+
+.brd-5 {
+
+    border-radius: 5px !important;
+}
+
 
 /* Card Form box*/
 .card {
@@ -327,16 +337,19 @@ div.core-overview-two span > i {
 
 /* Background */
 .palette-Blue-Only.bg {
+
     background-color: #1b397b !important;
 }
 
 /* Colors */
 .color-red {
+
   color: #c70000 !important;
 }
 
 /* Error */
-.core-error {
+.error {
+
   color: #c70000 !important;
   font-size: 10px !important;
   font-family: cursive;
@@ -345,6 +358,77 @@ div.core-overview-two span > i {
 
 /* Form Label */
 label, label.form-label {
+
     color: #455865d9 !important;
     font-weight: bold !important;
 }
+
+.fa-asterisk {
+
+  color: #c70000 !important;
+}
+
+/* Tbale */
+.table > tbody > tr {
+
+    color: #080082 !important;
+}
+
+tr.active > td{
+
+    background-color: rgba(240, 240, 240, 0) !important;
+}
+
+.table-striped > tbody > tr {
+    
+    color: #fff !important;
+    background-color: rgba(19, 86, 125, 0.94) !important;
+    border-bottom: 2px solid #fff;
+    font-size: 1em !important;
+}
+
+/* Login & Forgot Password */
+[data-lbg="purple"] {
+
+    background-color: rgba(19, 86, 125, 0.94) !important;
+}
+
+.palette-Purple.bg {
+
+    background-color: #504F63;
+}
+
+.palette-Purple.text {
+
+    color: #ff0000;
+}
+
+[data-lbg="teal"] {
+
+    background-color: #504F63;
+}
+
+.palette-Teal.bg {
+
+    background-color: #13567D;
+}
+
+.palette-Teal.text {
+
+    color: #000;
+}
+
+small {
+    font-size: 9px !important;
+}
+
+/* Add More */
+.add-more-subcat {
+
+    padding: 5% !important;
+}
+
+/*.form-control:not(.fc-alt).auto-size {
+    
+    height: 35px !important;
+}*/

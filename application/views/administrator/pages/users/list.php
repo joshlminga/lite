@@ -8,7 +8,9 @@
                                     <h2><?= ucwords($Module); ?> <small>Manage data by edit or delete <?= strtolower($Module); ?></small></h2>
                                 </div>
                                 <div class="col-sm-12 col-md-6">
-                                    <a href='<?= site_url(strtolower($Module)."/add");  ?>' class="btn btn-primary btn-lg waves-effect flt-right brd-20">Add New</a>
+                                    <a href='<?= site_url($form_new);  ?>' class="btn btn-primary btn-lg waves-effect flt-right brd-5">
+                                        Add New <i class="fa fa-plus"></i> 
+                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -16,7 +18,7 @@
                         <?php if (!empty($dataList)): ?>                                
                         <div class="table-responsive">
                             <div class="buld-action">
-                                <div class="row mag-0">
+                                <div class="row mag-0 mag-btm-5">
                                     <div class="btn-group">
                                         <button type="button" class="btn btn-warning">Buld Action</button>
                                         <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
@@ -32,8 +34,10 @@
                                         </ul>
                                     </div>
                                 </div>
-                            </div>
 
+                                <!-- Notification -->
+                                <?= (!is_null($notify) && !empty($notify))? $notify : ''; ?>
+                            </div>
                             <table id="data-table-command" class="table table-striped table-vmiddle">
                                 <thead>
                                     <tr>                                        
@@ -56,8 +60,17 @@
                                 <tbody>
                                     <?php for ($i=0; $i < count((array)$dataList); $i++): ?>
                                     <tr>
-                                        <?php for ($k=0; $k < count($ths); $k++):  $key = $ths[$k];?>                                                   
-                                        <td><?= $dataList[$i]->$key; ?></td>
+                                        <?php for ($k=0; $k < count($ths); $k++):  $key = $ths[$k];?>
+                                            <?php $active_column = strtolower($this->plural->singularize($Module)).'_'.'flg'; ?>
+                                            <?php if ($key == 'status' || $key == $active_column): ?>
+                                                    <?php if ($dataList[$i]->$key == 1): ?>
+                                                        <td> Active </td>
+                                                    <?php else: ?>
+                                                       <td> Deactivated </td>
+                                                    <?php endif ?>
+                                            <?php else: ?> 
+                                                <td><?= $dataList[$i]->$key; ?></td>
+                                            <?php endif ?>                                                  
                                         <?php endfor ?>
                                     </tr>
                                     <?php endfor ?>

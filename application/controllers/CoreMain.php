@@ -9,6 +9,20 @@ class CoreMain extends CI_Controller {
 	* -> The controller require user to login as Administrator
 	*/
 
+	private $Core = 'core'; //Core Lite Base Name | Change this if your Controller Name does not start with word Core
+	private $Module = 'main'; //Module
+	private $Folder = '/* HTML Source Folder Name */'; //Set Default Folder For html files
+	private $SubFolder = ''; //Set Default Sub Folder For html files and Front End Use Start with /
+	private $Escape = '/* espace column while auto form generated | Comma separated */'; // Escape Column
+	private $Require = '/* requred table value while form validation | Comma separated */'; // Required Column
+	private $Unique = '/* unique table value while form validation | Comma separated */'; // Unique & Required Values
+
+	private $Route = null; //If you have different route Name to Module name State it here |This wont be pluralized | set it null to use default
+	
+	private $New = '/* route for add new item form */'; //New User
+	private $Save = ' route for save new item '; //Add New User
+	private $Edit = ' route for update item '; //Update User
+
 	/* Functions
 	* -> __construct () = Load the most required operations E.g Class Module
 	* 
@@ -77,19 +91,18 @@ class CoreMain extends CI_Controller {
 	*/
     public function pages($data,$layout='main')
     {
-
-    	//Chech allowed Access
-		// $auth = 'check if authentication is true'; //Authentication
-
-		// if ($this->CoreLoad->auth($module='admin')) {
-
-			//Layout
-			$this->load->view("administrator/layouts/$layout",$data);
-
-		// }else{
-
-		// 	echo 'if failed say not allowed';
-		// }
+    	//Check if site is online
+    	if ($this->CoreLoad->site_status() == TRUE) {
+	    	//Chech allowed Access
+			if ($this->CoreLoad->logged()) { //Authentication
+				//Layout
+				$this->load->view("administrator/layouts/$layout",$data);
+			}else{
+    			$this->CoreLoad->notAllowed(); //Not Allowed To Access
+			}
+    	}else{
+    		$this->CoreLoad->siteOffline(); //Site is offline
+    	}
     }
 
     /*
