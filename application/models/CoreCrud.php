@@ -110,6 +110,64 @@ class CoreCrud extends CI_Model {
 
   	return $query->result();
   }
+
+  /*
+  *
+  * Upload File Class
+  * The function accept the input data, 
+  * validation string and 
+  * Upload Location
+  * Return Link or Name | By Default it return Name
+  * 
+  */
+  public function uploadFile($input = null,$valid = 'jpg|jpeg|png|doc|docx|pdf|xls|txt',$file = '../assets/admin/images/upload',$link=false)
+  {
+    
+    //Library
+    $this->load->library('upload');
+
+    if (!is_null($input)) {
+
+      //Upload        
+      $config['upload_path'] = realpath(APPPATH . $file);
+      $config['allowed_types'] = $valid;
+      // $config['max_size'] = 500;
+      $config['encrypt_name'] = TRUE;
+
+      $this->upload->initialize($config);
+
+      $key = 0;
+      for($i = 0; $i < count($input['name']); $i++){
+
+        $_FILES['photo']['name']     = $input['name'][$i];
+        $_FILES['photo']['type']     = $input['type'][$i];
+        $_FILES['photo']['tmp_name'] = $input['tmp_name'][$i];
+        $_FILES['photo']['error']     = $input['error'][$i];
+        $_FILES['photo']['size']     = $input['size'][$i];
+
+
+        if ($this->upload->do_upload('photo')) {
+          $data_upload = array('upload_data' => $this->upload->data());
+          //Uploaded
+          $file_name = $data_upload['upload_data']['file_name'];
+          if ($link == true) {
+            $file_uploaded[$key] = trim(str_replace("../", " ",trim($file)).'/'.$file_name);
+            $key++;
+          }else{
+            $file_uploaded[$key] = $file_name;
+            $key++;
+          }
+        }else{
+            $file_uploaded[$key] = null;
+        }
+      }
+      return $file_uploaded;
+    }else{
+
+      return null;
+    }
+  }
+
 }
 
 /* End of file CoreCrud.php */

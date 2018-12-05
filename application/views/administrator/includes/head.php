@@ -203,21 +203,14 @@
                         </ul>
                     </li>
                     <?php endif ?>
-                    <?php if ($this->CoreLoad->auth('company')): ?>
-                    <li class="sub-menu"> <!-- active -->
-                        <a href="#" data-ma-action="submenu-toggle"><i class="zmdi zmdi-local-convenience-store zmdi-hc-fw blue"></i> Companies </a>
-                        <ul>
-                            <li class=""><a href="<?= site_url('companies/new') ?>">New</a></li>
-                            <li class=""><a href="<?= site_url('companies') ?>">Manage</a></li> <!--active -->
-                        </ul>
-                    </li>
-                    <?php endif ?>
                     <?php if ($this->CoreLoad->auth('listing')): ?>
                     <!-- Listing -->
                     <li class="sub-menu"> <!-- active -->
                         <a href="#" data-ma-action="submenu-toggle"><i class="zmdi zmdi-plus-circle-o-duplicate purple"></i> Listing Plus </a>
                         <ul>
                             <li class=""><a href="<?= site_url('listing_companies') ?>">Companies</a></li>
+                            <li class=""><a href="<?= site_url('listing_products') ?>">Products</a></li>
+                            <li class=""><a href="<?= site_url('listing_logos') ?>">Logo</a></li>
                             <li class=""><a href="<?= site_url('listing_configs') ?>">Config</a></li>
                         </ul>
                     </li>

@@ -42,8 +42,9 @@ class _baseController extends CI_Controller {
 		$this->load->model('CoreCrud');
 		$this->load->model('CoreForm');
 
+		//Libraries
+
 		//Helpers
-		date_default_timezone_set('Africa/Nairobi');
 
         //Models
         

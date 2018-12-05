@@ -80,9 +80,6 @@ $route['customers/update'] = 'ExtensionCustomers/valid/update'; // Validate and 
 $route['customers/delete'] = 'ExtensionCustomers/valid/delete'; // Delete Customer
 $route['customers/multiple'] = 'ExtensionCustomers/valid/bulk'; // Bulk Action 
 
-$route['companies'] = 'ExtensionCompanies/index'; //Companies List
-$route['companies/new'] = 'ExtensionCompanies/open/add'; //Open Create New Companies Form
-
 /* Control */
 	//Custom Fields
  	$route['customfields'] = 'CoreCustomfields/index'; //Open Create New 
@@ -120,6 +117,24 @@ $route['companies/new'] = 'ExtensionCompanies/open/add'; //Open Create New Compa
 	$route['listing_companies/update'] = 'ListingCompanies/valid/update'; // Validate and Update
 	$route['listing_companies/delete'] = 'ListingCompanies/valid/delete'; // Delete 
 	$route['listing_companies/multiple'] = 'ListingCompanies/valid/bulk'; // Bulk Action  
+
+	//PRODUCTS
+ 	$route['listing_products'] = 'ListingProducts/index'; //Open Create New 
+ 	$route['listing_products/new'] = 'ListingProducts/open/add'; //Open Create New 
+ 	$route['listing_products/edit'] = 'ListingProducts/edit/edit'; //Open Edit 
+ 	$route['listing_products/save'] = 'ListingProducts/valid/save'; //Validate and Save
+	$route['listing_products/update'] = 'ListingProducts/valid/update'; // Validate and Update
+	$route['listing_products/delete'] = 'ListingProducts/valid/delete'; // Delete 
+	$route['listing_products/multiple'] = 'ListingProducts/valid/bulk'; // Bulk Action  
+
+	//PRODUCTS
+ 	$route['listing_logos'] = 'ListingLogos/index'; //Open Create New 
+ 	$route['listing_logos/new'] = 'ListingLogos/open/add'; //Open Create New 
+ 	$route['listing_logos/edit'] = 'ListingLogos/edit/edit'; //Open Edit 
+ 	$route['listing_logos/save'] = 'ListingLogos/valid/save'; //Validate and Save
+	$route['listing_logos/update'] = 'ListingLogos/valid/update'; // Validate and Update
+	$route['listing_logos/delete'] = 'ListingLogos/valid/delete'; // Delete 
+	$route['listing_logos/multiple'] = 'ListingLogos/valid/bulk'; // Bulk Action  
 
 //Choose SUB
 $route['category/select'] = 'AjaxList/categories'; //Dynamic Category
