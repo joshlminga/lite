@@ -125,7 +125,7 @@
                     
                     <ul class="dropdown-menu pull-right dm-icon">
                         <li>
-                            <a href="#"><i class="zmdi zmdi-account"></i> View Profile</a>
+                            <a href="<?= site_url("profile");?>"><i class="zmdi zmdi-account"></i> View Profile</a>
                         </li>
                         <li>
                             <a href="#"><i class="zmdi zmdi-settings"></i> Settings</a>

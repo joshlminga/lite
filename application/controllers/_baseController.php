@@ -383,37 +383,41 @@ class _baseController extends CI_Controller {
 	*/
 	public function create($insertData,$unsetData=null)
 	{
-		//Pluralize Module
-		$tableName = $this->plural->pluralize($this->Module);
 
-		//Column Stamp
-		$stamp = strtolower($this->CoreForm->get_column_name($this->Module,'stamp'));
-		$insertData["$stamp"] = date('Y-m-d H:i:s',time());
-		//Column Flg
-		$flg = strtolower($this->CoreForm->get_column_name($this->Module,'flg'));
-		$insertData["$flg"] = 1;
-
-		//Column Password
-		$column_password = strtolower($this->CoreForm->get_column_name($this->Module,'password'));
-
-		$insertData = $this->CoreLoad->unsetData($insertData,$unsetData); //Unset Data
-
-		//Check IF there is Password
-		if (array_key_exists($column_password,$insertData)) {
-			$insertData[$column_password] = sha1($this->config->item($insertData["$stamp"]).$insertData[$column_password]);
-		}
-
-		$details = strtolower($this->CoreForm->get_column_name($this->Module,'details'));
-		$insertData["$details"] = json_encode($insertData);
-
-		//Insert Data Into Table
-		$this->db->insert($tableName, $insertData);
-		if ($this->db->affected_rows() > 0) {
+		if ($this->CoreLoad->auth($this->Module)) { //Authentication
 			
-			return true; //Data Inserted
-		}else{
+			//Pluralize Module
+			$tableName = $this->plural->pluralize($this->Module);
 
-			return false; //Data Insert Failed
+			//Column Stamp
+			$stamp = strtolower($this->CoreForm->get_column_name($this->Module,'stamp'));
+			$insertData["$stamp"] = date('Y-m-d H:i:s',time());
+			//Column Flg
+			$flg = strtolower($this->CoreForm->get_column_name($this->Module,'flg'));
+			$insertData["$flg"] = 1;
+
+			//Column Password
+			$column_password = strtolower($this->CoreForm->get_column_name($this->Module,'password'));
+
+			$insertData = $this->CoreLoad->unsetData($insertData,$unsetData); //Unset Data
+
+			//Check IF there is Password
+			if (array_key_exists($column_password,$insertData)) {
+				$insertData[$column_password] = sha1($this->config->item($insertData["$stamp"]).$insertData[$column_password]);
+			}
+
+			$details = strtolower($this->CoreForm->get_column_name($this->Module,'details'));
+			$insertData["$details"] = json_encode($insertData);
+
+			//Insert Data Into Table
+			$this->db->insert($tableName, $insertData);
+			if ($this->db->affected_rows() > 0) {
+				
+				return true; //Data Inserted
+			}else{
+
+				return false; //Data Insert Failed
+			}
 		}
 	}
 
@@ -429,40 +433,43 @@ class _baseController extends CI_Controller {
 	*/
 	public function update($updateData,$valueWhere,$unsetData=null)
 	{
-	
-		//Pluralize Module
-		$tableName = $this->plural->pluralize($this->Module);
 
-		//Column Stamp
-		$stamp = $this->CoreForm->get_column_name($this->Module,'stamp');
-		$updateData["$stamp"] = date('Y-m-d H:i:s',time());
-
-		//Column Password
-		$column_password = strtolower($this->CoreForm->get_column_name($this->Module,'password'));
-
-		$updateData = $this->CoreLoad->unsetData($updateData,$unsetData); //Unset Data
-
-		//Check IF there is Password
-		if (array_key_exists($column_password,$updateData)) {
-			$updateData[$column_password] = sha1($this->config->item($updateData["$stamp"]).$updateData[$column_password]);
-		}
-
-		//Details Column Update
-		$details = strtolower($this->CoreForm->get_column_name($this->Module,'details'));
-		foreach ($valueWhere as $key => $value) {	$whereData = array($key => $value); /* Where Clause */ 	}
-
-		$current_details = json_decode($this->db->select($details)->where($whereData)->get($tableName)->row()->$details, true);
-		foreach ($updateData as $key => $value) { $current_details["$key"] = $value; /* Update -> Details */ }
-		$updateData["$details"] = json_encode($current_details);
-
-		//Update Data In The Table
-		$this->db->update($tableName, $updateData, $valueWhere);
-		if ($this->db->affected_rows() > 0) {
+		if ($this->CoreLoad->auth($this->Module)) { //Authentication
 			
-			return true; //Data Updated
-		}else{
+			//Pluralize Module
+			$tableName = $this->plural->pluralize($this->Module);
 
-			return false; //Data Updated Failed
+			//Column Stamp
+			$stamp = $this->CoreForm->get_column_name($this->Module,'stamp');
+			$updateData["$stamp"] = date('Y-m-d H:i:s',time());
+
+			//Column Password
+			$column_password = strtolower($this->CoreForm->get_column_name($this->Module,'password'));
+
+			$updateData = $this->CoreLoad->unsetData($updateData,$unsetData); //Unset Data
+
+			//Check IF there is Password
+			if (array_key_exists($column_password,$updateData)) {
+				$updateData[$column_password] = sha1($this->config->item($updateData["$stamp"]).$updateData[$column_password]);
+			}
+
+			//Details Column Update
+			$details = strtolower($this->CoreForm->get_column_name($this->Module,'details'));
+			foreach ($valueWhere as $key => $value) {	$whereData = array($key => $value); /* Where Clause */ 	}
+
+			$current_details = json_decode($this->db->select($details)->where($whereData)->get($tableName)->row()->$details, true);
+			foreach ($updateData as $key => $value) { $current_details["$key"] = $value; /* Update -> Details */ }
+			$updateData["$details"] = json_encode($current_details);
+
+			//Update Data In The Table
+			$this->db->update($tableName, $updateData, $valueWhere);
+			if ($this->db->affected_rows() > 0) {
+				
+				return true; //Data Updated
+			}else{
+
+				return false; //Data Updated Failed
+			}
 		}
 	}
 
@@ -474,17 +481,20 @@ class _baseController extends CI_Controller {
 	public function delete($valueWhere)
 	{
 
-		//Pluralize Module
-		$tableName = $this->plural->pluralize($this->Module);
-
-		//Deleted Data In The Table
-		$this->db->delete($tableName, $valueWhere);
-		if ($this->db->affected_rows() > 0) {
+		if ($this->CoreLoad->auth($this->Module)) { //Authentication
 			
-			return true; //Data Deleted
-		}else{
+			//Pluralize Module
+			$tableName = $this->plural->pluralize($this->Module);
 
-			return false; //Data Deletion Failed
+			//Deleted Data In The Table
+			$this->db->delete($tableName, $valueWhere);
+			if ($this->db->affected_rows() > 0) {
+				
+				return true; //Data Deleted
+			}else{
+
+				return false; //Data Deletion Failed
+			}
 		}
 	}
 

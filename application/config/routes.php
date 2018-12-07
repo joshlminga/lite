@@ -80,6 +80,10 @@ $route['customers/update'] = 'ExtensionCustomers/valid/update'; // Validate and 
 $route['customers/delete'] = 'ExtensionCustomers/valid/delete'; // Delete Customer
 $route['customers/multiple'] = 'ExtensionCustomers/valid/bulk'; // Bulk Action 
 
+//Sub Profile
+$route['profile'] = 'Profile/edit/edit'; //Open My Profile
+$route['profile/update'] = 'Profile/valid/update'; // Validate and Update
+
 /* Control */
 	//Custom Fields
  	$route['customfields'] = 'CoreCustomfields/index'; //Open Create New 
