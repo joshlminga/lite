@@ -438,6 +438,32 @@ class CoreForm extends CI_Model {
         return $input;
    }
 
+   /*
+   *
+   * This Fuction should be used mostly with Home Controller
+   * Here you pass the page name 
+   * And the folder name where your view file is located NB: The value must be an associative array
+   *     'Key' -> value
+   *     'Key has to be the file name(passed file naem)' => Value has to be the sub folder (directory Name) 
+   * 
+   */
+   public function sub_pages($page_name,$sub_page_route=array(null))
+   {
+        if (!is_null($sub_page_route)) { //Check if SubRoute Specified
+            $if_page = array_keys($sub_page_route); //Check which Page Is Requested
+            if (in_array(trim($page_name),$if_page)) {
+                $page_route = $sub_page_route[trim($page_name)]; //Get the sub route
+                $page = "$page_route/$page_name"; //Set the subroute
+            }else{
+                $page = $page_name;
+            }
+        }else{
+            $page = $page_name;
+        }
+
+        return $page; //Return the route specified
+   }
+
    /////////////////////////////////////////////////////////////////////////////////////////////
    //////////////////////////////  Quick Generated Form             ///////////////////////////
    ///////////////////////////////////////////////////////////////////////////////////////////

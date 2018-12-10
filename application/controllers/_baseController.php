@@ -270,9 +270,13 @@ class _baseController extends CI_Controller {
 		if ($type == 'save') {
 
 			$formData = $this->CoreLoad->input(); //Input Data
+			$validData['input_name1'] = "required|min_length[1]|max_length[50]"; //Demo Validate Data Rules
+			$validData['input_name2'] = "required|min_length[1]|max_length[50]|is_unique[table.column]|valid_email"; //Demo Validate Data Rules
+			$validData['input_name3'] = "required|min_length[1]|max_length[50]|is_unique[table.column]"; //Demo Validate Data Rules
+			$validData['input_name4'] = "required|min_length[1]|max_length[50],array('required' => 'You must %s.')"; //Demo Validate Data Rules
 
 			//Form Validation
-			if ($this->validation($formData) == TRUE) {
+			if ($this->validation($formData,$validData) == TRUE) {
 				if ($this->create($formData)) {
 					$this->session->set_flashdata('notification','success'); //Notification Type
 					redirect($this->New, 'refresh');//Redirect to Page
@@ -336,8 +340,14 @@ class _baseController extends CI_Controller {
 				else{ $unsetData= array('id',$column_password);/*Unset Value*/	}
 			}else{$unsetData= array('id');/*valude To Unset*/}
 
+			//Validation Data
+			$validData['input_name1'] = "required|min_length[1]|max_length[50]"; //Demo Validate Data Rules
+			$validData['input_name2'] = "required|min_length[1]|max_length[50]|is_unique[table.column]|valid_email"; //Demo Validate Data Rules
+			$validData['input_name3'] = "required|min_length[1]|max_length[50]|is_unique[table.column]"; //Demo Validate Data Rules
+			$validData['input_name4'] = "required|min_length[1]|max_length[50],array('required' => 'You must %s.')"; //Demo Validate Data Rules
+
 			//Form Validation
-			if ($this->validation($updateData,false,array($column_password)) == TRUE) {
+			if ($this->validation($updateData,$validData,array($column_password)) == TRUE) {
 				//Update Table
 				if ($this->update($updateData,array($column_id =>$value_id),$unsetData)) {
 					$this->session->set_flashdata('notification','success'); //Notification Type
@@ -507,10 +517,11 @@ class _baseController extends CI_Controller {
 	* 3: Skip Deep Validation
 	* 
 	*/
-	public function validation($formData,$email=TRUE,$skip=array())
+	public function validation($formData,$validate=array(),$skip=array())
 	{
-		//Pluralize Module
-		$module = $this->plural->pluralize($this->Module);
+		//Validation Keys
+		$valid_keys = array_keys($validate);
+		$check_box = 1;
 
 		//Validation
 		foreach ($formData as $key => $value) {
@@ -520,21 +531,20 @@ class _baseController extends CI_Controller {
 			if (in_array(strtolower($key),$skip)) {				
 				$this->form_validation->set_rules($key, $label, "trim|max_length[100]"); //Validate Input
 			}else{
-				if (strtolower($input) == 'email') {
-					if ($email == TRUE) {
-						$this->form_validation->set_rules($key, $label, "trim|required|max_length[100]|valid_email|is_unique[$module.$key]"); //Validate Email
+				if (empty($validate)) {
+					$this->form_validation->set_rules($key, $label, "trim");//Clean None Required Values
+				}else{					
+					if (in_array('check_box', $valid_keys) && $check_box == 1) {
+						$check_valid = $validate['check_box'];//Validate Inputs
+						$this->form_validation->set_rules('check_box', 'Input', "trim|$check_valid"); //Validate Email
+						$check_box = 0;
 					}else{
-						$this->form_validation->set_rules($key, $label, "trim|required|max_length[100]|valid_email"); //Validate Email
-					}
-				}else{
-					$required = explode(',',strtolower($this->Require)); //Required Columns
-					$unique = explode(',',strtolower($this->Unique)); //Unique Columns
-					if (in_array($input, $required)) {
-						$this->form_validation->set_rules($key, $label, "trim|required|min_length[1]"); //Validate Required
-					}elseif (in_array($input, $unique)) {
-						$this->form_validation->set_rules($key, $label, "trim|required|min_length[1]|is_unique[$module.$key]"); //Validate Required
-					}else{
-						$this->form_validation->set_rules($key, $label, "trim");//Clean None Required Values
+						if (in_array($key, $valid_keys)) {
+							$check_valid = $validate[$key];//Validate Inputs
+							$this->form_validation->set_rules($key, $label, "trim|$check_valid"); //Validate Email
+						}else{
+							$this->form_validation->set_rules($key, $label, "trim");//Clean None Required Values
+						}
 					}
 				}
 			}

@@ -49,7 +49,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | Examples:	my-controller/index	-> my_controller/index
 |		my-controller/my-method	-> my_controller/my_method
 */
-$route['default_controller'] = 'CoreMain';
+$route['default_controller'] = 'Home';
 $route['404_override'] = '';
 
 // Administrator
@@ -141,7 +141,8 @@ $route['profile/update'] = 'Profile/valid/update'; // Validate and Update
 	$route['listing_logos/multiple'] = 'ListingLogos/valid/bulk'; // Bulk Action  
 
 //Choose SUB
-$route['category/select'] = 'AjaxList/categories'; //Dynamic Category
+/* $route['..../select'] = 'AjaxList/....'; //Dynamic Category */
 
 
 $route['translate_uri_dashes'] = FALSE;
+$route['(:any)'] = 'Home/open/$1';
