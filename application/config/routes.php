@@ -70,16 +70,6 @@ $route['admin/login'] = 'CoreLog/valid/login'; //Login Verification
 $route['admin/reset'] = 'CoreLog/valid/reset'; //Reset Password
 $route['admin/logout'] = 'CoreLog/valid/logout'; //Reset Password
 
-
-// Extensions
-$route['customers'] = 'ExtensionCustomers/index'; //Customer List
-$route['customers/new'] = 'ExtensionCustomers/open/add'; //Open Create New Customer Form
-$route['customers/edit'] = 'ExtensionCustomers/edit/edit'; // Open Edit Customer Page
-$route['customers/save'] = 'ExtensionCustomers/valid/save'; // Validate and Save
-$route['customers/update'] = 'ExtensionCustomers/valid/update'; // Validate and Update
-$route['customers/delete'] = 'ExtensionCustomers/valid/delete'; // Delete Customer
-$route['customers/multiple'] = 'ExtensionCustomers/valid/bulk'; // Bulk Action 
-
 //Sub Profile
 $route['profile'] = 'Profile/edit/edit'; //Open My Profile
 $route['profile/update'] = 'Profile/valid/update'; // Validate and Update
@@ -139,6 +129,24 @@ $route['profile/update'] = 'Profile/valid/update'; // Validate and Update
 	$route['listing_logos/update'] = 'ListingLogos/valid/update'; // Validate and Update
 	$route['listing_logos/delete'] = 'ListingLogos/valid/delete'; // Delete 
 	$route['listing_logos/multiple'] = 'ListingLogos/valid/bulk'; // Bulk Action  
+
+/////////////////////////// EXTENSIONS //////////////////////////
+$route['customers'] = 'ExtensionCustomers/index'; //Customer List
+$route['customers/new'] = 'ExtensionCustomers/open/add'; //Open Create New Customer Form
+$route['customers/edit'] = 'ExtensionCustomers/edit/edit'; // Open Edit Customer Page
+$route['customers/save'] = 'ExtensionCustomers/valid/save'; // Validate and Save
+$route['customers/update'] = 'ExtensionCustomers/valid/update'; // Validate and Update
+$route['customers/delete'] = 'ExtensionCustomers/valid/delete'; // Delete Customer
+$route['customers/multiple'] = 'ExtensionCustomers/valid/bulk'; // Bulk Action 
+
+$route['newsposts'] = 'ExtensionNewsPosts/index'; //List
+$route['newsposts/new'] = 'ExtensionNewsPosts/open/add'; //Open Create New Form
+$route['newsposts/edit'] = 'ExtensionNewsPosts/edit/edit'; // Open Edit  Page
+$route['newsposts/save'] = 'ExtensionNewsPosts/valid/save'; // Validate and Save
+$route['newsposts/update'] = 'ExtensionNewsPosts/valid/update'; // Validate and Update
+$route['newsposts/delete'] = 'ExtensionNewsPosts/valid/delete'; // Delete 
+$route['newsposts/multiple'] = 'ExtensionNewsPosts/valid/bulk'; // Bulk Action 
+
 
 //Choose SUB
 /* $route['..../select'] = 'AjaxList/....'; //Dynamic Category */
