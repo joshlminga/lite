@@ -49,88 +49,77 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | Examples:	my-controller/index	-> my_controller/index
 |		my-controller/my-method	-> my_controller/my_method
 */
-$route['default_controller'] = 'Home';
-$route['404_override'] = '';
+$route['default_controller'] = 'Home'; //Main (Home) Page
+$route['404_override'] = 'CoreErrors/index'; //Default Error Page
 
-// Administrator
-$route['dashboard'] = 'CoreMain/index';
+//Administrator
+$route['dashboard'] = 'CoreMains/index'; //Dashboard
 
-// Users
-$route['users'] = 'CoreUsers/index'; //User List
-$route['users/new'] = 'CoreUsers/open/add'; //Open Create New User Form
-$route['users/edit'] = 'CoreUsers/edit/edit'; // Open Edit User Page
-$route['users/save'] = 'CoreUsers/valid/save'; // Validate and Save
-$route['users/update'] = 'CoreUsers/valid/update'; // Validate and Update
-$route['users/delete'] = 'CoreUsers/valid/delete'; // Delete User
-$route['users/multiple'] = 'CoreUsers/valid/bulk'; // Bulk Action 
+//Users
+$route['users'] = 'CoreUsers/index'; //Manage
+$route['users/new'] = 'CoreUsers/open/add'; //Create New
+$route['users/edit'] = 'CoreUsers/edit/edit'; //Edit
+$route['users/save'] = 'CoreUsers/valid/save'; //Validate and Save
+$route['users/update'] = 'CoreUsers/valid/update'; //Validate and Update
+$route['users/delete'] = 'CoreUsers/valid/delete'; //Delete 
+$route['users/multiple'] = 'CoreUsers/valid/bulk'; //Bulk Action 
+
+//Pages
+$route['pages'] = 'CorePages/index'; //List
+$route['pages/new'] = 'CorePages/open/add'; //Open Create New Form
+$route['pages/edit'] = 'CorePages/edit/edit'; // Open Edit  Page
+$route['pages/save'] = 'CorePages/valid/save'; // Validate and Save
+$route['pages/update'] = 'CorePages/valid/update'; // Validate and Update
+$route['pages/delete'] = 'CorePages/valid/delete'; // Delete 
+$route['pages/multiple'] = 'CorePages/valid/bulk'; // Bulk Action 
+
+//Settings
+$route['general'] = 'CoreSettings/open/general'; //General Settings
+$route['general/update'] = 'CoreSettings/valid/general'; //General Settings Update
+$route['link'] = 'CoreSettings/open/link'; //URL Settings
+$route['link/update'] = 'CoreSettings/valid/link'; //URL Settings Update
+$route['mail'] = 'CoreSettings/open/mail'; //Mail Settings
+$route['mail/update'] = 'CoreSettings/valid/mail'; //Mail Settings Update
+$route['blog'] = 'CoreSettings/open/blog'; //Blog Settings
+$route['blog/update'] = 'CoreSettings/valid/blog'; //Blog Settings Update
+$route['seo'] = 'CoreSettings/open/seo'; //Seo Settings
+$route['seo/update'] = 'CoreSettings/valid/seo'; //Seo Settings Update
 
 //Login
-$route['admin'] = 'CoreLog/index'; //Login Page
-$route['admin/login'] = 'CoreLog/valid/login'; //Login Verification
-$route['admin/reset'] = 'CoreLog/valid/reset'; //Reset Password
-$route['admin/logout'] = 'CoreLog/valid/logout'; //Reset Password
+$route['admin'] = 'CoreLogs/index'; //Login Page
+$route['admin/login'] = 'CoreLogs/valid/login'; //Login Verification
+$route['admin/reset'] = 'CoreLogs/valid/reset'; //Reset Password
+$route['admin/logout'] = 'CoreLogs/valid/logout'; //Logout
 
 //Sub Profile
-$route['profile'] = 'Profile/edit/edit'; //Open My Profile
-$route['profile/update'] = 'Profile/valid/update'; // Validate and Update
+$route['profile'] = 'CoreProfiles/edit/profile'; //My Profile
+$route['profile/update'] = 'CoreProfiles/valid/update'; //Validate and Update
 
-/* Control */
-	//Custom Fields
- 	$route['customfields'] = 'CoreCustomfields/index'; //Open Create New 
- 	$route['customfields/new'] = 'CoreCustomfields/open/add'; //Open Create New 
- 	$route['customfields/edit'] = 'CoreCustomfields/edit/edit'; //Open Edit 
- 	$route['customfields/save'] = 'CoreCustomfields/valid/save'; //Validate and Save
-	$route['customfields/update'] = 'CoreCustomfields/valid/update'; // Validate and Update
-	$route['customfields/delete'] = 'CoreCustomfields/valid/delete'; // Delete 
-	$route['customfields/multiple'] = 'CoreCustomfields/valid/bulk'; // Bulk Action  
-	//Field Customs
- 	$route['fieldcustoms'] = 'CoreFieldcustoms/index'; //Open Create New 
- 	$route['fieldcustoms/manage'] = 'CoreFieldcustoms/manage/manage'; // Manage Fields List
+//Custom Fields
+$route['customfields'] = 'CoreCustomFields/index'; //Manage
+$route['customfields/new'] = 'CoreCustomFields/open/add'; //Create New 
+$route['customfields/edit'] = 'CoreCustomFields/edit/edit'; //Edit 
+$route['customfields/save'] = 'CoreCustomFields/valid/save'; //Validate and Save
+$route['customfields/update'] = 'CoreCustomFields/valid/update'; //Validate and Update
+$route['customfields/delete'] = 'CoreCustomFields/valid/delete'; //Delete 
+$route['customfields/multiple'] = 'CoreCustomFields/valid/bulk'; //Bulk Action  
 
- 	$route['fieldcustoms/new/(:any)'] = 'CoreFieldcustoms/open/add/null/main/$1'; //Open Create New 
- 	$route['fieldcustoms/edit'] = 'CoreFieldcustoms/edit/edit'; //Open Edit 
- 	$route['fieldcustoms/save'] = 'CoreFieldcustoms/valid/save'; //Validate and Save
-	$route['fieldcustoms/update'] = 'CoreFieldcustoms/valid/update'; // Validate and Update
-	$route['fieldcustoms/delete'] = 'CoreFieldcustoms/valid/delete'; // Delete 
-	$route['fieldcustoms/multiple'] = 'CoreFieldcustoms/valid/bulk'; // Bulk Action  
 
-	//LISTING
- 	$route['listing_configs'] = 'ListingConfig/index'; //Open Create New 
- 	$route['listing_configs/new'] = 'ListingConfig/open/add'; //Open Create New 
- 	$route['listing_configs/edit'] = 'ListingConfig/edit/edit'; //Open Edit 
- 	$route['listing_configs/save'] = 'ListingConfig/valid/save'; //Validate and Save
-	$route['listing_configs/update'] = 'ListingConfig/valid/update'; // Validate and Update
-	$route['listing_configs/delete'] = 'ListingConfig/valid/delete'; // Delete 
-	$route['listing_configs/multiple'] = 'ListingConfig/valid/bulk'; // Bulk Action  
+/////////////////////////// CONTROLS //////////////////////////
 
-	//COMPANIES
- 	$route['listing_companies'] = 'ListingCompanies/index'; //Open Create New 
- 	$route['listing_companies/new'] = 'ListingCompanies/open/add'; //Open Create New 
- 	$route['listing_companies/edit'] = 'ListingCompanies/edit/edit'; //Open Edit 
- 	$route['listing_companies/save'] = 'ListingCompanies/valid/save'; //Validate and Save
-	$route['listing_companies/update'] = 'ListingCompanies/valid/update'; // Validate and Update
-	$route['listing_companies/delete'] = 'ListingCompanies/valid/delete'; // Delete 
-	$route['listing_companies/multiple'] = 'ListingCompanies/valid/bulk'; // Bulk Action  
+//UserData
+$route['userdatas'] = 'FieldUsers/index'; //Manage
+$route['userdatas/new'] = 'FieldUsers/open/add'; //Create New 
+$route['userdatas/edit'] = 'FieldUsers/edit/edit'; //Edit 
+$route['userdatas/save'] = 'FieldUsers/valid/save'; //Validate and Save
+$route['userdatas/update'] = 'FieldUsers/valid/update'; //Validate and Update
+$route['userdatas/delete'] = 'FieldUsers/valid/delete'; //Delete 
+$route['userdatas/multiple'] = 'FieldUsers/valid/bulk'; //Bulk Action  
 
-	//PRODUCTS
- 	$route['listing_products'] = 'ListingProducts/index'; //Open Create New 
- 	$route['listing_products/new'] = 'ListingProducts/open/add'; //Open Create New 
- 	$route['listing_products/edit'] = 'ListingProducts/edit/edit'; //Open Edit 
- 	$route['listing_products/save'] = 'ListingProducts/valid/save'; //Validate and Save
-	$route['listing_products/update'] = 'ListingProducts/valid/update'; // Validate and Update
-	$route['listing_products/delete'] = 'ListingProducts/valid/delete'; // Delete 
-	$route['listing_products/multiple'] = 'ListingProducts/valid/bulk'; // Bulk Action  
-
-	//PRODUCTS
- 	$route['listing_logos'] = 'ListingLogos/index'; //Open Create New 
- 	$route['listing_logos/new'] = 'ListingLogos/open/add'; //Open Create New 
- 	$route['listing_logos/edit'] = 'ListingLogos/edit/edit'; //Open Edit 
- 	$route['listing_logos/save'] = 'ListingLogos/valid/save'; //Validate and Save
-	$route['listing_logos/update'] = 'ListingLogos/valid/update'; // Validate and Update
-	$route['listing_logos/delete'] = 'ListingLogos/valid/delete'; // Delete 
-	$route['listing_logos/multiple'] = 'ListingLogos/valid/bulk'; // Bulk Action  
 
 /////////////////////////// EXTENSIONS //////////////////////////
+
+//Customers
 $route['customers'] = 'ExtensionCustomers/index'; //Customer List
 $route['customers/new'] = 'ExtensionCustomers/open/add'; //Open Create New Customer Form
 $route['customers/edit'] = 'ExtensionCustomers/edit/edit'; // Open Edit Customer Page
@@ -139,18 +128,7 @@ $route['customers/update'] = 'ExtensionCustomers/valid/update'; // Validate and 
 $route['customers/delete'] = 'ExtensionCustomers/valid/delete'; // Delete Customer
 $route['customers/multiple'] = 'ExtensionCustomers/valid/bulk'; // Bulk Action 
 
-$route['newsposts'] = 'ExtensionNewsPosts/index'; //List
-$route['newsposts/new'] = 'ExtensionNewsPosts/open/add'; //Open Create New Form
-$route['newsposts/edit'] = 'ExtensionNewsPosts/edit/edit'; // Open Edit  Page
-$route['newsposts/save'] = 'ExtensionNewsPosts/valid/save'; // Validate and Save
-$route['newsposts/update'] = 'ExtensionNewsPosts/valid/update'; // Validate and Update
-$route['newsposts/delete'] = 'ExtensionNewsPosts/valid/delete'; // Delete 
-$route['newsposts/multiple'] = 'ExtensionNewsPosts/valid/bulk'; // Bulk Action 
-
 
 //Choose SUB
-/* $route['..../select'] = 'AjaxList/....'; //Dynamic Category */
-
-
+$route['category/select'] = 'CoreAutoCrud/categories'; //Dynamic Category
 $route['translate_uri_dashes'] = FALSE;
-$route['(:any)'] = 'Home/open/$1';

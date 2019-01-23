@@ -62,7 +62,9 @@ class Home extends CI_Controller {
 
 		//Model Query
 		$data = $this->CoreLoad->open($pageID);
-		$passed = $this->passed();
+
+		$passed = $this->passed(); //Passed Data
+
 		$data = array_merge($data,$passed);
 
 		return $data;
@@ -81,11 +83,14 @@ class Home extends CI_Controller {
 		//Time Zone
 		date_default_timezone_set('Africa/Nairobi');
 		$data['str_to_time'] = strtotime(date('Y-m-d, H:i:s'));
-		$data['Module'] = $this->plural->pluralize($this->Folder);//Module Show
+		$data['Module'] = $this->plural->pluralize($this->Route);//Module Show
 		$data['routeURL'] = (is_null($this->Route)) ? $this->plural->pluralize($this->Folder) : $this->Route;
 		$data['assets'] = 'assets/themes/starter';
 
-		//Levels
+		//Article
+		$data['pages'] = $this->db->select('page_title,page_post')->from('pages')
+						->where('page_flg',1)
+			            ->get()->result();
 
 		//Form Submit URLs
 		$data['form_new'] = $this->New;
@@ -135,8 +140,8 @@ class Home extends CI_Controller {
 		$data = $this->load('home');
 
 		//Notification
-		$notify = $this->Notify->notify();
-		$data['notify'] = $this->Notify->$notify($notifyMessage);
+		$notify = $this->CoreNotify->notify();
+		$data['notify'] = $this->CoreNotify->$notify($notifyMessage);
 
 		//Open Page
 		$this->pages($data);		
@@ -165,8 +170,8 @@ class Home extends CI_Controller {
 		$data = $this->load($pageID);
 
 		//Notification
-		$notify = $this->Notify->notify();
-		$data['notify'] = $this->Notify->$notify($message);
+		$notify = $this->CoreNotify->notify();
+		$data['notify'] = $this->CoreNotify->$notify($message);
 
 		//Open Page
 		$this->pages($data,$layout);

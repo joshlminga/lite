@@ -16,6 +16,15 @@ function removeData(className) {
 
 $(document).ready(function(){
 
+    var selected = $('#usePost').val();
+    if (selected == 'video') {
+        $('#dataImage').hide();
+        $('#dataVideo').show();
+    }else{
+        $('#dataVideo').hide();
+        $('#dataImage').show();
+    }
+
     // Categories
     var cat_url = $('#categorySELECT').val();
     $('#categories').on("change",function () {
@@ -30,7 +39,155 @@ $(document).ready(function(){
             },
         });
     }); 
+
+    $('#usePost').on("change",function () {
+        var usePost = $(this).find('option:selected').val();
+        if (usePost == 'video') {
+            $('#dataImage').hide();
+            $('#dataImage').fadeOut("slow");
+            $('#dataVideo').show();
+        }else{
+            $('#dataVideo').hide();
+            $('#dataVideo').fadeOut("slow");
+            $('#dataImage').show();
+        }
+    }); 
+
+
 });
+
+//On Post Publish Time Change
+
+
+//Hide And Show the Current Link Button
+function changeCUR(arg) {
+
+    //check argument passed
+    if(arg == 'change'){
+
+        //Show Save and Cancel Button
+        $('.curr-hide-btn').removeClass('curr-hide');
+
+        //Show shorten URL without Post ID
+        $('#current-link-label').removeClass('curr-hide');
+
+        //Show Edit Input
+        $('#edit-current-link').removeClass('curr-hide');
+
+        //End Slash
+        $('.end-slash').removeClass('curr-hide');
+
+        //Hide Change Button
+        $('#change-btn').hide();
+
+        //Hide Current Link
+        $('#current-link').hide();
+    }
+    else if(arg == 'save'){
+
+        //default Label Link
+        var currentURL = $('#current-link-label').text();
+
+        //Current Entered Post ID
+        var currentPOSTID = $('#edit-current-link').val();
+
+        //Correct URL
+        var correctURL = currentPOSTID.replace(/\s+/g, '-').toLowerCase();
+
+        //Update links
+        var newLink = currentURL.trim()+correctURL.trim();
+
+        //Hide Save and Cancel Button
+        $('.curr-hide-btn').addClass('curr-hide');
+
+        //Hide shorten URL without Post ID
+        $('#current-link-label').addClass('curr-hide');
+
+        //Hide Edit Input
+        $('#edit-current-link').addClass('curr-hide');
+
+        //End Slash
+        $('.end-slash').addClass('curr-hide');
+
+        //Show Change Button
+        $('#change-btn').show();
+
+        //New Link to Database
+        $('#set-current-link').val(correctURL);
+
+        //change or update the link
+        $('#current-link').text(newLink);
+
+        //Show Current Link
+        $('#current-link').show();
+    }
+    else if(arg == 'cancel'){
+
+        //Cancel Action
+        btnlinkCAN();
+    }
+    else{
+
+        //Cancel Action
+        btnlinkCAN();
+    }
+
+}
+
+// On Current Link Change CLICK CANCEL
+function btnlinkCAN() {
+
+    //Hide Save and Cancel Button
+    $('.curr-hide-btn').addClass('curr-hide');
+
+    //Hide shorten URL without Post ID
+    $('#current-link-label').addClass('curr-hide');
+
+    //Hide Edit Box
+    $('#edit-current-link').addClass('curr-hide');
+
+    //End Slash
+    $('.end-slash').addClass('curr-hide');
+
+    //Show Change Button
+    $('#change-btn').show();
+
+    //Show Current Link
+    $('#current-link').show();
+
+    var oldLink = $('#old-url-link').val();
+    $('#current-link').text(oldLink);
+
+    var oldURL = $('#old-url').val();
+    $('#set-current-link').val(oldURL);
+
+}
+
+//On Post Publish Time Change
+$("#post-schedule").change(function () {
+
+    //Check if Checked
+    if($(this).prop("checked") == true){
+
+        //Hide Calender
+        $('#post-date').addClass('curr-hide');
+        $('#post-date').removeClass('fg-line');
+
+        //Change Text
+        $('#post-time').text('Post Now');
+
+    }else{
+
+        //Show Calender
+        $('#post-date').removeClass('curr-hide');
+        $('#post-date').addClass('fg-line');
+
+        //Change Text
+        $('#post-time').text('Post On Date');
+    }
+});
+
+
 
 /*
 * Auto Complete Data  
@@ -164,8 +321,8 @@ function autocomplete(inp, arr) {
 }
 
 /*An array containing all the country names in the world:*/
-var autocompleteData = $('#dataToAutoComplete').val().split(',');
+//var autocompleteData = $('#dataToAutoComplete').val().split(',');
 
 /*initiate the autocomplete function on the "myInput" element, and pass along the countries array as possible autocomplete values:*/
-autocomplete(document.getElementById("autoCompleteField"), autocompleteData);
+//autocomplete(document.getElementById("autoCompleteField"), autocompleteData);
 

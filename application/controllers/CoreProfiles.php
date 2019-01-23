@@ -1,7 +1,8 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class CoreUsers extends CI_Controller {
+class CoreProfiles extends CI_Controller {
+
 
 	/*
 	*
@@ -9,19 +10,19 @@ class CoreUsers extends CI_Controller {
 	* -> The controller require user to login as Administrator
 	*/
 
-	private $Core = 'core'; //Core Lite Base Name | Change this if your Controller Name does not start with word Core
+	private $Core = 'Extension'; //Core Lite Base Name | Change this if your Controller Name does not start with word Core
 	private $Module = 'user'; //Module
-	private $Folder = 'user'; //Set Default Folder For html files
+	private $Folder = 'users'; //Module
 	private $SubFolder = ''; //Set Default Sub Folder For html files and Front End Use Start with /
-	private $Escape = 'id,stamp,flg'; // Escape Column
-	private $Require = 'level,password,name,emal'; // Required Column
-	private $Unique = 'logname'; // Unique & Required Values
+	private $Escape = 'id,stamp,flg'; // Escape Column For Form Auto Generating
+	private $Require = 'level,password,name,emal'; // Required Column During Form Validation
+	private $Unique = 'logname'; // Unique & Required Values During Form Validation
 
-	private $Route = null; //If you have different route Name to Module name State it here |This wont be pluralized | set it null to use default
+	private $Route = 'profile'; //If you have different route Name to Module name State it here |This wont be pluralized | set it null to use default
 
-	private $New = 'users/new'; //New User
-	private $Save = 'users/save'; //Add New User
-	private $Edit = 'users/update'; //Update User
+	private $New = ''; //New customers
+	private $Save = ''; //Add New customers
+	private $Edit = 'profile/update'; //Update customers
 
 	/* Functions
 	* -> __construct () = Load the most required operations E.g Class Module
@@ -77,11 +78,12 @@ class CoreUsers extends CI_Controller {
 		//Time Zone
 		date_default_timezone_set('Africa/Nairobi');
 		$data['str_to_time'] = strtotime(date('Y-m-d, H:i:s'));
-		$data['Module'] = $this->plural->pluralize($this->Folder);//Module Show
+		$data['Module'] = $this->plural->pluralize($this->Route);//Module Show
 		$data['routeURL'] = (is_null($this->Route)) ? $this->plural->pluralize($this->Folder) : $this->Route;
 
 		//User Levels
-		$data['level'] = $this->db->select('level_name')->where('level_flg',1)->get('levels')->result();
+		$where = array('level_flg' =>1,'level_default' =>'no');
+		$data['level'] = $this->db->select('level_name')->where($where)->get('levels')->result();
 		//Form Submit URLs
 		$data['form_new'] = $this->New;
 		$data['form_save'] = $this->Save;
@@ -104,7 +106,7 @@ class CoreUsers extends CI_Controller {
     public function pages($data,$layout='main')
     {
     	//Chech allowed Access
-		if ($this->CoreLoad->auth($this->Module)) { //Authentication
+		if ($this->CoreLoad->auth('profile')) { //Authentication
 			//Layout
 			$this->load->view("administrator/layouts/$layout",$data);
 		}else{
@@ -133,8 +135,8 @@ class CoreUsers extends CI_Controller {
 		$data = $this->load($this->plural->pluralize($this->Folder).$this->SubFolder."/list");
 
 		//Table Select & Clause
-		$where = array('level !=' => 'customer');
 	   	$columns = array('id,level as level,logname as username,name as full_name,email as email,flg as status');
+	   	$where = array('level' =>'customer');
 		$data['dataList'] = $this->CoreCrud->selectCRUD($module,$where,$columns);
 
 		//Notification
@@ -210,9 +212,10 @@ class CoreUsers extends CI_Controller {
 		$pageID = (is_numeric($pageID)) ? $pageID : $this->plural->pluralize($this->Folder).$this->SubFolder."/".$pageID;
 		$data = $this->load($pageID);
 
-		$inputTYPE = (is_null($inputTYPE)) ? $this->CoreLoad->input('inputTYPE','GET') : $inputTYPE; //Access Value
-
-		$inputID = (is_null($inputID)) ? $this->CoreLoad->input('inputID','GET') : $inputID; //Access Value
+		// $inputTYPE = (is_null($inputTYPE)) ? $this->CoreLoad->input('inputTYPE','GET') : $inputTYPE; //Access Value
+		// $inputID = (is_null($inputID)) ? $this->CoreLoad->input('inputID','GET') : $inputID; //Access Value
+		$inputTYPE = 'id';
+		$inputID = $this->session->id;
 
 
 		if (!is_null($inputTYPE) || !is_null($inputID)) {
@@ -256,65 +259,13 @@ class CoreUsers extends CI_Controller {
 		$routeURL = (is_null($this->Route)) ? $module : $this->Route;
 
 		//Check Validation
-		if ($type == 'save') {
+		if ($type == 'update') {
 
-			$formData = $this->CoreLoad->input(); //Input Data
+			$updateData = $this->CoreLoad->input(); //Input Data	
+			$validData['user_name'] = "required|trim|min_length[1]|max_length[200]"; //Demo Validate Data Rules
+			$validData['user_email'] = "required|trim|min_length[1]|max_length[200]|valid_email"; //Demo Validate Data Rules
+			$validData['user_password'] = "trim|max_length[20]"; //Demo Validate Data Rules
 
-			//Form Validation
-			if ($this->validation($formData) == TRUE) {
-				if ($this->create($formData)) {
-					$this->session->set_flashdata('notification','success'); //Notification Type
-					redirect($this->New, 'refresh');//Redirect to Page
-				}else{
-					$this->session->set_flashdata('notification','error'); //Notification Type
-					$this->open('add');//Open Page
-				}
-			}else{
-				$this->session->set_flashdata('notification','error'); //Notification Type
-				$message = 'Please check the fields, and try again'; //Notification Message				
-				$this->open('add',$message);//Open Page
-			}			
-		}
-		elseif ($type == 'bulk') {
-
-			$action = $this->input->get('action'); //Get Action
-			$selectedData = json_decode($this->input->get('inputID'), true); //Get Selected Data
-			$column_id = strtolower($this->CoreForm->get_column_name($this->Module,'id')); //column name Reference column
-			$column_flg = strtolower($this->CoreForm->get_column_name($this->Module,'flg')); //Column name of Updated Input
-
-			//Check If Selection has Value
-			if (!empty($selectedData)) {
-				//Check Action
-				if (strtolower($action) == 'edit') {
-					$this->session->set_flashdata('notification','notify'); //Notification Type
-					$this->edit('edit','id',$selectedData[0]);//Open Page
-				}else{
-					for($i = 0; $i < count($selectedData); $i++){ //Loop through all submitted elements
-						$value_id = $selectedData[$i]; //Select Value To Update with
-						if (strtolower($action) == 'activate') { //Item/Data Activation
-							$this->update(array($column_flg =>1),array($column_id =>$value_id)); //Call Update Function
-						}elseif (strtolower($action) == 'deactivate'){ //Item/Data Deactivation
-							$this->update(array($column_flg =>0),array($column_id =>$value_id)); //Call Update Function
-						}elseif (strtolower($action) == 'delete'){ //Item/Data Deletion
-							$this->delete(array($column_id => $value_id)); //Call Delete Function
-						}else{
-							$this->session->set_flashdata('notification','error'); //Notification Type
-							$message = 'Wrong data sequence received'; //Notification Message				
-							$this->index($message);//Open Page
-						}
-					}
-					$this->session->set_flashdata('notification','success'); //Notification Type
-					redirect($routeURL, 'refresh'); //Redirect Index Module
-				}			
-			}else{
-				$this->session->set_flashdata('notification','error'); //Notification Type
-				$message = 'Please make a selection first, and try again'; //Notification Message				
-				$this->index($message);//Open Page
-			}
-		}
-		elseif ($type == 'update') {
-
-			$updateData = $this->CoreLoad->input(); //Input Data		
 			$column_password = strtolower($this->CoreForm->get_column_name($this->Module,'password'));//Column Password
 			$column_id = strtolower($this->CoreForm->get_column_name($this->Module,'id'));//Column ID
 			$value_id = $this->CoreLoad->input('id'); //Input Value
@@ -326,7 +277,8 @@ class CoreUsers extends CI_Controller {
 			}else{$unsetData= array('id');/*valude To Unset*/}
 
 			//Form Validation
-			if ($this->validation($updateData,false,array($column_password)) == TRUE) {
+			if ($this->validation($updateData,$validData) == TRUE) {	
+
 				//Update Table
 				if ($this->update($updateData,array($column_id =>$value_id),$unsetData)) {
 					$this->session->set_flashdata('notification','success'); //Notification Type
@@ -342,72 +294,9 @@ class CoreUsers extends CI_Controller {
 				$this->edit('edit','id',$value_id,$message);//Open Page
 			}		
 		}
-		elseif ($type == 'delete') {
-			$value_id = $this->input->get('inputID'); //Get Selected Data
-			$column_id = strtolower($this->CoreForm->get_column_name($this->Module,'id'));
-
-			if ($this->delete(array($column_id => $value_id)) == TRUE) { //Call Delete Function
-				$this->session->set_flashdata('notification','success'); //Notification Type
-				redirect($routeURL, 'refresh'); //Redirect Index Module
-			}else{
-				$this->session->set_flashdata('notification','error'); //Notification Type
-				redirect($routeURL, 'refresh'); //Redirect Index Module
-			}
-		}
 		else{
 			$this->session->set_flashdata('notification','notify'); //Notification Type
-			redirect($routeURL, 'refresh'); //Redirect Index Module
-		}
-	}
-
-	/*
-	* The function is used to save/insert data into table
-	* First is the data to be inserted 
-	*  N:B the data needed to be in an associative array form E.g $data = array('name' => 'theName');
-	*      the array key will be used as column name and the value as inputted Data
-	*  For colum default/details convert data to JSON on valid() method level
-	*
-	* Third is the data to be unset | Unset is to be used if some of the input you wish to be removed
-	* 
-	*/
-	public function create($insertData,$unsetData=null)
-	{
-
-    	//Chech allowed Access
-		if ($this->CoreLoad->auth($this->Module)) { //Authentication
-
-			//Pluralize Module
-			$tableName = $this->plural->pluralize($this->Module);
-
-			//Column Stamp
-			$stamp = strtolower($this->CoreForm->get_column_name($this->Module,'stamp'));
-			$insertData["$stamp"] = date('Y-m-d H:i:s',time());
-			//Column Flg
-			$flg = strtolower($this->CoreForm->get_column_name($this->Module,'flg'));
-			$insertData["$flg"] = 1;
-
-			//Column Password
-			$column_password = strtolower($this->CoreForm->get_column_name($this->Module,'password'));
-
-			$insertData = $this->CoreLoad->unsetData($insertData,$unsetData); //Unset Data
-
-			//Check IF there is Password
-			if (array_key_exists($column_password,$insertData)) {
-				$insertData[$column_password] = sha1($this->config->item($insertData["$stamp"]).$insertData[$column_password]);
-			}
-
-			$details = strtolower($this->CoreForm->get_column_name($this->Module,'details'));
-			$insertData["$details"] = json_encode($insertData);
-
-			//Insert Data Into Table
-			$this->db->insert($tableName, $insertData);
-			if ($this->db->affected_rows() > 0) {
-				
-				return true; //Data Inserted
-			}else{
-
-				return false; //Data Insert Failed
-			}
+			$this->edit('edit');//Open Page
 		}
 	}
 
@@ -424,8 +313,8 @@ class CoreUsers extends CI_Controller {
 	public function update($updateData,$valueWhere,$unsetData=null)
 	{
 
-    	//Chech allowed Access
-		if ($this->CoreLoad->auth($this->Module)) { //Authentication
+	    //Chech allowed Access
+		if ($this->CoreLoad->auth('profile')) { //Authentication
 
 			//Pluralize Module
 			$tableName = $this->plural->pluralize($this->Module);
@@ -441,7 +330,11 @@ class CoreUsers extends CI_Controller {
 
 			//Check IF there is Password
 			if (array_key_exists($column_password,$updateData)) {
-				$updateData[$column_password] = sha1($this->config->item($updateData["$stamp"]).$updateData[$column_password]);
+				if (!empty($updateData["$column_password"]) && !is_null($updateData["$column_password"])) {
+					$updateData[$column_password] = sha1($this->config->item($updateData["$stamp"]).$updateData[$column_password]);
+				}else{
+					$updateData = $this->CoreLoad->unsetData($updateData,array($column_password)); //Unset Data
+				}
 			}
 
 			//Details Column Update
@@ -465,32 +358,6 @@ class CoreUsers extends CI_Controller {
 	}
 
 	/*
-	* The function is used to delete data in the table
-	* First parameter is the values to be passed in where clause N:B the data needed to be in an associative array form E.g $data = array('column' => 'value');
-	* 
-	*/
-	public function delete($valueWhere)
-	{
-
-    	//Chech allowed Access
-		if ($this->CoreLoad->auth($this->Module)) { //Authentication
-
-			//Pluralize Module
-			$tableName = $this->plural->pluralize($this->Module);
-
-			//Deleted Data In The Table
-			$this->db->delete($tableName, $valueWhere);
-			if ($this->db->affected_rows() > 0) {
-				
-				return true; //Data Deleted
-			}else{
-
-				return false; //Data Deletion Failed
-			}
-		}
-	}
-
-	/*
 	*
 	* This Fuction is used to validate Input Data
 	* The fuctntion accept three parameters
@@ -499,10 +366,11 @@ class CoreUsers extends CI_Controller {
 	* 3: Skip Deep Validation
 	* 
 	*/
-	public function validation($formData,$email=TRUE,$skip=array())
+	public function validation($formData,$validate=array(),$skip=array())
 	{
-		//Pluralize Module
-		$module = $this->plural->pluralize($this->Module);
+		//Validation Keys
+		$valid_keys = array_keys($validate);
+		$check_box = 1;
 
 		//Validation
 		foreach ($formData as $key => $value) {
@@ -512,21 +380,20 @@ class CoreUsers extends CI_Controller {
 			if (in_array(strtolower($key),$skip)) {				
 				$this->form_validation->set_rules($key, $label, "trim|max_length[100]"); //Validate Input
 			}else{
-				if (strtolower($input) == 'email') {
-					if ($email == TRUE) {
-						$this->form_validation->set_rules($key, $label, "trim|required|max_length[100]|valid_email|is_unique[$module.$key]"); //Validate Email
+				if (empty($validate)) {
+					$this->form_validation->set_rules($key, $label, "trim");//Clean None Required Values
+				}else{					
+					if (in_array('check_box', $valid_keys) && $check_box == 1) {
+						$check_valid = $validate['check_box'];//Validate Inputs
+						$this->form_validation->set_rules('check_box', 'Input', "trim|$check_valid"); //Validate Email
+						$check_box = 0;
 					}else{
-						$this->form_validation->set_rules($key, $label, "trim|required|max_length[100]|valid_email"); //Validate Email
-					}
-				}else{
-					$required = explode(',',strtolower($this->Require)); //Required Columns
-					$unique = explode(',',strtolower($this->Unique)); //Unique Columns
-					if (in_array($input, $required)) {
-						$this->form_validation->set_rules($key, $label, "trim|required|min_length[1]"); //Validate Required
-					}elseif (in_array($input, $unique)) {
-						$this->form_validation->set_rules($key, $label, "trim|required|min_length[1]|is_unique[$module.$key]"); //Validate Required
-					}else{
-						$this->form_validation->set_rules($key, $label, "trim");//Clean None Required Values
+						if (in_array($key, $valid_keys)) {
+							$check_valid = $validate[$key];//Validate Inputs
+							$this->form_validation->set_rules($key, $label, "trim|$check_valid"); //Validate Email
+						}else{
+							$this->form_validation->set_rules($key, $label, "trim");//Clean None Required Values
+						}
 					}
 				}
 			}
@@ -538,8 +405,7 @@ class CoreUsers extends CI_Controller {
 			return false;
 		}
 	}
-
 }
 
-/* End of file CoreUsers.php */
-/* Location: ./application/controllers/CoreUsers.php */
+/* End of file CoreProfiles.php */
+/* Location: ./application/controllers/CoreProfiles.php */

@@ -113,6 +113,26 @@ class CoreCrud extends CI_Model {
 
   /*
   *
+  * Upload File Data
+  * -> Pass Input Name
+  * -> Pass Input Location (Upload location)
+  * 
+  */
+  public function upload($inputName,$location,$rule='jpg|jpeg|png',$link=true)
+  {
+
+    //Upload Data
+    $uploaded = $this->uploadFile($_FILES[$inputName],$rule,$location,$link);
+    if (!is_null($uploaded)) {
+      $file_link = json_encode($uploaded, true);
+    }else{
+      $file_link = json_encode(null);
+    }
+    return $file_link;
+  }
+
+  /*
+  *
   * Upload File Class
   * The function accept the input data, 
   * validation string and 
@@ -168,6 +188,76 @@ class CoreCrud extends CI_Model {
     }
   }
 
+  /*
+  *
+  * Generate Post Url From Title
+  * 
+  */
+  public function postURL($postID,$currURL=null)
+  {
+    //Select Post
+    $postTitle = $this->db->select('page_id,page_title')->where('page_id',$postID)
+                          ->order_by('page_createdat desc')->limit(1)->get('pages');
+    $postData = $postTitle->result();
+
+    //Url Format
+    $current_url = $this->db->select('setting_value')->where('setting_title','current_url')->get('settings')->row()->setting_value;
+
+    if (strtolower($current_url) == 'title') {
+
+      if (!is_null($currURL)) {
+          $post_url = substr(preg_replace("#[[:punct:]]#", "", stripcslashes($currURL)),0, 20);
+      }else{
+        $post_url = substr(preg_replace("#[[:punct:]]#", "", stripcslashes($postData[0]->page_title)),0, 20);
+      }
+      
+      $url = str_replace(" ", "-",strtolower(trim($post_url)));
+      $ExistingURL = $this->db->select('page_url')->like('page_url',$url,'both')
+                            ->order_by('page_createdat desc')->limit(1)->get('pages');
+      $URL = $ExistingURL->result();
+      if (!empty($URL)) {
+        $post_url = $url.'-'.$postData[0]->page_id;
+      }else{
+        $post_url = $url;
+      }    
+    }
+    elseif (strtolower($current_url) == 'get') {
+      if (!is_null($currURL)) {
+          $post_url = substr(preg_replace("#[[:punct:]]#", "", stripcslashes($currURL)),0, 20);
+      }else{
+        $post_url = substr(preg_replace("#[[:punct:]]#", "", stripcslashes($postData[0]->page_title)),0, 20);
+      }
+      
+      $url = str_replace(" ", "-",strtolower(trim($post_url)));
+      $ExistingURL = $this->db->select('page_url')->like('page_url',$url,'both')
+                            ->order_by('page_createdat desc')->limit(1)->get('pages');
+      $URL = $ExistingURL->result();
+      if (!empty($URL)) {
+        $post_url = '?p='.$url.'-'.$postData[0]->page_id;
+      }else{
+        $post_url = '?p='.$url;
+      }    
+    }else{
+        $post_url = $postData[0]->page_id;
+    }
+
+    return $post_url;
+  }
+  /*
+  *
+  * Check If Same URL Exist 
+  */
+  public function checkURL($currURL,$currPOST)
+  {
+    $ExistingURL = $this->db->select('page_id,page_title,page_url')->where('page_id',$currPOST)
+                          ->order_by('page_createdat desc')->limit(1)->get('pages');
+    $URL = $ExistingURL->result();
+    if ($URL[0]->page_url == $currURL) {
+      return $currURL;
+    }else{
+      return $this->postURL($URL[0]->page_id,$currURL);
+    }
+  }
 }
 
 /* End of file CoreCrud.php */

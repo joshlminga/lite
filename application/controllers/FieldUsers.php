@@ -1,27 +1,29 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class CoreUsers extends CI_Controller {
+class FieldUsers extends CI_Controller {
 
 	/*
 	*
 	* The main controller for Administrator Backend
-	* -> The controller require user to login as Administrator
+	* -> The controller require to login as Administrator
 	*/
 
-	private $Core = 'core'; //Core Lite Base Name | Change this if your Controller Name does not start with word Core
-	private $Module = 'user'; //Module
-	private $Folder = 'user'; //Set Default Folder For html files
-	private $SubFolder = ''; //Set Default Sub Folder For html files and Front End Use Start with /
-	private $Escape = 'id,stamp,flg'; // Escape Column
-	private $Require = 'level,password,name,emal'; // Required Column
-	private $Unique = 'logname'; // Unique & Required Values
+	private $Core = ''; //Lite Main Core
+	private $Module = 'field'; //Module
+	private $Folder = 'configs'; //Set Default Folder For html files and Front End Use
+	private $SubFolder = '/customfield/userdata'; //Set Default Sub Folder For html files and Front End Use Start with /
+	private $Escape = ''; // Escape Column For Form Auto Generating
+	private $Require = 'required[]'; // Required Column During Form Validation
+	private $Unique = 'title'; // Unique & Required Values During Form Validation
 
-	private $Route = null; //If you have different route Name to Module name State it here |This wont be pluralized | set it null to use default
+	private $Route = 'userdatas'; //If you have different route Name to Module name State it here |This wont be pluralized
 
-	private $New = 'users/new'; //New User
-	private $Save = 'users/save'; //Add New User
-	private $Edit = 'users/update'; //Update User
+	private $New = 'userdatas/new'; //New 
+	private $Save = 'userdatas/save'; //Add New 
+	private $Edit = 'userdatas/update'; //Update 
+
+	private $ModuleName = 'user data';
 
 	/* Functions
 	* -> __construct () = Load the most required operations E.g Class Module
@@ -77,11 +79,15 @@ class CoreUsers extends CI_Controller {
 		//Time Zone
 		date_default_timezone_set('Africa/Nairobi');
 		$data['str_to_time'] = strtotime(date('Y-m-d, H:i:s'));
-		$data['Module'] = $this->plural->pluralize($this->Folder);//Module Show
+		$data['Module'] = $this->plural->pluralize($this->Module);//Module Show
 		$data['routeURL'] = (is_null($this->Route)) ? $this->plural->pluralize($this->Folder) : $this->Route;
 
-		//User Levels
-		$data['level'] = $this->db->select('level_name')->where('level_flg',1)->get('levels')->result();
+		//More Data
+		$where = array('user_flg' =>1,'user_level' =>'customer');
+		$data['username'] = $this->db->select('user_name,user_id')->where($where)->get('users')->result();
+
+		$data['ModuleName'] = $this->plural->pluralize($this->ModuleName);
+
 		//Form Submit URLs
 		$data['form_new'] = $this->New;
 		$data['form_save'] = $this->Save;
@@ -97,24 +103,29 @@ class CoreUsers extends CI_Controller {
 	* 1: The first passed data is an array containing all pre-loaded data N.B it can't be empty becuase page name is passed through it
 	* 2: Layout -> this can be set to default so it can open a particular layout always | also you can pass other layout N.B can't be empty
 	*
-	* ** To some page functions which are not public, use the auth method from CoreLoad model to check is user is allowed to access the pages
+	* ** To some page functions which are not public, use the auth method from CoreLoad model to check  is allowed to access the pages
 	* ** If your page is public ignore the use of auth method
 	* 
 	*/
     public function pages($data,$layout='main')
     {
-    	//Chech allowed Access
-		if ($this->CoreLoad->auth($this->Module)) { //Authentication
-			//Layout
-			$this->load->view("administrator/layouts/$layout",$data);
-		}else{
-			$this->CoreLoad->notAllowed(); //Not Allowed To Access
-		}
+    	//Check if site is online
+    	if ($this->CoreLoad->site_status() == TRUE) {
+	    	//Chech allowed Access
+			if ($this->CoreLoad->auth($this->Module)) { //Authentication
+				//Layout
+				$this->load->view("administrator/layouts/$layout",$data);
+			}else{
+    			$this->CoreLoad->notAllowed(); //Not Allowed To Access
+			}
+    	}else{
+    		$this->CoreLoad->siteOffline(); //Site is offline
+    	}
     }
 
     /*
     *
-    * This is the first function to be accessed when a user open this controller
+    * This is the first function to be accessed when  open this controller
     * In here we can call the load function and pass data to passed as an array inorder to manupulate it inside passed function
     * 	* Set your Page name/ID here N:B Page ID can be a number if you wish to access other values linked to the page opened E.g Meta Data
     * 	* You can also set Page ID as actual pageName found in your view N:B do not put .php E.g home.php it should just be 'home'
@@ -128,13 +139,14 @@ class CoreUsers extends CI_Controller {
 	{
 		//Pluralize Module
 		$module = $this->plural->pluralize($this->Module);
+		$fieldName = $this->plural->singularize($this->Route);
 
 		//Model Query
 		$data = $this->load($this->plural->pluralize($this->Folder).$this->SubFolder."/list");
 
 		//Table Select & Clause
-		$where = array('level !=' => 'customer');
-	   	$columns = array('id,level as level,logname as username,name as full_name,email as email,flg as status');
+	   	$columns = array('id as id,data as user_name,data as email,flg as status');
+	   	$where = array('title' => $fieldName);
 		$data['dataList'] = $this->CoreCrud->selectCRUD($module,$where,$columns);
 
 		//Notification
@@ -147,7 +159,7 @@ class CoreUsers extends CI_Controller {
 
     /*
     *
-    * This is the function to be accessed when a user want to open specific page which deals with same controller E.g Edit data after saving
+    * This is the function to be accessed when  want to open specific page which deals with same controller E.g Edit data after saving
     * In here we can call the load function and pass data to passed as an array inorder to manupulate it inside passed function
     * 	* Set your Page name/ID here N:B Page ID can be a number if you wish to access other values linked to the page opened E.g Meta Data
     * 	* You can also set Page ID as actual pageName found in your view N:B do not put .php E.g home.php it should just be 'home'
@@ -167,6 +179,15 @@ class CoreUsers extends CI_Controller {
 		//Model Query
 		$pageID = (is_numeric($pageID)) ? $pageID : $this->plural->pluralize($this->Folder).$this->SubFolder."/".$pageID;
 		$data = $this->load($pageID);
+
+		//Column Type
+		$fieldName = $this->plural->singularize($this->Route);
+		$customFieldTable = $this->plural->pluralize('customfields');
+
+		//Table Select & Clause
+   		$columns = array('id as id,required as required,optional as optional,filters as filters,default as default');
+	   	$where = array('title' => $fieldName);
+		$data['fieldList'] = $this->CoreCrud->selectCRUD($customFieldTable,$where,$columns,'like');
 
 		//Notification
 		$notify = $this->CoreNotify->notify();
@@ -205,6 +226,8 @@ class CoreUsers extends CI_Controller {
 	{
 		//Pluralize Module
 		$module = $this->plural->pluralize($this->Module);
+		$fieldTable = $this->plural->pluralize($this->Route);
+		$customFieldTable = $this->plural->pluralize('customfields');
 
 		//Model Query
 		$pageID = (is_numeric($pageID)) ? $pageID : $this->plural->pluralize($this->Folder).$this->SubFolder."/".$pageID;
@@ -218,8 +241,14 @@ class CoreUsers extends CI_Controller {
 		if (!is_null($inputTYPE) || !is_null($inputID)) {
 			//Table Select & Clause
 			$where = array($inputTYPE =>$inputID);
-	   		$columns = array('id as id,name as name,email as email,level as level,logname as logname');
-			$data['resultList'] = $this->CoreCrud->selectCRUD($module,$where,$columns);
+	   		$columns = array('id as id,title as title,filters as filters,data as data');
+			$resultList = $this->CoreCrud->selectCRUD($module,$where,$columns);
+
+			$data['resultList'] = $resultList;
+			//Table Select & Clause
+	   		$columns = array('id as id,required as required,optional as optional,filters as filters,default as default');
+		   	$where = array('title' => $resultList[0]->title);
+			$data['fieldList'] = $this->CoreCrud->selectCRUD($customFieldTable,$where,$columns,'like');
 
 			//Notification
 			$notify = $this->CoreNotify->notify();
@@ -259,16 +288,65 @@ class CoreUsers extends CI_Controller {
 		if ($type == 'save') {
 
 			$formData = $this->CoreLoad->input(); //Input Data
+			$validData['user_name'] = "required|trim|min_length[1]|max_length[200]"; //Demo Validate Data Rules
+			$validData['user_email'] = "required|trim|min_length[1]|max_length[200]|valid_email"; //Demo Validate Data Rules
 
 			//Form Validation
-			if ($this->validation($formData) == TRUE) {
+			if ($this->validation($formData,$validData) == TRUE) {
+
+				//Table Select & Clause
+				$fieldTable = $this->plural->pluralize($this->Route);
+				$customFieldTable = $this->plural->pluralize('customfields');
+
+		   		$columns = array('title as title,filters as filters,default as default');
+			   	$where = array('id' => $this->CoreLoad->input('id'));
+				$fieldList = $this->CoreCrud->selectCRUD($customFieldTable,$where,$columns);
+
+				$field_title = $fieldList[0]->title; //Title Title
+				$field_filter = $fieldList[0]->filters; //FIlter List
+				$field_default = $fieldList[0]->default; //Default
+
+				//UnSet ID
+				$formData = $this->CoreLoad->unsetData($formData,array('id'));
+
+				//Set Filters
+				$column_filters = strtolower($this->CoreForm->get_column_name($this->Module,'filters'));
+				if ($field_default == 'no') {
+					$tempo_filter = json_encode($this->CoreLoad->input($column_filters)); /* Set Filters */
+					$formData[$column_filters] = $tempo_filter;
+					$formData = $this->CoreLoad->unsetData($formData,array($column_filters));
+				}
+
+				//Set Field Data
+				$column_data = strtolower($this->CoreForm->get_column_name($this->Module,'data'));
+				$formData[$column_data] = json_encode($formData); //Set Data
+
+				//Prepaire Data To Store
+				foreach ($formData as $key => $value) {
+					if ($key !== $column_data) {
+						$children[$key] = $value;
+						$formData = $this->CoreLoad->unsetData($formData,array($key)); //Unset Data
+					}
+				}
+				if ($field_default == 'no') {
+					$formData[$column_filters] = $tempo_filter;
+				}
+				else{ 
+					$formData[$column_filters] = $field_filter; /* Set Filters */
+				}
+
+				//Set Title/Name
+				$column_title = strtolower($this->CoreForm->get_column_name($this->Module,'title'));
+				$formData[$column_title] = $field_title; //Set Title
+
 				if ($this->create($formData)) {
 					$this->session->set_flashdata('notification','success'); //Notification Type
+					$message = 'Data was saved successful'; //Notification Message				
 					redirect($this->New, 'refresh');//Redirect to Page
 				}else{
 					$this->session->set_flashdata('notification','error'); //Notification Type
 					$this->open('add');//Open Page
-				}
+				}				
 			}else{
 				$this->session->set_flashdata('notification','error'); //Notification Type
 				$message = 'Please check the fields, and try again'; //Notification Message				
@@ -315,6 +393,26 @@ class CoreUsers extends CI_Controller {
 		elseif ($type == 'update') {
 
 			$updateData = $this->CoreLoad->input(); //Input Data		
+			$validData['user_name'] = "required|trim|min_length[1]|max_length[200]"; //Demo Validate Data Rules
+			$validData['user_email'] = "required|trim|min_length[1]|max_length[200]|valid_email"; //Demo Validate Data Rules
+
+			//Table
+			$fieldTable = $this->plural->pluralize($this->Route);
+			$customFieldTable = $this->plural->pluralize('customfields');
+
+			//Table Select & Clause
+			$where = array('id' => $this->CoreLoad->input('id'));
+	   		$columns = array('id as id,title as title');
+			$resultList = $this->CoreCrud->selectCRUD($module,$where,$columns);
+
+			//Table Select & Clause
+	   		$columns = array('id as id,required as required,optional as optional,filters as filters,default as default');
+		   	$where = array('title' => $resultList[0]->title);
+			$fieldList = $this->CoreCrud->selectCRUD($customFieldTable,$where,$columns,'like');
+
+			$field_filter = $fieldList[0]->filters; //FIlter List
+			$field_default = $fieldList[0]->default; //Default
+
 			$column_password = strtolower($this->CoreForm->get_column_name($this->Module,'password'));//Column Password
 			$column_id = strtolower($this->CoreForm->get_column_name($this->Module,'id'));//Column ID
 			$value_id = $this->CoreLoad->input('id'); //Input Value
@@ -326,16 +424,43 @@ class CoreUsers extends CI_Controller {
 			}else{$unsetData= array('id');/*valude To Unset*/}
 
 			//Form Validation
-			if ($this->validation($updateData,false,array($column_password)) == TRUE) {
+			if ($this->validation($updateData,$validData) == TRUE) {
+
+				//Set Filters
+				$column_filters = strtolower($this->CoreForm->get_column_name($this->Module,'filters'));
+				if ($field_default == 'no') {
+					$tempo_filter = json_encode($this->CoreLoad->input($column_filters)); /* Set Filters */
+					$updateData[$column_filters] = $tempo_filter;
+					$updateData = $this->CoreLoad->unsetData($updateData,array($column_filters));
+				}
+
+				//Set Field Data
+				$column_data = strtolower($this->CoreForm->get_column_name($this->Module,'data'));
+				$updateData[$column_data] = json_encode($updateData); //Set Data
+
+				//Prepaire Data To Store
+				foreach ($updateData as $key => $value) {
+					if ($key !== $column_data) {
+						$children[$key] = $value;
+						$updateData = $this->CoreLoad->unsetData($updateData,array($key)); //Unset Data
+					}
+				}
+				if ($field_default == 'no') {
+					$updateData[$column_filters] = $tempo_filter;
+				}
+				else{ 
+					$updateData[$column_filters] = $field_filter; /* Set Filters */
+				}
+
 				//Update Table
 				if ($this->update($updateData,array($column_id =>$value_id),$unsetData)) {
 					$this->session->set_flashdata('notification','success'); //Notification Type
 					$message = 'Data was saved successful'; //Notification Message				
-					$this->edit('edit','id',$value_id);//Open Page
+					$this->edit('edit','id',$value_id,$message);//Open Page
 				}else{
 					$this->session->set_flashdata('notification','error'); //Notification Type
 					$this->edit('edit','id',$value_id);//Open Page
-				}								
+				}	
 			}else{
 				$this->session->set_flashdata('notification','error'); //Notification Type
 				$message = 'Please check the fields, and try again'; //Notification Message				
@@ -373,9 +498,8 @@ class CoreUsers extends CI_Controller {
 	public function create($insertData,$unsetData=null)
 	{
 
-    	//Chech allowed Access
 		if ($this->CoreLoad->auth($this->Module)) { //Authentication
-
+			
 			//Pluralize Module
 			$tableName = $this->plural->pluralize($this->Module);
 
@@ -387,14 +511,7 @@ class CoreUsers extends CI_Controller {
 			$insertData["$flg"] = 1;
 
 			//Column Password
-			$column_password = strtolower($this->CoreForm->get_column_name($this->Module,'password'));
-
 			$insertData = $this->CoreLoad->unsetData($insertData,$unsetData); //Unset Data
-
-			//Check IF there is Password
-			if (array_key_exists($column_password,$insertData)) {
-				$insertData[$column_password] = sha1($this->config->item($insertData["$stamp"]).$insertData[$column_password]);
-			}
 
 			$details = strtolower($this->CoreForm->get_column_name($this->Module,'details'));
 			$insertData["$details"] = json_encode($insertData);
@@ -424,9 +541,8 @@ class CoreUsers extends CI_Controller {
 	public function update($updateData,$valueWhere,$unsetData=null)
 	{
 
-    	//Chech allowed Access
 		if ($this->CoreLoad->auth($this->Module)) { //Authentication
-
+			
 			//Pluralize Module
 			$tableName = $this->plural->pluralize($this->Module);
 
@@ -472,9 +588,8 @@ class CoreUsers extends CI_Controller {
 	public function delete($valueWhere)
 	{
 
-    	//Chech allowed Access
 		if ($this->CoreLoad->auth($this->Module)) { //Authentication
-
+			
 			//Pluralize Module
 			$tableName = $this->plural->pluralize($this->Module);
 
@@ -499,10 +614,11 @@ class CoreUsers extends CI_Controller {
 	* 3: Skip Deep Validation
 	* 
 	*/
-	public function validation($formData,$email=TRUE,$skip=array())
+	public function validation($formData,$validate=array(),$skip=array())
 	{
-		//Pluralize Module
-		$module = $this->plural->pluralize($this->Module);
+		//Validation Keys
+		$valid_keys = array_keys($validate);
+		$check_box = 1;
 
 		//Validation
 		foreach ($formData as $key => $value) {
@@ -512,21 +628,20 @@ class CoreUsers extends CI_Controller {
 			if (in_array(strtolower($key),$skip)) {				
 				$this->form_validation->set_rules($key, $label, "trim|max_length[100]"); //Validate Input
 			}else{
-				if (strtolower($input) == 'email') {
-					if ($email == TRUE) {
-						$this->form_validation->set_rules($key, $label, "trim|required|max_length[100]|valid_email|is_unique[$module.$key]"); //Validate Email
+				if (empty($validate)) {
+					$this->form_validation->set_rules($key, $label, "trim");//Clean None Required Values
+				}else{					
+					if (in_array('check_box', $valid_keys) && $check_box == 1) {
+						$check_valid = $validate['check_box'];//Validate Inputs
+						$this->form_validation->set_rules('check_box', 'Input', "trim|$check_valid"); //Validate Email
+						$check_box = 0;
 					}else{
-						$this->form_validation->set_rules($key, $label, "trim|required|max_length[100]|valid_email"); //Validate Email
-					}
-				}else{
-					$required = explode(',',strtolower($this->Require)); //Required Columns
-					$unique = explode(',',strtolower($this->Unique)); //Unique Columns
-					if (in_array($input, $required)) {
-						$this->form_validation->set_rules($key, $label, "trim|required|min_length[1]"); //Validate Required
-					}elseif (in_array($input, $unique)) {
-						$this->form_validation->set_rules($key, $label, "trim|required|min_length[1]|is_unique[$module.$key]"); //Validate Required
-					}else{
-						$this->form_validation->set_rules($key, $label, "trim");//Clean None Required Values
+						if (in_array($key, $valid_keys)) {
+							$check_valid = $validate[$key];//Validate Inputs
+							$this->form_validation->set_rules($key, $label, "trim|$check_valid"); //Validate Email
+						}else{
+							$this->form_validation->set_rules($key, $label, "trim");//Clean None Required Values
+						}
 					}
 				}
 			}
@@ -538,8 +653,7 @@ class CoreUsers extends CI_Controller {
 			return false;
 		}
 	}
-
 }
 
-/* End of file CoreUsers.php */
-/* Location: ./application/controllers/CoreUsers.php */
+/* End of file FieldUsers.php */
+/* Location: ./application/controllers/FieldUsers.php */

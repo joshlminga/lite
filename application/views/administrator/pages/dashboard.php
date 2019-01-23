@@ -7,15 +7,15 @@
                         <div class="btn-group btn-group-justified" role="group" aria-label="...">
 
                             <div class="btn-group" role="group">
-                                <button type="button" class="btn btn-default">New Page</button>
+                                <a type="button" class="btn btn-default" href="<?= site_url('newsposts/new') ?>">New Page</a>
                             </div>
 
                             <div class="btn-group" role="group">
-                                <button type="button" class="btn btn-info">Theme Customization</button>
+                                <a type="button" class="btn btn-info">Theme Customization</a>
                             </div>
 
                             <div class="btn-group" role="group">
-                                <button type="button" class="btn btn-warning">Site Settings</button>
+                                <a type="button" class="btn btn-warning" href="<?= site_url('') ?>" target="_blank">View Website</a>
                             </div>
 
                         </div>

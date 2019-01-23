@@ -97,13 +97,23 @@ class CoreLoad extends CI_Model {
     */
     public function random($length=4, $keyspace = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ{[}}-+*#')
     {
-	    $pieces = [];
-	    $max = mb_strlen($keyspace, '8bit') - 1;
-	    for ($i = 0; $i < $length; ++$i) {
-	        $pieces []= $keyspace[random_int(0, $max)];
-	    }
-   		//returned DATA
-	    return implode('', $pieces);
+	    // $pieces = [];
+	    // $max = mb_strlen($keyspace, '8bit') - 1;
+	    // for ($i = 0; $i < $length; ++$i) {
+	    //     $pieces []= $keyspace[random_int(0, $max)];
+	    // }
+   		// //returned DATA
+	    // return implode('', $pieces);
+
+		$min=0; $max=999; $quantity=2;
+
+	    $numbers = range($min, $max);
+	    shuffle($numbers);
+	    $numbers1 = array_slice($numbers, 0, $quantity);
+
+		$rand = implode("",$numbers1);
+
+		return $rand;
     }
 
     /*
@@ -272,8 +282,9 @@ class CoreLoad extends CI_Model {
 	*/
 	public function siteOffline()
 	{
-		//Quick Load
-		$offlineMessage = 'We are offline';
+		//Offline Message
+		$offlineMessage = $this->db->select('setting_value')->where('setting_title','offline_message')
+		->get('settings')->row()->setting_value;
 
 		//Message
 		$htmlDetails = htmlspecialchars_decode($offlineMessage);
@@ -296,7 +307,36 @@ class CoreLoad extends CI_Model {
 		$htmlDetails = htmlspecialchars_decode($invalidAccessMessage);
 
 		//Return
-		echo $htmlDetails; 
+		redirect("CoreErrors/open");
+		//echo $htmlDetails; 
+	}
+
+	/*
+	*
+	* Load Custom / Extension Styles Css
+	* 
+	*/
+	public function load_style()
+	{
+		$style = array('/custom/custom.css'
+
+		);
+
+		return $style;
+	}
+
+	/*
+	*
+	* Load Custom / Extension Script Js 
+	* 
+	*/
+	public function load_script()
+	{
+		$script = array('/custom/custom.js'
+
+		);
+
+		return $script;
 	}
 
 }

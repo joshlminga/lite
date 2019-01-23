@@ -149,8 +149,8 @@ class _baseController extends CI_Controller {
 		$data['dataList'] = $this->CoreCrud->selectCRUD($module,null,$columns);
 
 		//Notification
-		$notify = $this->Notify->notify();
-		$data['notify'] = $this->Notify->$notify($notifyMessage);
+		$notify = $this->CoreNotify->notify();
+		$data['notify'] = $this->CoreNotify->$notify($notifyMessage);
 
 		//Open Page
 		$this->pages($data);		
@@ -180,8 +180,8 @@ class _baseController extends CI_Controller {
 		$data = $this->load($pageID);
 
 		//Notification
-		$notify = $this->Notify->notify();
-		$data['notify'] = $this->Notify->$notify($message);
+		$notify = $this->CoreNotify->notify();
+		$data['notify'] = $this->CoreNotify->$notify($message);
 
 		//Open Page
 		$this->pages($data,$layout);
@@ -233,8 +233,8 @@ class _baseController extends CI_Controller {
 			$data['resultList'] = $this->CoreCrud->selectCRUD($module,$where,$columns);
 
 			//Notification
-			$notify = $this->Notify->notify();
-			$data['notify'] = $this->Notify->$notify($message);
+			$notify = $this->CoreNotify->notify();
+			$data['notify'] = $this->CoreNotify->$notify($message);
 
 			//Open Page
 			$this->pages($data,$layout);
@@ -409,15 +409,15 @@ class _baseController extends CI_Controller {
 			//Column Password
 			$column_password = strtolower($this->CoreForm->get_column_name($this->Module,'password'));
 
-			$insertData = $this->CoreLoad->unsetData($insertData,$unsetData); //Unset Data
-
 			//Check IF there is Password
 			if (array_key_exists($column_password,$insertData)) {
 				$insertData[$column_password] = sha1($this->config->item($insertData["$stamp"]).$insertData[$column_password]);
 			}
 
-			$details = strtolower($this->CoreForm->get_column_name($this->Module,'details'));
+			$details = strtolower($this->CoreForm->get_column_name($Module,'details'));
 			$insertData["$details"] = json_encode($insertData);
+
+			$insertData = $this->CoreLoad->unsetData($insertData,$unsetData); //Unset Data
 
 			//Insert Data Into Table
 			$this->db->insert($tableName, $insertData);

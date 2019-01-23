@@ -52,6 +52,11 @@ ul.main-menu {
     background-color: #504F63 !important;
 }
 
+
+.sub-menu ul > li.active > a{
+
+    /*color: #1d4867 !important;*/
+}
 .smm-header i {
 
     background-color: rgba(255, 190, 0, 0.99);
@@ -290,9 +295,9 @@ div.core-overview-two span > i {
     background: rgb(253, 253, 253) !important;
 }
 
-.card-header h2 {
+.card-header>h2 {
 
-    font-size: 30px !important;
+    font-size: 30px;
 }
 
 .card-header h2 small {
@@ -432,3 +437,265 @@ small {
     
     height: 35px !important;
 }*/
+
+/* Headers */
+
+.cust-card-header-h2 > h2 {
+    font-weight: bold;
+}
+
+
+/* PADDING */
+
+.cust-card-padding {
+    padding: 5% 10% !important;
+}
+
+.pad-top-5 {
+    padding-top: 5% !important;
+}
+
+.pad-btm-0 {
+    padding-bottom: 0px !important;
+}
+
+
+/* MARGIN */
+
+.c-m-tb-2 {
+    margin: 2% 0px !important;
+}
+
+.c-m-t-3 {
+    margin-top: 5% !important;
+}
+
+
+/* Placeholder */
+
+::-webkit-input-placeholder {
+    /* Chrome/Opera/Safari */
+    color: #000 !important;
+    font-weight: 300 !important;
+    font-size: 12px !important;
+}
+
+::-moz-placeholder {
+    /* Firefox 19+ */
+    color: #000 !important;
+    font-weight: 300 !important;
+    font-size: 12px !important;
+}
+
+:-ms-input-placeholder {
+    /* IE 10+ */
+    color: #000 !important;
+    font-weight: 300 !important;
+    font-size: 12px !important;
+}
+
+:-moz-placeholder {
+    /* Firefox 18- */
+    color: #000 !important;
+    font-weight: 300 !important;
+    font-size: 12px !important;
+}
+
+
+/* Background */
+
+.palette-Blue-Only.bg {
+    background-color: #1b397b !important;
+}
+
+
+/* Input Box Header */
+
+label.fg-label {
+    color: #000 !important;
+    font-weight: bold !important;
+}
+
+.input-label {
+    color: #000 !important;
+    font-weight: bold !important;
+}
+
+.background-input {
+    background: #fff !important;
+    border-radius: 5px !important;
+    padding: 1% !important;
+}
+
+
+/* Cards */
+
+.card-bg-grey {
+    background: #ececec !important;
+}
+
+
+/* Blog Post */
+
+
+/*link*/
+
+.curr-hide {
+    display: none;
+}
+
+#current-link {
+    text-decoration: underline !important;
+    color: #ff0909 !important;
+}
+
+#current-link-label {
+    color: #0a6ebd !important;
+}
+
+.change-current-link {
+    margin: 0 1% !important;
+    color: #fff !important;
+    border-radius: 3px !important;
+    background: #504F63 !important;
+    font-size: 12px !important;
+    border: 0px !important;
+}
+
+.change-current-link:hover {
+    margin: 0 1% !important;
+    color: #fff !important;
+    border-radius: 3px !important;
+    background: #504F63 !important;
+    font-size: 12px !important;
+}
+
+.change-current-cancel {
+    margin: 0 0% !important;
+    color: #000 !important;
+    border-radius: 3px !important;
+    background: #ffffff00 !important;
+    border: 0px !important;
+}
+
+.changeLink {
+    padding: 3px !important;
+    cursor: pointer !important;
+}
+
+input[type="text"].current-txt-input {
+    border: 1px solid rgb(155, 148, 148);
+    border-radius: 4px;
+}
+
+input[type=text].current-txt-input:focus {
+    box-shadow: 0 0 5px rgba(81, 203, 238, 1);
+    border: 1px solid rgba(81, 203, 238, 1);
+    border-radius: 4px;
+}
+
+
+/* Summernote | Text Editor */
+
+.note-editor .note-toolbar {
+    text-align: left !important;
+    margin: 0% !important;
+    padding: 0% !important;
+}
+
+.note-editor .note-editing-area .note-editable {
+    height: 349px !important;
+}
+
+.note-editor .note-editing-area {
+    height: 500px !important;
+}
+
+.note-resizebar {
+    display: none !important;
+}
+
+
+/* Time Picker */
+
+.timepicker-picker .btn {
+    background: #989898 !important;
+}
+
+
+/* Card Special */
+
+.card-special {
+    border-radius: 7px !important;
+}
+
+
+/* Media/Image Box */
+
+@media (min-width: 768px) {
+    .modal-dialog {
+        width: 85% !important;
+        margin: 2% auto !important;
+    }
+}
+
+.modal-content {
+    display: flow-root !important;
+}
+
+
+/* 
+.modal-body{
+
+    padding: 0px !important; 
+}
+*/
+
+#media-menu {
+    border-right: 1px dashed #f70072;
+    height: 550px !important;
+}
+
+.media-left-menu {
+    margin: 15% 0px !important;
+    padding-left: 2px !important;
+    padding-right: 2px !important;
+}
+
+.media-left-menu>li {
+    font-size: 14px;
+    list-style: none;
+    text-decoration: none;
+    font-weight: 500;
+    padding: 4px 0px;
+}
+
+.media-left-menu>li>a:hover {
+    padding-left: 4px;
+    color: #ff0000;
+}
+
+h2.media-header {
+    font-weight: bold;
+}
+
+.placed-h2 {
+    font-size: 17px !important;
+}
+
+.card-padding {
+
+    padding-top: 0px !important;
+    padding-left: 20px !important;
+}
+
+.fileinput .fileinput-preview {
+    width: 140% !important;
+}
+
+.thumbnail {
+
+    background-color: #FDFDFD !important;
+    border: 1px solid #FDFDFD !important;
+}
+

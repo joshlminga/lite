@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class CoreUsers extends CI_Controller {
+class CorePages extends CI_Controller {
 
 	/*
 	*
@@ -9,19 +9,19 @@ class CoreUsers extends CI_Controller {
 	* -> The controller require user to login as Administrator
 	*/
 
-	private $Core = 'core'; //Core Lite Base Name | Change this if your Controller Name does not start with word Core
-	private $Module = 'user'; //Module
-	private $Folder = 'user'; //Set Default Folder For html files
+	private $Core = 'Extension'; //Core Lite Base Name | Change this if your Controller Name does not start with word Core
+	private $Module = 'pages'; //Module
+	private $Folder = 'pages'; //Module
 	private $SubFolder = ''; //Set Default Sub Folder For html files and Front End Use Start with /
-	private $Escape = 'id,stamp,flg'; // Escape Column
-	private $Require = 'level,password,name,emal'; // Required Column
-	private $Unique = 'logname'; // Unique & Required Values
+	private $Escape = 'id,stamp,flg'; // Escape Column For Form Auto Generating
+	private $Require = ''; // Required Column During Form Validation
+	private $Unique = ''; // Unique & Required Values During Form Validation
 
-	private $Route = null; //If you have different route Name to Module name State it here |This wont be pluralized | set it null to use default
+	private $Route = 'pages';//If you have different route Name to Module name State it here |This wont be pluralized | set it null to use default
 
-	private $New = 'users/new'; //New User
-	private $Save = 'users/save'; //Add New User
-	private $Edit = 'users/update'; //Update User
+	private $New = 'pages/new'; //New customers
+	private $Save = 'pages/save'; //Add New customers
+	private $Edit = 'pages/update'; //Update customers
 
 	/* Functions
 	* -> __construct () = Load the most required operations E.g Class Module
@@ -77,11 +77,15 @@ class CoreUsers extends CI_Controller {
 		//Time Zone
 		date_default_timezone_set('Africa/Nairobi');
 		$data['str_to_time'] = strtotime(date('Y-m-d, H:i:s'));
-		$data['Module'] = $this->plural->pluralize($this->Folder);//Module Show
+		$data['Module'] = $this->plural->pluralize($this->Module);//Module Show
 		$data['routeURL'] = (is_null($this->Route)) ? $this->plural->pluralize($this->Folder) : $this->Route;
 
-		//User Levels
-		$data['level'] = $this->db->select('level_name')->where('level_flg',1)->get('levels')->result();
+		//Extension Route
+		$data['extRoute'] = "administrator/pages/".$this->plural->pluralize($this->Folder).$this->SubFolder."/";
+		$where = array('fieldcustom_flg' =>1,'fieldcustom_type' =>'Categories');
+
+	    //Select Post
+
 		//Form Submit URLs
 		$data['form_new'] = $this->New;
 		$data['form_save'] = $this->Save;
@@ -133,8 +137,8 @@ class CoreUsers extends CI_Controller {
 		$data = $this->load($this->plural->pluralize($this->Folder).$this->SubFolder."/list");
 
 		//Table Select & Clause
-		$where = array('level !=' => 'customer');
-	   	$columns = array('id,level as level,logname as username,name as full_name,email as email,flg as status');
+	   	$columns = array('id,title as title,flg as status');
+	   	$where = null;
 		$data['dataList'] = $this->CoreCrud->selectCRUD($module,$where,$columns);
 
 		//Notification
@@ -167,6 +171,7 @@ class CoreUsers extends CI_Controller {
 		//Model Query
 		$pageID = (is_numeric($pageID)) ? $pageID : $this->plural->pluralize($this->Folder).$this->SubFolder."/".$pageID;
 		$data = $this->load($pageID);
+
 
 		//Notification
 		$notify = $this->CoreNotify->notify();
@@ -211,14 +216,12 @@ class CoreUsers extends CI_Controller {
 		$data = $this->load($pageID);
 
 		$inputTYPE = (is_null($inputTYPE)) ? $this->CoreLoad->input('inputTYPE','GET') : $inputTYPE; //Access Value
-
 		$inputID = (is_null($inputID)) ? $this->CoreLoad->input('inputID','GET') : $inputID; //Access Value
-
 
 		if (!is_null($inputTYPE) || !is_null($inputID)) {
 			//Table Select & Clause
 			$where = array($inputTYPE =>$inputID);
-	   		$columns = array('id as id,name as name,email as email,level as level,logname as logname');
+	   		$columns = array('id as id,title as title,url as url,post as post,control as control,data as data,show as visibility');
 			$data['resultList'] = $this->CoreCrud->selectCRUD($module,$where,$columns);
 
 			//Notification
@@ -259,11 +262,31 @@ class CoreUsers extends CI_Controller {
 		if ($type == 'save') {
 
 			$formData = $this->CoreLoad->input(); //Input Data
+			$validData['page_title'] = "required|trim|min_length[1]|max_length[200]"; //Demo Validate Data Rules
+			$validData['page_tag'] = "trim|max_length[1000]"; //Demo Validate Data Rules
+			$validData['page_show'] = "trim|max_length[20]"; //Demo Validate Data Rules
+			$validData['thumbnail'] = "trim|min_length[1]|max_length[20]"; //Demo Validate Data Rules
 
 			//Form Validation
-			if ($this->validation($formData) == TRUE) {
-				if ($this->create($formData)) {
+			if ($this->validation($formData,$validData) == TRUE) {
+
+				$upoadDirectory = "../assets/admin/images/upload/media"; //Upload Location
+
+				//Check if Input Is Empty
+				if ($_FILES['thumbnail']['size'][0] > 0) {
+					$uploaded = $this->CoreCrud->upload('thumbnail',$upoadDirectory,'jpg|jpeg|png'); //Uploaded File Link
+					$page_control['thumbnail'] = $uploaded; //Uploaded Data
+				}else{
+					$page_control['thumbnail'] = null; //Uploaded Data
+				}
+
+				//More Data
+				$formData['page_post'] = $this->input->post('page_post');
+				$formData['page_control'] = json_encode($page_control);
+
+				if ($this->create($formData,array('thumbnail'))) {
 					$this->session->set_flashdata('notification','success'); //Notification Type
+					$message = 'Data was saved successful'; //Notification Message				
 					redirect($this->New, 'refresh');//Redirect to Page
 				}else{
 					$this->session->set_flashdata('notification','error'); //Notification Type
@@ -314,19 +337,36 @@ class CoreUsers extends CI_Controller {
 		}
 		elseif ($type == 'update') {
 
-			$updateData = $this->CoreLoad->input(); //Input Data		
-			$column_password = strtolower($this->CoreForm->get_column_name($this->Module,'password'));//Column Password
+			$updateData = $this->CoreLoad->input(); //Input Data
+
+			$validData['page_title'] = "required|trim|min_length[1]|max_length[200]"; //Demo Validate Data Rules
+			$validData['page_tag'] = "trim|max_length[1000]"; //Demo Validate Data Rules
+			$validData['page_show'] = "trim|max_length[20]"; //Demo Validate Data Rules
+			$validData['thumbnail'] = "trim|min_length[1]|max_length[20]"; //Demo Validate Data Rules
+
 			$column_id = strtolower($this->CoreForm->get_column_name($this->Module,'id'));//Column ID
 			$value_id = $this->CoreLoad->input('id'); //Input Value
 
-			//Select Value To Unset && Check If Password Requested
-			if (array_key_exists("$column_password",$updateData)) {
-				if (!empty($this->input->post($column_password))) {	$unsetData= array('id');/*valude To Unset */}
-				else{ $unsetData= array('id',$column_password);/*Unset Value*/	}
-			}else{$unsetData= array('id');/*valude To Unset*/}
+			//Select Value To Unset 
+			$unsetData = array('id','thumbnail');/*valude To Unset*/
 
 			//Form Validation
-			if ($this->validation($updateData,false,array($column_password)) == TRUE) {
+			if ($this->validation($updateData,$validData) == TRUE) {
+
+				$upoadDirectory = "../assets/admin/images/upload/media"; //Upload Location
+				$page_control = array();
+				
+				//Check if Input Is Empty
+				if ($_FILES['thumbnail']['size'][0] > 0) {
+					$uploaded = $this->CoreCrud->upload('thumbnail',$upoadDirectory,'jpg|jpeg|png'); //Uploaded File Link
+					$page_control['thumbnail'] = $uploaded; //Uploaded Data
+				}
+
+				//Data Updated
+				$updateData['page_control'] = json_encode($page_control);
+				$updateData['page_post'] = $this->input->post('page_post');
+				$updateData['page_url'] = $this->CoreCrud->checkURL($updateData['page_url'],$this->CoreLoad->input('id'));		
+
 				//Update Table
 				if ($this->update($updateData,array($column_id =>$value_id),$unsetData)) {
 					$this->session->set_flashdata('notification','success'); //Notification Type
@@ -373,36 +413,45 @@ class CoreUsers extends CI_Controller {
 	public function create($insertData,$unsetData=null)
 	{
 
-    	//Chech allowed Access
 		if ($this->CoreLoad->auth($this->Module)) { //Authentication
-
+			
 			//Pluralize Module
 			$tableName = $this->plural->pluralize($this->Module);
 
 			//Column Stamp
 			$stamp = strtolower($this->CoreForm->get_column_name($this->Module,'stamp'));
 			$insertData["$stamp"] = date('Y-m-d H:i:s',time());
+
+			$createdat = strtolower($this->CoreForm->get_column_name($this->Module,'createdat'));
+			$insertData["$createdat"] = date('Y-m-d H:i:s',time());
+
+	   		//Site Status
+			$author_name = $this->db->select('user_logname')->where('user_id',$this->session->id)->get('users')->row()->user_logname;
+			$author = strtolower($this->CoreForm->get_column_name($this->Module,'author'));
+			$insertData["$author"] = $author_name;
+
 			//Column Flg
 			$flg = strtolower($this->CoreForm->get_column_name($this->Module,'flg'));
 			$insertData["$flg"] = 1;
 
 			//Column Password
-			$column_password = strtolower($this->CoreForm->get_column_name($this->Module,'password'));
-
 			$insertData = $this->CoreLoad->unsetData($insertData,$unsetData); //Unset Data
-
-			//Check IF there is Password
-			if (array_key_exists($column_password,$insertData)) {
-				$insertData[$column_password] = sha1($this->config->item($insertData["$stamp"]).$insertData[$column_password]);
-			}
 
 			$details = strtolower($this->CoreForm->get_column_name($this->Module,'details'));
 			$insertData["$details"] = json_encode($insertData);
 
 			//Insert Data Into Table
 			$this->db->insert($tableName, $insertData);
+			$input_id = $this->db->insert_id(); //Post ID
 			if ($this->db->affected_rows() > 0) {
 				
+				//Columns
+				$column_url = strtolower($this->CoreForm->get_column_name($this->Module,'url'));
+				$column_id = strtolower($this->CoreForm->get_column_name($this->Module,'id'));
+
+				$page_url = $this->CoreCrud->postURL($input_id); //Post URL
+				$this->db->update($tableName,array($column_url =>$page_url),array($column_id=>$input_id)); //Update URL
+
 				return true; //Data Inserted
 			}else{
 
@@ -424,29 +473,34 @@ class CoreUsers extends CI_Controller {
 	public function update($updateData,$valueWhere,$unsetData=null)
 	{
 
-    	//Chech allowed Access
 		if ($this->CoreLoad->auth($this->Module)) { //Authentication
-
+			
 			//Pluralize Module
 			$tableName = $this->plural->pluralize($this->Module);
 
 			//Column Stamp
 			$stamp = $this->CoreForm->get_column_name($this->Module,'stamp');
 			$updateData["$stamp"] = date('Y-m-d H:i:s',time());
+			$editedat = strtolower($this->CoreForm->get_column_name($this->Module,'editedat'));
+			$insertData["$editedat"] = date('Y-m-d H:i:s',time());
 
-			//Column Password
-			$column_password = strtolower($this->CoreForm->get_column_name($this->Module,'password'));
+	   		//Site Status
+			$editor_name = $this->db->select('user_logname')->where('user_id',$this->session->id)->get('users')->row()->user_logname;
+			$editor = strtolower($this->CoreForm->get_column_name($this->Module,'editor'));
+			$insertData["$editor"] = $editor_name;
 
 			$updateData = $this->CoreLoad->unsetData($updateData,$unsetData); //Unset Data
 
-			//Check IF there is Password
-			if (array_key_exists($column_password,$updateData)) {
-				$updateData[$column_password] = sha1($this->config->item($updateData["$stamp"]).$updateData[$column_password]);
-			}
-
 			//Details Column Update
+			$control = strtolower($this->CoreForm->get_column_name($this->Module,'control'));
 			$details = strtolower($this->CoreForm->get_column_name($this->Module,'details'));
+			$option_control = json_decode($updateData[$control], true);
+
 			foreach ($valueWhere as $key => $value) {	$whereData = array($key => $value); /* Where Clause */ 	}
+
+			$current_control = json_decode($this->db->select($control)->where($whereData)->get($tableName)->row()->$control, true);
+			foreach ($option_control as $key => $value) { $current_control["$key"] = $value; /* Update -> Details */ }
+			$updateData["$control"] = json_encode($current_control);
 
 			$current_details = json_decode($this->db->select($details)->where($whereData)->get($tableName)->row()->$details, true);
 			foreach ($updateData as $key => $value) { $current_details["$key"] = $value; /* Update -> Details */ }
@@ -472,9 +526,8 @@ class CoreUsers extends CI_Controller {
 	public function delete($valueWhere)
 	{
 
-    	//Chech allowed Access
 		if ($this->CoreLoad->auth($this->Module)) { //Authentication
-
+			
 			//Pluralize Module
 			$tableName = $this->plural->pluralize($this->Module);
 
@@ -499,10 +552,11 @@ class CoreUsers extends CI_Controller {
 	* 3: Skip Deep Validation
 	* 
 	*/
-	public function validation($formData,$email=TRUE,$skip=array())
+	public function validation($formData,$validate=array(),$skip=array())
 	{
-		//Pluralize Module
-		$module = $this->plural->pluralize($this->Module);
+		//Validation Keys
+		$valid_keys = array_keys($validate);
+		$check_box = 1;
 
 		//Validation
 		foreach ($formData as $key => $value) {
@@ -512,21 +566,20 @@ class CoreUsers extends CI_Controller {
 			if (in_array(strtolower($key),$skip)) {				
 				$this->form_validation->set_rules($key, $label, "trim|max_length[100]"); //Validate Input
 			}else{
-				if (strtolower($input) == 'email') {
-					if ($email == TRUE) {
-						$this->form_validation->set_rules($key, $label, "trim|required|max_length[100]|valid_email|is_unique[$module.$key]"); //Validate Email
+				if (empty($validate)) {
+					$this->form_validation->set_rules($key, $label, "trim");//Clean None Required Values
+				}else{					
+					if (in_array('check_box', $valid_keys) && $check_box == 1) {
+						$check_valid = $validate['check_box'];//Validate Inputs
+						$this->form_validation->set_rules('check_box', 'Input', "trim|$check_valid"); //Validate Email
+						$check_box = 0;
 					}else{
-						$this->form_validation->set_rules($key, $label, "trim|required|max_length[100]|valid_email"); //Validate Email
-					}
-				}else{
-					$required = explode(',',strtolower($this->Require)); //Required Columns
-					$unique = explode(',',strtolower($this->Unique)); //Unique Columns
-					if (in_array($input, $required)) {
-						$this->form_validation->set_rules($key, $label, "trim|required|min_length[1]"); //Validate Required
-					}elseif (in_array($input, $unique)) {
-						$this->form_validation->set_rules($key, $label, "trim|required|min_length[1]|is_unique[$module.$key]"); //Validate Required
-					}else{
-						$this->form_validation->set_rules($key, $label, "trim");//Clean None Required Values
+						if (in_array($key, $valid_keys)) {
+							$check_valid = $validate[$key];//Validate Inputs
+							$this->form_validation->set_rules($key, $label, "trim|$check_valid"); //Validate Email
+						}else{
+							$this->form_validation->set_rules($key, $label, "trim");//Clean None Required Values
+						}
 					}
 				}
 			}
@@ -541,5 +594,5 @@ class CoreUsers extends CI_Controller {
 
 }
 
-/* End of file CoreUsers.php */
-/* Location: ./application/controllers/CoreUsers.php */
+/* End of file CorePages.php */
+/* Location: ./application/controllers/CorePages.php */

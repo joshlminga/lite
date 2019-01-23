@@ -1,0 +1,47 @@
+								<?php if (!empty($image_news)): ?>
+								<div class="section photo-gallery">
+                                	<?php if (!empty($in_categories)): ?>
+									<h1 class="section-title title inner-title"><a href=""><?= $in_categories[0]->fieldcustom_parent; ?></a></h1>
+                                	<?php endif ?>
+									<div id="photo-gallery" class="carousel slide carousel-fade" data-ride="carousel">						
+										<div class="carousel-inner">
+											<?php $act_s = 0; ?>
+											<?php for ($i = 0; $i < count($same_news); $i++): ?>
+											<?php $post_featured = (array)$same_news[$i]; ?>
+											<?php $control = json_decode($post_featured['newspost_control'], True); ?>
+											<?php $category = $post_featured['newspost_category']; ?>
+											<?php $thumbnail = json_decode($control['thumbnail'], True); ?>
+
+											<?php $thumbnail = json_decode($control['thumbnail'], True); ?>
+											<?php $act = ($act_s == 0)? 'active' : '' ?>
+											<?php if ($control['type'] == 'image'): ?>
+											<div class="item <?= $act ?>"> 
+												<?php $image = json_decode($control['image'], True); ?>
+												<?php if (!is_null($image[0])): ?>
+												<a href="#"><img class="img-responsive" src="<?= base_url($image[0]); ?>"
+												alt="<?= stripcslashes($post_featured['newspost_tag']); ?>" 
+												title="<?= stripcslashes($post_featured['newspost_title']); ?>"  /></a>
+												<?php $act_s++; ?>
+												<?php endif ?>
+												<h2><a href="#"><?= substr(stripcslashes($post_featured['newspost_post']),0, 120); ?>...</a></h2>
+											</div>
+											<?php endif ?>
+											<?php endfor ?>					
+										</div><!--/carousel-inner-->
+										
+										<ol class="gallery-indicators carousel-indicators">
+											<?php $act_s = 0; ?>
+											<?php for ($i = 0; $i < count($same_news); $i++): ?>
+											<?php $post_featured = (array)$same_news[$i]; ?>
+											<?php $control = json_decode($post_featured['newspost_control'], True); ?>
+											<?php $category = $post_featured['newspost_category']; ?>
+											<?php $thumbnail = json_decode($control['thumbnail'], True); ?>
+											<?php $act = ($act_s == 0)? 'active' : '' ?>
+											<?php if (!is_null($thumbnail[0])): ?>
+											<li data-target="#photo-gallery" data-slide-to="0" class="<?= $act_s ?>">
+												<img class="img-responsive" src="<?= base_url($thumbnail[0]); ?>" 
+												alt="<?= stripcslashes($post_featured['newspost_tag']); ?>" 
+												title="<?= stripcslashes($post_featured['newspost_title']); ?>"  />
+											</li>
+											<?php endif ?>
+											<?php endfor ?>					

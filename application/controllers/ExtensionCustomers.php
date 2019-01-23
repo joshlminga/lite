@@ -11,13 +11,13 @@ class ExtensionCustomers extends CI_Controller {
 
 	private $Core = 'Extension'; //Core Lite Base Name | Change this if your Controller Name does not start with word Core
 	private $Module = 'user'; //Module
-	private $Folder = 'customers'; //Module
-	private $SubFolder = ''; //Set Default Sub Folder For html files and Front End Use Start with /
+	private $Folder = 'extensions'; //Module
+	private $SubFolder = '/customers'; //Set Default Sub Folder For html files and Front End Use Start with /
 	private $Escape = 'id,stamp,flg'; // Escape Column For Form Auto Generating
 	private $Require = 'level,password,name,emal'; // Required Column During Form Validation
 	private $Unique = 'logname'; // Unique & Required Values During Form Validation
 
-	private $Route = null; //If you have different route Name to Module name State it here |This wont be pluralized | set it null to use default
+	private $Route = 'customers'; //If you have different route Name to Module name State it here |This wont be pluralized | set it null to use default
 
 	private $New = 'customers/new'; //New customers
 	private $Save = 'customers/save'; //Add New customers
@@ -77,7 +77,7 @@ class ExtensionCustomers extends CI_Controller {
 		//Time Zone
 		date_default_timezone_set('Africa/Nairobi');
 		$data['str_to_time'] = strtotime(date('Y-m-d, H:i:s'));
-		$data['Module'] = $this->plural->pluralize($this->Folder);//Module Show
+		$data['Module'] = $this->plural->pluralize($this->Route);//Module Show
 		$data['routeURL'] = (is_null($this->Route)) ? $this->plural->pluralize($this->Folder) : $this->Route;
 
 		//User Levels
@@ -104,18 +104,13 @@ class ExtensionCustomers extends CI_Controller {
 	*/
     public function pages($data,$layout='main')
     {
-    	//Check if site is online
-    	if ($this->CoreLoad->site_status() == TRUE) {
-	    	//Chech allowed Access
-			if ($this->CoreLoad->auth($this->Module)) { //Authentication
-				//Layout
-				$this->load->view("administrator/layouts/$layout",$data);
-			}else{
-    			$this->CoreLoad->notAllowed(); //Not Allowed To Access
-			}
-    	}else{
-    		$this->CoreLoad->siteOffline(); //Site is offline
-    	}
+    	//Chech allowed Access
+		if ($this->CoreLoad->auth($this->Module)) { //Authentication
+			//Layout
+			$this->load->view("administrator/layouts/$layout",$data);
+		}else{
+			$this->CoreLoad->notAllowed(); //Not Allowed To Access
+		}
     }
 
     /*
@@ -144,8 +139,8 @@ class ExtensionCustomers extends CI_Controller {
 		$data['dataList'] = $this->CoreCrud->selectCRUD($module,$where,$columns);
 
 		//Notification
-		$notify = $this->Notify->notify();
-		$data['notify'] = $this->Notify->$notify($notifyMessage);
+		$notify = $this->CoreNotify->notify();
+		$data['notify'] = $this->CoreNotify->$notify($notifyMessage);
 
 		//Open Page
 		$this->pages($data);		
@@ -175,8 +170,8 @@ class ExtensionCustomers extends CI_Controller {
 		$data = $this->load($pageID);
 
 		//Notification
-		$notify = $this->Notify->notify();
-		$data['notify'] = $this->Notify->$notify($message);
+		$notify = $this->CoreNotify->notify();
+		$data['notify'] = $this->CoreNotify->$notify($message);
 
 		//Open Page
 		$this->pages($data,$layout);
@@ -228,8 +223,8 @@ class ExtensionCustomers extends CI_Controller {
 			$data['resultList'] = $this->CoreCrud->selectCRUD($module,$where,$columns);
 
 			//Notification
-			$notify = $this->Notify->notify();
-			$data['notify'] = $this->Notify->$notify($message);
+			$notify = $this->CoreNotify->notify();
+			$data['notify'] = $this->CoreNotify->$notify($message);
 
 			//Open Page
 			$this->pages($data,$layout);

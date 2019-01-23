@@ -1,24 +1,24 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class CoreCustomfields extends CI_Controller {
+class CoreCustomFields extends CI_Controller {
 
 	/*
 	*
 	* The main controller for Administrator Backend
-	* -> The controller require user to login as Administrator
+	* -> The controller require to login as Administrator
 	*/
 
-	private $Core = 'core'; //Lite Main Core
+	private $Core = ''; //Lite Main Core
 	private $Module = 'customfield'; //Module
-	private $Folder = 'customfield'; //Set Default Folder For html files and Front End Use
-	private $SubFolder = ''; //Set Default Sub Folder For html files and Front End Use Start with /
+	private $Folder = 'configs'; //Set Default Folder For html files and Front End Use
+	private $SubFolder = '/customfield/config'; //Set Default Sub Folder For html files and Front End Use Start with /
 	private $Escape = ''; // Escape Column For Form Auto Generating
-	private $Require = 'type,parent'; // Required Column During Form Validation 
-	private $Unique = ''; // Unique & Required Values During Form Validation
+	private $Require = 'required[]'; // Required Column During Form Validation
+	private $Unique = 'title'; // Unique & Required Values During Form Validation
 
-	private $Route = null; //If you have different route Name to Module name State it here |This wont be pluralized | set it null to use default
-	
+	private $Route = 'customfields'; //If you have different route Name to Module name State it here |This wont be pluralized
+
 	private $New = 'customfields/new'; //New 
 	private $Save = 'customfields/save'; //Add New 
 	private $Edit = 'customfields/update'; //Update 
@@ -77,20 +77,11 @@ class CoreCustomfields extends CI_Controller {
 		//Time Zone
 		date_default_timezone_set('Africa/Nairobi');
 		$data['str_to_time'] = strtotime(date('Y-m-d, H:i:s'));
-		$data['Module'] = $this->plural->pluralize($this->Folder);//Module Show
+		$data['Module'] = $this->plural->pluralize($this->Module);//Module Show
 		$data['routeURL'] = (is_null($this->Route)) ? $this->plural->pluralize($this->Folder) : $this->Route;
 
-		//User Levels
-		$logname = '';
-		$datalogname = $this->db->select('user_logname')->where('user_flg',1)->get('users')->result();
-		foreach ($datalogname as $row) {
-			$logname .= $row->user_logname.",";
-		}
-		$data['logname'] = $logname;
-
-		$data['name'] = $this->db->select('user_name')->where('user_flg',1)->get('users')->result();
-		$data['level'] = $this->db->select('user_level')->where('user_flg',1)->get('users')->result();
-
+		//Levels
+		$data['level'] = $this->db->select('level_name')->where('level_flg',1)->get('levels')->result();
 		//Form Submit URLs
 		$data['form_new'] = $this->New;
 		$data['form_save'] = $this->Save;
@@ -106,7 +97,7 @@ class CoreCustomfields extends CI_Controller {
 	* 1: The first passed data is an array containing all pre-loaded data N.B it can't be empty becuase page name is passed through it
 	* 2: Layout -> this can be set to default so it can open a particular layout always | also you can pass other layout N.B can't be empty
 	*
-	* ** To some page functions which are not public, use the auth method from CoreLoad model to check is user is allowed to access the pages
+	* ** To some page functions which are not public, use the auth method from CoreLoad model to check  is allowed to access the pages
 	* ** If your page is public ignore the use of auth method
 	* 
 	*/
@@ -128,7 +119,7 @@ class CoreCustomfields extends CI_Controller {
 
     /*
     *
-    * This is the first function to be accessed when a user open this controller
+    * This is the first function to be accessed when  open this controller
     * In here we can call the load function and pass data to passed as an array inorder to manupulate it inside passed function
     * 	* Set your Page name/ID here N:B Page ID can be a number if you wish to access other values linked to the page opened E.g Meta Data
     * 	* You can also set Page ID as actual pageName found in your view N:B do not put .php E.g home.php it should just be 'home'
@@ -147,12 +138,12 @@ class CoreCustomfields extends CI_Controller {
 		$data = $this->load($this->plural->pluralize($this->Folder).$this->SubFolder."/list");
 
 		//Table Select & Clause
-	   	$columns = array('id as id,type as field_type,parent as parent_field,flg as status');
+	   	$columns = array('id as id,title as title,flg as status');
 		$data['dataList'] = $this->CoreCrud->selectCRUD($module,null,$columns);
 
 		//Notification
-		$notify = $this->Notify->notify();
-		$data['notify'] = $this->Notify->$notify($notifyMessage);
+		$notify = $this->CoreNotify->notify();
+		$data['notify'] = $this->CoreNotify->$notify($notifyMessage);
 
 		//Open Page
 		$this->pages($data);		
@@ -160,7 +151,7 @@ class CoreCustomfields extends CI_Controller {
 
     /*
     *
-    * This is the function to be accessed when a user want to open specific page which deals with same controller E.g Edit data after saving
+    * This is the function to be accessed when  want to open specific page which deals with same controller E.g Edit data after saving
     * In here we can call the load function and pass data to passed as an array inorder to manupulate it inside passed function
     * 	* Set your Page name/ID here N:B Page ID can be a number if you wish to access other values linked to the page opened E.g Meta Data
     * 	* You can also set Page ID as actual pageName found in your view N:B do not put .php E.g home.php it should just be 'home'
@@ -182,8 +173,8 @@ class CoreCustomfields extends CI_Controller {
 		$data = $this->load($pageID);
 
 		//Notification
-		$notify = $this->Notify->notify();
-		$data['notify'] = $this->Notify->$notify($message);
+		$notify = $this->CoreNotify->notify();
+		$data['notify'] = $this->CoreNotify->$notify($message);
 
 		//Open Page
 		$this->pages($data,$layout);
@@ -231,12 +222,12 @@ class CoreCustomfields extends CI_Controller {
 		if (!is_null($inputTYPE) || !is_null($inputID)) {
 			//Table Select & Clause
 			$where = array($inputTYPE =>$inputID);
-	   		$columns = array('id as id,type as field_type,parent as parent_field,child as children');
+	   		$columns = array('id as id,title as title,required as required,optional as optional,filters as filters,default as default,flg as status');
 			$data['resultList'] = $this->CoreCrud->selectCRUD($module,$where,$columns);
 
 			//Notification
-			$notify = $this->Notify->notify();
-			$data['notify'] = $this->Notify->$notify($message);
+			$notify = $this->CoreNotify->notify();
+			$data['notify'] = $this->CoreNotify->$notify($message);
 
 			//Open Page
 			$this->pages($data,$layout);
@@ -276,21 +267,17 @@ class CoreCustomfields extends CI_Controller {
 			//Form Validation
 			if ($this->validation($formData) == TRUE) {
 
-				$column_child = strtolower($this->CoreForm->get_column_name($this->Module,'child'));
-				$moreFields = $formData[$column_child]; // Get Field List
-				for($i = 0; $i < count($moreFields); $i++){
-					$subchildName = "sub_child_$i";
-					$children[$subchildName] = $moreFields[$i];
-				}
-				$formData[$column_child] = json_encode($children); //Set Childreans
+				$column_required = strtolower($this->CoreForm->get_column_name($this->Module,'required'));
+				$formData[$column_required] = json_encode($this->CoreLoad->input($column_required)); //Set Required
 
-				// $formData['customfield_type'] =str_replace(' ','',$this->CoreLoad->input('customfield_type'));//Trim
+				$column_optional = strtolower($this->CoreForm->get_column_name($this->Module,'optional'));
+				$formData[$column_optional] = json_encode($this->CoreLoad->input($column_optional)); //Set Optional
+				$formData['customfield_title'] = preg_replace('/\s+/', '', strtolower($formData['customfield_title']));
 
-				//Save Data
 				if ($this->create($formData)) {
 					$this->session->set_flashdata('notification','success'); //Notification Type
 					$message = 'Data was saved successful'; //Notification Message				
-					redirect("$coreModule/open/add","refresh");//Redirect to Page
+					redirect($this->New, 'refresh');//Redirect to Page
 				}else{
 					$this->session->set_flashdata('notification','error'); //Notification Type
 					$this->open('add');//Open Page
@@ -330,7 +317,7 @@ class CoreCustomfields extends CI_Controller {
 						}
 					}
 					$this->session->set_flashdata('notification','success'); //Notification Type
-					redirect($module); //Redirect Index Module
+					redirect($routeURL, 'refresh'); //Redirect Index Module
 				}			
 			}else{
 				$this->session->set_flashdata('notification','error'); //Notification Type
@@ -354,15 +341,21 @@ class CoreCustomfields extends CI_Controller {
 			//Form Validation
 			if ($this->validation($updateData,false,array($column_password)) == TRUE) {
 
-				//Update Values
-				$column_child = strtolower($this->CoreForm->get_column_name($this->Module,'child'));
-				$moreFields = $updateData[$column_child]; // Get Field List
-				for($i = 0; $i < count($moreFields); $i++){
-					$subchildName = "sub_child_$i";
-					$children[$subchildName] = $moreFields[$i];
+				$column_required = strtolower($this->CoreForm->get_column_name($this->Module,'required'));
+				$updateData[$column_required] = json_encode($this->CoreLoad->input($column_required)); //Set Required
+
+				$column_optional = strtolower($this->CoreForm->get_column_name($this->Module,'optional'));
+				$updateData[$column_optional] = json_encode($this->CoreLoad->input($column_optional)); //Set Optional
+
+				$column_filters = strtolower($this->CoreForm->get_column_name($this->Module,'filters'));
+				$column_default= strtolower($this->CoreForm->get_column_name($this->Module,'default'));
+				if (!empty($this->CoreLoad->input($column_filters))) {
+					$updateData[$column_filters] = json_encode($this->CoreLoad->input($column_filters)); //Set Filters
+					$updateData[$column_default] = 'yes'; //Set Default					
+				}else{
+					$updateData[$column_filters] = json_encode(null); //Set Filters
+					$updateData[$column_default] = 'no'; //Set Default					
 				}
-				$updateData[$column_child] = json_encode($children); //Set Childreans
-				// $updateData['customfield_type'] = str_replace(' ','',$this->CoreLoad->input('customfield_type'));//Trim
 
 				//Update Table
 				if ($this->update($updateData,array($column_id =>$value_id),$unsetData)) {
@@ -372,7 +365,7 @@ class CoreCustomfields extends CI_Controller {
 				}else{
 					$this->session->set_flashdata('notification','error'); //Notification Type
 					$this->edit('edit','id',$value_id);//Open Page
-				}					
+				}								
 			}else{
 				$this->session->set_flashdata('notification','error'); //Notification Type
 				$message = 'Please check the fields, and try again'; //Notification Message				
@@ -385,15 +378,15 @@ class CoreCustomfields extends CI_Controller {
 
 			if ($this->delete(array($column_id => $value_id)) == TRUE) { //Call Delete Function
 				$this->session->set_flashdata('notification','success'); //Notification Type
-				redirect($module); //Redirect Index Module
+				redirect($routeURL, 'refresh'); //Redirect Index Module
 			}else{
 				$this->session->set_flashdata('notification','error'); //Notification Type
-				redirect($module); //Redirect Index Module
+				redirect($routeURL, 'refresh'); //Redirect Index Module
 			}
 		}
 		else{
 			$this->session->set_flashdata('notification','notify'); //Notification Type
-			redirect($module); //Redirect Index Module
+			redirect($routeURL, 'refresh'); //Redirect Index Module
 		}
 	}
 
@@ -508,7 +501,7 @@ class CoreCustomfields extends CI_Controller {
 	{
 
 		if ($this->CoreLoad->auth($this->Module)) { //Authentication
-
+			
 			//Pluralize Module
 			$tableName = $this->plural->pluralize($this->Module);
 
@@ -575,5 +568,5 @@ class CoreCustomfields extends CI_Controller {
 
 }
 
-/* End of file CoreCustomfields.php */
-/* Location: ./application/controllers/CoreCustomfields.php */
+/* End of file CoreCustomFields.php */
+/* Location: ./application/controllers/CoreCustomFields.php */

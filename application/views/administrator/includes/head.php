@@ -36,8 +36,6 @@
     </head>
 
 
-
-
     <body data-ma-header="teal">
         <header id="header" class="media">
             <div class="pull-left h-logo">
@@ -57,56 +55,10 @@
 
             <ul class="pull-right h-menu">
                 <li class="hm-search-trigger">
-                    <a href="#" data-ma-action="search-open">
+                    <a class="core-sidebar-link" href="#" data-ma-action="search-open">
                         <i class="hm-icon zmdi zmdi-search"></i>
                     </a>
                 </li>
-                <!--
-                <li class="dropdown hidden-xs hidden-sm h-apps">
-                    <a data-toggle="dropdown" href="#">
-                        <i class="hm-icon zmdi zmdi-apps"></i>
-                    </a>
-                    <ul class="dropdown-menu pull-right">
-                        <li>
-                            <a href="#">
-                                <i class="palette-Red-400 bg zmdi zmdi-calendar"></i>
-                                <small>Calendar</small>
-                            </a>
-                        </li>
-                        
-                        <li>
-                            <a href="#">
-                                <i class="palette-Green-400 bg zmdi zmdi-file-text"></i>
-                                <small>Files</small>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <i class="palette-Light-Blue bg zmdi zmdi-email"></i>
-                                <small>Mail</small>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <i class="palette-Orange-400 bg zmdi zmdi-trending-up"></i>
-                                <small>Analytics</small>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <i class="palette-Purple-300 bg zmdi zmdi-view-headline"></i>
-                                <small>News</small>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <i class="palette-Blue-Grey bg zmdi zmdi-image"></i>
-                                <small>Gallery</small>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-                -->
                 <li class="dropdown hidden-xs">
                     <a data-toggle="dropdown" href="#"><i class="hm-icon zmdi zmdi-more-vert"></i></a>
                     <ul class="dropdown-menu dm-icon pull-right">
@@ -125,13 +77,15 @@
                     
                     <ul class="dropdown-menu pull-right dm-icon">
                         <li>
-                            <a href="<?= site_url("profile");?>"><i class="zmdi zmdi-account"></i> View Profile</a>
+                            <a class="core-sub-link" href="<?= site_url('') ?>" target="_blank">
+                                <i class="zmdi zmdi-view-web"></i> View Website
+                            </a>
                         </li>
                         <li>
-                            <a href="#"><i class="zmdi zmdi-settings"></i> Settings</a>
+                            <a href='<?= site_url("profile")?>'><i class="zmdi zmdi-account"></i> My Profile</a>
                         </li>
                         <li>
-                            <a href='<?= site_url("admin/logout");?>'><i class="zmdi zmdi-time-restore"></i> Logout</a>
+                            <a href='<?= site_url("admin/logout")?>'><i class="zmdi zmdi-time-restore"></i> Logout</a>
                         </li>
                     </ul>
                 </li>
@@ -157,16 +111,19 @@
                 </div>
 
                 <ul class="smm-alerts">
-                    <li class="">
+                    <li class="core-sub-item">
                         <i class="zmdi zmdi-flash"></i> Core v3.0 (Lite)
                     </li>
                 </ul>
 
                 <ul class="main-menu">
                     <li class="dashboard">
-                        <a href="<?= site_url('dashboard') ?>"><i class="zmdi zmdi-input-composite"></i> Dashboard</a>
+                        <a class="core-sub-link" href="<?= site_url('dashboard') ?>"><i class="zmdi zmdi-input-composite"></i>
+                        Dashboard
+                        </a>
                     </li>
-                    <li class="sub-menu" style="display: none;"> <!-- active -->
+                    <?php if ($this->CoreLoad->auth('author')): ?>
+                    <li class="sub-menu"> <!-- active -->
                         <a href="#" data-ma-action="submenu-toggle">
                             <i class="zmdi zmdi-format-color-text green_less"></i> Blog 
                         </a>
@@ -177,125 +134,70 @@
                             <li class=""><a href="#">Manage</a></li> <!--active -->
                         </ul>
                     </li>
-                    <li class="" style="display: none;"><a href="#"><i class="zmdi zmdi-comment-list"></i> Blog Comments</a></li>
-                    <li class="sub-menu" style="display: none;">
+                    <li class=""><a href="#"><i class="zmdi zmdi-comment-list"></i> Blog Comments</a></li>
+                    <li class="sub-menu">
                         <a href="#" data-ma-action="submenu-toggle"><i class="zmdi zmdi-file-plus green_less"></i> Page </a>
                         <ul>
-                            <li class=""><a href="#">New</a></li>
-                            <li class=""><a href="#">Manage</a></li>
+                            <li class=""><a href="<?= site_url('pages/new') ?>">New</a></li>
+                            <li class=""><a href="<?= site_url('pages') ?>">Manage</a></li>
+                        </ul>
+                    </li>
+                    <?php endif ?>
+                    <li class="sub-menu"> <!-- active -->
+                        <a href="#" data-ma-action="submenu-toggle"><i class="zmdi zmdi-assignment zmdi-hc-fw red_less"></i> 
+                            Field Control User 
+                        </a>
+                        <ul>
+                            <li class=""><a href="<?= site_url('userdatas/new') ?>">New</a></li>
+                            <li class=""><a href="<?= site_url('userdatas') ?>">Manage</a></li>
                         </ul>
                     </li>
                     <?php if ($this->CoreLoad->auth('user')): ?>
                     <li class="sub-menu"> <!-- active -->
-                        <a href="#" data-ma-action="submenu-toggle"><i class="zmdi zmdi-accounts-alt"></i> User </a>
-                        <ul>
-                            <li class=""><a href="<?= site_url('users/new') ?>">New</a></li>
-                            <li class=""><a href="<?= site_url('users') ?>">Manage</a></li> <!--active -->
-                        </ul>
-                    </li>
-                    <?php endif ?>
-                    <?php if ($this->CoreLoad->auth('customer')): ?>
-                    <li class="sub-menu"> <!-- active -->
-                        <a href="#" data-ma-action="submenu-toggle"><i class="zmdi zmdi-pin-account zmdi-hc-fw"></i> Customer </a>
+                        <a href="#" data-ma-action="submenu-toggle"><i class="zmdi zmdi-pin-account zmdi-hc-fw blue"></i> Customer </a>
                         <ul>
                             <li class=""><a href="<?= site_url('customers/new') ?>">New</a></li>
-                            <li class=""><a href="<?= site_url('customers') ?>">Manage</a></li> <!--active -->
+                            <li class=""><a href="<?= site_url('customers') ?>">Manage</a></li>
                         </ul>
                     </li>
                     <?php endif ?>
-                    <?php if ($this->CoreLoad->auth('listing')): ?>
-                    <!-- Listing -->
-                    <li class="sub-menu"> <!-- active -->
-                        <a href="#" data-ma-action="submenu-toggle"><i class="zmdi zmdi-plus-circle-o-duplicate purple"></i> Listing Plus </a>
+                    <?php if ($this->CoreLoad->auth('admin')): ?>
+                    <li class="sub-menu">
+                        <a class="core-sidebar-link" href="#" data-ma-action="submenu-toggle">
+                            <i class="zmdi zmdi-settings red_less"></i> Controls </a>
                         <ul>
-                            <li class=""><a href="<?= site_url('listing_companies') ?>">Companies</a></li>
-                            <li class=""><a href="<?= site_url('listing_products') ?>">Products</a></li>
-                            <li class=""><a href="<?= site_url('listing_logos') ?>">Logo</a></li>
-                            <li class=""><a href="<?= site_url('listing_configs') ?>">Config</a></li>
+                            <li class="core-sub-item" style="display: none;"><a href="#">Store</a></li>
+                            <li class="core-sub-item" style="display: none;"><a href="#">Import</a></li>
+                            <li class="core-sub-item" style="display: none;"><a href="#">Export</a></li>
+                            <li class="core-sub-item">
+                                <a class="core-sub-link" href="<?= site_url('customfields') ?>">
+                                Custom Fields
+                                </a>
+                            </li>
                         </ul>
                     </li>
-                    <!-- End Listing -->
                     <?php endif ?>
-                    <li class="sub-menu"> <!-- active -->
-                        <a href="#" data-ma-action="submenu-toggle">
-                            <i class="zmdi zmdi-format-color-text green_less"></i> News Post 
-                        </a>
+                    <?php if ($this->CoreLoad->auth('user')): ?>
+                    <li class="sub-menu">
+                        <a class="core-sidebar-link" href="#" data-ma-action="submenu-toggle"><i class="zmdi zmdi-accounts-alt"></i> User </a>
                         <ul>
-                            <li class=""><a href="#">New</a></li>
-                            <li class=""><a href="#">Stats</a></li>
-                            <li class=""><a href="#">Category</a></li>
-                            <li class=""><a href="#">Manage</a></li> <!--active -->
+                            <li class="core-sub-item"><a class="core-sub-link" href="<?= site_url('users/new') ?>">New</a></li>
+                            <li class="core-sub-item"><a class="core-sub-link" href="<?= site_url('users') ?>">Manage</a></li> 
                         </ul>
                     </li>
-
-                    <li class="" style="display: none;"><a href="#"><i class="zmdi zmdi-plus-circle-o-duplicate purple"></i> Content Plus </a></li>
-                    <!-- Extensions -->
-                    <li class="sub-menu" style="display: none;"> <!-- active -->
-                        <a href="#" data-ma-action="submenu-toggle"><i class="zmdi zmdi-puzzle-piece blue"></i> Extensions </a>
+                    <?php endif ?>
+                    <?php if ($this->CoreLoad->auth('admin')): ?>
+                    <li class="sub-menu">
+                        <a class="core-sidebar-link" href="#" data-ma-action="submenu-toggle"><i class="zmdi zmdi-wrench red_less"></i> Settings </a>
                         <ul>
-                            <li class=""><a href="#">Manage</a></li>
-                            <li class=""><a href="#">New</a></li>
+                            <li class="core-sub-item"><a class="core-sub-link" href="<?= site_url('general'); ?>">General</a></li>
+                            <li class="core-sub-item"><a class="core-sub-link" href="<?= site_url('link'); ?>">Link</a></li>
+                            <li class="core-sub-item"><a class="core-sub-link" href="<?= site_url('blog'); ?>">Page / Blog</a></li>
+                            <li class="core-sub-item"><a class="core-sub-link" href="<?= site_url('mail'); ?>">Mail</a></li>
+                            <li class="core-sub-item"><a class="core-sub-link" href="<?= site_url('seo'); ?>">Seo</a></li>
                         </ul>
                     </li>
-                    <!-- End Extensions -->
-
-                    <li class="sub-menu"> <!-- active -->
-                        <a href="#" data-ma-action="submenu-toggle"><i class="zmdi zmdi-settings red_less"></i> Controls </a>
-                        <ul>
-                            <li class="" style="display: none;"><a href="#">Store</a></li>
-                            <li class="" style="display: none;"><a href="#">Import</a></li>
-                            <li class="" style="display: none;"><a href="#">Export</a></li>
-                            <li class=""><a href="<?= site_url('fieldcustoms') ?>">Manage Field</a></li>
-                            <li class=""><a href="<?= site_url('customfields') ?>">Custom Fields</a></li>
-                        </ul>
-                    </li>
-
-                    <li class="sub-menu" style="display: none;"> <!-- active -->
-                        <a href="#" data-ma-action="submenu-toggle"><i class="zmdi zmdi-flower yellow"></i> Themes </a>
-                        <ul>
-                            <li class=""><a href="#">Manage</a></li>
-                            <li class=""><a href="#">Customize</a></li>
-                            <li class=""><a href="#">Menu</a></li>
-                            <li class=""><a href="#">CSS</a></li>
-                            <li class=""><a href="#">Header</a></li>
-                            <li class=""><a href="#">Footer</a></li>
-                        </ul>
-                    </li>
-
-                    <li class="" style="display: none;"><a href="#"><i class="zmdi zmdi-star-half yellow"></i> Widgets </a></li>
-
-                    <li class="sub-menu" style="display: none;"> <!-- active -->
-                        <a href="#" data-ma-action="submenu-toggle">
-                            <i class="zmdi zmdi-flower-alt green"></i> ATU Page Builder 
-                        </a>
-                        <ul>
-                            <li class=""><a href="#">General</a></li>
-                            <li class=""><a href="#">Role Manager</a></li>
-                            <li class=""><a href="#">CSS/JS</a></li>
-                            <li class=""><a href="#">Shortcode</a></li>
-                            <li class=""><a href="#">About</a></li>
-                        </ul>
-                    </li>
-
-                    <li class="sub-menu" style="display: none;"> <!-- active -->
-                        <a href="#" data-ma-action="submenu-toggle"><i class="zmdi zmdi-accounts-alt"></i> User </a>
-                        <ul>
-                            <li class=""><a href="#">New</a></li>
-                            <li class=""><a href="#">Manage</a></li> <!--active -->
-                        </ul>
-                    </li>
-
-                    <li class="sub-menu" style="display: none;"> <!-- active -->
-                        <a href="#" data-ma-action="submenu-toggle"><i class="zmdi zmdi-wrench red_less"></i> Settings </a>
-                        <ul>
-                            <li class=""><a href="#">General</a></li>
-                            <li class=""><a href="#">Link</a></li>
-                            <li class=""><a href="#">Blog</a></li>
-                            <li class=""><a href="#">Mail</a></li>
-                            <li class=""><a href="#">About</a></li>
-                        </ul>
-                    </li>
-
+                    <?php endif ?>
                     <li class="sub-menu" style="display: none;"> <!-- active -->
                         <a href="#" data-ma-action="submenu-toggle"><i class="zmdi zmdi-swap-vertical-circle blue"></i> About </a>
                         <ul>
@@ -304,6 +206,5 @@
                             <li class=""><a href="#">Updates</a></li>
                         </ul>
                     </li>
-
                 </ul>
             </aside>

@@ -62,7 +62,6 @@
         <script src="<?= base_url($assets); ?>/js/actions.js"></script>
 
         <!--<script src="<?= base_url($assets); ?>/js/demo.js"></script>-->
-
         <script src="<?= base_url($assets); ?>/custom/custom.js"></script>
         
         <!-- Data Table -->
@@ -139,6 +138,7 @@
         </script>
 
         <script type="text/javascript">
+
             //Manage Bulk Action
             function actionBulk(argument) {
                 
