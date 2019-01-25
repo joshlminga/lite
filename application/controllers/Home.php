@@ -85,7 +85,8 @@ class Home extends CI_Controller {
 		$data['str_to_time'] = strtotime(date('Y-m-d, H:i:s'));
 		$data['Module'] = $this->plural->pluralize($this->Route);//Module Show
 		$data['routeURL'] = (is_null($this->Route)) ? $this->plural->pluralize($this->Folder) : $this->Route;
-		$data['assets'] = 'assets/themes/starter';
+		$data['assets'] = "assets/themes/".$this->Theme;
+		$data['theme_name'] = $this->Theme;
 
 		//Article
 		$data['pages'] = $this->db->select('page_title,page_post')->from('pages')
