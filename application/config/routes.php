@@ -130,5 +130,5 @@ $route['customers/multiple'] = 'ExtensionCustomers/valid/bulk'; // Bulk Action
 
 
 //Choose SUB
-$route['category/select'] = 'CoreAutoCrud/categories'; //Dynamic Category
+$route['category/select'] = 'AjaxList/categories'; //Dynamic Category
 $route['translate_uri_dashes'] = FALSE;
