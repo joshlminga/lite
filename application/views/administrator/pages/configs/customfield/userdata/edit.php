@@ -17,31 +17,6 @@
 						<?php $optional = json_decode($fieldList[0]->optional, True); $totalOptional = count($optional); ?>
 						<?php $data = json_decode($resultList[0]->data, True);?>
 						
-						<?php if ($fieldList[0]->default == 'no'): ?>
-					    <div class="col-md-4 col-sm-12">
-					        <div class="form-group">
-					            <div class="fg-line">
-					            	<label>Set Default Filters <small>(Fields used when filtering)</small></label>
-									<?php $filters = json_decode($resultList[0]->filters, True); ?>
-									<?php $filter_data = array_values($filters) ?>
-                                    <select class="selectpicker" name="listinglist_filters[]" multiple>
-                                    	<?php foreach ($required as $key => $value): ?>
-                                    	<?php if (in_array(strtolower(str_replace("-", "_",str_replace(" ", "_",trim($value)))), $filter_data)):?>
-                                    		<?php $filter_selected = 'selected=""'; ?>
-                                    	<?php else: ?>
-                                    		<?php $filter_selected = ''; ?>
-                                    	<?php endif ?>
-                                        <option <?= $filter_selected; ?> 
-                                        value="<?= strtolower(str_replace("-", "_",str_replace(" ", "_",trim($value)))); ?>"><?= $value ?>
-                                        </option>
-                                    	<?php endforeach ?>
-                                    </select>
-					            </div>
-					            <span class="error"><?= form_error('listinglist_filters') ?></span>
-					        </div>
-					    </div>
-						<?php endif ?>
-
 
 						<?php foreach ($required as $key => $value): ?>
 							<?php if (!is_null($value) && !empty($value)): ?>
@@ -67,6 +42,24 @@
 							    <div class="col-md-4 col-sm-12" id="">
 							        <div class="form-group">
 							            <div class="fg-line">
+										<?php if ($field_name == 'user_gender'): ?>
+							            	<label><?= $value; ?> <small>(Select Gender)</small></label>
+		                                    <select class="selectpicker" name="<?= $field_name ?>">
+		                                    	<?php if (array_key_exists($field_name, $data)): ?>
+			                                    	<option value="male" 
+			                                    		<?= (strtolower(stripcslashes($data[$field_name])) == 'male')?'selected':''; ?>>
+			                                    		Male
+			                                    	</option>
+			                                    	<option value="female" 
+			                                    		<?= (strtolower(stripcslashes($data[$field_name])) == 'female')?'selected':''; ?>>
+			                                    		Female
+			                                    	</option>
+		                                    	<?php else: ?>
+			                                        <option value="male" selected>Male</option>
+			                                        <option value="female">Female</option>
+		                                    	<?php endif ?>
+		                                    </select>
+										<?php else: ?>
 					            			<label><?= $value; ?> </label>
 							                <input type="text" class="form-control" 
 							                name="<?= $field_name; ?>" id="" autocomplete="off" 
@@ -75,6 +68,7 @@
 							                <?php else: ?>
 							                	value=""
 							                <?php endif ?>>
+										<?php endif ?>
 							            </div>
 							            <span class="error"><?= form_error($field_name) ?></span>
 							        </div>

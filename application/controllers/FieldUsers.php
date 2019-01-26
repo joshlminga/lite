@@ -303,7 +303,7 @@ class FieldUsers extends CI_Controller {
 				$fieldList = $this->CoreCrud->selectCRUD($customFieldTable,$where,$columns);
 
 				$field_title = $fieldList[0]->title; //Title Title
-				$field_filter = $fieldList[0]->filters; //FIlter List
+				$field_filter = json_decode($fieldList[0]->filters, True); //FIlter List
 				$field_default = $fieldList[0]->default; //Default
 
 				//UnSet ID
@@ -311,11 +311,13 @@ class FieldUsers extends CI_Controller {
 
 				//Set Filters
 				$column_filters = strtolower($this->CoreForm->get_column_name($this->Module,'filters'));
-				if ($field_default == 'no') {
-					$tempo_filter = json_encode($this->CoreLoad->input($column_filters)); /* Set Filters */
-					$formData[$column_filters] = $tempo_filter;
-					$formData = $this->CoreLoad->unsetData($formData,array($column_filters));
+
+				//Set Values For Filter
+				for($i = 0; $i < count($field_filter); $i++){
+					$valueFilter = $field_filter[$i]; //Current Value
+					$newFilterDataValue[$valueFilter] = $formData[$valueFilter];
 				}
+				$tempo_filter = json_encode($newFilterDataValue); /* Set Filters */
 
 				//Set Field Data
 				$column_data = strtolower($this->CoreForm->get_column_name($this->Module,'data'));
@@ -328,12 +330,9 @@ class FieldUsers extends CI_Controller {
 						$formData = $this->CoreLoad->unsetData($formData,array($key)); //Unset Data
 					}
 				}
-				if ($field_default == 'no') {
-					$formData[$column_filters] = $tempo_filter;
-				}
-				else{ 
-					$formData[$column_filters] = $field_filter; /* Set Filters */
-				}
+
+				//Set Filters
+				$formData[$column_filters] = $tempo_filter; /* Set Filters */
 
 				//Set Title/Name
 				$column_title = strtolower($this->CoreForm->get_column_name($this->Module,'title'));
@@ -410,7 +409,8 @@ class FieldUsers extends CI_Controller {
 		   	$where = array('title' => $resultList[0]->title);
 			$fieldList = $this->CoreCrud->selectCRUD($customFieldTable,$where,$columns,'like');
 
-			$field_filter = $fieldList[0]->filters; //FIlter List
+			//$field_filter = $fieldList[0]->filters; //FIlter List
+			$field_filter = json_decode($fieldList[0]->filters, True); //FIlter List
 			$field_default = $fieldList[0]->default; //Default
 
 			$column_password = strtolower($this->CoreForm->get_column_name($this->Module,'password'));//Column Password
@@ -428,11 +428,13 @@ class FieldUsers extends CI_Controller {
 
 				//Set Filters
 				$column_filters = strtolower($this->CoreForm->get_column_name($this->Module,'filters'));
-				if ($field_default == 'no') {
-					$tempo_filter = json_encode($this->CoreLoad->input($column_filters)); /* Set Filters */
-					$updateData[$column_filters] = $tempo_filter;
-					$updateData = $this->CoreLoad->unsetData($updateData,array($column_filters));
+
+				//Set Values FOr Filter
+				for($i = 0; $i < count($field_filter); $i++){
+					$valueFilter = $field_filter[$i]; //Current Value
+					$newFilterDataValue[$valueFilter] = $updateData[$valueFilter];
 				}
+				$tempo_filter = json_encode($newFilterDataValue); /* Set Filters */
 
 				//Set Field Data
 				$column_data = strtolower($this->CoreForm->get_column_name($this->Module,'data'));
@@ -445,12 +447,9 @@ class FieldUsers extends CI_Controller {
 						$updateData = $this->CoreLoad->unsetData($updateData,array($key)); //Unset Data
 					}
 				}
-				if ($field_default == 'no') {
-					$updateData[$column_filters] = $tempo_filter;
-				}
-				else{ 
-					$updateData[$column_filters] = $field_filter; /* Set Filters */
-				}
+
+				//Set Filters
+				$updateData[$column_filters] = $tempo_filter; /* Set Filters */
 
 				//Update Table
 				if ($this->update($updateData,array($column_id =>$value_id),$unsetData)) {

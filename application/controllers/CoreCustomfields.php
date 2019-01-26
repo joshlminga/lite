@@ -274,6 +274,12 @@ class CoreCustomFields extends CI_Controller {
 				$formData[$column_optional] = json_encode($this->CoreLoad->input($column_optional)); //Set Optional
 				$formData['customfield_title'] = preg_replace('/\s+/', '', strtolower($formData['customfield_title']));
 
+				$column_filters = strtolower($this->CoreForm->get_column_name($this->Module,'filters'));
+				$formData[$column_filters] = strtolower(json_encode($this->CoreLoad->input($column_required))); //Set Filters
+
+				$column_default= strtolower($this->CoreForm->get_column_name($this->Module,'default'));
+				$formData[$column_default] = 'yes'; //Set Default					
+
 				if ($this->create($formData)) {
 					$this->session->set_flashdata('notification','success'); //Notification Type
 					$message = 'Data was saved successful'; //Notification Message				
@@ -349,13 +355,9 @@ class CoreCustomFields extends CI_Controller {
 
 				$column_filters = strtolower($this->CoreForm->get_column_name($this->Module,'filters'));
 				$column_default= strtolower($this->CoreForm->get_column_name($this->Module,'default'));
-				if (!empty($this->CoreLoad->input($column_filters))) {
-					$updateData[$column_filters] = json_encode($this->CoreLoad->input($column_filters)); //Set Filters
-					$updateData[$column_default] = 'yes'; //Set Default					
-				}else{
-					$updateData[$column_filters] = json_encode(null); //Set Filters
-					$updateData[$column_default] = 'no'; //Set Default					
-				}
+
+				$updateData[$column_filters] = strtolower(json_encode($this->CoreLoad->input($column_filters))); //Set Filters
+				$updateData[$column_default] = 'yes'; //Set Default					
 
 				//Update Table
 				if ($this->update($updateData,array($column_id =>$value_id),$unsetData)) {
