@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class CorePages extends CI_Controller {
+class CoreInheritances extends CI_Controller {
 
 	/*
 	*
@@ -10,18 +10,18 @@ class CorePages extends CI_Controller {
 	*/
 
 	private $Core = 'core'; //Core Lite Base Name | Change this if your Controller Name does not start with word Core
-	private $Module = 'pages'; //Module
-	private $Folder = 'pages'; //Module
+	private $Module = 'inheritances'; //Module
+	private $Folder = 'inheritance'; //Module
 	private $SubFolder = ''; //Set Default Sub Folder For html files and Front End Use Start with /
 	private $Escape = 'id,stamp,flg'; // Escape Column For Form Auto Generating
 	private $Require = ''; // Required Column During Form Validation
 	private $Unique = ''; // Unique & Required Values During Form Validation
 
-	private $Route = 'pages';//If you have different route Name to Module name State it here |This wont be pluralized | set it null to use default
+	private $Route = 'inheritances';//If you have different route Name to Module name State it here |This wont be pluralized | set it null to use default
 
-	private $New = 'pages/new'; //New customers
-	private $Save = 'pages/save'; //Add New customers
-	private $Edit = 'pages/update'; //Update customers
+	private $New = 'inheritances/new'; //New customers
+	private $Save = 'inheritances/save'; //Add New customers
+	private $Edit = 'inheritances/update'; //Update customers
 
 	/* Functions
 	* -> __construct () = Load the most required operations E.g Class Module
@@ -84,7 +84,9 @@ class CorePages extends CI_Controller {
 		$data['extRoute'] = "administrator/pages/".$this->plural->pluralize($this->Folder).$this->SubFolder."/";
 		$where = array('fieldcustom_flg' =>1,'fieldcustom_type' =>'Categories');
 
-	    //Select Post
+	    //Select Inheritance
+		$data['inheritance'] = $this->db->select('inheritance_id,inheritance_type,inheritance_parent,inheritance_title')
+		->from('inheritances')->where('inheritance_flg',1)->get()->result();
 
 		//Form Submit URLs
 		$data['form_new'] = $this->New;
@@ -221,7 +223,7 @@ class CorePages extends CI_Controller {
 		if (!is_null($inputTYPE) || !is_null($inputID)) {
 			//Table Select & Clause
 			$where = array($inputTYPE =>$inputID);
-	   		$columns = array('id as id,title as title,url as url,post as post,control as control,data as data,show as visibility');
+	   		$columns = array('id as id,type as type,title as title,parent as parent,title as title');
 			$data['resultList'] = $this->CoreCrud->selectCRUD($module,$where,$columns);
 
 			//Notification
@@ -262,28 +264,14 @@ class CorePages extends CI_Controller {
 		if ($type == 'save') {
 
 			$formData = $this->CoreLoad->input(); //Input Data
-			$validData['page_title'] = "required|trim|min_length[1]|max_length[200]"; //Demo Validate Data Rules
-			$validData['page_tag'] = "trim|max_length[1000]"; //Demo Validate Data Rules
-			$validData['page_show'] = "trim|max_length[20]"; //Demo Validate Data Rules
-			$validData['thumbnail'] = "trim|min_length[1]|max_length[20]"; //Demo Validate Data Rules
+			$validData['inheritance_type'] = "required|trim|min_length[1]|max_length[200]"; //Demo Validate Data Rules
+			$validData['inheritance_parent'] = "trim|min_length[1]|max_length[100]"; //Demo Validate Data Rules
+			$validData['inheritance_title'] = "trim|min_length[1]|max_length[500]"; //Demo Validate Data Rules
 
 			//Form Validation
 			if ($this->validation($formData,$validData) == TRUE) {
 
-				$upoadDirectory = "../assets/admin/images/upload/media"; //Upload Location
-
-				//Check if Input Is Empty
-				if ($_FILES['thumbnail']['size'][0] > 0) {
-					$uploaded = $this->CoreCrud->upload('thumbnail',$upoadDirectory,'jpg|jpeg|png'); //Uploaded File Link
-					$page_control['thumbnail'] = $uploaded; //Uploaded Data
-				}else{
-					$page_control['thumbnail'] = null; //Uploaded Data
-				}
-
 				//More Data
-				$formData['page_post'] = $this->input->post('page_post');
-				$formData['page_control'] = json_encode($page_control);
-
 				if ($this->create($formData,array('thumbnail'))) {
 					$this->session->set_flashdata('notification','success'); //Notification Type
 					$message = 'Data was saved successful'; //Notification Message				
@@ -339,33 +327,18 @@ class CorePages extends CI_Controller {
 
 			$updateData = $this->CoreLoad->input(); //Input Data
 
-			$validData['page_title'] = "required|trim|min_length[1]|max_length[200]"; //Demo Validate Data Rules
-			$validData['page_tag'] = "trim|max_length[1000]"; //Demo Validate Data Rules
-			$validData['page_show'] = "trim|max_length[20]"; //Demo Validate Data Rules
-			$validData['thumbnail'] = "trim|min_length[1]|max_length[20]"; //Demo Validate Data Rules
+			$validData['inheritance_type'] = "required|trim|min_length[1]|max_length[200]"; //Demo Validate Data Rules
+			$validData['inheritance_parent'] = "trim|min_length[1]|max_length[100]"; //Demo Validate Data Rules
+			$validData['inheritance_title'] = "trim|min_length[1]|max_length[500]"; //Demo Validate Data Rules
 
 			$column_id = strtolower($this->CoreForm->get_column_name($this->Module,'id'));//Column ID
 			$value_id = $this->CoreLoad->input('id'); //Input Value
 
 			//Select Value To Unset 
-			$unsetData = array('id','thumbnail');/*valude To Unset*/
+			$unsetData = array('id');/*valude To Unset*/
 
 			//Form Validation
 			if ($this->validation($updateData,$validData) == TRUE) {
-
-				$upoadDirectory = "../assets/admin/images/upload/media"; //Upload Location
-				$page_control = array();
-				
-				//Check if Input Is Empty
-				if ($_FILES['thumbnail']['size'][0] > 0) {
-					$uploaded = $this->CoreCrud->upload('thumbnail',$upoadDirectory,'jpg|jpeg|png'); //Uploaded File Link
-					$page_control['thumbnail'] = $uploaded; //Uploaded Data
-				}
-
-				//Data Updated
-				$updateData['page_control'] = json_encode($page_control);
-				$updateData['page_post'] = $this->input->post('page_post');
-				$updateData['page_url'] = $this->CoreCrud->checkURL($updateData['page_url'],$this->CoreLoad->input('id'));		
 
 				//Update Table
 				if ($this->update($updateData,array($column_id =>$value_id),$unsetData)) {
@@ -412,29 +385,20 @@ class CorePages extends CI_Controller {
 	*/
 	public function create($insertData,$unsetData=null)
 	{
-
+    	//Chech allowed Access
 		if ($this->CoreLoad->auth($this->Module)) { //Authentication
-			
+
 			//Pluralize Module
 			$tableName = $this->plural->pluralize($this->Module);
 
 			//Column Stamp
 			$stamp = strtolower($this->CoreForm->get_column_name($this->Module,'stamp'));
 			$insertData["$stamp"] = date('Y-m-d H:i:s',time());
-
-			$createdat = strtolower($this->CoreForm->get_column_name($this->Module,'createdat'));
-			$insertData["$createdat"] = date('Y-m-d H:i:s',time());
-
-	   		//Site Status
-			$author_name = $this->db->select('user_logname')->where('user_id',$this->session->id)->get('users')->row()->user_logname;
-			$author = strtolower($this->CoreForm->get_column_name($this->Module,'author'));
-			$insertData["$author"] = $author_name;
-
 			//Column Flg
 			$flg = strtolower($this->CoreForm->get_column_name($this->Module,'flg'));
 			$insertData["$flg"] = 1;
 
-			//Column Password
+			//Insert
 			$insertData = $this->CoreLoad->unsetData($insertData,$unsetData); //Unset Data
 
 			$details = strtolower($this->CoreForm->get_column_name($this->Module,'details'));
@@ -442,16 +406,8 @@ class CorePages extends CI_Controller {
 
 			//Insert Data Into Table
 			$this->db->insert($tableName, $insertData);
-			$input_id = $this->db->insert_id(); //Post ID
 			if ($this->db->affected_rows() > 0) {
 				
-				//Columns
-				$column_url = strtolower($this->CoreForm->get_column_name($this->Module,'url'));
-				$column_id = strtolower($this->CoreForm->get_column_name($this->Module,'id'));
-
-				$page_url = $this->CoreCrud->postURL($input_id); //Post URL
-				$this->db->update($tableName,array($column_url =>$page_url),array($column_id=>$input_id)); //Update URL
-
 				return true; //Data Inserted
 			}else{
 
@@ -472,35 +428,22 @@ class CorePages extends CI_Controller {
 	*/
 	public function update($updateData,$valueWhere,$unsetData=null)
 	{
-
+    	//Chech allowed Access
 		if ($this->CoreLoad->auth($this->Module)) { //Authentication
-			
+
 			//Pluralize Module
 			$tableName = $this->plural->pluralize($this->Module);
 
 			//Column Stamp
 			$stamp = $this->CoreForm->get_column_name($this->Module,'stamp');
 			$updateData["$stamp"] = date('Y-m-d H:i:s',time());
-			$editedat = strtolower($this->CoreForm->get_column_name($this->Module,'editedat'));
-			$insertData["$editedat"] = date('Y-m-d H:i:s',time());
 
-	   		//Site Status
-			$editor_name = $this->db->select('user_logname')->where('user_id',$this->session->id)->get('users')->row()->user_logname;
-			$editor = strtolower($this->CoreForm->get_column_name($this->Module,'editor'));
-			$insertData["$editor"] = $editor_name;
-
+			//Update
 			$updateData = $this->CoreLoad->unsetData($updateData,$unsetData); //Unset Data
 
 			//Details Column Update
-			$control = strtolower($this->CoreForm->get_column_name($this->Module,'control'));
 			$details = strtolower($this->CoreForm->get_column_name($this->Module,'details'));
-			$option_control = json_decode($updateData[$control], true);
-
 			foreach ($valueWhere as $key => $value) {	$whereData = array($key => $value); /* Where Clause */ 	}
-
-			$current_control = json_decode($this->db->select($control)->where($whereData)->get($tableName)->row()->$control, true);
-			foreach ($option_control as $key => $value) { $current_control["$key"] = $value; /* Update -> Details */ }
-			$updateData["$control"] = json_encode($current_control);
 
 			$current_details = json_decode($this->db->select($details)->where($whereData)->get($tableName)->row()->$details, true);
 			foreach ($updateData as $key => $value) { $current_details["$key"] = $value; /* Update -> Details */ }
@@ -594,5 +537,5 @@ class CorePages extends CI_Controller {
 
 }
 
-/* End of file CorePages.php */
-/* Location: ./application/controllers/CorePages.php */
+/* End of file CoreInheritances.php */
+/* Location: ./application/controllers/CoreInheritances.php */

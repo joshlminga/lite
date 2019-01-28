@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 28, 2019 at 09:33 AM
+-- Generation Time: Jan 28, 2019 at 11:31 AM
 -- Server version: 10.1.22-MariaDB
 -- PHP Version: 7.1.4
 
@@ -65,6 +65,30 @@ CREATE TABLE `fields` (
   `field_default` varchar(5) DEFAULT 'yes',
   `field_flg` int(1) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `inheritances`
+--
+
+CREATE TABLE `inheritances` (
+  `inheritance_id` bigint(20) NOT NULL,
+  `inheritance_type` varchar(100) NOT NULL,
+  `inheritance_parent` bigint(20) DEFAULT '0',
+  `inheritance_title` varchar(500) NOT NULL,
+  `inheritance_details` longtext,
+  `inheritance_stamp` datetime NOT NULL,
+  `inheritance_default` varchar(5) DEFAULT 'yes',
+  `inheritance_flg` int(1) NOT NULL DEFAULT '1'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `inheritances`
+--
+
+INSERT INTO `inheritances` (`inheritance_id`, `inheritance_type`, `inheritance_parent`, `inheritance_title`, `inheritance_details`, `inheritance_stamp`, `inheritance_default`, `inheritance_flg`) VALUES
+(1, 'default', 1, 'Parent 2', '{\"inheritance_type\":\"default\",\"inheritance_parent\":\"1\",\"inheritance_title\":\"Parent 2\",\"inheritance_stamp\":\"2019-01-28 13:25:59\",\"inheritance_flg\":1}', '2019-01-28 13:25:59', 'yes', 1);
 
 -- --------------------------------------------------------
 
@@ -209,6 +233,12 @@ ALTER TABLE `fields`
   ADD PRIMARY KEY (`field_id`);
 
 --
+-- Indexes for table `inheritances`
+--
+ALTER TABLE `inheritances`
+  ADD PRIMARY KEY (`inheritance_id`);
+
+--
 -- Indexes for table `levels`
 --
 ALTER TABLE `levels`
@@ -248,6 +278,11 @@ ALTER TABLE `customfields`
 --
 ALTER TABLE `fields`
   MODIFY `field_id` bigint(20) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `inheritances`
+--
+ALTER TABLE `inheritances`
+  MODIFY `inheritance_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `levels`
 --

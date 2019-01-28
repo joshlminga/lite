@@ -168,7 +168,7 @@
                         <ul>
                             <li class="core-sub-item" style="display: none;"><a href="#">Store</a></li>
                             <li class="core-sub-item" style="display: none;"><a href="#">Import</a></li>
-                            <li class="core-sub-item" style="display: none;"><a href="#">Export</a></li>
+                            <li class="core-sub-item"><a href="<?= site_url('inheritances') ?>">Inheritance</a></li>
                             <li class="core-sub-item">
                                 <a class="core-sub-link" href="<?= site_url('customfields') ?>">
                                 Custom Fields

@@ -104,6 +104,14 @@ $route['customfields/update'] = 'CoreCustomFields/valid/update'; //Validate and 
 $route['customfields/delete'] = 'CoreCustomFields/valid/delete'; //Delete 
 $route['customfields/multiple'] = 'CoreCustomFields/valid/bulk'; //Bulk Action  
 
+//Inheritance
+$route['inheritances'] = 'CoreInheritances/index'; //Manage
+$route['inheritances/new'] = 'CoreInheritances/open/add'; //Create New 
+$route['inheritances/edit'] = 'CoreInheritances/edit/edit'; //Edit 
+$route['inheritances/save'] = 'CoreInheritances/valid/save'; //Validate and Save
+$route['inheritances/update'] = 'CoreInheritances/valid/update'; //Validate and Update
+$route['inheritances/delete'] = 'CoreInheritances/valid/delete'; //Delete 
+$route['inheritances/multiple'] = 'CoreInheritances/valid/bulk'; //Bulk Action  
 
 /////////////////////////// CONTROLS //////////////////////////
 
