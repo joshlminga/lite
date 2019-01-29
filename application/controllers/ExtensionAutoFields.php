@@ -1,27 +1,27 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class CoreInheritances extends CI_Controller {
+class ExtensionAutoFields extends CI_Controller {
 
 	/*
 	*
 	* The main controller for Administrator Backend
-	* -> The controller require user to login as Administrator
+	* -> The controller require to login as Administrator
 	*/
 
-	private $Core = 'core'; //Core Lite Base Name | Change this if your Controller Name does not start with word Core
-	private $Module = 'inheritances'; //Module
-	private $Folder = 'inheritance'; //Module
-	private $SubFolder = ''; //Set Default Sub Folder For html files and Front End Use Start with /
-	private $Escape = 'id,stamp,flg'; // Escape Column For Form Auto Generating
-	private $Require = ''; // Required Column During Form Validation
-	private $Unique = ''; // Unique & Required Values During Form Validation
+	private $Core = 'Extension'; //Lite Main Core
+	private $Module = 'autofield'; //Module
+	private $Folder = 'extensions'; //Set Default Folder For html files and Front End Use
+	private $SubFolder = '/autofields'; //Set Default Sub Folder For html files and Front End Use Start with /
+	private $Escape = ''; // Escape Column For Form Auto Generating
+	private $Require = 'required[]'; // Required Column During Form Validation
+	private $Unique = 'title'; // Unique & Required Values During Form Validation
 
-	private $Route = 'inheritances';//If you have different route Name to Module name State it here |This wont be pluralized | set it null to use default
+	private $Route = 'autofields'; //If you have different route Name to Module name State it here |This wont be pluralized
 
-	private $New = 'inheritances/new'; //New customers
-	private $Save = 'inheritances/save'; //Add New customers
-	private $Edit = 'inheritances/update'; //Update customers
+	private $New = 'autofields/new'; //New 
+	private $Save = 'autofields/save'; //Add New 
+	private $Edit = 'autofields/update'; //Update 
 
 	/* Functions
 	* -> __construct () = Load the most required operations E.g Class Module
@@ -80,13 +80,8 @@ class CoreInheritances extends CI_Controller {
 		$data['Module'] = $this->plural->pluralize($this->Module);//Module Show
 		$data['routeURL'] = (is_null($this->Route)) ? $this->plural->pluralize($this->Folder) : $this->Route;
 
-		//Extension Route
-		$data['extRoute'] = "administrator/pages/".$this->plural->pluralize($this->Folder).$this->SubFolder."/";
-
-	    //Select Inheritance
-		$data['inheritance'] = $this->db->select('inheritance_id,inheritance_type,inheritance_parent,inheritance_title')
-		->from('inheritances')->where('inheritance_flg',1)->get()->result();
-
+		//Levels
+		$data['level'] = $this->db->select('level_name')->where('level_flg',1)->get('levels')->result();
 		//Form Submit URLs
 		$data['form_new'] = $this->New;
 		$data['form_save'] = $this->Save;
@@ -102,24 +97,29 @@ class CoreInheritances extends CI_Controller {
 	* 1: The first passed data is an array containing all pre-loaded data N.B it can't be empty becuase page name is passed through it
 	* 2: Layout -> this can be set to default so it can open a particular layout always | also you can pass other layout N.B can't be empty
 	*
-	* ** To some page functions which are not public, use the auth method from CoreLoad model to check is user is allowed to access the pages
+	* ** To some page functions which are not public, use the auth method from CoreLoad model to check  is allowed to access the pages
 	* ** If your page is public ignore the use of auth method
 	* 
 	*/
     public function pages($data,$layout='main')
     {
-    	//Chech allowed Access
-		if ($this->CoreLoad->auth($this->Module)) { //Authentication
-			//Layout
-			$this->load->view("administrator/layouts/$layout",$data);
-		}else{
-			$this->CoreLoad->notAllowed(); //Not Allowed To Access
-		}
+    	//Check if site is online
+    	if ($this->CoreLoad->site_status() == TRUE) {
+	    	//Chech allowed Access
+			if ($this->CoreLoad->auth($this->Module)) { //Authentication
+				//Layout
+				$this->load->view("administrator/layouts/$layout",$data);
+			}else{
+    			$this->CoreLoad->notAllowed(); //Not Allowed To Access
+			}
+    	}else{
+    		$this->CoreLoad->siteOffline(); //Site is offline
+    	}
     }
 
     /*
     *
-    * This is the first function to be accessed when a user open this controller
+    * This is the first function to be accessed when  open this controller
     * In here we can call the load function and pass data to passed as an array inorder to manupulate it inside passed function
     * 	* Set your Page name/ID here N:B Page ID can be a number if you wish to access other values linked to the page opened E.g Meta Data
     * 	* You can also set Page ID as actual pageName found in your view N:B do not put .php E.g home.php it should just be 'home'
@@ -138,9 +138,8 @@ class CoreInheritances extends CI_Controller {
 		$data = $this->load($this->plural->pluralize($this->Folder).$this->SubFolder."/list");
 
 		//Table Select & Clause
-	   	$columns = array('id,title as title,flg as status');
-	   	$where = null;
-		$data['dataList'] = $this->CoreCrud->selectCRUD($module,$where,$columns);
+	   	$columns = array('id as id,title as title,flg as status');
+		$data['dataList'] = $this->CoreCrud->selectCRUD($module,null,$columns);
 
 		//Notification
 		$notify = $this->CoreNotify->notify();
@@ -152,7 +151,7 @@ class CoreInheritances extends CI_Controller {
 
     /*
     *
-    * This is the function to be accessed when a user want to open specific page which deals with same controller E.g Edit data after saving
+    * This is the function to be accessed when  want to open specific page which deals with same controller E.g Edit data after saving
     * In here we can call the load function and pass data to passed as an array inorder to manupulate it inside passed function
     * 	* Set your Page name/ID here N:B Page ID can be a number if you wish to access other values linked to the page opened E.g Meta Data
     * 	* You can also set Page ID as actual pageName found in your view N:B do not put .php E.g home.php it should just be 'home'
@@ -172,7 +171,6 @@ class CoreInheritances extends CI_Controller {
 		//Model Query
 		$pageID = (is_numeric($pageID)) ? $pageID : $this->plural->pluralize($this->Folder).$this->SubFolder."/".$pageID;
 		$data = $this->load($pageID);
-
 
 		//Notification
 		$notify = $this->CoreNotify->notify();
@@ -217,12 +215,14 @@ class CoreInheritances extends CI_Controller {
 		$data = $this->load($pageID);
 
 		$inputTYPE = (is_null($inputTYPE)) ? $this->CoreLoad->input('inputTYPE','GET') : $inputTYPE; //Access Value
+
 		$inputID = (is_null($inputID)) ? $this->CoreLoad->input('inputID','GET') : $inputID; //Access Value
+
 
 		if (!is_null($inputTYPE) || !is_null($inputID)) {
 			//Table Select & Clause
 			$where = array($inputTYPE =>$inputID);
-	   		$columns = array('id as id,type as type,title as title,parent as parent,title as title');
+	   		$columns = array('id as id,title as title,data as data,default as default,flg as status');
 			$data['resultList'] = $this->CoreCrud->selectCRUD($module,$where,$columns);
 
 			//Notification
@@ -263,15 +263,26 @@ class CoreInheritances extends CI_Controller {
 		if ($type == 'save') {
 
 			$formData = $this->CoreLoad->input(); //Input Data
-			$validData['inheritance_type'] = "required|trim|min_length[1]|max_length[200]"; //Demo Validate Data Rules
-			$validData['inheritance_parent'] = "trim|min_length[1]|max_length[100]"; //Demo Validate Data Rules
-			$validData['inheritance_title'] = "trim|min_length[1]|max_length[500]"; //Demo Validate Data Rules
+			$validData['autofield_title'] = "trim|min_length[1]|max_length[200]"; //Demo Validate Data Rules
+
+			//Set Up Data
+			for ($i = 0; $i < count($formData['autofield_label']); $i++) {
+				$currentLabel = preg_replace('/\s+/', '_', strtolower($formData['autofield_label'][$i]));
+				$currentValue = $formData['autofield_value'][$i];
+				$itemData[$currentLabel] = $currentValue;
+			}
+
+			//Form Auto Field Data
+			$formData['autofield_data'] = json_encode($itemData); //Set Data To Json
+			$formData['autofield_title'] = strtolower(preg_replace('/\s+/', '_', $formData['autofield_title']));
+
+			//Select Value To Unset 
+			$unsetData = array('autofield_label','autofield_value');/*valude To Unset*/
 
 			//Form Validation
 			if ($this->validation($formData,$validData) == TRUE) {
 
-				//More Data
-				if ($this->create($formData,array('thumbnail'))) {
+				if ($this->create($formData,$unsetData)) {
 					$this->session->set_flashdata('notification','success'); //Notification Type
 					$message = 'Data was saved successful'; //Notification Message				
 					redirect($this->New, 'refresh');//Redirect to Page
@@ -324,20 +335,27 @@ class CoreInheritances extends CI_Controller {
 		}
 		elseif ($type == 'update') {
 
-			$updateData = $this->CoreLoad->input(); //Input Data
-
-			$validData['inheritance_type'] = "required|trim|min_length[1]|max_length[200]"; //Demo Validate Data Rules
-			$validData['inheritance_parent'] = "trim|min_length[1]|max_length[100]"; //Demo Validate Data Rules
-			$validData['inheritance_title'] = "trim|min_length[1]|max_length[500]"; //Demo Validate Data Rules
+			$updateData = $this->CoreLoad->input(); //Input Data	
+			$validData['autofield_title'] = "trim|min_length[1]|max_length[200]"; //Demo Validate Data Rules
 
 			$column_id = strtolower($this->CoreForm->get_column_name($this->Module,'id'));//Column ID
 			$value_id = $this->CoreLoad->input('id'); //Input Value
 
 			//Select Value To Unset 
-			$unsetData = array('id');/*valude To Unset*/
+			$unsetData = array('id','autofield_label','autofield_value');/*valude To Unset*/
 
 			//Form Validation
 			if ($this->validation($updateData,$validData) == TRUE) {
+
+				//Set Up Data
+				for ($i = 0; $i < count($updateData['autofield_label']); $i++) {
+					$currentLabel = preg_replace('/\s+/', '_', strtolower($updateData['autofield_label'][$i]));
+					$currentValue = $updateData['autofield_value'][$i];
+					$itemData[$currentLabel] = $currentValue;
+				}
+
+				//Form Auto Field Data
+				$updateData['autofield_data'] = json_encode($itemData); //Set Data To Json
 
 				//Update Table
 				if ($this->update($updateData,array($column_id =>$value_id),$unsetData)) {
@@ -384,9 +402,9 @@ class CoreInheritances extends CI_Controller {
 	*/
 	public function create($insertData,$unsetData=null)
 	{
-    	//Chech allowed Access
-		if ($this->CoreLoad->auth($this->Module)) { //Authentication
 
+		if ($this->CoreLoad->auth($this->Module)) { //Authentication
+			
 			//Pluralize Module
 			$tableName = $this->plural->pluralize($this->Module);
 
@@ -397,8 +415,15 @@ class CoreInheritances extends CI_Controller {
 			$flg = strtolower($this->CoreForm->get_column_name($this->Module,'flg'));
 			$insertData["$flg"] = 1;
 
-			//Insert
+			//Column Password
+			$column_password = strtolower($this->CoreForm->get_column_name($this->Module,'password'));
+
 			$insertData = $this->CoreLoad->unsetData($insertData,$unsetData); //Unset Data
+
+			//Check IF there is Password
+			if (array_key_exists($column_password,$insertData)) {
+				$insertData[$column_password] = sha1($this->config->item($insertData["$stamp"]).$insertData[$column_password]);
+			}
 
 			$details = strtolower($this->CoreForm->get_column_name($this->Module,'details'));
 			$insertData["$details"] = json_encode($insertData);
@@ -427,9 +452,9 @@ class CoreInheritances extends CI_Controller {
 	*/
 	public function update($updateData,$valueWhere,$unsetData=null)
 	{
-    	//Chech allowed Access
-		if ($this->CoreLoad->auth($this->Module)) { //Authentication
 
+		if ($this->CoreLoad->auth($this->Module)) { //Authentication
+			
 			//Pluralize Module
 			$tableName = $this->plural->pluralize($this->Module);
 
@@ -437,8 +462,15 @@ class CoreInheritances extends CI_Controller {
 			$stamp = $this->CoreForm->get_column_name($this->Module,'stamp');
 			$updateData["$stamp"] = date('Y-m-d H:i:s',time());
 
-			//Update
+			//Column Password
+			$column_password = strtolower($this->CoreForm->get_column_name($this->Module,'password'));
+
 			$updateData = $this->CoreLoad->unsetData($updateData,$unsetData); //Unset Data
+
+			//Check IF there is Password
+			if (array_key_exists($column_password,$updateData)) {
+				$updateData[$column_password] = sha1($this->config->item($updateData["$stamp"]).$updateData[$column_password]);
+			}
 
 			//Details Column Update
 			$details = strtolower($this->CoreForm->get_column_name($this->Module,'details'));
@@ -536,5 +568,5 @@ class CoreInheritances extends CI_Controller {
 
 }
 
-/* End of file CoreInheritances.php */
-/* Location: ./application/controllers/CoreInheritances.php */
+/* End of file ExtensionAutoFields.php */
+/* Location: ./application/controllers/ExtensionAutoFields.php */

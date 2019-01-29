@@ -136,6 +136,14 @@ $route['customers/update'] = 'ExtensionCustomers/valid/update'; // Validate and 
 $route['customers/delete'] = 'ExtensionCustomers/valid/delete'; // Delete Customer
 $route['customers/multiple'] = 'ExtensionCustomers/valid/bulk'; // Bulk Action 
 
+//AutoFields
+$route['autofields'] = 'ExtensionAutoFields/index'; //Customer List
+$route['autofields/new'] = 'ExtensionAutoFields/open/add'; //Open Create New Customer Form
+$route['autofields/edit'] = 'ExtensionAutoFields/edit/edit'; // Open Edit Customer Page
+$route['autofields/save'] = 'ExtensionAutoFields/valid/save'; // Validate and Save
+$route['autofields/update'] = 'ExtensionAutoFields/valid/update'; // Validate and Update
+$route['autofields/delete'] = 'ExtensionAutoFields/valid/delete'; // Delete Customer
+$route['autofields/multiple'] = 'ExtensionAutoFields/valid/bulk'; // Bulk Action 
 
 //Choose SUB
 $route['category/select'] = 'AjaxList/categories'; //Dynamic Category

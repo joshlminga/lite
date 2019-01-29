@@ -143,6 +143,9 @@
                         </ul>
                     </li>
                     <?php endif ?>
+                    <li class=""><a href="<?= site_url('autofields') ?>">
+                        <i class="zmdi zmdi-folder-star zmdi-hc-fw blue"></i> Auto Fields</a>
+                    </li>
                     <li class="sub-menu"> <!-- active -->
                         <a href="#" data-ma-action="submenu-toggle"><i class="zmdi zmdi-assignment zmdi-hc-fw red_less"></i> 
                             Field Control User 

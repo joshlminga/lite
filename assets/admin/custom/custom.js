@@ -14,6 +14,36 @@ function removeData(className) {
 	}
 }
 
+
+// Auto Field
+var i = 0; //Increment
+var v = 0; //Increment
+function autoaddData() {
+
+    var original = document.getElementById('itemLabel');
+    var clone = original.cloneNode(true); // "deep" clone
+    clone.id = "duplicetor" + ++i; // there can only be one element with an ID
+    original.parentNode.appendChild(clone);
+
+    var original = document.getElementById('itemValue');
+    var clone = original.cloneNode(true); // "deep" clone
+    clone.id = "duplicetor" + ++v; // there can only be one element with an ID
+    original.parentNode.appendChild(clone);
+
+}
+
+function autoremoveData() {
+
+    if ($('.labelItem').length > 1) {
+       $('.labelItem:last').remove();
+    }
+
+    if ($('.valueItem').length > 1) {
+       $('.valueItem:last').remove();
+    }
+
+}
+
 $(document).ready(function(){
 
     var selected = $('#usePost').val();
