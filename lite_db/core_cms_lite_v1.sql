@@ -1,0 +1,343 @@
+-- phpMyAdmin SQL Dump
+-- version 4.7.0
+-- https://www.phpmyadmin.net/
+--
+-- Host: 127.0.0.1
+-- Generation Time: Jan 29, 2019 at 02:07 PM
+-- Server version: 10.1.22-MariaDB
+-- PHP Version: 7.1.4
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Database: `core_cms_lite_v1`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `autofields`
+--
+
+CREATE TABLE `autofields` (
+  `autofield_id` bigint(20) NOT NULL,
+  `autofield_title` varchar(200) NOT NULL,
+  `autofield_data` longtext NOT NULL,
+  `autofield_details` longtext,
+  `autofield_stamp` datetime NOT NULL,
+  `autofield_default` varchar(5) DEFAULT 'yes',
+  `autofield_flg` int(1) NOT NULL DEFAULT '1'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `autofields`
+--
+
+INSERT INTO `autofields` (`autofield_id`, `autofield_title`, `autofield_data`, `autofield_details`, `autofield_stamp`, `autofield_default`, `autofield_flg`) VALUES
+(1, 'auto_field', '{\"add_item_1\":\"Item 1 Value\",\"add_item_2\":\"Item 2 Value\"}', '{\"autofield_title\":\"auto_field\",\"autofield_data\":\"{\\\"add_item_1\\\":\\\"Item 1 Value\\\",\\\"add_item_2\\\":\\\"Item 2 Value\\\"}\",\"autofield_stamp\":\"2019-01-29 16:03:20\",\"autofield_flg\":1}', '2019-01-29 16:03:20', 'yes', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `customfields`
+--
+
+CREATE TABLE `customfields` (
+  `customfield_id` bigint(20) NOT NULL,
+  `customfield_title` varchar(500) NOT NULL,
+  `customfield_required` varchar(2000) DEFAULT NULL,
+  `customfield_optional` longtext,
+  `customfield_filters` longtext,
+  `customfield_show` varchar(20) DEFAULT 'admin',
+  `customfield_details` longtext,
+  `customfield_stamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `customfield_default` varchar(5) DEFAULT 'no',
+  `customfield_flg` int(11) NOT NULL DEFAULT '1'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `customfields`
+--
+
+INSERT INTO `customfields` (`customfield_id`, `customfield_title`, `customfield_required`, `customfield_optional`, `customfield_filters`, `customfield_show`, `customfield_details`, `customfield_stamp`, `customfield_default`, `customfield_flg`) VALUES
+(1, 'userdata', '[\"User Name\",\"User Email\"]', '[\"User Gender\",\"User Mobile\"]', '[\"user_name\",\"user_email\"]', 'admin', '{\"customfield_title\":\"User Data\",\"customfield_required\":\"[\\\"User Name\\\",\\\"User Email\\\"]\",\"customfield_optional\":\"[\\\"User Gender\\\",\\\"User Mobile\\\"]\",\"customfield_stamp\":\"2019-01-23 17:05:15\",\"customfield_flg\":1,\"customfield_filters\":\"[\\\"user_name\\\",\\\"user_email\\\"]\",\"customfield_default\":\"yes\"}', '2019-01-23 14:09:18', 'yes', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `fields`
+--
+
+CREATE TABLE `fields` (
+  `field_id` bigint(20) NOT NULL,
+  `field_title` varchar(500) NOT NULL,
+  `field_filters` varchar(2000) DEFAULT NULL,
+  `field_data` longtext,
+  `field_show` varchar(500) DEFAULT 'public',
+  `field_details` longtext,
+  `field_stamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `field_default` varchar(5) DEFAULT 'yes',
+  `field_flg` int(1) NOT NULL DEFAULT '1'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `inheritances`
+--
+
+CREATE TABLE `inheritances` (
+  `inheritance_id` bigint(20) NOT NULL,
+  `inheritance_type` varchar(100) NOT NULL,
+  `inheritance_parent` bigint(20) DEFAULT '0',
+  `inheritance_title` varchar(500) NOT NULL,
+  `inheritance_details` longtext,
+  `inheritance_stamp` datetime NOT NULL,
+  `inheritance_default` varchar(5) DEFAULT 'yes',
+  `inheritance_flg` int(1) NOT NULL DEFAULT '1'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `inheritances`
+--
+
+INSERT INTO `inheritances` (`inheritance_id`, `inheritance_type`, `inheritance_parent`, `inheritance_title`, `inheritance_details`, `inheritance_stamp`, `inheritance_default`, `inheritance_flg`) VALUES
+(1, 'default', 1, 'Parent 2', '{\"inheritance_type\":\"default\",\"inheritance_parent\":\"1\",\"inheritance_title\":\"Parent 2\",\"inheritance_stamp\":\"2019-01-28 13:25:59\",\"inheritance_flg\":1}', '2019-01-28 13:25:59', 'yes', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `levels`
+--
+
+CREATE TABLE `levels` (
+  `level_id` bigint(20) NOT NULL,
+  `level_name` varchar(20) NOT NULL,
+  `level_module` varchar(500) NOT NULL,
+  `level_details` longtext,
+  `level_stamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `level_default` varchar(5) DEFAULT 'yes',
+  `level_flg` int(1) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `levels`
+--
+
+INSERT INTO `levels` (`level_id`, `level_name`, `level_module`, `level_details`, `level_stamp`, `level_default`, `level_flg`) VALUES
+(1, 'admin', 'main,user,customfield,page,setting,field', NULL, '2019-01-23 19:49:23', 'yes', 1),
+(2, 'user', 'main,user,page,field', NULL, '2019-01-23 19:49:57', 'no', 1),
+(3, 'author', 'main,page,field', NULL, '2019-01-23 19:50:14', 'yes', 0),
+(4, 'customer', 'main', NULL, '2019-01-23 19:50:47', 'yes', 0);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `pages`
+--
+
+CREATE TABLE `pages` (
+  `page_id` bigint(20) NOT NULL,
+  `page_title` varchar(200) NOT NULL,
+  `page_url` varchar(200) DEFAULT NULL,
+  `page_post` longtext,
+  `page_control` varchar(2000) DEFAULT NULL,
+  `page_show` varchar(10) DEFAULT 'public',
+  `page_author` varchar(20) NOT NULL,
+  `page_seo` longtext,
+  `page_data` longtext,
+  `page_createdat` datetime NOT NULL,
+  `page_editor` varchar(20) DEFAULT NULL,
+  `page_editedat` datetime DEFAULT NULL,
+  `page_details` longtext NOT NULL,
+  `page_stamp` datetime NOT NULL,
+  `page_default` varchar(5) DEFAULT 'yes',
+  `page_flg` int(1) NOT NULL DEFAULT '1'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `settings`
+--
+
+CREATE TABLE `settings` (
+  `setting_id` bigint(20) NOT NULL,
+  `setting_title` varchar(200) NOT NULL,
+  `setting_value` longtext NOT NULL,
+  `setting_stamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `setting_default` varchar(5) DEFAULT 'yes',
+  `setting_flg` int(1) DEFAULT '1'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `settings`
+--
+
+INSERT INTO `settings` (`setting_id`, `setting_title`, `setting_value`, `setting_stamp`, `setting_default`, `setting_flg`) VALUES
+(1, 'site_title', 'Core Lite Version 1.0', '2018-12-17 08:50:58', 'yes', 1),
+(2, 'site_slogan', 'Develop Faster, Easier and Modular ', '2018-11-23 14:19:36', 'yes', 1),
+(3, 'theme_title', 'starter', '2018-11-23 14:19:36', 'yes', 1),
+(4, 'site_status', 'online', '2018-12-17 08:52:06', 'yes', 1),
+(5, 'offline_message', 'We are offline', '2018-12-17 08:50:58', 'yes', 1),
+(6, 'current_url', 'title', '2018-12-17 17:54:02', 'yes', 1),
+(7, 'mail_protocol', 'mail', '2018-12-17 15:57:54', 'yes', 1),
+(8, 'smtp_host', '', '2018-12-17 15:24:08', 'yes', 1),
+(9, 'smtp_user', '', '2018-12-17 15:24:29', 'yes', 1),
+(10, 'smtp_pass', '', '2018-12-17 15:24:29', 'yes', 1),
+(11, 'smtp_port', '25', '2018-12-17 15:27:45', 'yes', 1),
+(12, 'smtp_timeout', '5', '2018-12-17 15:27:21', 'yes', 1),
+(13, 'smtp_crypto', '', '2018-12-17 15:25:41', 'yes', 1),
+(14, 'wordwrap', 'TRUE', '2018-12-17 15:27:10', 'yes', 1),
+(15, 'wrapchars', '76', '2018-12-17 15:27:03', 'yes', 1),
+(16, 'mailtype', 'text', '2018-12-17 15:26:56', 'yes', 1),
+(17, 'charset', 'UTF-8', '2018-12-17 15:26:34', 'yes', 1),
+(18, 'home_display', 'blog', '2018-12-17 17:24:53', 'yes', 1),
+(19, 'home_post', '', '2018-12-17 16:02:22', 'yes', 1),
+(20, 'home_page', '', '2018-12-17 16:03:08', 'yes', 1),
+(21, 'post_per_page', '10', '2018-12-17 16:11:11', 'yes', 1),
+(22, 'post_show', 'blog', '2018-12-17 17:24:53', 'yes', 1),
+(23, 'seo_visibility', 'index, follow', '2018-12-17 17:36:50', 'yes', 1),
+(24, 'seo_global', 'any', '2018-12-17 17:30:45', 'yes', 1),
+(25, 'seo_description ', '', '2018-12-17 16:09:31', 'yes', 1),
+(26, 'seo_keywords', '', '2018-12-17 17:30:41', 'yes', 1),
+(27, 'seo_meta_data', '', '2018-12-17 16:10:23', 'yes', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `users`
+--
+
+CREATE TABLE `users` (
+  `user_id` bigint(20) NOT NULL,
+  `user_level` varchar(50) NOT NULL,
+  `user_logname` varchar(50) NOT NULL,
+  `user_password` varchar(500) NOT NULL,
+  `user_name` varchar(50) NOT NULL,
+  `user_email` varchar(50) NOT NULL,
+  `user_details` longtext,
+  `user_stamp` datetime NOT NULL,
+  `user_default` varchar(5) DEFAULT 'yes',
+  `user_flg` int(1) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`user_id`, `user_level`, `user_logname`, `user_password`, `user_name`, `user_email`, `user_details`, `user_stamp`, `user_default`, `user_flg`) VALUES
+(1, 'admin', 'admin', '378590eaf2a7af7bddb831399b55824064d37f29', 'Apha 4074', 'fastemail47@gmail.com', '{\"user_name\":\"Apha 4074\",\"user_email\":\"fastemail47@gmail.com\",\"user_level\":\"admin\",\"user_password\":\"378590eaf2a7af7bddb831399b55824064d37f29\",\"user_stamp\":\"2019-01-23 20:07:41\",\"user_flg\":1}', '2019-01-23 20:07:41', 'yes', 1);
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `autofields`
+--
+ALTER TABLE `autofields`
+  ADD PRIMARY KEY (`autofield_id`);
+
+--
+-- Indexes for table `customfields`
+--
+ALTER TABLE `customfields`
+  ADD PRIMARY KEY (`customfield_id`),
+  ADD UNIQUE KEY `customfield_title` (`customfield_title`);
+
+--
+-- Indexes for table `fields`
+--
+ALTER TABLE `fields`
+  ADD PRIMARY KEY (`field_id`);
+
+--
+-- Indexes for table `inheritances`
+--
+ALTER TABLE `inheritances`
+  ADD PRIMARY KEY (`inheritance_id`);
+
+--
+-- Indexes for table `levels`
+--
+ALTER TABLE `levels`
+  ADD PRIMARY KEY (`level_id`);
+
+--
+-- Indexes for table `pages`
+--
+ALTER TABLE `pages`
+  ADD PRIMARY KEY (`page_id`);
+
+--
+-- Indexes for table `settings`
+--
+ALTER TABLE `settings`
+  ADD PRIMARY KEY (`setting_id`);
+
+--
+-- Indexes for table `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`user_id`,`user_email`),
+  ADD KEY `user_level` (`user_level`),
+  ADD KEY `user_logname` (`user_logname`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `autofields`
+--
+ALTER TABLE `autofields`
+  MODIFY `autofield_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+--
+-- AUTO_INCREMENT for table `customfields`
+--
+ALTER TABLE `customfields`
+  MODIFY `customfield_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+--
+-- AUTO_INCREMENT for table `fields`
+--
+ALTER TABLE `fields`
+  MODIFY `field_id` bigint(20) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `inheritances`
+--
+ALTER TABLE `inheritances`
+  MODIFY `inheritance_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+--
+-- AUTO_INCREMENT for table `levels`
+--
+ALTER TABLE `levels`
+  MODIFY `level_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+--
+-- AUTO_INCREMENT for table `pages`
+--
+ALTER TABLE `pages`
+  MODIFY `page_id` bigint(20) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `settings`
+--
+ALTER TABLE `settings`
+  MODIFY `setting_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+--
+-- AUTO_INCREMENT for table `users`
+--
+ALTER TABLE `users`
+  MODIFY `user_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
