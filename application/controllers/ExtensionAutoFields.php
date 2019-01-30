@@ -263,7 +263,7 @@ class ExtensionAutoFields extends CI_Controller {
 		if ($type == 'save') {
 
 			$formData = $this->CoreLoad->input(); //Input Data
-			$validData['autofield_title'] = "trim|min_length[1]|max_length[200]"; //Demo Validate Data Rules
+			$validData['autofield_title'] = "trim|min_length[1]|max_length[200]"; //Validate Data Rules
 
 			//Set Up Data
 			for ($i = 0; $i < count($formData['autofield_label']); $i++) {
@@ -336,7 +336,7 @@ class ExtensionAutoFields extends CI_Controller {
 		elseif ($type == 'update') {
 
 			$updateData = $this->CoreLoad->input(); //Input Data	
-			$validData['autofield_title'] = "trim|min_length[1]|max_length[200]"; //Demo Validate Data Rules
+			$validData['autofield_title'] = "trim|min_length[1]|max_length[200]"; //Validate Data Rules
 
 			$column_id = strtolower($this->CoreForm->get_column_name($this->Module,'id'));//Column ID
 			$value_id = $this->CoreLoad->input('id'); //Input Value

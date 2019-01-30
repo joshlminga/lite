@@ -262,10 +262,10 @@ class CorePages extends CI_Controller {
 		if ($type == 'save') {
 
 			$formData = $this->CoreLoad->input(); //Input Data
-			$validData['page_title'] = "required|trim|min_length[1]|max_length[200]"; //Demo Validate Data Rules
-			$validData['page_tag'] = "trim|max_length[1000]"; //Demo Validate Data Rules
-			$validData['page_show'] = "trim|max_length[20]"; //Demo Validate Data Rules
-			$validData['thumbnail'] = "trim|min_length[1]|max_length[20]"; //Demo Validate Data Rules
+			$validData['page_title'] = "required|trim|min_length[1]|max_length[200]"; //Validate Data Rules
+			$validData['page_tag'] = "trim|max_length[1000]"; //Validate Data Rules
+			$validData['page_show'] = "trim|max_length[20]"; //Validate Data Rules
+			$validData['thumbnail'] = "trim|min_length[1]|max_length[20]"; //Validate Data Rules
 
 			//Form Validation
 			if ($this->validation($formData,$validData) == TRUE) {
@@ -339,10 +339,10 @@ class CorePages extends CI_Controller {
 
 			$updateData = $this->CoreLoad->input(); //Input Data
 
-			$validData['page_title'] = "required|trim|min_length[1]|max_length[200]"; //Demo Validate Data Rules
-			$validData['page_tag'] = "trim|max_length[1000]"; //Demo Validate Data Rules
-			$validData['page_show'] = "trim|max_length[20]"; //Demo Validate Data Rules
-			$validData['thumbnail'] = "trim|min_length[1]|max_length[20]"; //Demo Validate Data Rules
+			$validData['page_title'] = "required|trim|min_length[1]|max_length[200]"; //Validate Data Rules
+			$validData['page_tag'] = "trim|max_length[1000]"; //Validate Data Rules
+			$validData['page_show'] = "trim|max_length[20]"; //Validate Data Rules
+			$validData['thumbnail'] = "trim|min_length[1]|max_length[20]"; //Validate Data Rules
 
 			$column_id = strtolower($this->CoreForm->get_column_name($this->Module,'id'));//Column ID
 			$value_id = $this->CoreLoad->input('id'); //Input Value

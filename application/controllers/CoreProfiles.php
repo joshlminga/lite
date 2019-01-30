@@ -262,9 +262,9 @@ class CoreProfiles extends CI_Controller {
 		if ($type == 'update') {
 
 			$updateData = $this->CoreLoad->input(); //Input Data	
-			$validData['user_name'] = "required|trim|min_length[1]|max_length[200]"; //Demo Validate Data Rules
-			$validData['user_email'] = "required|trim|min_length[1]|max_length[200]|valid_email"; //Demo Validate Data Rules
-			$validData['user_password'] = "trim|max_length[20]"; //Demo Validate Data Rules
+			$validData['user_name'] = "required|trim|min_length[1]|max_length[200]"; //Validate Data Rules
+			$validData['user_email'] = "required|trim|min_length[1]|max_length[200]|valid_email"; //Validate Data Rules
+			$validData['user_password'] = "trim|max_length[20]"; //Validate Data Rules
 
 			$column_password = strtolower($this->CoreForm->get_column_name($this->Module,'password'));//Column Password
 			$column_id = strtolower($this->CoreForm->get_column_name($this->Module,'id'));//Column ID

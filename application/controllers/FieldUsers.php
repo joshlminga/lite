@@ -288,8 +288,8 @@ class FieldUsers extends CI_Controller {
 		if ($type == 'save') {
 
 			$formData = $this->CoreLoad->input(); //Input Data
-			$validData['user_name'] = "required|trim|min_length[1]|max_length[200]"; //Demo Validate Data Rules
-			$validData['user_email'] = "required|trim|min_length[1]|max_length[200]|valid_email"; //Demo Validate Data Rules
+			$validData['user_name'] = "required|trim|min_length[1]|max_length[200]"; //Validate Data Rules
+			$validData['user_email'] = "required|trim|min_length[1]|max_length[200]|valid_email"; //Validate Data Rules
 
 			//Form Validation
 			if ($this->validation($formData,$validData) == TRUE) {
@@ -392,8 +392,8 @@ class FieldUsers extends CI_Controller {
 		elseif ($type == 'update') {
 
 			$updateData = $this->CoreLoad->input(); //Input Data		
-			$validData['user_name'] = "required|trim|min_length[1]|max_length[200]"; //Demo Validate Data Rules
-			$validData['user_email'] = "required|trim|min_length[1]|max_length[200]|valid_email"; //Demo Validate Data Rules
+			$validData['user_name'] = "required|trim|min_length[1]|max_length[200]"; //Validate Data Rules
+			$validData['user_email'] = "required|trim|min_length[1]|max_length[200]|valid_email"; //Validate Data Rules
 
 			//Table
 			$fieldTable = $this->plural->pluralize($this->Route);

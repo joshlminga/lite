@@ -263,9 +263,9 @@ class CoreInheritances extends CI_Controller {
 		if ($type == 'save') {
 
 			$formData = $this->CoreLoad->input(); //Input Data
-			$validData['inheritance_type'] = "required|trim|min_length[1]|max_length[200]"; //Demo Validate Data Rules
-			$validData['inheritance_parent'] = "trim|min_length[1]|max_length[100]"; //Demo Validate Data Rules
-			$validData['inheritance_title'] = "trim|min_length[1]|max_length[500]"; //Demo Validate Data Rules
+			$validData['inheritance_type'] = "required|trim|min_length[1]|max_length[200]"; //Validate Data Rules
+			$validData['inheritance_parent'] = "trim|min_length[1]|max_length[100]"; //Validate Data Rules
+			$validData['inheritance_title'] = "trim|min_length[1]|max_length[500]"; //Validate Data Rules
 
 			//Form Validation
 			if ($this->validation($formData,$validData) == TRUE) {
@@ -326,9 +326,9 @@ class CoreInheritances extends CI_Controller {
 
 			$updateData = $this->CoreLoad->input(); //Input Data
 
-			$validData['inheritance_type'] = "required|trim|min_length[1]|max_length[200]"; //Demo Validate Data Rules
-			$validData['inheritance_parent'] = "trim|min_length[1]|max_length[100]"; //Demo Validate Data Rules
-			$validData['inheritance_title'] = "trim|min_length[1]|max_length[500]"; //Demo Validate Data Rules
+			$validData['inheritance_type'] = "required|trim|min_length[1]|max_length[200]"; //Validate Data Rules
+			$validData['inheritance_parent'] = "trim|min_length[1]|max_length[100]"; //Validate Data Rules
+			$validData['inheritance_title'] = "trim|min_length[1]|max_length[500]"; //Validate Data Rules
 
 			$column_id = strtolower($this->CoreForm->get_column_name($this->Module,'id'));//Column ID
 			$value_id = $this->CoreLoad->input('id'); //Input Value
