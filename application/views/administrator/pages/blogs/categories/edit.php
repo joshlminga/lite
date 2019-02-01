@@ -12,28 +12,10 @@
 				<?= form_open($form_edit, '', ' autocomplete="off" '); ?>
 					<div class="row">
 						<input type="hidden" name="id" value="<?= $resultList[0]->id;?>">
-					    <div class="col-md-4 col-sm-12">
-					        <div class="fg-line">
-					            <label>Inheritance Type <small>(Select One)</small> <i class="fa fa-asterisk"></i></label>
-	                            <select name="inheritance_type" class="chosen" data-placeholder="Choose Type...">
-	                            	<?php for ($i = 0; $i < count($inheritance_type); $i++): ?>
-	                            		<?php if (strtolower($inheritance_type[$i]->inheritance_type) == $resultList[0]->type): ?>
-			                                <option value="<?= strtolower($inheritance_type[$i]->inheritance_type) ?>" selected="">
-			                                	<?= ucwords($inheritance_type[$i]->inheritance_type) ?>
-			                                </option>
-	                            		<?php else: ?>
-			                                <option value="<?= strtolower($inheritance_type[$i]->inheritance_type) ?>">
-			                                	<?= ucwords($inheritance_type[$i]->inheritance_type) ?>
-			                                </option>
-	                            		<?php endif ?>
-	                            	<?php endfor ?>
-	                            </select>
-                        	</div>
-					        <span class="error"><?= form_error('inheritance_type') ?></span>
-                        </div>
+                        <input type="hidden" name="inheritance_type" value="category">
 					    <div class="col-md-4 col-sm-12">
 				            <div class="fg-line">
-				            	<label>Inheritance Parent <small>(Parent Name)</small> <i class="fa fa-asterisk"></i></label>
+				            	<label>Select Parent <small>(Parent Category)</small> <i class="fa fa-asterisk"></i></label>
 	                            <select name="inheritance_parent" class="chosen" data-placeholder="Choose Parent...">
 	                            	<?php $default = 0; ?>
 	                            	<?php for ($i = 0; $i < count($inheritance_parent); $i++): ?>
@@ -54,10 +36,10 @@
 				            </div>
 				            <span class="error"><?= form_error('inheritance_parent') ?></span>
 					    </div>
-					    <div class="col-md-4 col-sm-12">
+					    <div class="col-md-8 col-sm-12">
 					        <div class="form-group">
 					            <div class="fg-line">
-					            	<label>Title <i class="fa fa-asterisk"></i></label>
+					            	<label>Category Title/Name <i class="fa fa-asterisk"></i></label>
 					                <input type="text" class="form-control" name="inheritance_title" id="" autocomplete="off" value="<?= $resultList[0]->title; ?>">
 					            </div>
 					            <span class="error"><?= form_error('inheritance_title') ?></span>

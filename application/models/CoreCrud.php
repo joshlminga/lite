@@ -140,7 +140,7 @@ class CoreCrud extends CI_Model {
   * Return Link or Name | By Default it return Name
   * 
   */
-  public function uploadFile($input = null,$valid = 'jpg|jpeg|png|doc|docx|pdf|xls|txt',$file = '../assets/admin/images/upload',$link=false)
+  public function uploadFile($input=null,$valid='jpg|jpeg|png|doc|docx|pdf|xls|txt',$file='../assets/admin/images/upload',$link=false)
   {
     
     //Library
@@ -190,14 +190,25 @@ class CoreCrud extends CI_Model {
 
   /*
   *
-  * Generate Post Url From Title
+  * Generate Url From Title
   * 
   */
-  public function postURL($postID,$currURL=null)
+  public function postURL($postID,$currURL=null,$module='page')
   {
+
+    //Modules
+    $module = $this->plural->singularize($module);
+    $table = $this->plural->pluralize($module);
+
+    //Columns
+    $page_column_id = $module."_id";
+    $page_column_title = $module."_title";
+    $page_column_createdat = $module."_createdat";
+    $page_column_url = $module."_url";
+
     //Select Post
-    $postTitle = $this->db->select('page_id,page_title')->where('page_id',$postID)
-                          ->order_by('page_createdat desc')->limit(1)->get('pages');
+    $postTitle = $this->db->select("$page_column_id,$page_column_title")->where("$page_column_id",$postID)
+                          ->order_by("$page_column_createdat desc")->limit(1)->get("$table");
     $postData = $postTitle->result();
 
     //Url Format
@@ -206,14 +217,14 @@ class CoreCrud extends CI_Model {
     if (strtolower($current_url) == 'title') {
 
       if (!is_null($currURL)) {
-          $post_url = substr(preg_replace("#[[:punct:]]#", "", stripcslashes($currURL)),0, 20);
+          $post_url = substr(preg_replace("/[^ \w-]/", "", stripcslashes($currURL)),0, 50);
       }else{
-        $post_url = substr(preg_replace("#[[:punct:]]#", "", stripcslashes($postData[0]->page_title)),0, 20);
+        $post_url = substr(preg_replace("/[^ \w-]/", "", stripcslashes($postData[0]->$page_column_title)),0, 50);
       }
       
       $url = str_replace(" ", "-",strtolower(trim($post_url)));
-      $ExistingURL = $this->db->select('page_url')->like('page_url',$url,'both')
-                            ->order_by('page_createdat desc')->limit(1)->get('pages');
+      $ExistingURL = $this->db->select("$page_column_url")->like("$page_column_url",$url,"both")
+                            ->order_by("$page_column_createdat desc")->limit(1)->get("$table");
       $URL = $ExistingURL->result();
       if (!empty($URL)) {
         $post_url = $url.'-'.$postData[0]->page_id;
@@ -223,41 +234,55 @@ class CoreCrud extends CI_Model {
     }
     elseif (strtolower($current_url) == 'get') {
       if (!is_null($currURL)) {
-          $post_url = substr(preg_replace("#[[:punct:]]#", "", stripcslashes($currURL)),0, 20);
+          $post_url = substr(preg_replace("/[^ \w-]/", "", stripcslashes($currURL)),0, 50);
       }else{
-        $post_url = substr(preg_replace("#[[:punct:]]#", "", stripcslashes($postData[0]->page_title)),0, 20);
+        $post_url = substr(preg_replace("/[^ \w-]/", "", stripcslashes($postData[0]->page_title)),0, 50);
       }
       
       $url = str_replace(" ", "-",strtolower(trim($post_url)));
-      $ExistingURL = $this->db->select('page_url')->like('page_url',$url,'both')
-                            ->order_by('page_createdat desc')->limit(1)->get('pages');
+      $ExistingURL = $this->db->select("$page_column_url")->like("$page_column_url",$url,"both")
+                            ->order_by("$page_column_createdat desc")->limit(1)->get("$table");
       $URL = $ExistingURL->result();
       if (!empty($URL)) {
-        $post_url = '?p='.$url.'-'.$postData[0]->page_id;
+        $post_url = '?p='.$url.'-'.$postData[0]->$page_column_id;
       }else{
         $post_url = '?p='.$url;
       }    
     }else{
-        $post_url = $postData[0]->page_id;
+        $post_url = $postData[0]->$page_column_id;
     }
 
     return $post_url;
   }
+
   /*
   *
   * Check If Same URL Exist 
   */
-  public function checkURL($currURL,$currPOST)
+  public function checkURL($currURL,$currPOST,$module='page')
   {
-    $ExistingURL = $this->db->select('page_id,page_title,page_url')->where('page_id',$currPOST)
-                          ->order_by('page_createdat desc')->limit(1)->get('pages');
+
+    //Modules
+    $module = $this->plural->singularize($module);
+    $table = $this->plural->pluralize($module);
+
+    //Columns
+    $page_column_id = $module."_id";
+    $page_column_title = $module."_title";
+    $page_column_createdat = $module."_createdat";
+    $page_column_url = $module."_url";
+
+    $ExistingURL = $this->db->select("$page_column_id,$page_column_title,$page_column_url")->where("$page_column_id",$currPOST)
+                          ->order_by("$page_column_createdat desc")->limit(1)->get("$table");
     $URL = $ExistingURL->result();
-    if ($URL[0]->page_url == $currURL) {
+    if ($URL[0]->$page_column_url == $currURL) {
       return $currURL;
     }else{
-      return $this->postURL($URL[0]->page_id,$currURL);
+      return $this->postURL($URL[0]->$page_column_id,$currURL);
     }
   }
+
+
 }
 
 /* End of file CoreCrud.php */

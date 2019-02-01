@@ -64,6 +64,31 @@ $route['users/update'] = 'CoreUsers/valid/update'; //Validate and Update
 $route['users/delete'] = 'CoreUsers/valid/delete'; //Delete 
 $route['users/multiple'] = 'CoreUsers/valid/bulk'; //Bulk Action 
 
+//Blogs
+$route['blogs'] = 'CoreBlogs/index'; //List
+$route['blogs/new'] = 'CoreBlogs/open/add'; //Open Create New Form
+$route['blogs/edit'] = 'CoreBlogs/edit/edit'; // Open Edit  Page
+$route['blogs/save'] = 'CoreBlogs/valid/save'; // Validate and Save
+$route['blogs/update'] = 'CoreBlogs/valid/update'; // Validate and Update
+$route['blogs/delete'] = 'CoreBlogs/valid/delete'; // Delete 
+$route['blogs/multiple'] = 'CoreBlogs/valid/bulk'; // Bulk Action 
+
+//Blog Tags
+$route['blogtag'] = 'CoreBlogTags/index'; //Manage
+$route['blogtag/edit'] = 'CoreBlogTags/edit/edit'; //Edit 
+$route['blogtag/save'] = 'CoreBlogTags/valid/save'; //Validate and Save
+$route['blogtag/update'] = 'CoreBlogTags/valid/update'; //Validate and Update
+$route['blogtag/delete'] = 'CoreBlogTags/valid/delete'; //Delete 
+$route['blogtag/multiple'] = 'CoreBlogTags/valid/bulk'; //Bulk Action  
+
+//Blog Categories
+$route['blogcategory'] = 'CoreBlogCategories/index'; //Manage
+$route['blogcategory/edit'] = 'CoreBlogCategories/edit/edit'; //Edit 
+$route['blogcategory/save'] = 'CoreBlogCategories/valid/save'; //Validate and Save
+$route['blogcategory/update'] = 'CoreBlogCategories/valid/update'; //Validate and Update
+$route['blogcategory/delete'] = 'CoreBlogCategories/valid/delete'; //Delete 
+$route['blogcategory/multiple'] = 'CoreBlogCategories/valid/bulk'; //Bulk Action  
+
 //Pages
 $route['pages'] = 'CorePages/index'; //List
 $route['pages/new'] = 'CorePages/open/add'; //Open Create New Form

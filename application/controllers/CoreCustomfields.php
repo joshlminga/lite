@@ -23,6 +23,8 @@ class CoreCustomFields extends CI_Controller {
 	private $Save = 'customfields/save'; //Add New 
 	private $Edit = 'customfields/update'; //Update 
 
+	private $ModuleName = 'custom field'; //Module Nmae
+
 	/* Functions
 	* -> __construct () = Load the most required operations E.g Class Module
 	* 
@@ -79,6 +81,9 @@ class CoreCustomFields extends CI_Controller {
 		$data['str_to_time'] = strtotime(date('Y-m-d, H:i:s'));
 		$data['Module'] = $this->plural->pluralize($this->Module);//Module Show
 		$data['routeURL'] = (is_null($this->Route)) ? $this->plural->pluralize($this->Folder) : $this->Route;
+
+		//Module Name - For Forms Title
+		$data['ModuleName'] = $this->plural->pluralize($this->ModuleName);
 
 		//Levels
 		$data['level'] = $this->db->select('level_name')->where('level_flg',1)->get('levels')->result();

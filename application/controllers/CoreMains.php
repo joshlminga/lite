@@ -23,6 +23,8 @@ class CoreMains extends CI_Controller {
 	private $Save = ' route for save new item '; //Add New User
 	private $Edit = ' route for update item '; //Update User
 
+	private $ModuleName = 'main'; //Module Nmae
+
 	/* Functions
 	* -> __construct () = Load the most required operations E.g Class Module
 	* 
@@ -74,6 +76,9 @@ class CoreMains extends CI_Controller {
 		//Time Zone
 		date_default_timezone_set('Africa/Nairobi');
 		$data['str_to_time'] = strtotime(date('Y-m-d, H:i:s'));
+
+		//Module Name - For Forms Title
+		$data['ModuleName'] = $this->plural->pluralize($this->ModuleName);
 
 		return $data;
 	}

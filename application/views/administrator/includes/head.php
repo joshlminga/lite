@@ -32,7 +32,7 @@
 
         <!-- Font Awsome -->
         <script src="https://use.fontawesome.com/36d9a607df.js"></script>
-
+        
     </head>
 
 
@@ -128,13 +128,13 @@
                             <i class="zmdi zmdi-format-color-text green_less"></i> Blog 
                         </a>
                         <ul>
-                            <li class=""><a href="#">New</a></li>
-                            <li class=""><a href="#">Tags</a></li>
-                            <li class=""><a href="#">Category</a></li>
-                            <li class=""><a href="#">Manage</a></li> <!--active -->
+                            <li class=""><a href="<?= site_url('blogs/new') ?>">New</a></li>
+                            <li class=""><a href="<?= site_url('blogtag') ?>">Tags</a></li>
+                            <li class=""><a href="<?= site_url('blogcategory') ?>">Category</a></li>
+                            <li class=""><a href="<?= site_url('blogs') ?>">Manage</a></li> <!--active -->
                         </ul>
                     </li>
-                    <li class=""><a href="#"><i class="zmdi zmdi-comment-list"></i> Blog Comments</a></li>
+                    <li class="" style="display: none;"><a href="#"><i class="zmdi zmdi-comment-list"></i> Blog Comments</a></li>
                     <li class="sub-menu">
                         <a href="#" data-ma-action="submenu-toggle"><i class="zmdi zmdi-file-plus green_less"></i> Page </a>
                         <ul>

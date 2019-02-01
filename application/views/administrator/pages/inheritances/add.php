@@ -2,7 +2,7 @@
     <div class="container">
         <div class="card">
             <div class="card-header">
-                <h2><?= ucwords($Module); ?> <small>Creat / Add new <?= strtolower($Module); ?></small></h2>
+                <h2><?= ucwords($ModuleName); ?> <small>Creat / Add new <?= strtolower($ModuleName); ?></small></h2>
             </div>
             
 
@@ -16,6 +16,11 @@
 					            <label>Inheritance Type <small>(Select One)</small> <i class="fa fa-asterisk"></i></label>
 	                            <select name="inheritance_type" class="chosen" data-placeholder="Choose Type...">
 	                                <option value="default" selected="">Default</option>
+	                            	<?php for ($i = 0; $i < count($inheritance_type); $i++): ?>
+	                                <option value="<?= strtolower($inheritance_type[$i]->inheritance_type) ?>">
+	                                	<?= ucwords($inheritance_type[$i]->inheritance_type) ?>
+	                                </option>
+	                            	<?php endfor ?>
 	                            </select>
                         	</div>
 					        <span class="error"><?= form_error('inheritance_type') ?></span>
@@ -25,6 +30,11 @@
 				            	<label>Inheritance Parent <small>(Parent Name)</small> <i class="fa fa-asterisk"></i></label>
 	                            <select name="inheritance_parent" class="chosen" data-placeholder="Choose Parent...">
                                 	<option value="0" selected="">Self</option>
+	                            	<?php for ($i = 0; $i < count($inheritance_parent); $i++): ?>
+	                                <option value="<?= strtolower($inheritance_parent[$i]->inheritance_id) ?>">
+	                                	<?= ucwords($inheritance_parent[$i]->inheritance_title) ?>
+	                                </option>
+	                            	<?php endfor ?>
 	                            </select>
 				            </div>
 				            <span class="error"><?= form_error('inheritance_parent') ?></span>

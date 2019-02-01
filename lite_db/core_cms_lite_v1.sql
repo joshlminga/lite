@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 29, 2019 at 02:07 PM
+-- Generation Time: Feb 01, 2019 at 06:57 PM
 -- Server version: 10.1.22-MariaDB
 -- PHP Version: 7.1.4
 
@@ -44,6 +44,34 @@ CREATE TABLE `autofields` (
 
 INSERT INTO `autofields` (`autofield_id`, `autofield_title`, `autofield_data`, `autofield_details`, `autofield_stamp`, `autofield_default`, `autofield_flg`) VALUES
 (1, 'auto_field', '{\"add_item_1\":\"Item 1 Value\",\"add_item_2\":\"Item 2 Value\"}', '{\"autofield_title\":\"auto_field\",\"autofield_data\":\"{\\\"add_item_1\\\":\\\"Item 1 Value\\\",\\\"add_item_2\\\":\\\"Item 2 Value\\\"}\",\"autofield_stamp\":\"2019-01-29 16:03:20\",\"autofield_flg\":1}', '2019-01-29 16:03:20', 'yes', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `blogs`
+--
+
+CREATE TABLE `blogs` (
+  `blog_id` bigint(20) NOT NULL,
+  `blog_category` varchar(200) DEFAULT 'post',
+  `blog_title` varchar(200) NOT NULL,
+  `blog_url` varchar(200) DEFAULT NULL,
+  `blog_post` longtext,
+  `blog_control` varchar(2000) DEFAULT NULL,
+  `blog_tag` varchar(1000) DEFAULT NULL,
+  `blog_format` varchar(100) DEFAULT 'none',
+  `blog_show` varchar(10) DEFAULT 'public',
+  `blog_author` varchar(20) NOT NULL,
+  `blog_seo` longtext,
+  `blog_data` longtext,
+  `blog_createdat` datetime NOT NULL,
+  `blog_editor` varchar(20) DEFAULT NULL,
+  `blog_editedat` datetime DEFAULT NULL,
+  `blog_details` longtext NOT NULL,
+  `blog_stamp` datetime NOT NULL,
+  `blog_default` varchar(5) DEFAULT 'yes',
+  `blog_flg` int(1) NOT NULL DEFAULT '1'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -111,7 +139,8 @@ CREATE TABLE `inheritances` (
 --
 
 INSERT INTO `inheritances` (`inheritance_id`, `inheritance_type`, `inheritance_parent`, `inheritance_title`, `inheritance_details`, `inheritance_stamp`, `inheritance_default`, `inheritance_flg`) VALUES
-(1, 'default', 1, 'Parent 2', '{\"inheritance_type\":\"default\",\"inheritance_parent\":\"1\",\"inheritance_title\":\"Parent 2\",\"inheritance_stamp\":\"2019-01-28 13:25:59\",\"inheritance_flg\":1}', '2019-01-28 13:25:59', 'yes', 1);
+(1, 'category', 0, 'Uncategorised', '{\"inheritance_type\":\"default\",\"inheritance_parent\":\"1\",\"inheritance_title\":\"Parent 2\",\"inheritance_stamp\":\"2019-01-28 13:25:59\",\"inheritance_flg\":1}', '2019-01-28 13:25:59', 'yes', 1),
+(2, 'tag', 0, 'Blog', '{\"inheritance_type\":\"default\",\"inheritance_parent\":\"0\",\"inheritance_title\":\"home\",\"inheritance_stamp\":\"2019-02-01 16:06:29\",\"inheritance_flg\":1}', '2019-02-01 16:06:29', 'yes', 1);
 
 -- --------------------------------------------------------
 
@@ -249,6 +278,12 @@ ALTER TABLE `autofields`
   ADD PRIMARY KEY (`autofield_id`);
 
 --
+-- Indexes for table `blogs`
+--
+ALTER TABLE `blogs`
+  ADD PRIMARY KEY (`blog_id`);
+
+--
 -- Indexes for table `customfields`
 --
 ALTER TABLE `customfields`
@@ -303,6 +338,11 @@ ALTER TABLE `users`
 ALTER TABLE `autofields`
   MODIFY `autofield_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
+-- AUTO_INCREMENT for table `blogs`
+--
+ALTER TABLE `blogs`
+  MODIFY `blog_id` bigint(20) NOT NULL AUTO_INCREMENT;
+--
 -- AUTO_INCREMENT for table `customfields`
 --
 ALTER TABLE `customfields`
@@ -316,7 +356,7 @@ ALTER TABLE `fields`
 -- AUTO_INCREMENT for table `inheritances`
 --
 ALTER TABLE `inheritances`
-  MODIFY `inheritance_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `inheritance_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT for table `levels`
 --

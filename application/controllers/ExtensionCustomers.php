@@ -23,6 +23,8 @@ class ExtensionCustomers extends CI_Controller {
 	private $Save = 'customers/save'; //Add New customers
 	private $Edit = 'customers/update'; //Update customers
 
+	private $ModuleName = 'customers'; //Module Nmae
+
 	/* Functions
 	* -> __construct () = Load the most required operations E.g Class Module
 	* 
@@ -79,6 +81,9 @@ class ExtensionCustomers extends CI_Controller {
 		$data['str_to_time'] = strtotime(date('Y-m-d, H:i:s'));
 		$data['Module'] = $this->plural->pluralize($this->Route);//Module Show
 		$data['routeURL'] = (is_null($this->Route)) ? $this->plural->pluralize($this->Folder) : $this->Route;
+
+		//Module Name - For Forms Title
+		$data['ModuleName'] = $this->plural->pluralize($this->ModuleName);
 
 		//User Levels
 		$where = array('level_flg' =>1,'level_default' =>'no');

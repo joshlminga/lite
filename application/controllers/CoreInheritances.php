@@ -23,6 +23,8 @@ class CoreInheritances extends CI_Controller {
 	private $Save = 'inheritances/save'; //Add New customers
 	private $Edit = 'inheritances/update'; //Update customers
 
+	private $ModuleName = 'inheritances'; //Module Nmae
+
 	/* Functions
 	* -> __construct () = Load the most required operations E.g Class Module
 	* 
@@ -84,8 +86,15 @@ class CoreInheritances extends CI_Controller {
 		$data['extRoute'] = "administrator/pages/".$this->plural->pluralize($this->Folder).$this->SubFolder."/";
 
 	    //Select Inheritance
-		$data['inheritance'] = $this->db->select('inheritance_id,inheritance_type,inheritance_parent,inheritance_title')
+		$data['inheritance_type'] = $this->db->select('inheritance_id,inheritance_type,inheritance_parent,inheritance_title')
+		->from('inheritances')->where('inheritance_flg',1)->group_by('inheritance_type')->get()->result();
+
+		$data['inheritance_parent'] = $this->db->select('inheritance_id,inheritance_type,inheritance_parent,inheritance_title')
 		->from('inheritances')->where('inheritance_flg',1)->get()->result();
+
+
+		//Module Name - For Forms Title
+		$data['ModuleName'] = $this->plural->pluralize($this->ModuleName);
 
 		//Form Submit URLs
 		$data['form_new'] = $this->New;

@@ -23,6 +23,8 @@ class CorePages extends CI_Controller {
 	private $Save = 'pages/save'; //Add New customers
 	private $Edit = 'pages/update'; //Update customers
 
+	private $ModuleName = 'pages'; //Module Nmae
+
 	/* Functions
 	* -> __construct () = Load the most required operations E.g Class Module
 	* 
@@ -84,7 +86,8 @@ class CorePages extends CI_Controller {
 		$data['extRoute'] = "administrator/pages/".$this->plural->pluralize($this->Folder).$this->SubFolder."/";
 		$where = array('fieldcustom_flg' =>1,'fieldcustom_type' =>'Categories');
 
-	    //Select Post
+		//Module Name - For Forms Title
+		$data['ModuleName'] = $this->plural->pluralize($this->ModuleName);
 
 		//Form Submit URLs
 		$data['form_new'] = $this->New;
@@ -365,7 +368,9 @@ class CorePages extends CI_Controller {
 				//Data Updated
 				$updateData['page_control'] = json_encode($page_control);
 				$updateData['page_post'] = $this->input->post('page_post');
-				$updateData['page_url'] = $this->CoreCrud->checkURL($updateData['page_url'],$this->CoreLoad->input('id'));		
+				$updateData['page_url'] = $this->CoreCrud->checkURL($updateData['page_url'],$this->CoreLoad->input('id'));	
+
+				// echo $updateData['page_url'];	
 
 				//Update Table
 				if ($this->update($updateData,array($column_id =>$value_id),$unsetData)) {

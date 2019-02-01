@@ -25,6 +25,8 @@ class CoreSettings extends CI_Controller {
 	private $Blog = 'blog/update'; //Update User
 	private $Seo = 'seo/update'; //Update User
 
+	private $ModuleName = 'settings'; //Module Nmae
+
 	/* Functions
 	* -> __construct () = Load the most required operations E.g Class Module
 	* 
@@ -81,6 +83,9 @@ class CoreSettings extends CI_Controller {
 		$data['str_to_time'] = strtotime(date('Y-m-d, H:i:s'));
 		$data['Module'] = $this->plural->pluralize($this->Folder);//Module Show
 		$data['routeURL'] = (is_null($this->Route)) ? $this->plural->pluralize($this->Folder) : $this->Route;
+
+		//Module Name - For Forms Title
+		$data['ModuleName'] = $this->plural->pluralize($this->ModuleName);
 
 		//Form Submit URLs
 		$data['form_general'] = $this->General;

@@ -8,8 +8,6 @@
 
         </section>
 
-        
-
         <!-- Javascript Libraries -->
         <script src="<?= base_url($assets); ?>/vendors/bower_components/jquery/dist/jquery.min.js"></script>
         <script src="<?= base_url($assets); ?>/vendors/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>

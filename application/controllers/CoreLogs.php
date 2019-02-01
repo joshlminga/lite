@@ -23,6 +23,8 @@ class CoreLogs extends CI_Controller {
 	private $Save = ''; //Add New User
 	private $Edit = 'admin/reset'; //Update Password
 
+	private $ModuleName = 'user'; //Module Nmae
+
 	/* Functions
 	* -> __construct () = Load the most required operations E.g Class Module
 	* 
@@ -79,6 +81,9 @@ class CoreLogs extends CI_Controller {
 		$data['str_to_time'] = strtotime(date('Y-m-d, H:i:s'));
 		$data['Module'] = $this->plural->pluralize($this->Module);//Module Show
 		$data['routeURL'] = (is_null($this->Route)) ? $this->plural->pluralize($this->Folder) : $this->Route;
+
+		//Module Name - For Forms Title
+		$data['ModuleName'] = $this->plural->pluralize($this->ModuleName);
 
 		//Form Submit URLs
 		$data['form_new'] = $this->New;

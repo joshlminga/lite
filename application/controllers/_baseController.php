@@ -29,6 +29,8 @@ class _baseController extends CI_Controller {
 	private $Save = ' route for save new item '; //Add New 
 	private $Edit = ' route for update item '; //Update 
 
+	private $ModuleName = '/* This Text Will be Visible as Form Title */'; //Module Nmae
+
 	/* Functions
 	* -> __construct () = Load the most required operations E.g Class Module
 	* 
@@ -86,6 +88,9 @@ class _baseController extends CI_Controller {
 		$data['str_to_time'] = strtotime(date('Y-m-d, H:i:s'));
 		$data['Module'] = $this->plural->pluralize($this->Folder);//Module Show
 		$data['routeURL'] = (is_null($this->Route)) ? $this->plural->pluralize($this->Folder) : $this->Route;
+
+		//Module Name
+		$data['ModuleName'] = $this->plural->pluralize($this->ModuleName);
 
 		//Levels
 		$data['level'] = $this->db->select('level_name')->where('level_flg',1)->get('levels')->result();

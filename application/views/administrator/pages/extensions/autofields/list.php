@@ -5,7 +5,7 @@
                         <div class="card-header">
                             <div class="row">
                                 <div class="col-sm-12 col-md-6">
-                                    <h2><?= ucwords($Module); ?> <small>Manage data by edit or delete <?= strtolower($Module); ?></small></h2>
+                                    <h2><?= ucwords($ModuleName); ?> <small>Manage data by edit or delete <?= strtolower($ModuleName); ?></small></h2>
                                 </div>
                                 <div class="col-sm-12 col-md-6">
                                     <a href='<?= site_url($form_new);  ?>' class="btn btn-primary btn-lg waves-effect flt-right brd-5">

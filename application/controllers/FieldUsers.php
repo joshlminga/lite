@@ -86,6 +86,7 @@ class FieldUsers extends CI_Controller {
 		$where = array('user_flg' =>1,'user_level' =>'customer');
 		$data['username'] = $this->db->select('user_name,user_id')->where($where)->get('users')->result();
 
+		//Module Name - For Forms Title
 		$data['ModuleName'] = $this->plural->pluralize($this->ModuleName);
 
 		//Form Submit URLs

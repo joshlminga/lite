@@ -26,10 +26,10 @@
                                 <div class="form-group fg-float">
                                     <label class="c-black f-500 c-m-tb-2 input-label">Add Title</label>
                                     <div class="fg-line">
-                                        <input type="text" class="form-control fg-input background-input" name="page_title" 
-                                        value="<?= set_value('page_title'); ?>"  autocomplete="off">
+                                        <input type="text" class="form-control fg-input background-input" name="blog_title" 
+                                        value="<?= set_value('blog_title'); ?>"  autocomplete="off">
                                     </div>
-                                    <span class="error"><?= form_error('page_title') ?></span>
+                                    <span class="error"><?= form_error('blog_title') ?></span>
                                 </div>
                             </div>
                         </div>
@@ -38,8 +38,8 @@
                             <div class="form-group fg-float">
                                 <div class="col-md-12">
                                     <div class="form-group fg-float">
-                                        <textarea class="html-editor" name="page_post"  autocomplete="off"></textarea>
-                                        <span class="error"><?= form_error('page_post') ?></span>
+                                        <textarea class="html-editor" name="blog_post"  autocomplete="off"></textarea>
+                                        <span class="error"><?= form_error('blog_post') ?></span>
                                     </div>
                                 </div>
                             </div>
@@ -49,7 +49,33 @@
                     <div class="col-lg-3 col-md-3 col-sm-12 c-m-t-3">
 
                         <!-- Add Media -->
-                        <div class="card card-special" style="display: none">
+                        <div class="card card-special">
+
+                            <div class="card-header ch-alt cust-card-header-h2">
+                                <h2 class="placed-h2">Category </h2>
+
+                                <div class="fg-line">
+                                    <select class="chosen p-l-10" name="blog_category"  autocomplete="off" data-placeholder="Select Category">
+                                    <?php for ($i = 0; $i < count($categories); $i++): ?>
+                                        <?php if ($i == 0): ?>
+                                        <option value="<?= strtolower($categories[$i]->inheritance_title) ?>" selected>
+                                            <?= ucwords($categories[$i]->inheritance_title) ?>
+                                        </option>
+                                        <?php else: ?>
+                                        <option value="<?= strtolower($categories[$i]->inheritance_title) ?>">
+                                            <?= ucwords($categories[$i]->inheritance_title) ?>
+                                        </option>
+                                        <?php endif ?>
+                                    <?php endfor ?>
+                                    </select>
+                                    <span class="error"><?= form_error('blog_category') ?></span>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- Add Media -->
+                        <div class="card card-special" style="display: none;">
 
                             <div class="card-header ch-alt cust-card-header-h2">
                                 <h2 class="placed-h2">Media Manager </h2>
@@ -70,8 +96,8 @@
                             </div>
 
                             <div class="m-10" style="display: none;">
-                                <button type="button" class="btn palette-Grey bg waves-effect">Save Post</button>
-                                <button type="button" class="btn btn-default  item-float-right">View Post</button>
+                                <button class="btn palette-Grey bg waves-effect">Save</button>
+                                <button class="btn btn-default  item-float-right">View</button>
                             </div>
 
                             <div class="card-body card-padding cust-card-padding">
@@ -79,15 +105,15 @@
                                 <div class="form-group fg-float m-b-20">
                                     <div class="fg-line">
                                         <p class="f-500 m-b-15 c-black input-label"> Visibility: </p>
-                                        <select class="selectpicker p-l-10" name="page_show">
+                                        <select class="selectpicker p-l-10" name="blog_show">
                                             <option value="public" selected>Public</option>
                                             <option value="protected">Protected</option>
                                             <option value="private">Private</option>                                        
                                         </select>
-                                        <span class="error"><?= form_error('page_show') ?></span>
+                                        <span class="error"><?= form_error('blog_show') ?></span>
                                     </div>
 
-                                    <div class="input-group form-group m-t-10 m-b-20">
+                                    <div class="input-group form-group m-t-10 m-b-20" style="display: none">
                                         <p class="c-black f-500 input-label">Publish Schedule :</p>
 
                                         <div class="toggle-switch">
@@ -109,12 +135,34 @@
                                 <div class="clearfix"></div>
 
                                 <div class="m-t-20 text-center">
-                                    <button class="btn btn-success" onclick="submitForm('<?= $form_save_link ;?>')" type="submit">Publish Post</button>
+                                    <button class="btn btn-success" onclick="submitForm('<?= $form_save_link ;?>')" type="submit">
+                                    Publish Blog</button>
                                     <button class="btn btn-danger">Cancel</button>
                                 </div>
 
                             </div>
 
+                        </div>
+                        <div class="card card-special">
+                            <div class="card-header ch-alt cust-card-header-h2">
+                                <h2 class="placed-h2">Format </h2>
+                                <div class="radio m-b-15">
+                                    <label>
+                                        <input type="radio" name="blog_format" value="default" checked="">
+                                        <i class="input-helper"></i>
+                                        Default 
+                                    </label>
+                                </div>
+
+                                <div class="radio m-b-15">
+                                    <label>
+                                        <input type="radio" name="blog_format" value="image">
+                                        <i class="input-helper"></i>
+                                        Image
+                                    </label>
+                                </div>
+                                <span class="error"><?= form_error('blog_format') ?></span>
+                            </div>
                         </div>
 
                         <!-- Add Media -->
@@ -126,7 +174,7 @@
                                         <div class="fileinput-preview thumbnail" data-trigger="fileinput"></div>
                                         <div>
                                             <span class="btn btn-info btn-file">
-                                                <span class="fileinput-new">Choose Image</span>
+                                                <span class="fileinput-new">Select image</span>
                                                 <span class="fileinput-exists">Change</span>
                                                 <input type="file" name="thumbnail[]">
                                             </span>
@@ -148,9 +196,28 @@
 
         <div class="card">
             <div class="card-header">
-                <h2>Page Controls <small>Control your page section and appearance.</small></h2>
+                <h2>Controls <small>Control you post section and appearance.</small></h2>
             </div>
 
+            <div class="card-body card-padding">
+
+                <div class="row">
+                    <div class="col-sm-12 col-md-12">
+                        <h5><strong>Tags</strong> <small>(Separate item with comma E.g breaking,sports)</small></h5>
+                        <div class="fg-line">
+                            <select class="chosen" multiple data-placeholder="Choose Tag..." name="blog_tag[]" autocomplete="off">
+                                <option value=""></option>
+                                <?php for ($i = 0; $i < count($tags); $i++): ?>
+                                    <option value="<?= strtolower($tags[$i]->inheritance_title) ?>">
+                                        <?= ucwords($tags[$i]->inheritance_title) ?>
+                                    </option>
+                                <?php endfor ?>
+                            </select>
+                        </div>
+                        <span class="error"><?= form_error('blog_tag') ?></span>
+                    </div>
+                </div>
+            </div>
         </div>
 
         </form>
