@@ -39,6 +39,13 @@ class CoreLoad extends CI_Model {
 		$data['site_title'] = $this->db->select('setting_value')->where('setting_title','site_title')->where('setting_default','yes')
 		->where('setting_flg',1)->get('settings')->row()->setting_value;
 
+		$data['description'] = $this->db->select('setting_value')->where('setting_title','seo_description')->where('setting_default','yes')
+		->where('setting_flg',1)->get('settings')->row()->setting_value;
+		$data['keywords'] = $this->db->select('setting_value')->where('setting_title','seo_keywords')->where('setting_default','yes')
+		->where('setting_flg',1)->get('settings')->row()->setting_value;
+		$data['seo_data'] = $this->db->select('setting_value')->where('setting_title','seo_meta_data')->where('setting_default','yes')
+		->where('setting_flg',1)->get('settings')->row()->setting_value;
+
    		//returned DATA
     	return $data;
     }
