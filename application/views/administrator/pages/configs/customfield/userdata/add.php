@@ -40,7 +40,7 @@
 							            <div class="fg-line">
 										<?php if ($field_name == 'user_gender'): ?>
 							            	<label><?= $value; ?> <small>(Select Gender)</small></label>
-		                                    <select class="selectpicker" name="<?= $field_name ?>">
+		                                    <select class="selectpicker form-control" name="<?= $field_name ?>">
 		                                        <option value="male" selected>Male</option>
 		                                        <option value="female">Female</option>
 		                                    </select>
