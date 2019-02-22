@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 04, 2019 at 08:11 PM
+-- Generation Time: Feb 22, 2019 at 06:52 PM
 -- Server version: 10.1.22-MariaDB
 -- PHP Version: 7.1.4
 
@@ -117,6 +117,13 @@ CREATE TABLE `fields` (
   `field_flg` int(1) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Dumping data for table `fields`
+--
+
+INSERT INTO `fields` (`field_id`, `field_title`, `field_filters`, `field_data`, `field_show`, `field_details`, `field_stamp`, `field_default`, `field_flg`) VALUES
+(1, 'userdata', '{\"user_name\":\"Andrew\",\"user_email\":\"njenga@gmail.com\"}', '{\"user_name\":\"Andrew\",\"user_email\":\"njenga@gmail.com\",\"user_gender\":\"male\",\"user_mobile\":\"070854960\"}', 'public', '{\"field_data\":\"{\\\"user_name\\\":\\\"Andrew\\\",\\\"user_email\\\":\\\"njenga@gmail.com\\\",\\\"user_gender\\\":\\\"male\\\",\\\"user_mobile\\\":\\\"070854960\\\"}\",\"field_filters\":\"{\\\"user_name\\\":\\\"Andrew\\\",\\\"user_email\\\":\\\"njenga@gmail.com\\\"}\",\"field_title\":\"userdata\",\"field_stamp\":\"2019-02-06 18:34:25\",\"field_flg\":1}', '2019-02-06 15:34:25', 'yes', 1);
+
 -- --------------------------------------------------------
 
 --
@@ -164,9 +171,9 @@ CREATE TABLE `levels` (
 
 INSERT INTO `levels` (`level_id`, `level_name`, `level_module`, `level_details`, `level_stamp`, `level_default`, `level_flg`) VALUES
 (1, 'admin', 'main,user,customfield,page,setting,field', NULL, '2019-01-23 19:49:23', 'yes', 1),
-(2, 'user', 'main,user,page,field', NULL, '2019-01-23 19:49:57', 'no', 1),
-(3, 'author', 'main,page,field', NULL, '2019-01-23 19:50:14', 'yes', 0),
-(4, 'customer', 'main', NULL, '2019-01-23 19:50:47', 'yes', 0);
+(2, 'user', 'main,user,page,field', NULL, '2019-02-08 15:43:52', 'yes', 1),
+(3, 'author', 'main,page,field', NULL, '2019-02-08 15:43:56', 'yes', 1),
+(4, 'customer', 'main', NULL, '2019-02-08 15:44:04', 'no', 1);
 
 -- --------------------------------------------------------
 
@@ -239,7 +246,8 @@ INSERT INTO `settings` (`setting_id`, `setting_title`, `setting_value`, `setting
 (24, 'seo_global', 'any', '2018-12-17 17:30:45', 'yes', 1),
 (25, 'seo_description ', '', '2018-12-17 16:09:31', 'yes', 1),
 (26, 'seo_keywords', '', '2018-12-17 17:30:41', 'yes', 1),
-(27, 'seo_meta_data', '', '2018-12-17 16:10:23', 'yes', 1);
+(27, 'seo_meta_data', '', '2018-12-17 16:10:23', 'yes', 1),
+(28, 'inheritance_data', 'default,category,tag', '2019-02-22 17:52:44', 'yes', 1);
 
 -- --------------------------------------------------------
 
@@ -351,7 +359,7 @@ ALTER TABLE `customfields`
 -- AUTO_INCREMENT for table `fields`
 --
 ALTER TABLE `fields`
-  MODIFY `field_id` bigint(20) NOT NULL AUTO_INCREMENT;
+  MODIFY `field_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `inheritances`
 --
@@ -371,7 +379,7 @@ ALTER TABLE `pages`
 -- AUTO_INCREMENT for table `settings`
 --
 ALTER TABLE `settings`
-  MODIFY `setting_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `setting_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 --
 -- AUTO_INCREMENT for table `users`
 --

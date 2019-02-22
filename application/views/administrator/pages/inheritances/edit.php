@@ -17,14 +17,10 @@
 					            <label>Inheritance Type <small>(Select One)</small> <i class="fa fa-asterisk"></i></label>
 	                            <select name="inheritance_type" class="chosen" data-placeholder="Choose Type...">
 	                            	<?php for ($i = 0; $i < count($inheritance_type); $i++): ?>
-	                            		<?php if (strtolower($inheritance_type[$i]->inheritance_type) == $resultList[0]->type): ?>
-			                                <option value="<?= strtolower($inheritance_type[$i]->inheritance_type) ?>" selected="">
-			                                	<?= ucwords($inheritance_type[$i]->inheritance_type) ?>
-			                                </option>
+	                            		<?php if (strtolower($inheritance_type[$i]) == $resultList[0]->type): ?>
+			                                <option value="<?= strtolower($inheritance_type[$i]) ?>" selected=""><?= ucwords($inheritance_type[$i]) ?></option>
 	                            		<?php else: ?>
-			                                <option value="<?= strtolower($inheritance_type[$i]->inheritance_type) ?>">
-			                                	<?= ucwords($inheritance_type[$i]->inheritance_type) ?>
-			                                </option>
+			                                <option value="<?= strtolower($inheritance_type[$i]) ?>"><?= ucwords($inheritance_type[$i]) ?></option>
 	                            		<?php endif ?>
 	                            	<?php endfor ?>
 	                            </select>
@@ -38,16 +34,12 @@
 	                            	<?php $default = 0; ?>
 	                            	<?php for ($i = 0; $i < count($inheritance_parent); $i++): ?>
 	                            		<?php if (strtolower($inheritance_parent[$i]->inheritance_id) == $resultList[0]->parent): ?>
-			                                <option value="<?= strtolower($inheritance_parent[$i]->inheritance_id) ?>" selected="">
-			                                	<?= ucwords($inheritance_parent[$i]->inheritance_title) ?>
-			                                </option>
+			                                <option value="<?= strtolower($inheritance_parent[$i]->inheritance_id) ?>" selected=""><?= ucwords($inheritance_parent[$i]->inheritance_title) ?></option>
 			                            <?php elseif($resultList[0]->parent == $default): ?>
                                 			<option value="0" selected="">Self</option>
                                 			<?php $default = 1; ?>
 	                            		<?php else: ?>
-			                                <option value="<?= strtolower($inheritance_parent[$i]->inheritance_id) ?>">
-			                                	<?= ucwords($inheritance_parent[$i]->inheritance_title) ?>
-			                                </option>
+			                                <option value="<?= strtolower($inheritance_parent[$i]->inheritance_id) ?>"><?= ucwords($inheritance_parent[$i]->inheritance_title) ?></option>
 	                            		<?php endif ?>
 	                            	<?php endfor ?>
 	                            </select>

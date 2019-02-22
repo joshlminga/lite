@@ -24,9 +24,7 @@
                                                 <select name="inheritance_parent" class="chosen" data-placeholder="Choose Parent...">
                                                     <option value="0" selected="">Self</option>
                                                     <?php for ($i = 0; $i < count($inheritance_parent); $i++): ?>
-                                                    <option value="<?= strtolower($inheritance_parent[$i]->inheritance_id) ?>">
-                                                        <?= ucwords($inheritance_parent[$i]->inheritance_title) ?>
-                                                    </option>
+                                                    <option value="<?= strtolower($inheritance_parent[$i]->inheritance_id) ?>"><?= ucwords($inheritance_parent[$i]->inheritance_title) ?></option>
                                                     <?php endfor ?>
                                                 </select>
                                             </div>

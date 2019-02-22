@@ -14,12 +14,13 @@
 					    <div class="col-md-4 col-sm-12">
 					        <div class="fg-line">
 					            <label>Inheritance Type <small>(Select One)</small> <i class="fa fa-asterisk"></i></label>
-	                            <select name="inheritance_type" class="chosen" data-placeholder="Choose Type...">
-	                                <option value="default" selected="">Default</option>
+	                            <select name="inheritance_type" class="chosen" data-placeholder="Choose Type...">	                            	
 	                            	<?php for ($i = 0; $i < count($inheritance_type); $i++): ?>
-	                                <option value="<?= strtolower($inheritance_type[$i]->inheritance_type) ?>">
-	                                	<?= ucwords($inheritance_type[$i]->inheritance_type) ?>
-	                                </option>
+	                            		<?php if ($i == 0): ?>
+	                               		<option value="<?= strtolower($inheritance_type[$i]) ?>" selected=""><?= ucwords($inheritance_type[$i]) ?></option>
+	                               		<?php else: ?>
+		                                <option value="<?= strtolower($inheritance_type[$i]) ?>"><?= ucwords($inheritance_type[$i]) ?></option>
+	                            		<?php endif ?>
 	                            	<?php endfor ?>
 	                            </select>
                         	</div>
@@ -31,9 +32,7 @@
 	                            <select name="inheritance_parent" class="chosen" data-placeholder="Choose Parent...">
                                 	<option value="0" selected="">Self</option>
 	                            	<?php for ($i = 0; $i < count($inheritance_parent); $i++): ?>
-	                                <option value="<?= strtolower($inheritance_parent[$i]->inheritance_id) ?>">
-	                                	<?= ucwords($inheritance_parent[$i]->inheritance_title) ?>
-	                                </option>
+	                                <option value="<?= strtolower($inheritance_parent[$i]->inheritance_id) ?>"><?= ucwords($inheritance_parent[$i]->inheritance_title) ?></option>
 	                            	<?php endfor ?>
 	                            </select>
 				            </div>

@@ -86,8 +86,10 @@ class CoreInheritances extends CI_Controller {
 		$data['extRoute'] = "administrator/pages/".$this->plural->pluralize($this->Folder).$this->SubFolder."/";
 
 	    //Select Inheritance
-		$data['inheritance_type'] = $this->db->select('inheritance_id,inheritance_type,inheritance_parent,inheritance_title')
-		->from('inheritances')->where('inheritance_flg',1)->group_by('inheritance_type')->get()->result();
+		$inheritance_type = $this->db->select('setting_value')->where('setting_title','inheritance_data')->where('setting_default','yes')
+		->where('setting_flg',1)->get('settings')->row()->setting_value;
+
+		$data['inheritance_type'] = explode(',', $inheritance_type);
 
 		$data['inheritance_parent'] = $this->db->select('inheritance_id,inheritance_type,inheritance_parent,inheritance_title')
 		->from('inheritances')->where('inheritance_flg',1)->get()->result();

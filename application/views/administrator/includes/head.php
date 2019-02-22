@@ -39,7 +39,7 @@
     <body data-ma-header="teal">
         <header id="header" class="media">
             <div class="pull-left h-logo">
-                <a href="index.php" class="hidden-xs">
+                <a href="<?= site_url('dashboard'); ?>" class="hidden-xs">
                     CORE  
                     <small>The Lite</small>
                 </a>

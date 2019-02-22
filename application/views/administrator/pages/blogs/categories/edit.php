@@ -20,16 +20,12 @@
 	                            	<?php $default = 0; ?>
 	                            	<?php for ($i = 0; $i < count($inheritance_parent); $i++): ?>
 	                            		<?php if (strtolower($inheritance_parent[$i]->inheritance_id) == $resultList[0]->parent): ?>
-			                                <option value="<?= strtolower($inheritance_parent[$i]->inheritance_id) ?>" selected="">
-			                                	<?= ucwords($inheritance_parent[$i]->inheritance_title) ?>
-			                                </option>
+			                                <option value="<?= strtolower($inheritance_parent[$i]->inheritance_id) ?>" selected=""><?= ucwords($inheritance_parent[$i]->inheritance_title) ?></option>
 			                            <?php elseif($resultList[0]->parent == $default): ?>
                                 			<option value="0" selected="">Self</option>
                                 			<?php $default = 1; ?>
 	                            		<?php else: ?>
-			                                <option value="<?= strtolower($inheritance_parent[$i]->inheritance_id) ?>">
-			                                	<?= ucwords($inheritance_parent[$i]->inheritance_title) ?>
-			                                </option>
+			                                <option value="<?= strtolower($inheritance_parent[$i]->inheritance_id) ?>"><?= ucwords($inheritance_parent[$i]->inheritance_title) ?></option>
 	                            		<?php endif ?>
 	                            	<?php endfor ?>
 	                            </select>
