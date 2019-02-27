@@ -209,44 +209,40 @@ class Home extends CI_Controller {
 	*  N:B the data needed to be in an associative array form E.g $data = array('name' => 'theName');
 	*      the array key will be used as column name and the value as inputted Data
 	*  For colum default/details convert data to JSON on valid() method level
-	* Second Value is Table Name to be Affected NB: Table will be pluralized
-	* Third is the data to be unset | Unset is to be used if some of the input you wish to be removed
+	*
+	* Second is the data to be unset | Unset is to be used if some of the input you wish to be removed
 	* 
 	*/
-	public function create($insertData,$tableName,$unsetData=null)
+	public function create($insertData,$unsetData=null)
 	{
-		//Pluralize Module
-		$tableName = $this->plural->pluralize($tableName);
-		$Module = $this->plural->singularize($tableName);
 
-		//Column Stamp
-		$stamp = strtolower($this->CoreForm->get_column_name($Module,'stamp'));
-		$insertData["$stamp"] = date('Y-m-d H:i:s',time());
-		//Column Flg
-		$flg = strtolower($this->CoreForm->get_column_name($Module,'flg'));
-		$insertData["$flg"] = 1;
-
-		//Column Password
-		$column_password = strtolower($this->CoreForm->get_column_name($Module,'password'));
-
-		$insertData = $this->CoreLoad->unsetData($insertData,$unsetData); //Unset Data
-
-		//Check IF there is Password
-		if (array_key_exists($column_password,$insertData)) {
-			$insertData[$column_password] = sha1($this->config->item($insertData["$stamp"]).$insertData[$column_password]);
-		}
-
-		$details = strtolower($this->CoreForm->get_column_name($Module,'details'));
-		$insertData["$details"] = json_encode($insertData);
-
-		//Insert Data Into Table
-		$this->db->insert($tableName, $insertData);
-		if ($this->db->affected_rows() > 0) {
+		if ($this->CoreLoad->auth($this->Route)) { //Authentication
 			
-			return true; //Data Inserted
-		}else{
+			//Pluralize Module
+			$tableName = $this->plural->pluralize($this->Module);
 
-			return false; //Data Insert Failed
+			//Column Stamp
+			$stamp = strtolower($this->CoreForm->get_column_name($this->Module,'stamp'));
+			$insertData["$stamp"] = date('Y-m-d H:i:s',time());
+			//Column Flg
+			$flg = strtolower($this->CoreForm->get_column_name($this->Module,'flg'));
+			$insertData["$flg"] = 1;
+
+			//Column Password
+			$insertData = $this->CoreLoad->unsetData($insertData,$unsetData); //Unset Data
+
+			$details = strtolower($this->CoreForm->get_column_name($this->Module,'details'));
+			$insertData["$details"] = json_encode($insertData);
+
+			//Insert Data Into Table
+			$this->db->insert($tableName, $insertData);
+			if ($this->db->affected_rows() > 0) {
+				
+				return true; //Data Inserted
+			}else{
+
+				return false; //Data Insert Failed
+			}
 		}
 	}
 
@@ -260,11 +256,11 @@ class Home extends CI_Controller {
 	public function searchData($category,$location,$subCategory=null)
 	{
 
-		//Get Business
+		//Get Data
 		$where = array('column_flg' =>1,'column to look' =>'value to match');
-		$business = $this->db->select('select_data1,select_data2')->where($where)->get('table')->result();
+		$getData = $this->db->select('select_data1,select_data2')->where($where)->get('table')->result();
 
-		return $business;
+		return $getData;
 	}
 
 	/*

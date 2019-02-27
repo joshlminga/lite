@@ -202,10 +202,14 @@ class CoreLogs extends CI_Controller {
 					$this->session->set_flashdata('notification','error'); //Notification Type
 					$message = 'Failed!, wrong password or username'; //Notification Message				
 					$this->index($message);//Open Page
+				}elseif ($this->login($formData) == 'deactivated') {
+					$this->session->set_flashdata('notification','error'); //Notification Type
+					$message = 'Failed!, your account is suspended'; //Notification Message				
+					$this->index($message);//Open Page
 				}
 				else{
 					$this->session->set_flashdata('notification','error'); //Notification Type
-					$message = 'Failed!, your account is suspended'; //Notification Message				
+					$message = 'Failed!, account does not exist'; //Notification Message				
 					$this->index($message);//Open Page
 				}
 			}else{
@@ -255,23 +259,30 @@ class CoreLogs extends CI_Controller {
 		}
 
 		//Get Date Time
-		$stamp = $this->db->select($column_stamp)->where($column_logname,$logname)->get($tableName)->row()->$column_stamp;
+		$result = $this->db->select($column_stamp)->from($tableName)->where($column_logname,$logname)->limit(1)->get();
+		if ($result->num_rows() === 1) {
 
-		//Check If Enabled
-		if ($this->db->select($column_flg)->where($column_logname,$logname)->get($tableName)->row()->$column_flg) {			
-			$hased_password = sha1($this->config->item($stamp).$password);//Hashed Password
-			$where = array($column_logname => $logname, $column_password => $hased_password); // Where Clause
-			$query = $this->db->select("$column_id, $column_level")->where($where)->limit(1)->get($tableName)->result(); //Set Query Select
+			$row = $result->row();
+			$stamp = $row->$column_stamp; //Date Time
 
-			if ($query) {							
-				$newsession = array('id'=>$query[0]->$column_id,'level'=>$query[0]->$column_level,'logged'=>TRUE); //Set Session Data
-				$this->session->set_userdata($newsession); //Create Session
-				return 'success'; //Logged In
+			//Check If Enabled
+			if ($this->db->select($column_flg)->where($column_logname,$logname)->get($tableName)->row()->$column_flg) {			
+				$hased_password = sha1($this->config->item($stamp).$password);//Hashed Password
+				$where = array($column_logname => $logname, $column_password => $hased_password); // Where Clause
+				$query = $this->db->select("$column_id, $column_level")->where($where)->limit(1)->get($tableName)->result(); //Set Query Select
+
+				if ($query) {							
+					$newsession = array('id'=>$query[0]->$column_id,'level'=>$query[0]->$column_level,'logged'=>TRUE); //Set Session Data
+					$this->session->set_userdata($newsession); //Create Session
+					return 'success'; //Logged In
+				}else{
+					return 'wrong'; //Wrong Account Password / Logname
+				}
 			}else{
-				return 'wrong'; //Wrong Account Password / Logname
+				return 'deactivated'; //Account Deactivated
 			}
 		}else{
-			return 'deactivated'; //Account Deactivated
+			return 'error'; //Account Don't Exist
 		}
 	}
 
