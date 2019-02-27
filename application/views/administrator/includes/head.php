@@ -135,9 +135,12 @@
                         </ul>
                     </li>
                     <?php endif ?>
+                    <?php if ($this->CoreLoad->auth('autofield')): ?>
                     <li class=""><a href="<?= site_url('autofields') ?>">
                         <i class="zmdi zmdi-folder-star zmdi-hc-fw blue"></i> Auto Fields</a>
                     </li>
+                    <?php endif ?>
+                    <?php if ($this->CoreLoad->auth('userdata')): ?>
                     <li class="sub-menu"> <!-- active -->
                         <a href="#" data-ma-action="submenu-toggle"><i class="zmdi zmdi-assignment zmdi-hc-fw red_less"></i> 
                             Field Control User 
@@ -147,6 +150,7 @@
                             <li class=""><a href="<?= site_url('userdatas') ?>">Manage</a></li>
                         </ul>
                     </li>
+                    <?php endif ?>
                     <?php if ($this->CoreLoad->auth('user')): ?>
                     <li class="sub-menu"> <!-- active -->
                         <a href="#" data-ma-action="submenu-toggle"><i class="zmdi zmdi-pin-account zmdi-hc-fw blue"></i> Customer </a>

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 22, 2019 at 06:52 PM
+-- Generation Time: Feb 27, 2019 at 09:09 PM
 -- Server version: 10.1.22-MariaDB
 -- PHP Version: 7.1.4
 
@@ -170,8 +170,8 @@ CREATE TABLE `levels` (
 --
 
 INSERT INTO `levels` (`level_id`, `level_name`, `level_module`, `level_details`, `level_stamp`, `level_default`, `level_flg`) VALUES
-(1, 'admin', 'main,user,customfield,page,setting,field', NULL, '2019-01-23 19:49:23', 'yes', 1),
-(2, 'user', 'main,user,page,field', NULL, '2019-02-08 15:43:52', 'yes', 1),
+(1, 'admin', 'main,user,customfield,page,setting,field,userdata,autofield', NULL, '2019-02-27 20:07:01', 'yes', 1),
+(2, 'user', 'main,user,page,field,userdata,autofield', NULL, '2019-02-27 20:07:13', 'yes', 1),
 (3, 'author', 'main,page,field', NULL, '2019-02-08 15:43:56', 'yes', 1),
 (4, 'customer', 'main', NULL, '2019-02-08 15:44:04', 'no', 1);
 
@@ -220,7 +220,7 @@ CREATE TABLE `settings` (
 --
 
 INSERT INTO `settings` (`setting_id`, `setting_title`, `setting_value`, `setting_stamp`, `setting_default`, `setting_flg`) VALUES
-(1, 'site_title', 'Core Lite Version 1.0', '2018-12-17 08:50:58', 'yes', 1),
+(1, 'site_title', 'Core CMS Lite V 1.0', '2019-02-27 20:08:35', 'yes', 1),
 (2, 'site_slogan', 'Develop Faster, Easier and Modular ', '2018-11-23 14:19:36', 'yes', 1),
 (3, 'theme_title', 'starter', '2018-11-23 14:19:36', 'yes', 1),
 (4, 'site_status', 'online', '2018-12-17 08:52:06', 'yes', 1),
@@ -273,7 +273,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`user_id`, `user_level`, `user_logname`, `user_password`, `user_name`, `user_email`, `user_details`, `user_stamp`, `user_default`, `user_flg`) VALUES
-(1, 'admin', 'admin', '378590eaf2a7af7bddb831399b55824064d37f29', 'Apha 4074', 'fastemail47@gmail.com', '{\"user_name\":\"Apha 4074\",\"user_email\":\"fastemail47@gmail.com\",\"user_level\":\"admin\",\"user_password\":\"378590eaf2a7af7bddb831399b55824064d37f29\",\"user_stamp\":\"2019-01-23 20:07:41\",\"user_flg\":1}', '2019-01-23 20:07:41', 'yes', 1);
+(1, 'admin', 'admin', '378590eaf2a7af7bddb831399b55824064d37f29', 'Apha 407', 'fastemail47@gmail.com', '{\"user_name\":\"Apha 407\",\"user_email\":\"fastemail47@gmail.com\",\"user_level\":\"admin\",\"user_password\":\"378590eaf2a7af7bddb831399b55824064d37f29\",\"user_stamp\":\"2019-02-27 22:08:19\",\"user_flg\":1}', '2019-02-27 22:08:19', 'yes', 1);
 
 --
 -- Indexes for dumped tables
