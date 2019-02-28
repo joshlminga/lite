@@ -190,6 +190,25 @@ class CoreCrud extends CI_Model {
 
   /*
   *
+  * Delete Image/File Class
+  * The function accept the file stored path, 
+  *
+  */
+  public function deleteFile($path)
+  {
+
+    //File URL
+    $file = "../".$path;
+
+    //Base FIle URL
+    $realpath = realpath(APPPATH . $file);
+
+    //Delete FIle
+    unlink($realpath);
+  }
+
+  /*
+  *
   * Generate Url From Title
   * 
   */
