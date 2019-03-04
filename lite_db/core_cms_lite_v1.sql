@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 27, 2019 at 09:09 PM
+-- Generation Time: Mar 04, 2019 at 07:14 PM
 -- Server version: 10.1.22-MariaDB
 -- PHP Version: 7.1.4
 
@@ -158,7 +158,7 @@ INSERT INTO `inheritances` (`inheritance_id`, `inheritance_type`, `inheritance_p
 CREATE TABLE `levels` (
   `level_id` bigint(20) NOT NULL,
   `level_name` varchar(20) NOT NULL,
-  `level_module` varchar(500) NOT NULL,
+  `level_module` longtext NOT NULL,
   `level_details` longtext,
   `level_stamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `level_default` varchar(5) DEFAULT 'yes',

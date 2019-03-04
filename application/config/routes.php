@@ -153,21 +153,21 @@ $route['userdatas/multiple'] = 'FieldUsers/valid/bulk'; //Bulk Action
 /////////////////////////// EXTENSIONS //////////////////////////
 
 //Customers
-$route['customers'] = 'ExtensionCustomers/index'; //Customer List
-$route['customers/new'] = 'ExtensionCustomers/open/add'; //Open Create New Customer Form
-$route['customers/edit'] = 'ExtensionCustomers/edit/edit'; // Open Edit Customer Page
+$route['customers'] = 'ExtensionCustomers/index'; // List
+$route['customers/new'] = 'ExtensionCustomers/open/add'; // Create New
+$route['customers/edit'] = 'ExtensionCustomers/edit/edit'; // Edit 
 $route['customers/save'] = 'ExtensionCustomers/valid/save'; // Validate and Save
 $route['customers/update'] = 'ExtensionCustomers/valid/update'; // Validate and Update
-$route['customers/delete'] = 'ExtensionCustomers/valid/delete'; // Delete Customer
+$route['customers/delete'] = 'ExtensionCustomers/valid/delete'; // Delete 
 $route['customers/multiple'] = 'ExtensionCustomers/valid/bulk'; // Bulk Action 
 
 //AutoFields
-$route['autofields'] = 'ExtensionAutoFields/index'; //Customer List
-$route['autofields/new'] = 'ExtensionAutoFields/open/add'; //Open Create New Customer Form
-$route['autofields/edit'] = 'ExtensionAutoFields/edit/edit'; // Open Edit Customer Page
+$route['autofields'] = 'ExtensionAutoFields/index'; //List
+$route['autofields/new'] = 'ExtensionAutoFields/open/add'; //Create New
+$route['autofields/edit'] = 'ExtensionAutoFields/edit/edit'; // Edit 
 $route['autofields/save'] = 'ExtensionAutoFields/valid/save'; // Validate and Save
 $route['autofields/update'] = 'ExtensionAutoFields/valid/update'; // Validate and Update
-$route['autofields/delete'] = 'ExtensionAutoFields/valid/delete'; // Delete Customer
+$route['autofields/delete'] = 'ExtensionAutoFields/valid/delete'; // Delete 
 $route['autofields/multiple'] = 'ExtensionAutoFields/valid/bulk'; // Bulk Action 
 
 //Choose SUB
