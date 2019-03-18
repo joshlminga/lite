@@ -203,8 +203,11 @@ class CoreCrud extends CI_Model {
     //Base FIle URL
     $realpath = realpath(APPPATH . $file);
 
-    //Delete FIle
-    unlink($realpath);
+    //Check If File Exist
+    if (file_exists($realpath)) {
+      //Delete FIle
+      unlink($realpath);
+    }
   }
 
   /*
