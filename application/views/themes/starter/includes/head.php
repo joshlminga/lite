@@ -7,10 +7,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
 	<!-- SEO -->
+    <?php if ($site_global == 'any'): ?>
     <meta name="description" content="<?= $description; ?>">
     <meta name="keywords" content="<?= $keywords; ?>">
     <meta name="author" content="<?= $site_title; ?>">
-	<?= stripcslashes($seo_data); ?>
+    <meta name="robots" content="<?= $site_robots; ?>">
+    <?= stripcslashes($seo_data); ?>
+    <?php endif ?>
 	
 	<!-- Title -->
 	<title><?= $site_title; ?></title>
