@@ -71,7 +71,7 @@
 						<?php endforeach ?>
 
 						<?php $optional = json_decode($resultList[0]->optional, True); ?>
-						<?php if (!empty($optional)): ?>
+						<?php if (!empty($optional) || is_null($optional)): ?>
 						<?php foreach ($optional as $key => $value): ?>
 							<?php if (!is_null($value) && !empty($value)): ?>
 							    <div class="col-md-4 col-sm-12 optional" id="optional">
@@ -86,6 +86,16 @@
 							    </div>
 							<?php endif ?>
 						<?php endforeach ?>
+						<?php else: ?>
+					    <div class="col-md-4 col-sm-12 optional" id="optional">
+					        <div class="form-group">
+					            <div class="fg-line">
+					            	<label>Optional <small>(Optional Fields)</small></label>
+					                <input type="text" class="form-control" name="customfield_optional[]" id="" autocomplete="off" value="<?= set_value('customfield_optional'); ?>">
+					            </div>
+					            <span class="error"><?= form_error('customfield_optional') ?></span>
+					        </div>
+					    </div>
 						<?php endif ?>
 					</div>
 					<div class="row">

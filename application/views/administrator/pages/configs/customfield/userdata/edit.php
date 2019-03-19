@@ -33,16 +33,6 @@
 							    </div>
 							<?php endif ?>
 						<?php endforeach ?>
-						<?php else: ?>
-					    <div class="col-md-4 col-sm-12 required" id="required">
-					        <div class="form-group">
-					            <div class="fg-line">
-					            	<label>Required <small>(Required Fields)</small><i class="fa fa-asterisk"></i></label>
-					                <input type="text" class="form-control" name="customfield_required[]" id="" autocomplete="off" value="<?= set_value('customfield_required'); ?>">
-					            </div>
-					            <span class="error"><?= form_error('customfield_required') ?></span>
-					        </div>
-					    </div>
 						<?php endif ?>
 
 						<?php if (!empty($optional)): ?>
@@ -86,16 +76,6 @@
 							    </div>
 							<?php endif ?>
 						<?php endforeach ?>
-						<?php else: ?>
-					    <div class="col-md-4 col-sm-12 optional" id="optional">
-					        <div class="form-group">
-					            <div class="fg-line">
-					            	<label>Optional <small>(Optional Fields)</small></label>
-					                <input type="text" class="form-control" name="customfield_optional[]" id="" autocomplete="off" value="<?= set_value('customfield_optional'); ?>">
-					            </div>
-					            <span class="error"><?= form_error('customfield_optional') ?></span>
-					        </div>
-					    </div>
 						<?php endif ?>
 					</div>
 					<div class="row">
