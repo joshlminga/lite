@@ -17,7 +17,7 @@
 						<?php $optional = json_decode($fieldList[0]->optional, True); $totalOptional = count($optional); ?>
 						<?php $data = json_decode($resultList[0]->data, True);?>
 						
-
+						<?php if (!empty($required)): ?>
 						<?php foreach ($required as $key => $value): ?>
 							<?php if (!is_null($value) && !empty($value)): ?>
 							<?php $field_name = strtolower(str_replace("-", "_",str_replace(" ", "_",trim($value)))); ?>
@@ -33,8 +33,19 @@
 							    </div>
 							<?php endif ?>
 						<?php endforeach ?>
+						<?php else: ?>
+					    <div class="col-md-4 col-sm-12 required" id="required">
+					        <div class="form-group">
+					            <div class="fg-line">
+					            	<label>Required <small>(Required Fields)</small><i class="fa fa-asterisk"></i></label>
+					                <input type="text" class="form-control" name="customfield_required[]" id="" autocomplete="off" value="<?= set_value('customfield_required'); ?>">
+					            </div>
+					            <span class="error"><?= form_error('customfield_required') ?></span>
+					        </div>
+					    </div>
+						<?php endif ?>
 
-
+						<?php if (!empty($optional)): ?>
 						<?php foreach ($optional as $key => $value): ?>
 							<?php if (!is_null($value) && !empty($value)): ?>
 							<?php $field_name = strtolower(str_replace("-", "_",str_replace(" ", "_",trim($value)))); ?>
@@ -75,6 +86,17 @@
 							    </div>
 							<?php endif ?>
 						<?php endforeach ?>
+						<?php else: ?>
+					    <div class="col-md-4 col-sm-12 optional" id="optional">
+					        <div class="form-group">
+					            <div class="fg-line">
+					            	<label>Optional <small>(Optional Fields)</small></label>
+					                <input type="text" class="form-control" name="customfield_optional[]" id="" autocomplete="off" value="<?= set_value('customfield_optional'); ?>">
+					            </div>
+					            <span class="error"><?= form_error('customfield_optional') ?></span>
+					        </div>
+					    </div>
+						<?php endif ?>
 					</div>
 					<div class="row">
 					    <div class="col-md-12 col-sm-12">

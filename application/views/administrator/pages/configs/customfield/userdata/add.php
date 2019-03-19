@@ -16,6 +16,7 @@
 						<?php $optional = json_decode($fieldList[0]->optional, True); $totalOptional = count($optional); ?>
 						<?php $filters = json_decode($fieldList[0]->filters, True); ?>
 
+						<?php if (!empty($required)): ?>
 						<?php foreach ($required as $key => $value): ?>
 							<?php if (!is_null($value) && !empty($value)): ?>
 								<?php $field_name = strtolower(str_replace("-", "_",str_replace(" ", "_",trim($value)))); ?>
@@ -31,7 +32,9 @@
 							    </div>
 							<?php endif ?>
 						<?php endforeach ?>
-
+						<?php endif ?>
+						
+						<?php if (!empty($optional)): ?>
 						<?php foreach ($optional as $key => $value): ?>
 							<?php if (!is_null($value) && !empty($value)): ?>
 								<?php $field_name = strtolower(str_replace("-", "_",str_replace(" ", "_",trim($value)))); ?>
@@ -55,6 +58,7 @@
 							    </div>
 							<?php endif ?>
 						<?php endforeach ?>
+						<?php endif ?>
 					</div>
 					<div class="row">
 					    <div class="col-md-12 col-sm-12">
