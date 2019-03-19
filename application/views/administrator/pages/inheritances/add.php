@@ -17,9 +17,9 @@
 	                            <select name="inheritance_type" class="chosen" data-placeholder="Choose Type...">	                            	
 	                            	<?php for ($i = 0; $i < count($inheritance_type); $i++): ?>
 	                            		<?php if ($i == 0): ?>
-	                               		<option value="<?= strtolower(str_replace(" ", "_",$inheritance_type[$i])) ?>" selected=""><?= ucwords($inheritance_type[$i]) ?></option>
+	                               		<option value="<?= strtolower(str_replace(" ", "_",$inheritance_type[$i])) ?>" selected=""><?= ucwords(str_replace("_", " ",$inheritance_type[$i])) ?></option>
 	                               		<?php else: ?>
-		                                <option value="<?= strtolower(str_replace(" ", "_",$inheritance_type[$i])) ?>"><?= ucwords($inheritance_type[$i]) ?></option>
+		                                <option value="<?= strtolower(str_replace(" ", "_",$inheritance_type[$i])) ?>"><?= ucwords(str_replace("_", " ",$inheritance_type[$i])) ?></option>
 	                            		<?php endif ?>
 	                            	<?php endfor ?>
 	                            </select>
