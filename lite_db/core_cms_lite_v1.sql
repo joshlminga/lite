@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 04, 2019 at 07:14 PM
+-- Generation Time: Mar 19, 2019 at 08:31 AM
 -- Server version: 10.1.22-MariaDB
 -- PHP Version: 7.1.4
 
@@ -31,6 +31,7 @@ SET time_zone = "+00:00";
 CREATE TABLE `autofields` (
   `autofield_id` bigint(20) NOT NULL,
   `autofield_title` varchar(200) NOT NULL,
+  `autofield_select` varchar(5000) DEFAULT NULL,
   `autofield_data` longtext NOT NULL,
   `autofield_details` longtext,
   `autofield_stamp` datetime NOT NULL,
@@ -42,8 +43,8 @@ CREATE TABLE `autofields` (
 -- Dumping data for table `autofields`
 --
 
-INSERT INTO `autofields` (`autofield_id`, `autofield_title`, `autofield_data`, `autofield_details`, `autofield_stamp`, `autofield_default`, `autofield_flg`) VALUES
-(1, 'auto_field', '{\"add_item_1\":\"Item 1 Value\",\"add_item_2\":\"Item 2 Value\"}', '{\"autofield_title\":\"auto_field\",\"autofield_data\":\"{\\\"add_item_1\\\":\\\"Item 1 Value\\\",\\\"add_item_2\\\":\\\"Item 2 Value\\\"}\",\"autofield_stamp\":\"2019-01-29 16:03:20\",\"autofield_flg\":1}', '2019-01-29 16:03:20', 'yes', 1);
+INSERT INTO `autofields` (`autofield_id`, `autofield_title`, `autofield_select`, `autofield_data`, `autofield_details`, `autofield_stamp`, `autofield_default`, `autofield_flg`) VALUES
+(1, 'auto_field', NULL, '{\"add_item_1\":\"Item 1 Value\",\"add_item_2\":\"Item 2 Value\"}', '{\"autofield_title\":\"auto_field\",\"autofield_data\":\"{\\\"add_item_1\\\":\\\"Item 1 Value\\\",\\\"add_item_2\\\":\\\"Item 2 Value\\\"}\",\"autofield_stamp\":\"2019-01-29 16:03:20\",\"autofield_flg\":1}', '2019-01-29 16:03:20', 'yes', 1);
 
 -- --------------------------------------------------------
 
@@ -242,8 +243,8 @@ INSERT INTO `settings` (`setting_id`, `setting_title`, `setting_value`, `setting
 (20, 'home_page', '', '2018-12-17 16:03:08', 'yes', 1),
 (21, 'post_per_page', '10', '2018-12-17 16:11:11', 'yes', 1),
 (22, 'post_show', 'blog', '2018-12-17 17:24:53', 'yes', 1),
-(23, 'seo_visibility', 'index, follow', '2018-12-17 17:36:50', 'yes', 1),
-(24, 'seo_global', 'any', '2018-12-17 17:30:45', 'yes', 1),
+(23, 'seo_visibility', 'noindex, nofollow', '2019-03-18 16:26:50', 'yes', 1),
+(24, 'seo_global', 'any', '2019-03-18 16:37:13', 'yes', 1),
 (25, 'seo_description ', '', '2018-12-17 16:09:31', 'yes', 1),
 (26, 'seo_keywords', '', '2018-12-17 17:30:41', 'yes', 1),
 (27, 'seo_meta_data', '', '2018-12-17 16:10:23', 'yes', 1),
