@@ -151,7 +151,7 @@ class CoreCrud extends CI_Model {
       //Upload        
       $config['upload_path'] = realpath(APPPATH . $file);
       $config['allowed_types'] = $valid;
-      // $config['max_size'] = 500;
+      $config['max_size'] = 2048;
       $config['encrypt_name'] = TRUE;
 
       $this->upload->initialize($config);
@@ -204,7 +204,7 @@ class CoreCrud extends CI_Model {
     $realpath = realpath(APPPATH . $file);
 
     //Check If File Exist
-    if (file_exists($realpath)) {
+    if (file_exists($realpath) === True) {
       //Delete FIle
       unlink($realpath);
     }
@@ -304,6 +304,33 @@ class CoreCrud extends CI_Model {
     }
   }
 
+  /*
+  *
+  * Destroy Data Session
+  *  This function will destroy all page session values
+  *  For specific session pass session ID/name as array
+  *  
+  */
+  public function destroySession($sessionData=null)
+  {
+
+    //Check If Session Key(name/id) was Passed
+    if (!is_null($sessionData)) {
+
+      //Destroy specific session item
+      for ($i=0; $i < count($sessionData); $i++) { 
+
+        $item = $sessionData[$i]; //Destroy Session Item
+        
+        //Check If Session Key is Set
+        if (isset($this->session->$item)) {
+          $this->session->unset_userdata($item); //Destroy Session
+        }
+      }
+    }else{
+      $this->session->sess_destroy();// Destroy all session data
+    }
+  }
 
 }
 

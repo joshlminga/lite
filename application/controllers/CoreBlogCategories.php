@@ -13,9 +13,6 @@ class CoreBlogCategories extends CI_Controller {
 	private $Module = 'inheritances'; //Module
 	private $Folder = 'blogs'; //Module
 	private $SubFolder = '/categories'; //Set Default Sub Folder For html files and Front End Use Start with /
-	private $Escape = 'id,stamp,flg'; // Escape Column For Form Auto Generating
-	private $Require = ''; // Required Column During Form Validation
-	private $Unique = ''; // Unique & Required Values During Form Validation
 
 	private $Route = 'blogcategory';//If you have different route Name to Module name State it here |This wont be pluralized | set it null to use default
 
@@ -268,12 +265,14 @@ class CoreBlogCategories extends CI_Controller {
 		if ($type == 'save') {
 
 			$formData = $this->CoreLoad->input(); //Input Data
-			$validData['inheritance_type'] = "required|trim|min_length[1]|max_length[200]"; //Validate Data Rules
-			$validData['inheritance_parent'] = "trim|min_length[1]|max_length[100]"; //Validate Data Rules
-			$validData['inheritance_title'] = "trim|min_length[1]|max_length[500]"; //Validate Data Rules
+
+			//Form Validation Values
+			$this->form_validation->set_rules("inheritance_type", "Inheritance Type", "required|trim|min_length[1]|max_length[200]");
+			$this->form_validation->set_rules("inheritance_parent", "Inheritance Parent", "rim|min_length[1]|max_length[100]");
+			$this->form_validation->set_rules("inheritance_title", "Inheritance Title", "trim|min_length[1]|max_length[500]");
 
 			//Form Validation
-			if ($this->validation($formData,$validData) == TRUE) {
+			if ($this->form_validation->run() == TRUE) {
 
 				//More Data
 				if ($this->create($formData,array('thumbnail'))) {
