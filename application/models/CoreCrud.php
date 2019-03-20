@@ -113,6 +113,103 @@ class CoreCrud extends CI_Model {
 
   /*
   *
+  * This function is to help user select Inheritance Data
+  *
+  * By default the function will select inheritance_id,inheritance_type,inheritance_parent.inheritance_title unless specified other wise
+  *  
+  * 1: Pass The where clause as array('id'=>id_number,'parent'=>parent_id)
+  * 2: Pass selected values separated by comma | by default it will select id,type,parent,title
+  *
+  */
+  public function selectInheritanceItem($inheritance_where,$inheritance_select='id,type,parent,title')
+  {
+  
+    // Select Inheritance Data
+    $columns = array($inheritance_select);
+    $where = array($inheritance_where);
+    $data = $this->selectCRUD('inheritances',$inheritance_where,$columns);
+
+    return $data; //Return Data
+  }
+
+  /*
+  * This function help you to select specific fields value from Field Table
+  * Kindly not this function wont check if your Field value is Active (field_flg = 1) by default
+  * -- It will also not compaire against filter value (If you use filter)
+  * 
+  * 
+  * 1: First parameter to pass is $field_where = To the idetifier value E.g id=>17,title=>User etc. | It has to be an array
+  * 2: Pass field value you want to select | also you can pass to return value as e.g registration_date as date, full_name as name
+  * N.B must match the field names
+  * If you want to select all values from field data, just do not pass second parameter
+  * 
+  * 3: Optional search type| by default it will search using where you can add like etc
+  *
+  * Kindly remember these values are selected on field_data column and field_id will be selected by default
+  * The function will loop through field_data value to match against your field_select value keys
+  *
+  * ----> To view the data Decode the Json json_decode($returned_data[array_position],True) 
+  * 
+  */
+  public function selectFieldItem($field_where,$fiel_select='all',$clause='where')
+  {
+
+    //Check if fiel_select passed is not an array
+    if (!is_array($fiel_select)) {
+      $fiel_select = explode(',', $fiel_select); //Array to string
+    }
+
+    //Select Data
+    $columns = array('id as id,data as data');
+    $field_data = $this->selectCRUD('fields',$field_where,$columns,$clause);
+
+    //Check if Query Exceuted And Has Data
+    if ($field_data) {
+
+      //Loop through returned field Data
+      for ($i=0; $i < count($field_data); $i++) { 
+
+        $field_data_id = $field_data[$i]->id; //Field Data ID
+        $field_data_values = json_decode($field_data[$i]->data, True); //Field Data Values
+
+        //Check if user want to select all data
+        if ($fiel_select[0] == 'all') {
+
+          $selected = $field_data_values; //Field Data
+          $selected['id'] = $field_data_id; //Data ID
+
+          $data[$i] = json_encode($selected, True);// All selected Data
+        }else{
+
+          //Loop through selected values
+          for ($f=0; $f < count($fiel_select); $f++) { 
+            $select = $fiel_select[$f];//Selectd value
+            if (strpos($select, 'as') !== false) {
+              $key_as = explode('as', $select);//Get array Key and As value
+              $key = trim($key_as[0]); //Set Key
+              $as = trim($key_as[1]); //Set As value
+              $field_values[$as] = $field_data_values[$key]; //Set Value
+            }else{
+              $field_values[$select] = $field_data_values[$select]; //Set Values
+            }
+          }
+
+          //Set Values
+          $selected = $field_values; //Field Data
+          $selected['id'] = $field_data_id; //Data ID
+
+          $data[$i] = json_encode($selected, True);// All selected Data
+        }
+      }
+
+      return $data; //return Data
+    }else{
+      return null; //return null for no data
+    }
+  }
+
+  /*
+  *
   * Upload File Data
   * -> Pass Input Name
   * -> Pass Input Location (Upload location)
