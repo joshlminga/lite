@@ -13,9 +13,8 @@ class CorePages extends CI_Controller {
 	private $Module = 'pages'; //Module
 	private $Folder = 'pages'; //Module
 	private $SubFolder = ''; //Set Default Sub Folder For html files and Front End Use Start with /
-	private $Escape = 'id,stamp,flg'; // Escape Column For Form Auto Generating
-	private $Require = ''; // Required Column During Form Validation
-	private $Unique = ''; // Unique & Required Values During Form Validation
+
+	private $AllowedFile = null; //Set Default allowed file extension, remember you can pass this upon upload to override default allowed file type. Allowed File Extensions Separated by | also leave null to validate using jpg|jpeg|png|doc|docx|pdf|xls|txt change this on validation function at the bottom
 
 	private $Route = 'pages';//If you have different route Name to Module name State it here |This wont be pluralized | set it null to use default
 
@@ -261,26 +260,36 @@ class CorePages extends CI_Controller {
 		$coreModule = ucwords($this->Core).ucwords($module);
 		$routeURL = (is_null($this->Route)) ? $module : $this->Route;
 
+		//Set Allowed Files
+		$allowed_files = (is_null($this->AllowedFile))? 'jpg|jpeg|png|doc|docx|pdf|xls|txt' : $this->AllowedFile;
+
+		//Set Upload File Values
+		$file_upload_session = array("file_name" => "thumbnail", "file_required" => true);
+		$this->session->set_userdata($file_upload_session);
+
+		$upoadDirectory = "../assets/admin/images/upload/media"; //Upload Location
+
 		//Check Validation
 		if ($type == 'save') {
 
 			$formData = $this->CoreLoad->input(); //Input Data
-			$validData['page_title'] = "required|trim|min_length[1]|max_length[200]"; //Validate Data Rules
-			$validData['page_tag'] = "trim|max_length[1000]"; //Validate Data Rules
-			$validData['page_show'] = "trim|max_length[20]"; //Validate Data Rules
-			$validData['thumbnail'] = "trim|min_length[1]|max_length[20]"; //Validate Data Rules
+
+			$this->form_validation->set_rules("page_title", "Page Title", "required|trim|min_length[1]|max_length[200]");
+			$this->form_validation->set_rules("page_tag", "Page Tag", "trim|max_length[2000]");
+			$this->form_validation->set_rules("page_show", "Page Show", "trim|max_length[20]");
+			$this->form_validation->set_rules("thumbnail", "Thumbnail", "trim|callback_validation");
 
 			//Form Validation
-			if ($this->validation($formData,$validData) == TRUE) {
+			if ($this->form_validation->run() == TRUE) {
 
-				$upoadDirectory = "../assets/admin/images/upload/media"; //Upload Location
+				$image = "thumbnail"; // Input 
 
 				//Check if Input Is Empty
-				if ($_FILES['thumbnail']['size'][0] > 0) {
-					$uploaded = $this->CoreCrud->upload('thumbnail',$upoadDirectory,'jpg|jpeg|png'); //Uploaded File Link
-					$page_control['thumbnail'] = $uploaded; //Uploaded Data
+				if ($_FILES[$image]['size'][0] > 0) {
+					$uploaded = $this->CoreCrud->upload($image,$upoadDirectory,$allowed_files); //Uploaded File Link
+					$page_control[$image] = $uploaded; //Uploaded Data
 				}else{
-					$page_control['thumbnail'] = null; //Uploaded Data
+					$page_control[$image] = null; //Uploaded Data
 				}
 
 				//More Data
@@ -342,10 +351,10 @@ class CorePages extends CI_Controller {
 
 			$updateData = $this->CoreLoad->input(); //Input Data
 
-			$validData['page_title'] = "required|trim|min_length[1]|max_length[200]"; //Validate Data Rules
-			$validData['page_tag'] = "trim|max_length[1000]"; //Validate Data Rules
-			$validData['page_show'] = "trim|max_length[20]"; //Validate Data Rules
-			$validData['thumbnail'] = "trim|min_length[1]|max_length[20]"; //Validate Data Rules
+			$this->form_validation->set_rules("page_title", "Page Title", "required|trim|min_length[1]|max_length[200]");
+			$this->form_validation->set_rules("page_tag", "Page Tag", "trim|max_length[2000]");
+			$this->form_validation->set_rules("page_show", "Page Show", "trim|max_length[20]");
+			$this->form_validation->set_rules("thumbnail", "Thumbnail", "trim|callback_validation");
 
 			$column_id = strtolower($this->CoreForm->get_column_name($this->Module,'id'));//Column ID
 			$value_id = $this->CoreLoad->input('id'); //Input Value
@@ -354,23 +363,23 @@ class CorePages extends CI_Controller {
 			$unsetData = array('id','thumbnail');/*valude To Unset*/
 
 			//Form Validation
-			if ($this->validation($updateData,$validData) == TRUE) {
+			if ($this->form_validation->run() == TRUE) {
 
-				$upoadDirectory = "../assets/admin/images/upload/media"; //Upload Location
 				$page_control = array();
 				
+				$image = "thumbnail"; // Input 
+
 				//Check if Input Is Empty
-				if ($_FILES['thumbnail']['size'][0] > 0) {
-					$uploaded = $this->CoreCrud->upload('thumbnail',$upoadDirectory,'jpg|jpeg|png'); //Uploaded File Link
-					$page_control['thumbnail'] = $uploaded; //Uploaded Data
+				if ($_FILES[$image]['size'][0] > 0) {
+
+					$uploaded = $this->CoreCrud->upload($image,$upoadDirectory,$allowed_files); //Uploaded File Link
+					$page_control[$image] = $uploaded; //Uploaded Data
 				}
 
 				//Data Updated
 				$updateData['page_control'] = json_encode($page_control);
 				$updateData['page_post'] = $this->input->post('page_post');
 				$updateData['page_url'] = $this->CoreCrud->checkURL($updateData['page_url'],$this->CoreLoad->input('id'));	
-
-				// echo $updateData['page_url'];	
 
 				//Update Table
 				if ($this->update($updateData,array($column_id =>$value_id),$unsetData)) {
@@ -440,7 +449,7 @@ class CorePages extends CI_Controller {
 			$insertData["$flg"] = 1;
 
 			//Column Password
-			$insertData = $this->CoreLoad->unsetData($insertData,$unsetData); //Unset Data
+			$insertData = $this->CoreCrud->unsetData($insertData,$unsetData); //Unset Data
 
 			$details = strtolower($this->CoreForm->get_column_name($this->Module,'details'));
 			$insertData["$details"] = json_encode($insertData);
@@ -494,7 +503,7 @@ class CorePages extends CI_Controller {
 			$editor = strtolower($this->CoreForm->get_column_name($this->Module,'editor'));
 			$insertData["$editor"] = $editor_name;
 
-			$updateData = $this->CoreLoad->unsetData($updateData,$unsetData); //Unset Data
+			$updateData = $this->CoreCrud->unsetData($updateData,$unsetData); //Unset Data
 
 			//Details Column Update
 			$control = strtolower($this->CoreForm->get_column_name($this->Module,'control'));
@@ -550,52 +559,86 @@ class CorePages extends CI_Controller {
 
 	/*
 	*
-	* This Fuction is used to validate Input Data
-	* The fuctntion accept three parameters
-	* 1: The Form Data (Remember to pass them trought CoreLoad->input First)
-	* 2: Should Email considered Unique or not
-	* 3: Skip Deep Validation
+	* This Fuction is used to validate File Input Data
+	* The fuctntion accept one parameters
+	* 1: This parameter does not required to be passed, Codeigniter will handle that
+	*
+	* --> Access session containing the Input Name ( $_FILR['this_name']) & required option 
+	* --> before validating using this method.. 
 	* 
+	* -> Set Session
+	*  $file_upload_session = array("file_name" => "input_name", "file_required" => true)
+	*  $this->session->set_userdata($file_upload_session);
+	*
+	* N.B For custom validation add session $this->session->set_userdata("file_rule","identifier");
+	* the check with comparison/conditional operator under else statement
+	*
 	*/
-	public function validation($formData,$validate=array(),$skip=array())
-	{
-		//Validation Keys
-		$valid_keys = array_keys($validate);
-		$check_box = 1;
+    public function validation($value){
 
-		//Validation
-		foreach ($formData as $key => $value) {
-			$label = $this->CoreForm->get_column_label_name($key); // Label Name
-			$input = $this->CoreForm->get_label_name($key); // Input Processed
-			//Check Skip
-			if (in_array(strtolower($key),$skip)) {				
-				$this->form_validation->set_rules($key, $label, "trim|max_length[100]"); //Validate Input
-			}else{
-				if (empty($validate)) {
-					$this->form_validation->set_rules($key, $label, "trim");//Clean None Required Values
-				}else{					
-					if (in_array('check_box', $valid_keys) && $check_box == 1) {
-						$check_valid = $validate['check_box'];//Validate Inputs
-						$this->form_validation->set_rules('check_box', 'Input', "trim|$check_valid"); //Validate Email
-						$check_box = 0;
-					}else{
-						if (in_array($key, $valid_keys)) {
-							$check_valid = $validate[$key];//Validate Inputs
-							$this->form_validation->set_rules($key, $label, "trim|$check_valid"); //Validate Email
-						}else{
-							$this->form_validation->set_rules($key, $label, "trim");//Clean None Required Values
-						}
-					}
-				}
-			}
-		}
-		//Check If Validation was successful
-		if ($this->form_validation->run() == TRUE) {
-			return true;
-		}else{
-			return false;
-		}
-	}
+    	//Used Session Key ID/Name
+    	$session_keys = array('file_rule','file_name','file_required');
+
+    	//Check Which Rule To Apply
+    	if (!isset($this->session->file_rule) || empty($this->session->file_rule) || is_null($this->session->file_rule)) {
+
+	    	// Get Allowed File Extension
+	    	$allowed_extension = (!is_null($this->AllowedFile))? $this->AllowedFile : 'jpg|jpeg|png|doc|docx|pdf|xls|txt';
+	    	$allowed_extension_array = explode('|',$allowed_extension);
+
+	        $file_name = $this->session->file_name; //Upload File Name
+			$file_requred = (!isset($this->session->file_required))? true : $this->session->file_required; //Check if file is requred
+
+	        //Loop through uploaded values
+	        for ($i=0; $i < count($_FILES[$file_name]['name']); $i++) {
+
+	        	$file = $_FILES[$file_name]['name'][$i]; //Current Selected File
+		        if(isset($file) && !empty($file) && !is_null($file)){
+
+					$file_ext = pathinfo($file, PATHINFO_EXTENSION); //Get current file extension
+
+					//Check If file extension allowed
+		            if(in_array($file_ext, $allowed_extension_array)){
+		                $validation_status[$i] = true; //Succeeded
+		            }else{
+		                $validation_status[$i] = false; //Error
+		            }
+		        }else{
+		        	//Input Is Blank... So check if it is requred
+		        	if ($file_requred == TRUE) {
+			            $validation_status[$i] = 'empty'; //Error Input required
+		        	}else{
+		                $validation_status[$i] = true; //Succeeded , This input is allowed to be empty
+		        	}
+		        }
+	        }
+
+	        //Check If any validated value has an error
+	        if (in_array('empty',$validation_status, true)) {
+			    $this->form_validation->set_message('validation', 'Please choose a file to upload.');
+
+	        	$this->CoreCrud->destroySession($session_keys); //Destroy Session Values
+	        	return false; // Validation has an error, Input is required and is set to empty
+	        }
+	        elseif (in_array(false,$validation_status, true)) {
+		        $this->form_validation->set_message("validation", "Please select only ".str_replace('|',',',$allowed_extension)." file(s).");
+
+	        	$this->CoreCrud->destroySession($session_keys); //Destroy Session Values
+	        	return false; // Validation has an error
+	        }
+	        else{
+
+	        	$this->CoreCrud->destroySession($session_keys); //Destroy Session Values
+	        	return true; // Validation was successful
+	        }
+	    }else{
+
+	    	/* Your custom Validation Code Here */
+
+	    	//Before returning validation status destroy session
+	        $this->CoreCrud->destroySession($session_keys); //Destroy Session Values
+	    }
+    }
 
 }
 

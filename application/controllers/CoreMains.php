@@ -13,9 +13,8 @@ class CoreMains extends CI_Controller {
 	private $Module = 'main'; //Module
 	private $Folder = '/* HTML Source Folder Name */'; //Set Default Folder For html files
 	private $SubFolder = ''; //Set Default Sub Folder For html files and Front End Use Start with /
-	private $Escape = '/* espace column while auto form generated | Comma separated */'; // Escape Column
-	private $Require = '/* requred table value while form validation | Comma separated */'; // Required Column
-	private $Unique = '/* unique table value while form validation | Comma separated */'; // Unique & Required Values
+
+	private $AllowedFile = null; //Set Default allowed file extension, remember you can pass this upon upload to override default allowed file type. Allowed File Extensions Separated by | also leave null to validate using jpg|jpeg|png|doc|docx|pdf|xls|txt change this on validation function at the bottom
 
 	private $Route = null; //If you have different route Name to Module name State it here |This wont be pluralized | set it null to use default
 	
@@ -171,6 +170,9 @@ class CoreMains extends CI_Controller {
 	public function valid($type)
 	{
 
+		//Set Allowed Files
+		$allowed_files = (is_null($this->AllowedFile))? 'jpg|jpeg|png|doc|docx|pdf|xls|txt' : $this->AllowedFile;
+
 		//Check Validation
 		if ($type == 'check Value if true') {
 
@@ -196,7 +198,7 @@ class CoreMains extends CI_Controller {
 	public function create($tableName,$insertData,$unsetData=null)
 	{
 		
-		$insertData = $this->CoreLoad->unsetData($insertData,$unsetData); //Unset Data
+		$insertData = $this->CoreCrud->unsetData($insertData,$unsetData); //Unset Data
 
 		//Insert Data Into Table
 		$this->db->insert($tableName, $insertData);
@@ -223,7 +225,7 @@ class CoreMains extends CI_Controller {
 	public function update($tableName,$updateData,$valueWhere,$unsetData=null)
 	{
 		
-		$updateData = $this->CoreLoad->unsetData($updateData,$unsetData); //Unset Data
+		$updateData = $this->CoreCrud->unsetData($updateData,$unsetData); //Unset Data
 
 		//Update Data In The Table
 		$this->db->update($tableName, $updateData, $valueWhere);

@@ -215,7 +215,7 @@ class CoreCrud extends CI_Model {
   * -> Pass Input Location (Upload location)
   * 
   */
-  public function upload($inputName,$location,$rule='jpg|jpeg|png',$link=true)
+  public function upload($inputName,$location,$rule='jpg|jpeg|png|doc|docx|pdf|xls|txt',$link=true)
   {
 
     //Upload Data
@@ -398,6 +398,34 @@ class CoreCrud extends CI_Model {
       return $currURL;
     }else{
       return $this->postURL($URL[0]->$page_column_id,$currURL);
+    }
+  }
+
+  /*
+  *
+  * This function allow user to remove array key and it's value from the data
+  * The two parameters passed are
+  * 1: $passedData - the array containing full data
+  * 2: $unsetData - the value you wish to be removed from the array
+  *
+  *  -> The function will return the remaining of the data
+  */
+  public function unsetData($passedData,$unsetData=null)
+  {
+    if (!is_null($unsetData)) {
+
+      //Unset Data
+      for($i = 0; $i < count($unsetData); $i++){
+
+        $unset = $unsetData[$i]; //Key Value To Remove
+        
+        unset($passedData["$unset"]); //Remove Item
+      }
+
+      return $passedData; //Remaining Data AFter Unset
+    }
+    else{
+      return $passedData; //All Data Without Unset
     }
   }
 

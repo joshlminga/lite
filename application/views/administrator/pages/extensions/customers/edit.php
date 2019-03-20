@@ -53,7 +53,7 @@
 					        <div class="form-group">
 					            <div class="fg-line">
 					            	<label>User Logname <small>(login/user name)</small> <i class="fa fa-asterisk"></i></label>
-					                <input type="text" class="form-control" name="user_logname" id="" autocomplete="off" value="<?= stripcslashes($resultList[0]->logname); ?>" 
+					                <input type="text" class="form-control" id="" autocomplete="off" value="<?= stripcslashes($resultList[0]->logname); ?>" 
 					                disabled="">
 					            </div>
 					            <span class="error"><?= form_error('user_logname') ?></span>

@@ -270,9 +270,14 @@ class _baseController extends CI_Controller {
 		$coreModule = ucwords($this->Core).ucwords($module);
 		$routeURL = (is_null($this->Route)) ? $module : $this->Route;
 
+		//Set Allowed Files
+		$allowed_files = (is_null($this->AllowedFile))? 'jpg|jpeg|png|doc|docx|pdf|xls|txt' : $this->AllowedFile;
+		
 		//Set Upload File Values
 		$file_upload_session = array("file_name" => "upload_file_name", "file_required" => true);
 		$this->session->set_userdata($file_upload_session);
+
+		$upoadDirectory = "../assets/admin/images/upload/media"; //Upload Location
 
 		//Check Validation
 		if ($type == 'save') {
@@ -297,6 +302,20 @@ class _baseController extends CI_Controller {
 
 			//Form Validation
 			if ($this->form_validation->run() == TRUE) {
+
+				//UnSet ID
+				$formData = $this->CoreLoad->unsetData($formData,array('id'));
+
+				$image = "myfile"; // Input 
+
+				//Check if Input Is Empty
+				if ($_FILES[$image]['size'][0] > 0) {
+					$uploaded = $this->CoreCrud->upload($image,$upoadDirectory,'jpg|jpeg|png'); //Uploaded File Link
+					$formData[$image] = $uploaded; //Uploaded Data
+				}else{
+					$formData[$image] = null; //Uploaded Data
+				}
+
 				if ($this->create($formData)) {
 					$this->session->set_flashdata('notification','success'); //Notification Type
 					redirect($this->New, 'refresh');//Redirect to Page
@@ -350,15 +369,10 @@ class _baseController extends CI_Controller {
 		elseif ($type == 'update') {
 
 			$updateData = $this->CoreLoad->input(); //Input Data		
-			$column_password = strtolower($this->CoreForm->get_column_name($this->Module,'password'));//Column Password
 			$column_id = strtolower($this->CoreForm->get_column_name($this->Module,'id'));//Column ID
 			$value_id = $this->CoreLoad->input('id'); //Input Value
 
-			//Select Value To Unset && Check If Password Requested
-			if (array_key_exists("$column_password",$updateData)) {
-				if (!empty($this->input->post($column_password))) {	$unsetData= array('id');/*valude To Unset */}
-				else{ $unsetData= array('id',$column_password);/*Unset Value*/	}
-			}else{$unsetData= array('id');/*valude To Unset*/}
+			$unsetData = array('id');/*value To Unset*/
 
 			//Form Validation Values
 			$this->form_validation->set_rules("input_name", "Input Label", "required|min_length[1]|max_length[50]"); //Demo Validate Data
@@ -378,6 +392,29 @@ class _baseController extends CI_Controller {
 
 			//Form Validation
 			if ($this->form_validation->run() == TRUE) {
+
+				$unsetData = array('id');/*value To Unset*/
+
+				$current_data = array('select form existing array list'); //Get Current Data
+				$image = "myfile"; // Input 
+
+				//Check if Input Is Empty
+				if ($_FILES[$image]['size'][0] > 0) {
+
+					$image_array = json_decode($current_data[$image], True);//Current Image Array
+					$current_image = $image_array[0]; //Current Image
+
+					$this->CoreCrud->deleteFile($current_image); //Delete File
+
+					$uploaded = $this->CoreCrud->upload($image,$upoadDirectory,'jpg|jpeg|png'); //Uploaded File Link
+					$updateData[$image] = $uploaded; //Uploaded Data
+				}else{
+					
+					$currentData = json_decode($resultList[0]->data, True); //Current Data
+					$img = $currentData[$image]; //Select Image
+					$updateData[$image] = $img; //Set Image
+				}
+
 				//Update Table
 				if ($this->update($updateData,array($column_id =>$value_id),$unsetData)) {
 					$this->session->set_flashdata('notification','success'); //Notification Type
@@ -436,18 +473,10 @@ class _baseController extends CI_Controller {
 			$flg = strtolower($this->CoreForm->get_column_name($this->Module,'flg'));
 			$insertData["$flg"] = 1;
 
-			//Column Password
-			$column_password = strtolower($this->CoreForm->get_column_name($this->Module,'password'));
-
-			//Check IF there is Password
-			if (array_key_exists($column_password,$insertData)) {
-				$insertData[$column_password] = sha1($this->config->item($insertData["$stamp"]).$insertData[$column_password]);
-			}
-
 			$details = strtolower($this->CoreForm->get_column_name($Module,'details'));
 			$insertData["$details"] = json_encode($insertData);
 
-			$insertData = $this->CoreLoad->unsetData($insertData,$unsetData); //Unset Data
+			$insertData = $this->CoreCrud->unsetData($insertData,$unsetData); //Unset Data
 
 			//Insert Data Into Table
 			$this->db->insert($tableName, $insertData);
@@ -483,15 +512,7 @@ class _baseController extends CI_Controller {
 			$stamp = $this->CoreForm->get_column_name($this->Module,'stamp');
 			$updateData["$stamp"] = date('Y-m-d H:i:s',time());
 
-			//Column Password
-			$column_password = strtolower($this->CoreForm->get_column_name($this->Module,'password'));
-
-			$updateData = $this->CoreLoad->unsetData($updateData,$unsetData); //Unset Data
-
-			//Check IF there is Password
-			if (array_key_exists($column_password,$updateData)) {
-				$updateData[$column_password] = sha1($this->config->item($updateData["$stamp"]).$updateData[$column_password]);
-			}
+			$updateData = $this->CoreCrud->unsetData($updateData,$unsetData); //Unset Data
 
 			//Details Column Update
 			$details = strtolower($this->CoreForm->get_column_name($this->Module,'details'));

@@ -13,9 +13,8 @@ class CoreSettings extends CI_Controller {
 	private $Module = 'setting'; //Module
 	private $Folder = 'setting'; //Set Default Folder For html files setting
 	private $SubFolder = ''; //Set Default Sub Folder For html files and Front End Use Start with /
-	private $Escape = 'id,stamp,flg'; // Escape Column
-	private $Require = ''; // Required Column
-	private $Unique = ''; // Unique & Required Values
+	
+	private $AllowedFile = null; //Set Default allowed file extension, remember you can pass this upon upload to override default allowed file type. Allowed File Extensions Separated by | also leave null to validate using jpg|jpeg|png|doc|docx|pdf|xls|txt change this on validation function at the bottom
 
 	private $Route = null; //If you have different route Name to Module name State it here |This wont be pluralized | set it null to use default
 
@@ -204,17 +203,21 @@ class CoreSettings extends CI_Controller {
 		$coreModule = ucwords($this->Core).ucwords($module);
 		$routeURL = (is_null($this->Route)) ? $module : $this->Route;
 
+		//Set Allowed Files
+		$allowed_files = (is_null($this->AllowedFile))? 'jpg|jpeg|png|doc|docx|pdf|xls|txt' : $this->AllowedFile;
+
 		//Check Validation
 		if ($type == 'general') {
 
 			$updateData = $this->CoreLoad->input(); //Input Data
-			//Validation Data
-			$validData['site_title'] = "required|min_length[1]|max_length[800]"; //Validate Data Rules
-			$validData['site_slogan'] = "required|min_length[1]|max_length[800]"; //Validate Data 
-			$validData['site_status'] = "required|min_length[1]|max_length[10]"; //Validate Data Rules
+
+			//Form Validation Values
+			$this->form_validation->set_rules("site_title", "Site Title", "required|min_length[1]|max_length[800]");
+			$this->form_validation->set_rules("site_slogan", "Site Slogan", "required|min_length[1]|max_length[800]");
+			$this->form_validation->set_rules("site_status", "Site Status", "required|min_length[1]|max_length[10]");
 
 			//Form Validation
-			if ($this->validation($updateData,$validData) == TRUE) {
+			if ($this->form_validation->run() == TRUE) {
 				if ($this->update($updateData)) {
 					$this->session->set_flashdata('notification','success'); //Notification Type
 					$this->open($type);//Redirect to Page
@@ -231,11 +234,11 @@ class CoreSettings extends CI_Controller {
 		elseif ($type == 'link') {
 
 			$updateData = $this->CoreLoad->input(); //Input Data
-			//Validation Data
-			$validData['current_url'] = "required|min_length[1]|max_length[50]"; //Validate Data Rules
+
+			$this->form_validation->set_rules("current_url", "Current Url", "required|min_length[1]|max_length[50]");
 
 			//Form Validation
-			if ($this->validation($updateData,$validData) == TRUE) {
+			if ($this->form_validation->run() == TRUE) {
 				if ($this->update($updateData)) {
 
 					//Update URL
@@ -264,21 +267,21 @@ class CoreSettings extends CI_Controller {
 		}elseif ($type == 'mail') {
 
 			$updateData = $this->CoreLoad->input(); //Input Data
-			//Validation Data
-			$validData['mail_protocol'] = "required|min_length[1]|max_length[50]"; //Validate Data Rules
-			$validData['smtp_host'] = "min_length[1]|max_length[50]"; //Validate Data Rules
-			$validData['smtp_user'] = "min_length[1]|max_length[50]"; //Validate Data Rules
-			$validData['smtp_pass'] = "min_length[1]|max_length[50]"; //Validate Data Rules
-			$validData['smtp_port'] = "integer|min_length[1]|max_length[50]"; //Validate Data Rules
-			$validData['smtp_timeout'] = "integer|min_length[1]|max_length[50]"; //Validate Data Rules
-			$validData['smtp_crypto'] = "min_length[1]|max_length[50]"; //Validate Data Rules
-			$validData['wordwrap'] = "required|min_length[1]|max_length[50]"; //Validate Data Rules
-			$validData['wrapchars'] = "required|integer|min_length[1]|max_length[50]"; //Validate Data Rules
-			$validData['mailtype'] = "required|min_length[1]|max_length[50]"; //Validate Data Rules
-			$validData['charset'] = "required|min_length[1]|max_length[50]"; //Validate Data Rules
+
+			$this->form_validation->set_rules("mail_protocol", "Mail Protocol", "required|min_length[1]|max_length[50]");
+			$this->form_validation->set_rules("smtp_host", "Smtp Host", "min_length[1]|max_length[50]");
+			$this->form_validation->set_rules("smtp_user", "Smtp User", "min_length[1]|max_length[50]");
+			$this->form_validation->set_rules("smtp_pass", "Smtp Pass", "min_length[1]|max_length[50]");
+			$this->form_validation->set_rules("smtp_port", "Smtp Port", "integer|min_length[1]|max_length[50]");
+			$this->form_validation->set_rules("smtp_timeout", "Smtp Timeout", "integer|min_length[1]|max_length[50]");
+			$this->form_validation->set_rules("smtp_crypto", "Smtp Crypto", "min_length[1]|max_length[50]");
+			$this->form_validation->set_rules("wordwrap", "Wordwrap", "required|min_length[1]|max_length[50]");
+			$this->form_validation->set_rules("wrapchars", "Wrapchars", "required|min_length[1]|max_length[50]");
+			$this->form_validation->set_rules("mailtype", "Mailtype", "required|min_length[1]|max_length[50]");
+			$this->form_validation->set_rules("charset", "Charset", "required|min_length[1]|max_length[50]");
 
 			//Form Validation
-			if ($this->validation($updateData,$validData) == TRUE) {
+			if ($this->form_validation->run() == TRUE) {
 				if ($this->update($updateData)) {
 					$this->session->set_flashdata('notification','success'); //Notification Type
 					$this->open($type);//Redirect to Page
@@ -294,15 +297,15 @@ class CoreSettings extends CI_Controller {
 		}elseif ($type == 'mail') {
 
 			$updateData = $this->CoreLoad->input(); //Input Data
-			//Validation Data
-			$validData['home_display'] = "required|min_length[1]|max_length[50]"; //Validate Data Rules
-			$validData['home_post'] = "min_length[1]|max_length[50]"; //Validate Data Rules
-			$validData['home_page'] = "min_length[1]|max_length[50]"; //Validate Data Rules
-			$validData['post_per_page'] = "required|integer|min_length[1]|max_length[50]"; //Validate Data Rules
-			$validData['post_show'] = "required|min_length[1]|max_length[50]"; //Validate Data Rules
+
+			$this->form_validation->set_rules("home_display", "Home Display", "required|min_length[1]|max_length[50]");
+			$this->form_validation->set_rules("home_post", "Home Post", "min_length[1]|max_length[50]");
+			$this->form_validation->set_rules("home_page", "Home Page", "min_length[1]|max_length[50]");
+			$this->form_validation->set_rules("post_per_page", "Post Per Page", "required|integer|min_length[1]|max_length[50]");
+			$this->form_validation->set_rules("post_show", "Post Show", "required|min_length[1]|max_length[50]");
 
 			//Form Validation
-			if ($this->validation($updateData,$validData) == TRUE) {
+			if ($this->form_validation->run() == TRUE) {
 				if ($this->update($updateData)) {
 					$this->session->set_flashdata('notification','success'); //Notification Type
 					$this->open($type);//Redirect to Page
@@ -318,15 +321,14 @@ class CoreSettings extends CI_Controller {
 		}elseif ($type == 'seo') {
 
 			$updateData = $this->CoreLoad->input(); //Input Data
-			//Validation Data
-			$validData['seo_visibility'] = "required|min_length[1]|max_length[50]"; //Validate Data Rules
-			$validData['seo_global'] = "required|min_length[1]|max_length[50]"; //Validate Data Rules
-			$validData['seo_description'] = "max_length[8000]"; //Validate Data Rules
-			$validData['seo_description'] = "max_length[8000]"; //Validate Data Rules
-			$validData['seo_keywords'] = "max_length[8000]"; //Validate Data Rules
+
+			$this->form_validation->set_rules("seo_visibility", "Seo Visibility", "required|min_length[1]|max_length[50]");
+			$this->form_validation->set_rules("seo_global", "Seo Global", "equired|min_length[1]|max_length[50]");
+			$this->form_validation->set_rules("seo_description", "Seo Description", "max_length[8000]");
+			$this->form_validation->set_rules("seo_keywords", "Seo Keywords", "max_length[8000]");
 
 			//Form Validation
-			if ($this->validation($updateData,$validData) == TRUE) {
+			if ($this->form_validation->run() == TRUE) {
 				if ($this->update($updateData)) {
 					$this->session->set_flashdata('notification','success'); //Notification Type
 					$this->open($type);//Redirect to Page
@@ -379,55 +381,6 @@ class CoreSettings extends CI_Controller {
 
 	/*
 	*
-	* This Fuction is used to validate Input Data
-	* The fuctntion accept three parameters
-	* 1: The Form Data (Remember to pass them trought CoreLoad->input First)
-	* 2: Should Email considered Unique or not
-	* 3: Skip Deep Validation
-	* 
-	*/
-	public function validation($formData,$validate=array(),$skip=array())
-	{
-		//Validation Keys
-		$valid_keys = array_keys($validate);
-		$check_box = 1;
-
-		//Validation
-		foreach ($formData as $key => $value) {
-			$label = $this->CoreForm->get_column_label_name($key); // Label Name
-			$input = $this->CoreForm->get_label_name($key); // Input Processed
-			//Check Skip
-			if (in_array(strtolower($key),$skip)) {				
-				$this->form_validation->set_rules($key, $label, "trim|max_length[100]"); //Validate Input
-			}else{
-				if (empty($validate)) {
-					$this->form_validation->set_rules($key, $label, "trim");//Clean None Required Values
-				}else{					
-					if (in_array('check_box', $valid_keys) && $check_box == 1) {
-						$check_valid = $validate['check_box'];//Validate Inputs
-						$this->form_validation->set_rules('check_box', 'Input', "trim|$check_valid"); //Validate Email
-						$check_box = 0;
-					}else{
-						if (in_array($key, $valid_keys)) {
-							$check_valid = $validate[$key];//Validate Inputs
-							$this->form_validation->set_rules($key, $label, "trim|$check_valid"); //Validate Email
-						}else{
-							$this->form_validation->set_rules($key, $label, "trim");//Clean None Required Values
-						}
-					}
-				}
-			}
-		}
-		//Check If Validation was successful
-		if ($this->form_validation->run() == TRUE) {
-			return true;
-		}else{
-			return false;
-		}
-	}
-
-	/*
-	*
 	* Check Which Settings Type To Open
 	* Pass the Page Name
 	*/
@@ -459,6 +412,89 @@ class CoreSettings extends CI_Controller {
 		//Data Returned
 		return $resultList->result();
 	}
+
+	/*
+	*
+	* This Fuction is used to validate File Input Data
+	* The fuctntion accept one parameters
+	* 1: This parameter does not required to be passed, Codeigniter will handle that
+	*
+	* --> Access session containing the Input Name ( $_FILR['this_name']) & required option 
+	* --> before validating using this method.. 
+	* 
+	* -> Set Session
+	*  $file_upload_session = array("file_name" => "input_name", "file_required" => true)
+	*  $this->session->set_userdata($file_upload_session);
+	*
+	* N.B For custom validation add session $this->session->set_userdata("file_rule","identifier");
+	* the check with comparison/conditional operator under else statement
+	*
+	*/
+    public function validation($value){
+
+    	//Used Session Key ID/Name
+    	$session_keys = array('file_rule','file_name','file_required');
+
+    	//Check Which Rule To Apply
+    	if (!isset($this->session->file_rule) || empty($this->session->file_rule) || is_null($this->session->file_rule)) {
+
+	    	// Get Allowed File Extension
+	    	$allowed_extension = (!is_null($this->AllowedFile))? $this->AllowedFile : 'jpg|jpeg|png|doc|docx|pdf|xls|txt';
+	    	$allowed_extension_array = explode('|',$allowed_extension);
+
+	        $file_name = $this->session->file_name; //Upload File Name
+			$file_requred = (!isset($this->session->file_required))? true : $this->session->file_required; //Check if file is requred
+
+	        //Loop through uploaded values
+	        for ($i=0; $i < count($_FILES[$file_name]['name']); $i++) {
+
+	        	$file = $_FILES[$file_name]['name'][$i]; //Current Selected File
+		        if(isset($file) && !empty($file) && !is_null($file)){
+
+					$file_ext = pathinfo($file, PATHINFO_EXTENSION); //Get current file extension
+
+					//Check If file extension allowed
+		            if(in_array($file_ext, $allowed_extension_array)){
+		                $validation_status[$i] = true; //Succeeded
+		            }else{
+		                $validation_status[$i] = false; //Error
+		            }
+		        }else{
+		        	//Input Is Blank... So check if it is requred
+		        	if ($file_requred == TRUE) {
+			            $validation_status[$i] = 'empty'; //Error Input required
+		        	}else{
+		                $validation_status[$i] = true; //Succeeded , This input is allowed to be empty
+		        	}
+		        }
+	        }
+
+	        //Check If any validated value has an error
+	        if (in_array('empty',$validation_status, true)) {
+			    $this->form_validation->set_message('validation', 'Please choose a file to upload.');
+
+	        	$this->CoreCrud->destroySession($session_keys); //Destroy Session Values
+	        	return false; // Validation has an error, Input is required and is set to empty
+	        }
+	        elseif (in_array(false,$validation_status, true)) {
+		        $this->form_validation->set_message("validation", "Please select only ".str_replace('|',',',$allowed_extension)." file(s).");
+
+	        	$this->CoreCrud->destroySession($session_keys); //Destroy Session Values
+	        	return false; // Validation has an error
+	        }
+	        else{
+
+	        	$this->CoreCrud->destroySession($session_keys); //Destroy Session Values
+	        	return true; // Validation was successful
+	        }
+	    }else{
+
+	    	/* Your custom Validation Code Here */
+
+	    	//Before returning validation status destroy session
+	        $this->CoreCrud->destroySession($session_keys); //Destroy Session Values
+	    }
+    }
 
 }
 

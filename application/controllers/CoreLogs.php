@@ -13,9 +13,8 @@ class CoreLogs extends CI_Controller {
 	private $Module = 'user'; //Module
 	private $Folder = '/* HTML Source Folder Name */'; //Set Default Folder For html files
 	private $SubFolder = ''; //Set Default Sub Folder For html files and Front End Use Start with /
-	private $Escape = ''; // Escape Column
-	private $Require = 'logname,password'; // Required Column
-	private $Unique = ''; // Unique & Required Values
+
+	private $AllowedFile = null; //Set Default allowed file extension, remember you can pass this upon upload to override default allowed file type. Allowed File Extensions Separated by | also leave null to validate using jpg|jpeg|png|doc|docx|pdf|xls|txt change this on validation function at the bottom
 
 	private $Route = null; //If you have different route Name to Module name State it here |This wont be pluralized | set it null to use default
 
@@ -188,13 +187,19 @@ class CoreLogs extends CI_Controller {
 		$module = $this->plural->pluralize($this->Module);
 		$routeURL = (is_null($this->Route)) ? $module : $this->Route;
 
+		//Set Allowed Files
+		$allowed_files = (is_null($this->AllowedFile))? 'jpg|jpeg|png|doc|docx|pdf|xls|txt' : $this->AllowedFile;
+
 		//Check Validation
 		if ($type == 'login') {
 
 			$formData = $this->CoreLoad->input(); //Input Data
 
+			$this->form_validation->set_rules("user_logname", "Logname", "trim|required|min_length[1]");
+			$this->form_validation->set_rules("user_password", "Password", "trim|required|min_length[1]");
+
 			//Form Validation
-			if ($this->validation($formData) == TRUE) {
+			if ($this->form_validation->run() == TRUE) {
 				if ($this->login($formData) == 'success') {
 					$this->session->set_flashdata('notification','notify'); //Notification Type
 					redirect("dashboard","refresh");//Redirect to Page
@@ -288,52 +293,86 @@ class CoreLogs extends CI_Controller {
 
 	/*
 	*
-	* This Fuction is used to validate Input Data
-	* The fuctntion accept three parameters
-	* 1: The Form Data (Remember to pass them trought CoreLoad->input First)
-	* 2: Should Email considered Unique or not
-	* 3: Skip Deep Validation
+	* This Fuction is used to validate File Input Data
+	* The fuctntion accept one parameters
+	* 1: This parameter does not required to be passed, Codeigniter will handle that
+	*
+	* --> Access session containing the Input Name ( $_FILR['this_name']) & required option 
+	* --> before validating using this method.. 
 	* 
+	* -> Set Session
+	*  $file_upload_session = array("file_name" => "input_name", "file_required" => true)
+	*  $this->session->set_userdata($file_upload_session);
+	*
+	* N.B For custom validation add session $this->session->set_userdata("file_rule","identifier");
+	* the check with comparison/conditional operator under else statement
+	*
 	*/
-	public function validation($formData,$email=TRUE,$skip=array())
-	{
-		//Pluralize Module
-		$module = $this->plural->pluralize($this->Module);
+    public function validation($value){
 
-		//Validation
-		foreach ($formData as $key => $value) {
-			$label = $this->CoreForm->get_column_label_name($key); // Label Name
-			$input = $this->CoreForm->get_label_name($key); // Input Processed
-			//Check Skip
-			if (in_array(strtolower($key),$skip)) {				
-				$this->form_validation->set_rules($key, $label, "trim|max_length[100]"); //Validate Input
-			}else{
-				if (strtolower($input) == 'email') {
-					if ($email == TRUE) {
-						$this->form_validation->set_rules($key, $label, "trim|required|max_length[100]|valid_email|is_unique[$module.$key]"); //Validate Email
-					}else{
-						$this->form_validation->set_rules($key, $label, "trim|required|max_length[100]|valid_email"); //Validate Email
-					}
-				}else{
-					$required = explode(',',strtolower($this->Require)); //Required Columns
-					$unique = explode(',',strtolower($this->Unique)); //Unique Columns
-					if (in_array($input, $required)) {
-						$this->form_validation->set_rules($key, $label, "trim|required|min_length[1]"); //Validate Required
-					}elseif (in_array($input, $unique)) {
-						$this->form_validation->set_rules($key, $label, "trim|required|min_length[1]|is_unique[$module.$key]"); //Validate Required
-					}else{
-						$this->form_validation->set_rules($key, $label, "trim");//Clean None Required Values
-					}
-				}
-			}
-		}
-		//Check If Validation was successful
-		if ($this->form_validation->run() == TRUE) {
-			return true;
-		}else{
-			return false;
-		}
-	}
+    	//Used Session Key ID/Name
+    	$session_keys = array('file_rule','file_name','file_required');
+
+    	//Check Which Rule To Apply
+    	if (!isset($this->session->file_rule) || empty($this->session->file_rule) || is_null($this->session->file_rule)) {
+
+	    	// Get Allowed File Extension
+	    	$allowed_extension = (!is_null($this->AllowedFile))? $this->AllowedFile : 'jpg|jpeg|png|doc|docx|pdf|xls|txt';
+	    	$allowed_extension_array = explode('|',$allowed_extension);
+
+	        $file_name = $this->session->file_name; //Upload File Name
+			$file_requred = (!isset($this->session->file_required))? true : $this->session->file_required; //Check if file is requred
+
+	        //Loop through uploaded values
+	        for ($i=0; $i < count($_FILES[$file_name]['name']); $i++) {
+
+	        	$file = $_FILES[$file_name]['name'][$i]; //Current Selected File
+		        if(isset($file) && !empty($file) && !is_null($file)){
+
+					$file_ext = pathinfo($file, PATHINFO_EXTENSION); //Get current file extension
+
+					//Check If file extension allowed
+		            if(in_array($file_ext, $allowed_extension_array)){
+		                $validation_status[$i] = true; //Succeeded
+		            }else{
+		                $validation_status[$i] = false; //Error
+		            }
+		        }else{
+		        	//Input Is Blank... So check if it is requred
+		        	if ($file_requred == TRUE) {
+			            $validation_status[$i] = 'empty'; //Error Input required
+		        	}else{
+		                $validation_status[$i] = true; //Succeeded , This input is allowed to be empty
+		        	}
+		        }
+	        }
+
+	        //Check If any validated value has an error
+	        if (in_array('empty',$validation_status, true)) {
+			    $this->form_validation->set_message('validation', 'Please choose a file to upload.');
+
+	        	$this->CoreCrud->destroySession($session_keys); //Destroy Session Values
+	        	return false; // Validation has an error, Input is required and is set to empty
+	        }
+	        elseif (in_array(false,$validation_status, true)) {
+		        $this->form_validation->set_message("validation", "Please select only ".str_replace('|',',',$allowed_extension)." file(s).");
+
+	        	$this->CoreCrud->destroySession($session_keys); //Destroy Session Values
+	        	return false; // Validation has an error
+	        }
+	        else{
+
+	        	$this->CoreCrud->destroySession($session_keys); //Destroy Session Values
+	        	return true; // Validation was successful
+	        }
+	    }else{
+
+	    	/* Your custom Validation Code Here */
+
+	    	//Before returning validation status destroy session
+	        $this->CoreCrud->destroySession($session_keys); //Destroy Session Values
+	    }
+    }
 
 }
 

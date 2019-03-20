@@ -6,6 +6,9 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Sorry</title>
         
+        <meta name="author" content="Core CMS Lite Team">
+        <meta name="robots" content="noindex, nofollow">
+
         <!-- Vendor CSS -->
         <link href="<?= base_url($assets); ?>/vendors/bower_components/animate.css/animate.min.css" rel="stylesheet">
         <link href="<?= base_url($assets); ?>/vendors/bower_components/material-design-iconic-font/dist/css/material-design-iconic-font.min.css" rel="stylesheet">
