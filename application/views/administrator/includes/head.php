@@ -176,6 +176,11 @@
                                 Custom Fields
                                 </a>
                             </li>
+                            <li class="core-sub-item">
+                                <a class="core-sub-link" href="<?= site_url('level') ?>">
+                                Access Level
+                                </a>
+                            </li>
                         </ul>
                     </li>
                     <?php endif ?>
@@ -186,11 +191,6 @@
                             <li class="core-sub-item"><a class="core-sub-link" href="<?= site_url('users/new') ?>">New</a></li>
                             <li class="core-sub-item"><a class="core-sub-link" href="<?= site_url('users') ?>">Manage</a></li> 
                         </ul>
-                    </li>
-                    <?php endif ?>
-                    <?php if ($this->CoreLoad->auth('accesslevel')): ?>
-                    <li class=""><a href="<?= site_url('level') ?>">
-                        <i class="zmdi zmdi-receipt zmdi-hc-fww yellow"></i> Access Level</a>
                     </li>
                     <?php endif ?>
                     <?php if ($this->CoreLoad->auth('admin')): ?>

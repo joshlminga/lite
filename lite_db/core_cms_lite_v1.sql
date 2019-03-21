@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 21, 2019 at 06:50 PM
+-- Generation Time: Mar 21, 2019 at 07:29 PM
 -- Server version: 10.1.22-MariaDB
 -- PHP Version: 7.1.4
 
@@ -178,8 +178,8 @@ CREATE TABLE `levels` (
 --
 
 INSERT INTO `levels` (`level_id`, `level_name`, `level_module`, `level_details`, `level_stamp`, `level_default`, `level_flg`) VALUES
-(1, 'admin', 'main,user,profile,customfield,page,setting,field,userdata,autofield,accesslevel', '{\"level_module\":\"main,user,profile,customfield,page,setting,field,userdata,autofield,accesslevel\",\"level_stamp\":\"2019-03-21 20:14:42\"}', '2019-03-21 17:14:42', 'yes', 1),
-(2, 'user', 'main,user,profile,page,field,userdata,autofield', '{\"level_module\":\"main,user,profile,page,field,userdata,autofield\",\"level_stamp\":\"2019-03-21 20:13:58\"}', '2019-03-21 17:13:58', 'yes', 1),
+(1, 'admin', 'main,user,profile,customfield,page,setting,field,userdata,autofield,levels', '{\"level_module\":\"main,user,profile,customfield,page,setting,field,userdata,autofield,levels\",\"level_stamp\":\"2019-03-21 21:29:18\"}', '2019-03-21 18:29:18', 'yes', 1),
+(2, 'user', 'main,user,profile,page,field,userdata,autofield', '{\"level_module\":\"main,user,profile,page,field,userdata,autofield\",\"level_stamp\":\"2019-03-21 21:28:59\"}', '2019-03-21 18:28:59', 'yes', 1),
 (3, 'author', 'main,profile,page,field', '{\"level_module\":\"main,profile,page,field\",\"level_stamp\":\"2019-03-21 20:14:24\"}', '2019-03-21 17:14:24', 'yes', 1),
 (4, 'customer', 'main,profile', '{\"level_module\":\"main,profile\",\"level_stamp\":\"2019-03-21 20:14:12\"}', '2019-03-21 17:14:12', 'no', 1);
 
@@ -263,7 +263,7 @@ INSERT INTO `settings` (`setting_id`, `setting_title`, `setting_value`, `setting
 (26, 'seo_keywords', '', '2018-12-17 17:30:41', 'yes', 1),
 (27, 'seo_meta_data', '', '2018-12-17 16:10:23', 'yes', 1),
 (28, 'inheritance_data', 'default,category,tag', '2019-02-22 17:52:44', 'yes', 1),
-(29, 'module_list', 'main,user,profile,customfield,page,setting,field,userdata,autofield,accesslevel', '2019-03-21 17:11:54', 'yes', 1);
+(29, 'module_list', 'main,user,profile,customfield,page,setting,field,userdata,autofield,levels', '2019-03-21 18:28:38', 'yes', 1);
 
 -- --------------------------------------------------------
 
