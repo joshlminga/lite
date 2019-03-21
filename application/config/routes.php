@@ -122,7 +122,6 @@ $route['level/update'] = 'CoreLevels/valid/update'; //Validate and Update
 $route['level/delete'] = 'CoreLevels/valid/delete'; //Delete 
 $route['level/multiple'] = 'CoreLevels/valid/bulk'; //Bulk Action  
 
-
 //Login
 $route['admin'] = 'CoreLogs/index'; //Login Page
 $route['admin/login'] = 'CoreLogs/valid/login'; //Login Verification
