@@ -18,11 +18,13 @@ class CoreSettings extends CI_Controller {
 
 	private $Route = null; //If you have different route Name to Module name State it here |This wont be pluralized | set it null to use default
 
-	private $General = 'general/update'; //Update Settings
-	private $Link = 'link/update'; //Add New User
-	private $Mail = 'mail/update'; //Update User
-	private $Blog = 'blog/update'; //Update User
-	private $Seo = 'seo/update'; //Update User
+	private $General = 'general/update'; //Settings
+	private $Link = 'link/update'; //
+	private $Mail = 'mail/update'; //
+	private $Blog = 'blog/update'; //
+	private $Seo = 'seo/update'; //
+	private $Inheritance = 'inheritance/update'; //
+	private $Modulelist = 'module/update'; //
 
 	private $ModuleName = 'settings'; //Module Nmae
 
@@ -36,13 +38,13 @@ class CoreSettings extends CI_Controller {
 
 		//Libraries
 		$this->load->library('form_validation');
-		$this->load->model('CoreCrud');
-		$this->load->model('CoreForm');
 
 		//Helpers
 		date_default_timezone_set('Africa/Nairobi');
 
         //Models
+		$this->load->model('CoreCrud');
+		$this->load->model('CoreForm');
         
 	}
 
@@ -86,12 +88,20 @@ class CoreSettings extends CI_Controller {
 		//Module Name - For Forms Title
 		$data['ModuleName'] = $this->plural->pluralize($this->ModuleName);
 
+		//Post
+		$data['posts'] = $this->db->select('page_id,page_title')->where('page_flg',1)->get('pages')->result();
+
+		//Blog
+		$data['blogs'] = $this->db->select('blog_id,blog_title')->where('blog_flg',1)->get('blogs')->result();
+
 		//Form Submit URLs
 		$data['form_general'] = $this->General;
 		$data['form_link'] = $this->Link;
 		$data['form_mail'] = $this->Mail;
 		$data['form_blog'] = $this->Blog;
 		$data['form_seo'] = $this->Seo;
+		$data['form_inheritance'] = $this->Inheritance;
+		$data['form_module'] = $this->Modulelist;
 
 		return $data;
 	}
@@ -241,16 +251,32 @@ class CoreSettings extends CI_Controller {
 			if ($this->form_validation->run() == TRUE) {
 				if ($this->update($updateData)) {
 
-					//Update URL
-					$postTitle = $this->db->select('newspost_id')->get('newsposts');
+					//Update Blog URL
+					$postTitle = $this->db->select('blog_id')->get('blogs');
 					$postData = $postTitle->result();
 
-					foreach ($postData as $row) {
-						$post_id = $row->newspost_id; //Post ID
-						$url = $this->CoreCrud->postURL($post_id);
+					if (count($postData) > 0) {
+						foreach ($postData as $row) {
+							$post_id = $row->blog_id; //Post ID
+							$url = $this->CoreCrud->postURL($post_id,null,'blog');
 
-					    $sql = "UPDATE `newsposts` SET `newspost_url` = '$url' WHERE  `newspost_id` = '$post_id' ";
-					    $results = $this->db->query($sql);//site_title
+						    $sql = "UPDATE `blogs` SET `blog_url` = '$url' WHERE `blog_id` = '$post_id' ";
+						    $results = $this->db->query($sql);//site_title
+						}
+					}
+
+					//Update POST URL
+					$postTitle = $this->db->select('page_id')->get('pages');
+					$postData = $postTitle->result();
+
+					if (count($postData) > 0) {
+						foreach ($postData as $row) {
+							$post_id = $row->page_id; //Post ID
+							$url = $this->CoreCrud->postURL($post_id);
+
+						    $sql = "UPDATE `pages` SET `page_url` = '$url' WHERE `page_id` = '$post_id' ";
+						    $results = $this->db->query($sql);//site_title
+						}
 					}
 
 					$this->session->set_flashdata('notification','success'); //Notification Type
@@ -294,7 +320,7 @@ class CoreSettings extends CI_Controller {
 				$message = 'Please check the fields, and try again'; //Notification Message				
 				$this->open($type,$message);//Open Page
 			}			
-		}elseif ($type == 'mail') {
+		}elseif ($type == 'blog') {
 
 			$updateData = $this->CoreLoad->input(); //Input Data
 
@@ -323,9 +349,49 @@ class CoreSettings extends CI_Controller {
 			$updateData = $this->CoreLoad->input(); //Input Data
 
 			$this->form_validation->set_rules("seo_visibility", "Seo Visibility", "required|min_length[1]|max_length[50]");
-			$this->form_validation->set_rules("seo_global", "Seo Global", "equired|min_length[1]|max_length[50]");
+			$this->form_validation->set_rules("seo_global", "Seo Global", "required|min_length[1]|max_length[50]");
 			$this->form_validation->set_rules("seo_description", "Seo Description", "max_length[8000]");
 			$this->form_validation->set_rules("seo_keywords", "Seo Keywords", "max_length[8000]");
+
+			//Form Validation
+			if ($this->form_validation->run() == TRUE) {
+				if ($this->update($updateData)) {
+					$this->session->set_flashdata('notification','success'); //Notification Type
+					$this->open($type);//Redirect to Page
+				}else{
+					$this->session->set_flashdata('notification','error'); //Notification Type
+					$this->open($type);//Open Page
+				}
+			}else{
+				$this->session->set_flashdata('notification','error'); //Notification Type
+				$message = 'Please check the fields, and try again'; //Notification Message				
+				$this->open($type,$message);//Open Page
+			}
+		}elseif ($type == 'inheritance') {
+
+			$updateData = $this->CoreLoad->input(); //Input Data
+
+			$this->form_validation->set_rules("inheritance_data", "Inheritance Type Data", "trim");
+
+			//Form Validation
+			if ($this->form_validation->run() == TRUE) {
+				if ($this->update($updateData)) {
+					$this->session->set_flashdata('notification','success'); //Notification Type
+					$this->open($type);//Redirect to Page
+				}else{
+					$this->session->set_flashdata('notification','error'); //Notification Type
+					$this->open($type);//Open Page
+				}
+			}else{
+				$this->session->set_flashdata('notification','error'); //Notification Type
+				$message = 'Please check the fields, and try again'; //Notification Message				
+				$this->open($type,$message);//Open Page
+			}
+		}elseif ($type == 'module') {
+
+			$updateData = $this->CoreLoad->input(); //Input Data
+
+			$this->form_validation->set_rules("module_list", "Module List", "trim");
 
 			//Form Validation
 			if ($this->form_validation->run() == TRUE) {
@@ -401,6 +467,10 @@ class CoreSettings extends CI_Controller {
 			$where_in = array('home_display','home_post','home_page','post_per_page','post_show');//General Update
 		}elseif (end($page) == 'seo') {
 			$where_in = array('seo_visibility','seo_keywords','seo_description ','seo_global','seo_meta_data');//General Update
+		}elseif (end($page) == 'inheritance') {
+			$where_in = array('inheritance_data');//Inheritance Data
+		}elseif (end($page) == 'module') {
+			$where_in = array('module_list');//Inheritance Data
 		}else{
 			$where_in = array('none');//General Update
 		}

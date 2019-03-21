@@ -34,13 +34,13 @@ class CoreBlogs extends CI_Controller {
 
 		//Libraries
 		$this->load->library('form_validation');
-		$this->load->model('CoreCrud');
-		$this->load->model('CoreForm');
 
 		//Helpers
 		date_default_timezone_set('Africa/Nairobi');
 
         //Models
+		$this->load->model('CoreCrud');
+		$this->load->model('CoreForm');
         
 	}
 
@@ -83,12 +83,10 @@ class CoreBlogs extends CI_Controller {
 
 		//Extension Route
 		$data['extRoute'] = "administrator/pages/".$this->plural->pluralize($this->Folder).$this->SubFolder."/";
-	    //Select Inheritance
-		$data['categories'] = $this->db->select('inheritance_id,inheritance_title')
-		->from('inheritances')->where('inheritance_flg',1)->where('inheritance_type','category')->get()->result();
 
-		$data['tags'] = $this->db->select('inheritance_id,inheritance_title')
-		->from('inheritances')->where('inheritance_flg',1)->where('inheritance_type','tag')->get()->result();
+	    //Select Inheritance
+	    $data['categories'] = $this->CoreCrud->selectInheritanceItem(array('flg'=>1,'type'=>'category'),'id,title');
+	    $data['tags'] = $this->CoreCrud->selectInheritanceItem(array('flg'=>1,'type'=>'tag'),'id,title');
 
 		//Module Name - For Forms Title
 		$data['ModuleName'] = $this->plural->pluralize($this->ModuleName);
@@ -271,7 +269,7 @@ class CoreBlogs extends CI_Controller {
 		$allowed_files = (is_null($this->AllowedFile))? 'jpg|jpeg|png|doc|docx|pdf|xls|txt' : $this->AllowedFile;
 
 		//Set Upload File Values
-		$file_upload_session = array("file_name" => "thumbnail", "file_required" => true);
+		$file_upload_session = array("file_name" => "thumbnail", "file_required" => false);
 		$this->session->set_userdata($file_upload_session);
 
 		$upoadDirectory = "../assets/admin/images/upload/media"; //Upload Location
@@ -413,7 +411,7 @@ class CoreBlogs extends CI_Controller {
 				//Update Table
 				if ($this->update($updateData,array($column_id =>$value_id),$unsetData)) {
 					$this->session->set_flashdata('notification','success'); //Notification Type
-					$message = 'Data was saved successful'; //Notification Message				
+					$message = 'Data was updated successful'; //Notification Message				
 					$this->edit('edit','id',$value_id);//Open Page
 				}else{
 					$this->session->set_flashdata('notification','error'); //Notification Type

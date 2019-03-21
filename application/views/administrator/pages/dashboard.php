@@ -7,7 +7,7 @@
                         <div class="btn-group btn-group-justified" role="group" aria-label="...">
 
                             <div class="btn-group" role="group">
-                                <a type="button" class="btn btn-default" href="<?= site_url('newsposts/new') ?>">New Page</a>
+                                <a type="button" class="btn btn-default" href="<?= site_url('pages/new') ?>">New Page</a>
                             </div>
 
                             <div class="btn-group" role="group">
@@ -54,7 +54,10 @@
                             <div class="row card-body card-padding core-overview">
                                 <div class="col-md-6">
                                     <span>
-                                        <i class="zmdi zmdi-format-color-text"></i> <a href=""> 2 Post</a>
+                                        <i class="zmdi zmdi-format-color-text"></i> 
+                                        <a href="<?= site_url('blogs') ?>"> 
+                                            <?= $this->CoreCrud->countTableRows('blog') ?> Post
+                                        </a>
                                     </span>
                                 </div>
                                 <div class="col-md-6">
@@ -64,7 +67,10 @@
                                 </div>
                                 <div class="col-md-6">
                                     <span>
-                                        <i class="zmdi zmdi-file-plus"></i> <a href=""> 3 Page</a>
+                                        <i class="zmdi zmdi-file-plus"></i> 
+                                        <a href="<?= site_url('pages') ?>"> 
+                                            <?= $this->CoreCrud->countTableRows('page') ?> Page
+                                        </a>
                                     </span>
                                 </div>
                                 <div class="col-md-6">

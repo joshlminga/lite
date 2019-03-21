@@ -2,7 +2,7 @@
             <input type="hidden" id="categorySELECT" value="<?= site_url('category/select') ?>">
 
             <footer id="footer">
-                Copyright &copy; 2015 Core Lite 1.0
+                Copyright &copy; 2019 Core Lite 3.6 | Published 21-March-2019
                 <center>Powered by Core-CMS Team</center>
             </footer>
 

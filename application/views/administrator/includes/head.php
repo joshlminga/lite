@@ -89,7 +89,7 @@
             <div class="media-body h-search hidden-xs hidden-sm">
                 <div class="p-relative">
                     <span class="welcome-header">
-                        Welcome to Core Lite, you're running Lite version 1.0 | Build Faster &amp; Smart.
+                        Welcome to Core Lite, you're running Lite version 3.6 | Build Faster &amp; Smart.
                     </span>
                 </div>
             </div>
@@ -188,6 +188,11 @@
                         </ul>
                     </li>
                     <?php endif ?>
+                    <?php if ($this->CoreLoad->auth('accesslevel')): ?>
+                    <li class=""><a href="<?= site_url('level') ?>">
+                        <i class="zmdi zmdi-receipt zmdi-hc-fww yellow"></i> Access Level</a>
+                    </li>
+                    <?php endif ?>
                     <?php if ($this->CoreLoad->auth('admin')): ?>
                     <li class="sub-menu">
                         <a class="core-sidebar-link" href="#" data-ma-action="submenu-toggle"><i class="zmdi zmdi-wrench red_less"></i> Settings </a>
@@ -197,6 +202,8 @@
                             <li class="core-sub-item"><a class="core-sub-link" href="<?= site_url('blog'); ?>">Page / Blog</a></li>
                             <li class="core-sub-item"><a class="core-sub-link" href="<?= site_url('mail'); ?>">Mail</a></li>
                             <li class="core-sub-item"><a class="core-sub-link" href="<?= site_url('seo'); ?>">Seo</a></li>
+                            <li class="core-sub-item"><a class="core-sub-link" href="<?= site_url('inheritance'); ?>">Set Inheritance</a></li>
+                            <li class="core-sub-item"><a class="core-sub-link" href="<?= site_url('module'); ?>">Modules</a></li>
                         </ul>
                     </li>
                     <?php endif ?>

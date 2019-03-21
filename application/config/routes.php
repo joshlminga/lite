@@ -109,6 +109,19 @@ $route['blog'] = 'CoreSettings/open/blog'; //Blog Settings
 $route['blog/update'] = 'CoreSettings/valid/blog'; //Blog Settings Update
 $route['seo'] = 'CoreSettings/open/seo'; //Seo Settings
 $route['seo/update'] = 'CoreSettings/valid/seo'; //Seo Settings Update
+$route['inheritance'] = 'CoreSettings/open/inheritance'; //Inheritance Type Settings
+$route['inheritance/update'] = 'CoreSettings/valid/inheritance'; //Inheritance Type Settings Update
+$route['module'] = 'CoreSettings/open/module'; //ModuleSettings
+$route['module/update'] = 'CoreSettings/valid/module'; //Module Settings Update
+
+//Blog Categories
+$route['level'] = 'CoreLevels/index'; //Manage
+$route['level/edit'] = 'CoreLevels/edit/edit'; //Edit 
+$route['level/save'] = 'CoreLevels/valid/save'; //Validate and Save
+$route['level/update'] = 'CoreLevels/valid/update'; //Validate and Update
+$route['level/delete'] = 'CoreLevels/valid/delete'; //Delete 
+$route['level/multiple'] = 'CoreLevels/valid/bulk'; //Bulk Action  
+
 
 //Login
 $route['admin'] = 'CoreLogs/index'; //Login Page

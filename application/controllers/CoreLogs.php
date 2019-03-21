@@ -34,13 +34,13 @@ class CoreLogs extends CI_Controller {
 
 		//Libraries
 		$this->load->library('form_validation');
-		$this->load->model('CoreCrud');
-		$this->load->model('CoreForm');
 
 		//Helpers
 		date_default_timezone_set('Africa/Nairobi');
 
         //Models
+		$this->load->model('CoreCrud');
+		$this->load->model('CoreForm');
         
 	}
 

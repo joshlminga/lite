@@ -34,13 +34,13 @@ class CoreInheritances extends CI_Controller {
 
 		//Libraries
 		$this->load->library('form_validation');
-		$this->load->model('CoreCrud');
-		$this->load->model('CoreForm');
 
 		//Helpers
 		date_default_timezone_set('Africa/Nairobi');
 
         //Models
+		$this->load->model('CoreCrud');
+		$this->load->model('CoreForm');
         
 	}
 
@@ -89,10 +89,7 @@ class CoreInheritances extends CI_Controller {
 		->where('setting_flg',1)->get('settings')->row()->setting_value;
 
 		$data['inheritance_type'] = explode(',', $inheritance_type);
-
-		$data['inheritance_parent'] = $this->db->select('inheritance_id,inheritance_type,inheritance_parent,inheritance_title')
-		->from('inheritances')->where('inheritance_flg',1)->get()->result();
-
+	    $data['inheritance_parent'] = $this->CoreCrud->selectInheritanceItem(array('flg'=>1),'id,type,parent,title');
 
 		//Module Name - For Forms Title
 		$data['ModuleName'] = $this->plural->pluralize($this->ModuleName);
@@ -356,7 +353,7 @@ class CoreInheritances extends CI_Controller {
 				//Update Table
 				if ($this->update($updateData,array($column_id =>$value_id),$unsetData)) {
 					$this->session->set_flashdata('notification','success'); //Notification Type
-					$message = 'Data was saved successful'; //Notification Message				
+					$message = 'Data was updated successful'; //Notification Message				
 					$this->edit('edit','id',$value_id);//Open Page
 				}else{
 					$this->session->set_flashdata('notification','error'); //Notification Type

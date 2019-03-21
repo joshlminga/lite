@@ -38,7 +38,7 @@ class CoreMains extends CI_Controller {
 		//Helpers
 		
         //Models
-        
+		$this->load->model('CoreCrud');
 	}
 
 	/*

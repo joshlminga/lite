@@ -210,6 +210,47 @@ class CoreCrud extends CI_Model {
 
   /*
   *
+  * Count Table Rows
+  * This function will return number of rows in a table selected
+  * By Default the function will do selection query only by ID (this is to speedup the selection process) 
+  * Then it will count the number of retuned results
+  * and return the number
+  *
+  * This function accept 
+  * 1: Table Name | passed as string
+  * 2: Clase, a where clause if you want to check specific column value
+  *  NB: pass as an array | array('column_name' => 'match_value');
+  * 
+  */
+  public function countTableRows($table,$where=null)
+  {
+
+    //Get Table Name
+    $table = $this->plural->pluralize($table);
+
+    //Check if Clause Specified
+    if (!is_null($where)) {
+
+      //Select
+      $columns = array('id');
+      $where = array($where);
+      $data = $this->selectCRUD($table,$inheritance_where,$columns);
+
+    }else{
+
+      $columns = array('id');
+      $data = $this->selectCRUD($table,null,$columns);
+    }
+
+    //Count Number of result
+    $row_num = count($data);
+
+    return $row_num; //Number Of Rows
+  }
+
+
+  /*
+  *
   * Upload File Data
   * -> Pass Input Name
   * -> Pass Input Location (Upload location)
@@ -346,7 +387,7 @@ class CoreCrud extends CI_Model {
                             ->order_by("$page_column_createdat desc")->limit(1)->get("$table");
       $URL = $ExistingURL->result();
       if (!empty($URL)) {
-        $post_url = $url.'-'.$postData[0]->page_id;
+        $post_url = $url.'-'.$postData[0]->$page_column_id;
       }else{
         $post_url = $url;
       }    
@@ -355,7 +396,7 @@ class CoreCrud extends CI_Model {
       if (!is_null($currURL)) {
           $post_url = substr(preg_replace("/[^ \w-]/", "", stripcslashes($currURL)),0, 50);
       }else{
-        $post_url = substr(preg_replace("/[^ \w-]/", "", stripcslashes($postData[0]->page_title)),0, 50);
+        $post_url = substr(preg_replace("/[^ \w-]/", "", stripcslashes($postData[0]->$page_column_title)),0, 50);
       }
       
       $url = str_replace(" ", "-",strtolower(trim($post_url)));
@@ -368,7 +409,7 @@ class CoreCrud extends CI_Model {
         $post_url = '?p='.$url;
       }    
     }else{
-        $post_url = $postData[0]->$page_column_id;
+      $post_url = $postData[0]->$page_column_id;
     }
 
     return $post_url;

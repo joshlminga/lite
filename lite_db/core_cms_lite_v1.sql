@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 19, 2019 at 08:11 PM
+-- Generation Time: Mar 21, 2019 at 06:50 PM
 -- Server version: 10.1.22-MariaDB
 -- PHP Version: 7.1.4
 
@@ -73,6 +73,13 @@ CREATE TABLE `blogs` (
   `blog_default` varchar(5) DEFAULT 'yes',
   `blog_flg` int(1) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `blogs`
+--
+
+INSERT INTO `blogs` (`blog_id`, `blog_category`, `blog_title`, `blog_url`, `blog_post`, `blog_control`, `blog_tag`, `blog_format`, `blog_show`, `blog_author`, `blog_seo`, `blog_data`, `blog_createdat`, `blog_editor`, `blog_editedat`, `blog_details`, `blog_stamp`, `blog_default`, `blog_flg`) VALUES
+(1, 'uncategorised', 'Welcome To Core', 'welcome-to-core', '<p>Welcome to core blog</p>', '{\"thumbnail\":\"[\\\"assets\\\\\\/admin\\\\\\/images\\\\\\/upload\\\\\\/media\\\\\\/e146b95b2a62b136fa2a07432482d393.png\\\"]\"}', '', 'default', 'public', 'admin', NULL, NULL, '2019-03-21 19:55:27', NULL, NULL, '{\"blog_title\":\"Welcome To Core\",\"blog_post\":\"<p>Welcome to core blog<\\/p>\",\"blog_category\":\"uncategorised\",\"blog_show\":\"public\",\"blog_format\":\"default\",\"blog_control\":\"{\\\"thumbnail\\\":\\\"[\\\\\\\"assets\\\\\\\\\\\\\\/admin\\\\\\\\\\\\\\/images\\\\\\\\\\\\\\/upload\\\\\\\\\\\\\\/media\\\\\\\\\\\\\\/e146b95b2a62b136fa2a07432482d393.png\\\\\\\"]\\\"}\",\"blog_tag\":\"\",\"blog_stamp\":\"2019-03-21 19:55:27\",\"blog_createdat\":\"2019-03-21 19:55:27\",\"blog_author\":\"admin\",\"blog_flg\":1}', '2019-03-21 19:55:27', 'yes', 1);
 
 -- --------------------------------------------------------
 
@@ -171,10 +178,10 @@ CREATE TABLE `levels` (
 --
 
 INSERT INTO `levels` (`level_id`, `level_name`, `level_module`, `level_details`, `level_stamp`, `level_default`, `level_flg`) VALUES
-(1, 'admin', 'main,user,customfield,page,setting,field,userdata,autofield', NULL, '2019-02-27 20:07:01', 'yes', 1),
-(2, 'user', 'main,user,page,field,userdata,autofield', NULL, '2019-02-27 20:07:13', 'yes', 1),
-(3, 'author', 'main,page,field', NULL, '2019-02-08 15:43:56', 'yes', 1),
-(4, 'customer', 'main', NULL, '2019-02-08 15:44:04', 'no', 1);
+(1, 'admin', 'main,user,profile,customfield,page,setting,field,userdata,autofield,accesslevel', '{\"level_module\":\"main,user,profile,customfield,page,setting,field,userdata,autofield,accesslevel\",\"level_stamp\":\"2019-03-21 20:14:42\"}', '2019-03-21 17:14:42', 'yes', 1),
+(2, 'user', 'main,user,profile,page,field,userdata,autofield', '{\"level_module\":\"main,user,profile,page,field,userdata,autofield\",\"level_stamp\":\"2019-03-21 20:13:58\"}', '2019-03-21 17:13:58', 'yes', 1),
+(3, 'author', 'main,profile,page,field', '{\"level_module\":\"main,profile,page,field\",\"level_stamp\":\"2019-03-21 20:14:24\"}', '2019-03-21 17:14:24', 'yes', 1),
+(4, 'customer', 'main,profile', '{\"level_module\":\"main,profile\",\"level_stamp\":\"2019-03-21 20:14:12\"}', '2019-03-21 17:14:12', 'no', 1);
 
 -- --------------------------------------------------------
 
@@ -200,6 +207,13 @@ CREATE TABLE `pages` (
   `page_default` varchar(5) DEFAULT 'yes',
   `page_flg` int(1) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `pages`
+--
+
+INSERT INTO `pages` (`page_id`, `page_title`, `page_url`, `page_post`, `page_control`, `page_show`, `page_author`, `page_seo`, `page_data`, `page_createdat`, `page_editor`, `page_editedat`, `page_details`, `page_stamp`, `page_default`, `page_flg`) VALUES
+(1, 'Home Page', 'home-page', '<p>Core CMS home page</p>', '{\"thumbnail\":null}', 'public', 'admin', NULL, NULL, '2019-03-21 19:55:57', NULL, NULL, '{\"page_title\":\"Home Page\",\"page_post\":\"<p>Core CMS home page<\\/p>\",\"page_show\":\"public\",\"page_control\":\"{\\\"thumbnail\\\":null}\",\"page_stamp\":\"2019-03-21 19:55:57\",\"page_createdat\":\"2019-03-21 19:55:57\",\"page_author\":\"admin\",\"page_flg\":1}', '2019-03-21 19:55:57', 'yes', 1);
 
 -- --------------------------------------------------------
 
@@ -239,16 +253,17 @@ INSERT INTO `settings` (`setting_id`, `setting_title`, `setting_value`, `setting
 (16, 'mailtype', 'text', '2018-12-17 15:26:56', 'yes', 1),
 (17, 'charset', 'UTF-8', '2018-12-17 15:26:34', 'yes', 1),
 (18, 'home_display', 'blog', '2018-12-17 17:24:53', 'yes', 1),
-(19, 'home_post', '', '2018-12-17 16:02:22', 'yes', 1),
+(19, 'home_post', 'latest_post', '2019-03-21 17:09:47', 'yes', 1),
 (20, 'home_page', '', '2018-12-17 16:03:08', 'yes', 1),
 (21, 'post_per_page', '10', '2018-12-17 16:11:11', 'yes', 1),
-(22, 'post_show', 'blog', '2018-12-17 17:24:53', 'yes', 1),
+(22, 'post_show', 'summary', '2019-03-21 16:53:57', 'yes', 1),
 (23, 'seo_visibility', 'noindex, nofollow', '2019-03-18 16:26:50', 'yes', 1),
 (24, 'seo_global', 'any', '2019-03-18 16:37:13', 'yes', 1),
 (25, 'seo_description ', '', '2018-12-17 16:09:31', 'yes', 1),
 (26, 'seo_keywords', '', '2018-12-17 17:30:41', 'yes', 1),
 (27, 'seo_meta_data', '', '2018-12-17 16:10:23', 'yes', 1),
-(28, 'inheritance_data', 'default,category,tag', '2019-02-22 17:52:44', 'yes', 1);
+(28, 'inheritance_data', 'default,category,tag', '2019-02-22 17:52:44', 'yes', 1),
+(29, 'module_list', 'main,user,profile,customfield,page,setting,field,userdata,autofield,accesslevel', '2019-03-21 17:11:54', 'yes', 1);
 
 -- --------------------------------------------------------
 
@@ -350,7 +365,7 @@ ALTER TABLE `autofields`
 -- AUTO_INCREMENT for table `blogs`
 --
 ALTER TABLE `blogs`
-  MODIFY `blog_id` bigint(20) NOT NULL AUTO_INCREMENT;
+  MODIFY `blog_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `customfields`
 --
@@ -375,12 +390,12 @@ ALTER TABLE `levels`
 -- AUTO_INCREMENT for table `pages`
 --
 ALTER TABLE `pages`
-  MODIFY `page_id` bigint(20) NOT NULL AUTO_INCREMENT;
+  MODIFY `page_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `settings`
 --
 ALTER TABLE `settings`
-  MODIFY `setting_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+  MODIFY `setting_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 --
 -- AUTO_INCREMENT for table `users`
 --
