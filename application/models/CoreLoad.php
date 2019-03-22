@@ -18,8 +18,8 @@ class CoreLoad extends CI_Model {
         //Helpers
 
         //Models
+        $this->load->model('CoreField');
 
-		
         // Your own constructor code
         
     }
@@ -33,6 +33,14 @@ class CoreLoad extends CI_Model {
     */
     public function load()
     {
+
+		//Loading Core CMS Version
+		$data['version'] = '3.6';
+		$data['copyright_head'] = "Welcome to Core Lite, you're running Lite version ".$data['version']." | Build Faster &amp; Smart.";
+		$data['copyright_side'] = "Core v".$data['version']." (Lite)";
+		$data['copyright_footer_1'] = "Copyright &copy; 2019 Core Lite ".$data['version']." | Published 21-March-2019";
+		$data['copyright_footer_2'] = "Powered by Core-CMS Team";
+
     	//Values Assets
 		$data['assets'] = 'assets/admin';
 		$data['extension_dir'] = 'application/views/extensions/';
@@ -44,6 +52,10 @@ class CoreLoad extends CI_Model {
 		$data['site_robots'] = $this->CoreCrud->selectSingleValue('settings','value',array('title'=>'seo_visibility','flg'=>1));
 		$data['site_global'] = $this->CoreCrud->selectSingleValue('settings','value',array('title'=>'seo_global','flg'=>1));
 		$data['seo_data'] = $this->CoreCrud->selectSingleValue('settings','value',array('title'=>'seo_meta_data','flg'=>1));
+
+		//Load Custom Data
+		$customData = $this->CoreField->load();
+		$data = array_merge($data,$customData);
 
    		//returned DATA
     	return $data;

@@ -89,7 +89,7 @@
             <div class="media-body h-search hidden-xs hidden-sm">
                 <div class="p-relative">
                     <span class="welcome-header">
-                        Welcome to Core Lite, you're running Lite version 3.6 | Build Faster &amp; Smart.
+                        <?= $copyright_head; ?>
                     </span>
                 </div>
             </div>
@@ -107,7 +107,7 @@
 
                 <ul class="smm-alerts">
                     <li class="core-sub-item">
-                        <i class="zmdi zmdi-flash"></i> Core v3.0 (Lite)
+                        <i class="zmdi zmdi-flash"></i> <?= $copyright_side; ?>
                     </li>
                 </ul>
 
