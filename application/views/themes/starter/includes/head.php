@@ -18,6 +18,9 @@
 	<!-- Title -->
 	<title><?= $site_title; ?></title>
 	
+    <!-- Favicon Load -->
+    <link rel="shortcut icon" href="<?= base_url($assets); ?>/favicon.ico" type="image/x-icon">
+
     <!-- Load STyle -->
     <link href="<?= base_url($assets); ?>/css/style.css" rel="stylesheet">
 </head>
