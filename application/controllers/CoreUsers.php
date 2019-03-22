@@ -41,6 +41,8 @@ class CoreUsers extends CI_Controller {
         //Models
 		$this->load->model('CoreCrud');
 		$this->load->model('CoreForm');
+		
+        // Your own constructor code
         
 	}
 
@@ -85,7 +87,8 @@ class CoreUsers extends CI_Controller {
 		$data['ModuleName'] = $this->plural->pluralize($this->ModuleName);
 
 		//User Levels
-		$data['level'] = $this->db->select('level_name')->where('level_flg',1)->get('levels')->result();
+		$data['level'] = $this->CoreCrud->selectMultipleValue('levels','name',array('flg'=>1));
+
 		//Form Submit URLs
 		$data['form_new'] = $this->New;
 		$data['form_save'] = $this->Save;

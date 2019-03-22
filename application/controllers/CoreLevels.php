@@ -42,6 +42,8 @@ class CoreLevels extends CI_Controller {
         //Models
 		$this->load->model('CoreCrud');
 		$this->load->model('CoreForm');
+		
+        // Your own constructor code
         
 	}
 
@@ -86,8 +88,7 @@ class CoreLevels extends CI_Controller {
 		$data['extRoute'] = "administrator/pages/".$this->plural->pluralize($this->Folder).$this->SubFolder."/";
 
 	    //Select Module Type
-		$module_list = $this->db->select('setting_value')->where('setting_title','module_list')->where('setting_default','yes')
-		->where('setting_flg',1)->get('settings')->row()->setting_value;
+		$module_list = $this->CoreCrud->selectSingleValue('settings','value',array('title'=>'module_list','flg'=>1));
 
 		$data['modulelist'] = explode(',', $module_list);
 

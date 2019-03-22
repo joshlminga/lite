@@ -18,6 +18,7 @@ class CoreCrud extends CI_Model {
       //Helpers
 
       //Models
+      $this->load->model('CoreForm');
 
       // Your own constructor code
   }
@@ -35,7 +36,7 @@ class CoreCrud extends CI_Model {
 
   	foreach ($where as $key => $value) {
   		//Set Clomun names
-  		$column = $module.'_'.$key;
+      $column = $this->CoreForm->get_column_name($module,$key);
   		//Set key as column name and assign the value to look 
   		$select_where[$column] = $value;
   	}
@@ -66,11 +67,11 @@ class CoreCrud extends CI_Model {
 
   			$exploded = explode("as",strtolower($key)); //Get Column name in Key 0 and As value Name in Key 1
 
-  			$column_name = $module.'_'.$exploded[0];//Set Column name
+  			$column_name = $this->CoreForm->get_column_name($module,$exploded[0]);//Set Column name
   			$columns[$i] = $column_name.'AS'.$exploded[1];//Set Column name as
   		}else{
   			
-  			$columns[$i] = $module.'_'.$key;//Set Clomun names
+        $columns[$i] = $this->CoreForm->get_column_name($module,$key);//Set Column name
   		}
   		$i++;//Count
     }
@@ -156,7 +157,7 @@ class CoreCrud extends CI_Model {
 
     //Check if fiel_select passed is not an array
     if (!is_array($fiel_select)) {
-      $fiel_select = explode(',', $fiel_select); //Array to string
+      $fiel_select = explode(',', $fiel_select); //string to Array
     }
 
     //Select Data
@@ -206,6 +207,117 @@ class CoreCrud extends CI_Model {
     }else{
       return null; //return null for no data
     }
+  }
+
+  /*
+  *
+  * This function help you to select and retun specific column value
+  * You can only select single column value
+  *
+  * In this function you pass
+  *
+  * 1: Module name / Table name
+  *  -> This will be singularize and used to generate column Name
+  *  -> Also pluralize for Table Name
+  *
+  * 2: Pass the selected column name
+  * 3: Pass the comparison values
+  *  array('column'=>'value')
+  *
+  * 4: Pass clause if you want to use Like etc.
+  *
+  * NB: Full Column Name -- will be added by the function 
+  * 
+  */
+  public function selectSingleValue($module,$select,$where,$clause=null)
+  {
+
+    //Modules
+    $module = $this->plural->singularize($module);
+    $table = $this->plural->pluralize($module);
+
+    //Columns
+    $select_column = $this->CoreForm->get_column_name($module,$select);
+    foreach ($where as $key => $value) {
+
+      $column = $this->CoreForm->get_column_name($module,$key);
+      $where_column[$column] = $value; //Set Proper Column Name 
+    }
+
+    //Check If Clause specified
+    if (!is_null($clause)) {
+
+      $value = $this->db->select($select_column)->$clause($where_column)->limit(1)->get($table)->row()->$select_column; //Select Data
+    }else{
+      $value = $this->db->select($select_column)->where($where_column)->limit(1)->get($table)->row()->$select_column; //Select Data
+    }
+
+    //Return Data
+    return $value;
+  }
+
+  /*
+  *
+  * This function help you to select and retun multiple value
+  * You can only select passed column value(s)
+  *
+  * In this function you pass
+  *
+  * 1: Module name / Table name
+  *  -> This will be singularize and used to generate column Name
+  *  -> Also pluralize for Table Name
+  *
+  * 2: Pass the selected column name(s)
+  * 3: Pass the comparison values
+  *  array('column'=>'value')
+  *
+  * 4: Pass clause if you want to use Like etc.
+  *
+  * NB: Full Column Name -- will be added by the function 
+  * 
+  */
+  public function selectMultipleValue($module,$select,$where,$clause=null)
+  {
+
+    //Modules
+    $module = $this->plural->singularize($module);
+    $table = $this->plural->pluralize($module);
+
+    //Check if select passed is not an array
+    if (!is_array($select)) {
+      $select = explode(',', $select); //string to Array
+    }
+
+    //Set-Up Columns
+    for ($i = 0; $i < count($select); $i++) {
+
+      $column = $this->CoreForm->get_column_name($module,$select[$i]);
+      $select_column[$i] = $column; //Set Proper Column Name 
+    }
+
+    //Set the column array to string
+    if (is_array($select_column)) {
+      //Columns
+      $select_column = implode(',', $select_column); //Array to string
+    }
+
+    //Where - Comparison
+    foreach ($where as $key => $value) {
+
+      $column = $this->CoreForm->get_column_name($module,$key);
+      $where_column[$column] = $value; //Set Proper Column Name 
+    }
+
+    //Check If Clause specified
+    if (!is_null($clause)) {
+
+      $values = $this->db->select($select_column)->$clause($where_column)->get($table)->result(); //Select Data
+    }else{
+      $values = $this->db->select($select_column)->where($where_column)->get($table)->result(); //Select Data
+    }
+
+    //Return Data
+    return $values;
   }
 
   /*
@@ -361,10 +473,10 @@ class CoreCrud extends CI_Model {
     $table = $this->plural->pluralize($module);
 
     //Columns
-    $page_column_id = $module."_id";
-    $page_column_title = $module."_title";
-    $page_column_createdat = $module."_createdat";
-    $page_column_url = $module."_url";
+    $page_column_id = $this->CoreForm->get_column_name($module,'id');
+    $page_column_title = $this->CoreForm->get_column_name($module,'title');
+    $page_column_createdat = $this->CoreForm->get_column_name($module,'createdat');
+    $page_column_url = $this->CoreForm->get_column_name($module,'url');
 
     //Select Post
     $postTitle = $this->db->select("$page_column_id,$page_column_title")->where("$page_column_id",$postID)
@@ -427,10 +539,10 @@ class CoreCrud extends CI_Model {
     $table = $this->plural->pluralize($module);
 
     //Columns
-    $page_column_id = $module."_id";
-    $page_column_title = $module."_title";
-    $page_column_createdat = $module."_createdat";
-    $page_column_url = $module."_url";
+    $page_column_id = $this->CoreForm->get_column_name($module,'id');
+    $page_column_title = $this->CoreForm->get_column_name($module,'title');
+    $page_column_createdat = $this->CoreForm->get_column_name($module,'createdat');
+    $page_column_url = $this->CoreForm->get_column_name($module,'url');
 
     $ExistingURL = $this->db->select("$page_column_id,$page_column_title,$page_column_url")->where("$page_column_id",$currPOST)
                           ->order_by("$page_column_createdat desc")->limit(1)->get("$table");

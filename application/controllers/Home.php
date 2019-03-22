@@ -43,6 +43,9 @@ class Home extends CI_Controller {
 		$this->load->model('CoreCrud');
 		$this->load->model('CoreForm');
 		$this->load->model('CoreData');
+		
+        // Your own constructor code
+        
 	}
 
 	/*
@@ -87,9 +90,8 @@ class Home extends CI_Controller {
 		$data['theme_name'] = $this->Theme;
 
 		//Article
-		$data['pages'] = $this->db->select('page_title,page_post')->from('pages')
-						->where('page_flg',1)
-			            ->get()->result();
+		$data['pages'] = $this->CoreCrud->selectMultipleValue('pages','title,post',array('flg'=>1));
+
 
 		//Form Submit URLs
 		$data['form_new'] = $this->New;

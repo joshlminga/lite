@@ -41,6 +41,8 @@ class FieldUsers extends CI_Controller {
         //Models
 		$this->load->model('CoreCrud');
 		$this->load->model('CoreForm');
+		
+        // Your own constructor code
         
 	}
 
@@ -82,8 +84,7 @@ class FieldUsers extends CI_Controller {
 		$data['routeURL'] = (is_null($this->Route)) ? $this->plural->pluralize($this->Folder) : $this->Route;
 
 		//More Data
-		$where = array('user_flg' =>1,'user_level' =>'customer');
-		$data['username'] = $this->db->select('user_name,user_id')->where($where)->get('users')->result();
+		$data['username'] = $this->CoreCrud->selectMultipleValue('users','name,id',array('flg'=>1,'level'=>'customer'));
 
 		//Module Name - For Forms Title
 		$data['ModuleName'] = $this->plural->pluralize($this->ModuleName);

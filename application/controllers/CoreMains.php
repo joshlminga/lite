@@ -39,6 +39,9 @@ class CoreMains extends CI_Controller {
 		
         //Models
 		$this->load->model('CoreCrud');
+		
+        // Your own constructor code
+        
 	}
 
 	/*

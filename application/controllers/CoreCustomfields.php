@@ -41,6 +41,8 @@ class CoreCustomFields extends CI_Controller {
         //Models
 		$this->load->model('CoreCrud');
 		$this->load->model('CoreForm');
+		
+        // Your own constructor code
         
 	}
 

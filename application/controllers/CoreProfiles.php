@@ -42,6 +42,8 @@ class CoreProfiles extends CI_Controller {
         //Models
 		$this->load->model('CoreCrud');
 		$this->load->model('CoreForm');
+		
+        // Your own constructor code
         
 	}
 
@@ -86,8 +88,8 @@ class CoreProfiles extends CI_Controller {
 		$data['ModuleName'] = $this->plural->pluralize($this->ModuleName);
 
 		//User Levels
-		$where = array('level_flg' =>1,'level_default' =>'no');
-		$data['level'] = $this->db->select('level_name')->where($where)->get('levels')->result();
+		$data['level'] = $this->CoreCrud->selectMultipleValue('levels','name',array('flg'=>1,'default'=>'no'));
+
 		//Form Submit URLs
 		$data['form_new'] = $this->New;
 		$data['form_save'] = $this->Save;

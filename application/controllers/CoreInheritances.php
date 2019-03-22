@@ -41,6 +41,8 @@ class CoreInheritances extends CI_Controller {
         //Models
 		$this->load->model('CoreCrud');
 		$this->load->model('CoreForm');
+		
+        // Your own constructor code
         
 	}
 
@@ -85,8 +87,7 @@ class CoreInheritances extends CI_Controller {
 		$data['extRoute'] = "administrator/pages/".$this->plural->pluralize($this->Folder).$this->SubFolder."/";
 
 	    //Select Inheritance
-		$inheritance_type = $this->db->select('setting_value')->where('setting_title','inheritance_data')->where('setting_default','yes')
-		->where('setting_flg',1)->get('settings')->row()->setting_value;
+		$inheritance_type = $this->CoreCrud->selectSingleValue('settings','value',array('title'=>'inheritance_data','flg'=>1));
 
 		$data['inheritance_type'] = explode(',', $inheritance_type);
 	    $data['inheritance_parent'] = $this->CoreCrud->selectInheritanceItem(array('flg'=>1),'id,type,parent,title');

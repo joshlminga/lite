@@ -18,6 +18,8 @@ class CoreErrors extends CI_Controller {
 		
         //Models
         $this->load->model('CoreData');
+		
+        // Your own constructor code
         
 	}
 
@@ -92,11 +94,12 @@ class CoreErrors extends CI_Controller {
 	{
 		//Model Query
 		$data = $this->load('error');
+		$message = 'Sorry Page Was Not Found 404:';
 
 		//Notification
 		$notify = $this->CoreNotify->notify();
 		$data['notify'] = $this->CoreNotify->$notify($notifyMessage);
-		$data['message'] = 'Sorry Page Was Not Found 404:';
+		$data['message'] = $message; //Error Message
 
 		//Open Page
 		$this->pages($data);		
@@ -115,7 +118,7 @@ class CoreErrors extends CI_Controller {
     * 	Page layout can be passed via $layout
 	* 
     */
-	public function open($pageID='error',$message='You are not allowed To Access This Page',$layout='error')
+	public function open($pageID='error',$message='You do not have permission to access this page',$layout='error')
 	{
 
 		//Model Query

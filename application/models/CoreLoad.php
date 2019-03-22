@@ -19,7 +19,9 @@ class CoreLoad extends CI_Model {
 
         //Models
 
+		
         // Your own constructor code
+        
     }
 
     /*
@@ -36,19 +38,12 @@ class CoreLoad extends CI_Model {
 		$data['extension_dir'] = 'application/views/extensions/';
 
 		//Site Title
-		$data['site_title'] = $this->db->select('setting_value')->where('setting_title','site_title')->where('setting_default','yes')
-		->where('setting_flg',1)->get('settings')->row()->setting_value;
-
-		$data['description'] = $this->db->select('setting_value')->where('setting_title','seo_description')->where('setting_default','yes')
-		->where('setting_flg',1)->get('settings')->row()->setting_value;
-		$data['keywords'] = $this->db->select('setting_value')->where('setting_title','seo_keywords')->where('setting_default','yes')
-		->where('setting_flg',1)->get('settings')->row()->setting_value;
-		$data['site_robots'] = $this->db->select('setting_value')->where('setting_title','seo_visibility')->where('setting_default','yes')
-		->where('setting_flg',1)->get('settings')->row()->setting_value;
-		$data['site_global'] = $this->db->select('setting_value')->where('setting_title','seo_global')->where('setting_default','yes')
-		->where('setting_flg',1)->get('settings')->row()->setting_value;
-		$data['seo_data'] = $this->db->select('setting_value')->where('setting_title','seo_meta_data')->where('setting_default','yes')
-		->where('setting_flg',1)->get('settings')->row()->setting_value;
+		$data['site_title'] = $this->CoreCrud->selectSingleValue('settings','value',array('title'=>'site_title','flg'=>1));
+		$data['description'] = $this->CoreCrud->selectSingleValue('settings','value',array('title'=>'seo_description','flg'=>1));
+		$data['keywords'] = $this->CoreCrud->selectSingleValue('settings','value',array('title'=>'seo_keywords','flg'=>1));
+		$data['site_robots'] = $this->CoreCrud->selectSingleValue('settings','value',array('title'=>'seo_visibility','flg'=>1));
+		$data['site_global'] = $this->CoreCrud->selectSingleValue('settings','value',array('title'=>'seo_global','flg'=>1));
+		$data['seo_data'] = $this->CoreCrud->selectSingleValue('settings','value',array('title'=>'seo_meta_data','flg'=>1));
 
    		//returned DATA
     	return $data;
@@ -87,7 +82,7 @@ class CoreLoad extends CI_Model {
    	public function site_status()
    	{
    		//Site Status
-		$status = $this->db->select('setting_value')->where('setting_title','site_status')->get('settings')->row()->setting_value;
+		$status = $this->CoreCrud->selectSingleValue('settings','value',array('title'=>'site_status','flg'=>1));
 
 		//Check if is online
 		if (strtolower($status) == 'online') {
@@ -106,25 +101,17 @@ class CoreLoad extends CI_Model {
     * E.g If you pass '12345' the random integer will be generated from randomized number 1 2 3 4 5  
     *     If you do not pass anything here we advise you only do this when generating password
     */
-    public function random($length=4, $keyspace = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ{[}}-+*#')
+    public function random($length=4, $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ{[}}-+*#')
     {
-	    // $pieces = [];
-	    // $max = mb_strlen($keyspace, '8bit') - 1;
-	    // for ($i = 0; $i < $length; ++$i) {
-	    //     $pieces []= $keyspace[random_int(0, $max)];
-	    // }
-   		// //returned DATA
-	    // return implode('', $pieces);
 
-		$min=0; $max=999; $quantity=2;
+    	//Generate Random String
+	    $charactersLength = strlen($characters);
+	    $randomString = '';
+	    for ($i = 0; $i < $length; $i++) {
+	        $randomString .= $characters[rand(0, $charactersLength - 1)];
+	    }
 
-	    $numbers = range($min, $max);
-	    shuffle($numbers);
-	    $numbers1 = array_slice($numbers, 0, $quantity);
-
-		$rand = implode("",$numbers1);
-
-		return $rand;
+		return $randomString; // Return Random String
     }
 
     /*
@@ -203,7 +190,7 @@ class CoreLoad extends CI_Model {
 			$level = (is_null($level))? $this->session->level : $level; //Access Level	
 
 			$module = $this->plural->singularize($module); //Module Name
-			$modules_list = $this->db->select('level_module')->where('level_name',$level)->get('levels')->row()->level_module; //Module List
+			$modules_list = $this->CoreCrud->selectSingleValue('levels','module',array('name'=>$level,'flg'=>1)); //Module List
 			$modules = explode(",",strtolower($modules_list)); //Allowed Modules
 
 			if (in_array(strtolower($module), $modules)) { 
@@ -266,8 +253,7 @@ class CoreLoad extends CI_Model {
 	public function siteOffline()
 	{
 		//Offline Message
-		$offlineMessage = $this->db->select('setting_value')->where('setting_title','offline_message')
-		->get('settings')->row()->setting_value;
+		$offlineMessage = $this->CoreCrud->selectSingleValue('settings','value',array('title'=>'offline_message','flg'=>1)); //Module List
 
 		//Message
 		$htmlDetails = htmlspecialchars_decode($offlineMessage);
@@ -283,15 +269,9 @@ class CoreLoad extends CI_Model {
 	*/
 	public function notAllowed($error=null)
 	{
-		//Quick Load
-		$invalidAccessMessage = 'You are not allowed To Access This Page';
-
-		//Message
-		$htmlDetails = htmlspecialchars_decode($invalidAccessMessage);
 
 		//Return
 		redirect("CoreErrors/open");
-		//echo $htmlDetails; 
 	}
 
 	/*

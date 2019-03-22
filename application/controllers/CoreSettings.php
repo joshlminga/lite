@@ -45,6 +45,8 @@ class CoreSettings extends CI_Controller {
         //Models
 		$this->load->model('CoreCrud');
 		$this->load->model('CoreForm');
+		
+        // Your own constructor code
         
 	}
 
@@ -89,10 +91,7 @@ class CoreSettings extends CI_Controller {
 		$data['ModuleName'] = $this->plural->pluralize($this->ModuleName);
 
 		//Post
-		$data['posts'] = $this->db->select('page_id,page_title')->where('page_flg',1)->get('pages')->result();
-
-		//Blog
-		$data['blogs'] = $this->db->select('blog_id,blog_title')->where('blog_flg',1)->get('blogs')->result();
+		$data['posts'] = $this->CoreCrud->selectMultipleValue('pages','id,title',array('flg'=>1));
 
 		//Form Submit URLs
 		$data['form_general'] = $this->General;

@@ -41,6 +41,8 @@ class CorePages extends CI_Controller {
         //Models
 		$this->load->model('CoreCrud');
 		$this->load->model('CoreForm');
+		
+        // Your own constructor code
         
 	}
 
@@ -83,7 +85,6 @@ class CorePages extends CI_Controller {
 
 		//Extension Route
 		$data['extRoute'] = "administrator/pages/".$this->plural->pluralize($this->Folder).$this->SubFolder."/";
-		$where = array('fieldcustom_flg' =>1,'fieldcustom_type' =>'Categories');
 
 		//Module Name - For Forms Title
 		$data['ModuleName'] = $this->plural->pluralize($this->ModuleName);

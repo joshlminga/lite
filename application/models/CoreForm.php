@@ -20,8 +20,9 @@ class CoreForm extends CI_Model {
         //Helpers
 
         //Models
-
+        
         // Your own constructor code
+        
     }
 
     /*
@@ -162,7 +163,7 @@ class CoreForm extends CI_Model {
         $column_list = array();
         for($i = 0; $i < count($columns); $i++){
 
-            $column_list[$i] = $module.'_'.$columns[$i]; 
+            $column_list[$i] = $this->get_column_names($module,$columns[$i]); //Column Name
         }
 
         //Return Columns Names
@@ -252,58 +253,6 @@ class CoreForm extends CI_Model {
 
         return $type_value;
     }
-
-    /*
-    *
-    * Generate Auto Forms
-    * Pass:
-    * - input type
-    * - input name
-    * - input class
-    * - data label
-    * - bootstrap col- class (col-md-4) 
-    * 
-    */
-    public function get_auto_form()
-    {
-        # code...
-    }
-
-   /*
-   *
-   * This Fuction should be used mostly with Home Controller
-   * Here you pass the page name 
-   * And the folder name where your view file is located NB: The value must be an associative array
-   *     'Key' -> value
-   *     'Key has to be the file name(passed file naem)' => Value has to be the sub folder (directory Name) 
-   * 
-   */
-   public function sub_pages($page_name,$sub_page_route=array(null))
-   {
-        if (!is_null($sub_page_route)) { //Check if SubRoute Specified
-            $if_page = array_keys($sub_page_route); //Check which Page Is Requested
-            if (in_array(trim($page_name),$if_page)) {
-                $page_route = $sub_page_route[trim($page_name)]; //Get the sub route
-                $page = "$page_route/$page_name"; //Set the subroute
-            }else{
-                $page = $page_name;
-            }
-        }else{
-            $page = $page_name;
-        }
-
-        return $page; //Return the route specified
-   }
-
-   /////////////////////////////////////////////////////////////////////////////////////////////
-   //////////////////////////////  Quick Generated Form             ///////////////////////////
-   ///////////////////////////////////////////////////////////////////////////////////////////
-   
-   /*
-   *
-   *    Input Text 
-   * 
-   */
 
 }
 

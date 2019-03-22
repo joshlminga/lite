@@ -19,7 +19,9 @@ class CoreNotify extends CI_Model {
 
         //Models
 
+        
         // Your own constructor code
+        
     }
 
     /*
