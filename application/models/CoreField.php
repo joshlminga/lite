@@ -24,23 +24,22 @@ class CoreField extends CI_Model {
         // Your own constructor code
     }
 
+    /*
+    *
+    * This function is used to load all your custom data requred to be present for the system/website to oparate well
+    * All values are return as one array (data)
+    * 
+    */
+    public function load()
+    {
+    	//Values Assets
 
-	/*
-	*
-	*
-	* Get Parent - Child herachy
-	* 
-	*/
-	public function allign_children($parentChild)
-	{
-		if (!empty($parentChild) && !is_null($parentChild)) {			
-			foreach ($parentChild as $key => $value) {
-				if (strpos($value, ',') !== false) { $data = explode(",",$value); }
-				else{ $data = array($value); }
-				for($i = 0; $i < count($data); $i++){ $list[$key][$i] = $data[$i]; }
-			} return $list;
-		}else{ return null; }
-	}
+		//Loading Demo
+		$data['demo_load'] = 'Delete These';
+
+   		//returned DATA
+    	return $data;
+    }
 
 }
 
