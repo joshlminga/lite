@@ -11,12 +11,13 @@
                 <?= (!is_null($notify) && !empty($notify))? $notify : ''; ?>
 				<?= form_open($form_edit, '', ' autocomplete="off" '); ?>
 					<div class="row">
+
 						<input type="hidden" name="id" value="<?= $resultList[0]->id;?>">
 					    <div class="col-md-4 col-sm-12">
 				            <div class="fg-line">
 				            	<label>Select Modules <small>(Modules allowed to access)</small> <i class="fa fa-asterisk"></i></label>
 	                            <select name="level_module[]" multiple="" class="selectpicker" data-placeholder="Choose Modules...">
-	                            	<?php $moduleselected = explode(",",$resultList[0]->module); ?>
+	                            	<?php $moduleselected = explode(",",trim($resultList[0]->module)); ?>
 
                                     <?php for ($i = 0; $i < count($modulelist); $i++): ?>
                                     	<?php if (in_array($modulelist[$i],$moduleselected)): ?>

@@ -111,7 +111,7 @@ class ExtensionCustomers extends CI_Controller {
     public function pages($data,$layout='main')
     {
     	//Chech allowed Access
-		if ($this->CoreLoad->auth($this->Module)) { //Authentication
+		if ($this->CoreLoad->auth($this->Route)) { //Authentication
 			//Layout
 			$this->load->view("administrator/layouts/$layout",$data);
 		}else{
@@ -397,7 +397,7 @@ class ExtensionCustomers extends CI_Controller {
 	public function create($insertData,$unsetData=null)
 	{
 
-		if ($this->CoreLoad->auth($this->Module)) { //Authentication
+		if ($this->CoreLoad->auth($this->Route)) { //Authentication
 			
 			//Pluralize Module
 			$tableName = $this->plural->pluralize($this->Module);
@@ -447,7 +447,7 @@ class ExtensionCustomers extends CI_Controller {
 	public function update($updateData,$valueWhere,$unsetData=null)
 	{
 
-		if ($this->CoreLoad->auth($this->Module)) { //Authentication
+		if ($this->CoreLoad->auth($this->Route)) { //Authentication
 			
 			//Pluralize Module
 			$tableName = $this->plural->pluralize($this->Module);
@@ -494,7 +494,7 @@ class ExtensionCustomers extends CI_Controller {
 	public function delete($valueWhere)
 	{
 
-		if ($this->CoreLoad->auth($this->Module)) { //Authentication
+		if ($this->CoreLoad->auth($this->Route)) { //Authentication
 			
 			//Pluralize Module
 			$tableName = $this->plural->pluralize($this->Module);

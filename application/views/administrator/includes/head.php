@@ -120,7 +120,7 @@
                         Dashboard
                         </a>
                     </li>
-                    <?php if ($this->CoreLoad->auth('author')): ?>
+                    <?php if ($this->CoreLoad->auth('blog')): ?>
                     <li class="sub-menu"> <!-- active -->
                         <a href="#" data-ma-action="submenu-toggle">
                             <i class="zmdi zmdi-format-color-text green_less"></i> Blog 
@@ -133,6 +133,8 @@
                         </ul>
                     </li>
                     <li class="" style="display: none;"><a href="#"><i class="zmdi zmdi-comment-list"></i> Blog Comments</a></li>
+                    <?php endif ?>
+                    <?php if ($this->CoreLoad->auth('page')): ?>
                     <li class="sub-menu">
                         <a href="#" data-ma-action="submenu-toggle"><i class="zmdi zmdi-file-plus green_less"></i> Page </a>
                         <ul>
@@ -146,7 +148,7 @@
                         <i class="zmdi zmdi-folder-star zmdi-hc-fw blue"></i> Auto Fields</a>
                     </li>
                     <?php endif ?>
-                    <?php if ($this->CoreLoad->auth('userdata')): ?>
+                    <?php if ($this->CoreLoad->auth('userdatas')): ?>
                     <li class="sub-menu"> <!-- active -->
                         <a href="#" data-ma-action="submenu-toggle"><i class="zmdi zmdi-assignment zmdi-hc-fw red_less"></i> 
                             Field Control User 
@@ -157,7 +159,7 @@
                         </ul>
                     </li>
                     <?php endif ?>
-                    <?php if ($this->CoreLoad->auth('user')): ?>
+                    <?php if ($this->CoreLoad->auth('customers')): ?>
                     <li class="sub-menu"> <!-- active -->
                         <a href="#" data-ma-action="submenu-toggle"><i class="zmdi zmdi-pin-account zmdi-hc-fw blue"></i> Customer </a>
                         <ul>
@@ -166,24 +168,30 @@
                         </ul>
                     </li>
                     <?php endif ?>
-                    <?php if ($this->CoreLoad->auth('admin')): ?>
+                    <?php if ($this->CoreLoad->auth('control')): ?>
                     <li class="sub-menu">
                         <a class="core-sidebar-link" href="#" data-ma-action="submenu-toggle">
                             <i class="zmdi zmdi-settings red_less"></i> Controls </a>
                         <ul>
                             <li class="core-sub-item" style="display: none;"><a href="#">Store</a></li>
                             <li class="core-sub-item" style="display: none;"><a href="#">Import</a></li>
+                            <?php if ($this->CoreLoad->auth('inheritance')): ?>
                             <li class="core-sub-item"><a href="<?= site_url('inheritances') ?>">Inheritance</a></li>
+                            <?php endif ?>
+                            <?php if ($this->CoreLoad->auth('customfield')): ?>
                             <li class="core-sub-item">
                                 <a class="core-sub-link" href="<?= site_url('customfields') ?>">
                                 Custom Fields
                                 </a>
                             </li>
+                            <?php endif ?>
+                            <?php if ($this->CoreLoad->auth('level')): ?>
                             <li class="core-sub-item">
                                 <a class="core-sub-link" href="<?= site_url('level') ?>">
                                 Access Level
                                 </a>
                             </li>
+                            <?php endif ?>
                         </ul>
                     </li>
                     <?php endif ?>
@@ -196,7 +204,7 @@
                         </ul>
                     </li>
                     <?php endif ?>
-                    <?php if ($this->CoreLoad->auth('admin')): ?>
+                    <?php if ($this->CoreLoad->auth('setting')): ?>
                     <li class="sub-menu">
                         <a class="core-sidebar-link" href="#" data-ma-action="submenu-toggle"><i class="zmdi zmdi-wrench red_less"></i> Settings </a>
                         <ul>
