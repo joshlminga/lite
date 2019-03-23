@@ -18,7 +18,8 @@ class CoreErrors extends CI_Controller {
 		
         //Models
         $this->load->model('CoreData');
-		
+        $this->load->model('CoreCrud');
+
         // Your own constructor code
         
 	}
