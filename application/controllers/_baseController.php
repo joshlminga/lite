@@ -301,7 +301,7 @@ class _baseController extends CI_Controller {
 			if ($this->form_validation->run() == TRUE) {
 
 				//UnSet ID
-				$formData = $this->CoreLoad->unsetData($formData,array('id'));
+				$formData = $this->CoreCrud->unsetData($formData,array('id'));
 
 				$image = "myfile"; // Input 
 
