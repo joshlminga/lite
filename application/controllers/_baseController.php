@@ -303,7 +303,7 @@ class _baseController extends CI_Controller {
 				//UnSet ID
 				$formData = $this->CoreCrud->unsetData($formData,array('id'));
 
-				$image = "myfile"; // Input 
+				$image = 'upload_file_name'; // Input 
 
 				//Check if Input Is Empty
 				if ($_FILES[$image]['size'][0] > 0) {
@@ -393,7 +393,7 @@ class _baseController extends CI_Controller {
 				$unsetData = array('id');/*value To Unset*/
 
 				$current_data = array('select form existing array list'); //Get Current Data
-				$image = "myfile"; // Input 
+				$image = 'upload_file_name'; // Input 
 
 				//Check if Input Is Empty
 				if ($_FILES[$image]['size'][0] > 0) {
