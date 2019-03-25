@@ -132,6 +132,15 @@ $route['admin/logout'] = 'CoreLogs/valid/logout'; //Logout
 $route['profile'] = 'CoreProfiles/edit/profile'; //My Profile
 $route['profile/update'] = 'CoreProfiles/valid/update'; //Validate and Update
 
+//AutoFields
+$route['autofields'] = 'CoreAutoFields/index'; //List
+$route['autofields/new'] = 'CoreAutoFields/open/add'; //Create New
+$route['autofields/edit'] = 'CoreAutoFields/edit/edit'; // Edit 
+$route['autofields/save'] = 'CoreAutoFields/valid/save'; // Validate and Save
+$route['autofields/update'] = 'CoreAutoFields/valid/update'; // Validate and Update
+$route['autofields/delete'] = 'CoreAutoFields/valid/delete'; // Delete 
+$route['autofields/multiple'] = 'CoreAutoFields/valid/bulk'; // Bulk Action 
+
 //Custom Fields
 $route['customfields'] = 'CoreCustomFields/index'; //Manage
 $route['customfields/new'] = 'CoreCustomFields/open/add'; //Create New 
@@ -172,15 +181,6 @@ $route['customers/save'] = 'ExtensionCustomers/valid/save'; // Validate and Save
 $route['customers/update'] = 'ExtensionCustomers/valid/update'; // Validate and Update
 $route['customers/delete'] = 'ExtensionCustomers/valid/delete'; // Delete 
 $route['customers/multiple'] = 'ExtensionCustomers/valid/bulk'; // Bulk Action 
-
-//AutoFields
-$route['autofields'] = 'ExtensionAutoFields/index'; //List
-$route['autofields/new'] = 'ExtensionAutoFields/open/add'; //Create New
-$route['autofields/edit'] = 'ExtensionAutoFields/edit/edit'; // Edit 
-$route['autofields/save'] = 'ExtensionAutoFields/valid/save'; // Validate and Save
-$route['autofields/update'] = 'ExtensionAutoFields/valid/update'; // Validate and Update
-$route['autofields/delete'] = 'ExtensionAutoFields/valid/delete'; // Delete 
-$route['autofields/multiple'] = 'ExtensionAutoFields/valid/bulk'; // Bulk Action 
 
 //Choose SUB
 $route['category/select'] = 'AjaxList/categories'; //Dynamic Category

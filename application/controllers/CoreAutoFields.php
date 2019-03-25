@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class ExtensionAutoFields extends CI_Controller {
+class CoreAutoFields extends CI_Controller {
 
 	/*
 	*
@@ -11,8 +11,8 @@ class ExtensionAutoFields extends CI_Controller {
 
 	private $Core = 'Extension'; //Lite Main Core
 	private $Module = 'autofield'; //Module
-	private $Folder = 'extensions'; //Set Default Folder For html files and Front End Use
-	private $SubFolder = '/autofields'; //Set Default Sub Folder For html files and Front End Use Start with /
+	private $Folder = 'autofields'; //Set Default Folder For html files and Front End Use
+	private $SubFolder = ''; //Set Default Sub Folder For html files and Front End Use Start with /
 	
 	private $AllowedFile = null; //Set Default allowed file extension, remember you can pass this upon upload to override default allowed file type. Allowed File Extensions Separated by | also leave null to validate using jpg|jpeg|png|doc|docx|pdf|xls|txt change this on validation function at the bottom
 
@@ -229,7 +229,7 @@ class ExtensionAutoFields extends CI_Controller {
 		if (!is_null($inputTYPE) || !is_null($inputID)) {
 			//Table Select & Clause
 			$where = array($inputTYPE =>$inputID);
-	   		$columns = array('id as id,title as title,data as data,default as default,flg as status');
+	   		$columns = array('id as id,title as title,select as select,data as data,default as default,flg as status');
 			$data['resultList'] = $this->CoreCrud->selectCRUD($module,$where,$columns);
 
 			//Notification
@@ -276,6 +276,7 @@ class ExtensionAutoFields extends CI_Controller {
 			$validData['autofield_title'] = "trim|min_length[1]|max_length[200]"; //Validate Data Rules
 
 			$this->form_validation->set_rules("autofield_title", "Autofield Title", "trim|min_length[1]|max_length[200]");
+			$this->form_validation->set_rules("autofield_select", "Autofield Select", "trim|max_length[5000]");
 
 			//Set Up Data
 			for ($i = 0; $i < count($formData['autofield_label']); $i++) {
@@ -348,7 +349,9 @@ class ExtensionAutoFields extends CI_Controller {
 		elseif ($type == 'update') {
 
 			$updateData = $this->CoreLoad->input(); //Input Data	
+
 			$this->form_validation->set_rules("autofield_title", "Autofield Title", "trim|min_length[1]|max_length[200]");
+			$this->form_validation->set_rules("autofield_select", "Autofield Select", "trim|max_length[5000]");
 
 			$column_id = strtolower($this->CoreForm->get_column_name($this->Module,'id'));//Column ID
 			$value_id = $this->CoreLoad->input('id'); //Input Value
@@ -613,5 +616,5 @@ class ExtensionAutoFields extends CI_Controller {
     }
 }
 
-/* End of file ExtensionAutoFields.php */
-/* Location: ./application/controllers/ExtensionAutoFields.php */
+/* End of file CoreAutoFields.php */
+/* Location: ./application/controllers/CoreAutoFields.php */
