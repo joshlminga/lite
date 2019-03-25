@@ -16,6 +16,24 @@
                                 <?= form_open($form_save, ' autocomplete="off" '); ?>
                                     <div class="row">
                                         <div class="col-md-12 col-sm-12">
+                                            <div class="form-group">
+                                                <div class="">
+                                                    <label><strong>Default Value</strong></label>
+                                                    <label class="radio radio-inline m-r-20">
+                                                        <input type="radio" name="level_default" value="yes" checked="">
+                                                        <i class="input-helper"></i>
+                                                        <?= ucwords('Yes') ?>
+                                                    </label>
+                                                    <label class="radio radio-inline m-r-20">
+                                                        <input type="radio" name="level_default" value="no">
+                                                        <i class="input-helper"></i>
+                                                        <?= ucwords('No') ?>
+                                                    </label>
+                                                </div>
+                                            <span class="error"><?= form_error('level_default') ?></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12 col-sm-12">
                                             <div class="fg-line">
                                                 <label>Select Modules <small>(Modules allowed to access)</small> 
                                                     <i class="fa fa-asterisk"></i>

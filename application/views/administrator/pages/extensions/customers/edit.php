@@ -37,7 +37,7 @@
 					            <div class="fg-line">
 					            	<label>User Level <i class="fa fa-asterisk"></i></label>
 	                                <div class="select">
-	                                    <select class="form-control" name="user_level" autocomplete="off">
+	                                    <select class="chosen form-control" name="user_level" autocomplete="off">
 	                                    	<option selected="" value="<?= strtolower($resultList[0]->level); ?>"><?= ucwords($resultList[0]->level); ?></option>
 	                                    	<?php foreach ($level as $row): ?>
 	                                    		<?php if (strtolower($resultList[0]->level) != strtolower($row->level_name)): ?>

@@ -230,7 +230,7 @@ class CoreLevels extends CI_Controller {
 		if (!is_null($inputTYPE) || !is_null($inputID)) {
 			//Table Select & Clause
 			$where = array($inputTYPE =>$inputID);
-	   		$columns = array('id as id,name as name,module as module');
+	   		$columns = array('id as id,name as name,module as module,default as default');
 			$data['resultList'] = $this->CoreCrud->selectCRUD($module,$where,$columns);
 
 			//Notification
@@ -276,6 +276,7 @@ class CoreLevels extends CI_Controller {
 			$formData = $this->CoreLoad->input(); //Input Data
 
 			//Form Validation Values
+			$this->form_validation->set_rules('level_default', 'Default Value', 'trim|required|min_length[1]|max_length[5]');
 			$this->form_validation->set_rules("level_name", "Access Name", "required|trim|min_length[1]|max_length[20]");
 			$this->form_validation->set_rules("level_module[]", "Modules", "required|trim|min_length[1]|max_length[20000]");
 			
@@ -342,6 +343,7 @@ class CoreLevels extends CI_Controller {
 			$updateData = $this->CoreLoad->input(); //Input Data
 
 			//Form Validation Values
+			$this->form_validation->set_rules('level_default', 'Default Value', 'trim|required|min_length[1]|max_length[5]');
 			$this->form_validation->set_rules("level_module[]", "Modules", "required|trim|min_length[1]|max_length[20000]");
 
 			$updateData['level_module'] = implode(",",$updateData['level_module']); //Module List

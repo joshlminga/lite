@@ -40,6 +40,27 @@
 					        </div>
 					    </div>
 
+					    <div class="col-md-4 col-sm-12">
+					        <div class="form-group">
+					            <div class="">
+					            	<label><strong>Default Value</strong></label>
+		                            <label class="radio radio-inline m-r-20">
+		                                <input type="radio" name="level_default" value="yes"
+		                                <?= ($resultList[0]->default == 'yes')? 'checked' : ''; ?>>
+		                                <i class="input-helper"></i>
+		                                <?= ucwords('Yes') ?>
+		                            </label>
+		                            <label class="radio radio-inline m-r-20">
+		                                <input type="radio" name="level_default" value="no" 
+		                                <?= ($resultList[0]->default == 'no')? 'checked' : ''; ?>>
+		                                <i class="input-helper"></i>
+		                                <?= ucwords('No') ?>
+		                            </label>
+					            </div>
+				            <span class="error"><?= form_error('level_default') ?></span>
+					        </div>
+					    </div>
+					    
 					    <div class="col-md-12 col-sm-12">
 			                <div class="form-group">
 			                    <button type="submit" class="btn btn-primary btn-lg waves-effect flt-right brd-20">Update</button>
