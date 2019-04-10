@@ -142,22 +142,15 @@ class CoreSettings extends CI_Controller {
 	public function index($notifyMessage=null)
 	{
 		//Pluralize Module
-		$module = $this->plural->pluralize($this->Module);
 
 		//Model Query
-		$data = $this->load($this->plural->pluralize($this->Folder).$this->SubFolder."/list");
 
 		//Table Select & Clause
-		$where = array('level !=' => 'customer');
-	   	$columns = array('id,level as level,logname as username,name as full_name,email as email,flg as status');
-		$data['dataList'] = $this->CoreCrud->selectCRUD($module,$where,$columns);
 
 		//Notification
-		$notify = $this->CoreNotify->notify();
-		$data['notify'] = $this->CoreNotify->$notify($notifyMessage);
 
 		//Open Page
-		$this->pages($data);		
+		$this->open('general');		
 	}
 
     /*
@@ -221,9 +214,9 @@ class CoreSettings extends CI_Controller {
 			$updateData = $this->CoreLoad->input(); //Input Data
 
 			//Form Validation Values
-			$this->form_validation->set_rules("site_title", "Site Title", "required|min_length[1]|max_length[800]");
-			$this->form_validation->set_rules("site_slogan", "Site Slogan", "required|min_length[1]|max_length[800]");
-			$this->form_validation->set_rules("site_status", "Site Status", "required|min_length[1]|max_length[10]");
+			$this->form_validation->set_rules("site_title", "Site Title", "trim|required|min_length[1]|max_length[800]");
+			$this->form_validation->set_rules("site_slogan", "Site Slogan", "trim|required|min_length[1]|max_length[800]");
+			$this->form_validation->set_rules("site_status", "Site Status", "trim|required|min_length[1]|max_length[10]");
 
 			//Form Validation
 			if ($this->form_validation->run() == TRUE) {
@@ -244,7 +237,7 @@ class CoreSettings extends CI_Controller {
 
 			$updateData = $this->CoreLoad->input(); //Input Data
 
-			$this->form_validation->set_rules("current_url", "Current Url", "required|min_length[1]|max_length[50]");
+			$this->form_validation->set_rules("current_url", "Current Url", "trim|required|min_length[1]|max_length[50]");
 
 			//Form Validation
 			if ($this->form_validation->run() == TRUE) {
@@ -293,17 +286,17 @@ class CoreSettings extends CI_Controller {
 
 			$updateData = $this->CoreLoad->input(); //Input Data
 
-			$this->form_validation->set_rules("mail_protocol", "Mail Protocol", "required|min_length[1]|max_length[50]");
-			$this->form_validation->set_rules("smtp_host", "Smtp Host", "min_length[1]|max_length[50]");
-			$this->form_validation->set_rules("smtp_user", "Smtp User", "min_length[1]|max_length[50]");
-			$this->form_validation->set_rules("smtp_pass", "Smtp Pass", "min_length[1]|max_length[50]");
-			$this->form_validation->set_rules("smtp_port", "Smtp Port", "integer|min_length[1]|max_length[50]");
-			$this->form_validation->set_rules("smtp_timeout", "Smtp Timeout", "integer|min_length[1]|max_length[50]");
-			$this->form_validation->set_rules("smtp_crypto", "Smtp Crypto", "min_length[1]|max_length[50]");
-			$this->form_validation->set_rules("wordwrap", "Wordwrap", "required|min_length[1]|max_length[50]");
-			$this->form_validation->set_rules("wrapchars", "Wrapchars", "required|min_length[1]|max_length[50]");
-			$this->form_validation->set_rules("mailtype", "Mailtype", "required|min_length[1]|max_length[50]");
-			$this->form_validation->set_rules("charset", "Charset", "required|min_length[1]|max_length[50]");
+			$this->form_validation->set_rules("mail_protocol", "Mail Protocol", "trim|required|min_length[1]|max_length[50]");
+			$this->form_validation->set_rules("smtp_host", "Smtp Host", "trim|min_length[1]|max_length[50]");
+			$this->form_validation->set_rules("smtp_user", "Smtp User", "trim|min_length[1]|max_length[50]");
+			$this->form_validation->set_rules("smtp_pass", "Smtp Pass", "trim|min_length[1]|max_length[50]");
+			$this->form_validation->set_rules("smtp_port", "Smtp Port", "trim|integer|min_length[1]|max_length[50]");
+			$this->form_validation->set_rules("smtp_timeout", "Smtp Timeout", "trim|integer|min_length[1]|max_length[50]");
+			$this->form_validation->set_rules("smtp_crypto", "Smtp Crypto", "trim|min_length[1]|max_length[50]");
+			$this->form_validation->set_rules("wordwrap", "Wordwrap", "trim|required|min_length[1]|max_length[50]");
+			$this->form_validation->set_rules("wrapchars", "Wrapchars", "trim|required|min_length[1]|max_length[50]");
+			$this->form_validation->set_rules("mailtype", "Mailtype", "trim|required|min_length[1]|max_length[50]");
+			$this->form_validation->set_rules("charset", "Charset", "trim|required|min_length[1]|max_length[50]");
 
 			//Form Validation
 			if ($this->form_validation->run() == TRUE) {
@@ -323,11 +316,11 @@ class CoreSettings extends CI_Controller {
 
 			$updateData = $this->CoreLoad->input(); //Input Data
 
-			$this->form_validation->set_rules("home_display", "Home Display", "required|min_length[1]|max_length[50]");
-			$this->form_validation->set_rules("home_post", "Home Post", "min_length[1]|max_length[50]");
-			$this->form_validation->set_rules("home_page", "Home Page", "min_length[1]|max_length[50]");
-			$this->form_validation->set_rules("post_per_page", "Post Per Page", "required|integer|min_length[1]|max_length[50]");
-			$this->form_validation->set_rules("post_show", "Post Show", "required|min_length[1]|max_length[50]");
+			$this->form_validation->set_rules("home_display", "Home Display", "trim|required|min_length[1]|max_length[50]");
+			$this->form_validation->set_rules("home_post", "Home Post", "trim|min_length[1]|max_length[50]");
+			$this->form_validation->set_rules("home_page", "Home Page", "trim|min_length[1]|max_length[50]");
+			$this->form_validation->set_rules("post_per_page", "Post Per Page", "trim|required|integer|min_length[1]|max_length[50]");
+			$this->form_validation->set_rules("post_show", "Post Show", "trim|required|min_length[1]|max_length[50]");
 
 			//Form Validation
 			if ($this->form_validation->run() == TRUE) {
@@ -347,10 +340,10 @@ class CoreSettings extends CI_Controller {
 
 			$updateData = $this->CoreLoad->input(); //Input Data
 
-			$this->form_validation->set_rules("seo_visibility", "Seo Visibility", "required|min_length[1]|max_length[50]");
-			$this->form_validation->set_rules("seo_global", "Seo Global", "required|min_length[1]|max_length[50]");
-			$this->form_validation->set_rules("seo_description", "Seo Description", "max_length[8000]");
-			$this->form_validation->set_rules("seo_keywords", "Seo Keywords", "max_length[8000]");
+			$this->form_validation->set_rules("seo_visibility", "Seo Visibility", "trim|required|min_length[1]|max_length[50]");
+			$this->form_validation->set_rules("seo_global", "Seo Global", "trim|required|min_length[1]|max_length[50]");
+			$this->form_validation->set_rules("seo_description", "Seo Description", "trim|max_length[8000]");
+			$this->form_validation->set_rules("seo_keywords", "Seo Keywords", "trim|max_length[8000]");
 
 			//Form Validation
 			if ($this->form_validation->run() == TRUE) {

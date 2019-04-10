@@ -3,7 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class CoreField extends CI_Model {
 
-    private $DB = "core_cms_lite_v1";
+    private $DB = "";
 
 	/*
 	*
