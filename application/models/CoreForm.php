@@ -40,9 +40,9 @@ class CoreForm extends CI_Model {
         if (!is_array($column) && strpos($column,",") == False) {
             $column_name = $module.'_'.$column; //Column Name
         }else{
-            $columns = explode(",", $column); //Get Column Name
-            for($i = 0; $i < count($columns); $i++){
-                $column_name[$i] = $this->get_column_name($module,$columns[$i]); //Column Name
+            if (!is_array($column) && strpos($column,",") == True) { $column = explode(",", $column); /* Get Column Name */ }
+            for($i = 0; $i < count($column); $i++){
+                $column_name[$i] = $this->get_column_name($module,$column[$i]); //Column Name
             }
         }
 
@@ -61,10 +61,10 @@ class CoreForm extends CI_Model {
         if (!is_array($column) && strpos($column,",") == False) {
             $label =  substr($column,strpos($column, "_") +1); //Get Current Label Name
         }else{            
-            $columns = explode(",", $columns);//Get Columns
+            if (!is_array($column) && strpos($column,",") == True) { $column = explode(",", $column); /* Get Column Name */ }
             //Remove Module Name
             for($i = 0; $i < count($column); $i++){
-                $column_name = $columns[$i]; //Set Current Column Name
+                $column_name = $column[$i]; //Set Current Column Name
                 $label[$i] =  substr($column_name,strpos($column_name, "_") +1); //Get Current Label Name
             }
         }
@@ -84,9 +84,9 @@ class CoreForm extends CI_Model {
         if (!is_array($column) && strpos($column,",") == False) {
             $column_label = ucwords(str_replace('_',' ',$column));
         }else{
-            $columns = explode(",", $column); //Get Columns
-            for($i = 0; $i < count($columns); $i++){
-                $column_name = $columns[$i]; //Set Current Column Name
+            if (!is_array($column) && strpos($column,",") == True) { $column = explode(",", $column); /* Get Column Name */ }
+            for($i = 0; $i < count($column); $i++){
+                $column_name = $column[$i]; //Set Current Column Name
                 $column_label[$i] =  ucwords(str_replace('_',' ',$column_name)); //Get Current Column Label Name
             }
         }
@@ -94,7 +94,7 @@ class CoreForm extends CI_Model {
         return $column_label; //Column Label Name
     }
 
-    /* THIS FUNCTION IS ON BETA - USE WITH CAUTION
+    /*
     *
     * Set Validation Session Data
     *
@@ -111,7 +111,7 @@ class CoreForm extends CI_Model {
         $required = (array_key_exists("file_required",$validation))? $validation['file_required'] : $this->session->file_required; //Required
 
         //Set Upload File Values
-        $file_upload_session = array('file_name' =>$filename, 'file_required' => $required);
+        $file_upload_session = array('file_name'=>$filename,'file_required'=>$required);
         $this->session->set_userdata($file_upload_session);
     }
 
