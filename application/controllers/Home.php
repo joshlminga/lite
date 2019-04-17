@@ -140,6 +140,7 @@ class Home extends CI_Controller {
 		//Model Query
 		$data = $this->load('home');
 
+
 		//Notification
 		$notify = $this->CoreNotify->notify();
 		$data['notify'] = $this->CoreNotify->$notify($notifyMessage);
@@ -191,10 +192,14 @@ class Home extends CI_Controller {
 	public function valid($type)
 	{
 
+		//Pluralize Module
+		$module = $this->plural->pluralize($this->Module);
+		$coreModule = ucwords($this->Core).ucwords($module);
+		$routeURL = (is_null($this->Route)) ? $module : $this->Route;
+		$baseLoadPath = $this->plural->pluralize($this->Folder).$this->SubFolder.'/';
+
 		//Set Allowed Files
 		$allowed_files = (is_null($this->AllowedFile))? 'jpg|jpeg|png|doc|docx|pdf|xls|txt' : $this->AllowedFile;
-
-		//Pluralize Module
 
 		//Check Validation
 		if ($type == 'some condintion') {
@@ -247,23 +252,6 @@ class Home extends CI_Controller {
 				return false; //Data Insert Failed
 			}
 		}
-	}
-
-	/*
-	*
-	* This is function is for searching Data
-	* Here we pass Category name
-	* Area / Location to look for 
-	* 
-	*/
-	public function searchData($category,$location,$subCategory=null)
-	{
-
-		//Get Data
-		$where = array('column_flg' =>1,'column to look' =>'value to match');
-		$getData = $this->db->select('select_data1,select_data2')->where($where)->get('table')->result();
-
-		return $getData;
 	}
 
 	/*
