@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 10, 2019 at 02:39 PM
+-- Generation Time: May 01, 2019 at 02:17 PM
 -- Server version: 10.1.22-MariaDB
 -- PHP Version: 7.1.4
 
@@ -105,7 +105,7 @@ CREATE TABLE `customfields` (
 --
 
 INSERT INTO `customfields` (`customfield_id`, `customfield_title`, `customfield_required`, `customfield_optional`, `customfield_filters`, `customfield_show`, `customfield_details`, `customfield_stamp`, `customfield_default`, `customfield_flg`) VALUES
-(1, 'userdata', '[\"User Name\",\"User Email\"]', '[\"User Gender\",\"User Mobile\"]', '[\"user_name\",\"user_email\"]', 'admin', '{\"customfield_title\":\"User Data\",\"customfield_required\":\"[\\\"User Name\\\",\\\"User Email\\\"]\",\"customfield_optional\":\"[\\\"User Gender\\\",\\\"User Mobile\\\"]\",\"customfield_stamp\":\"2019-01-23 17:05:15\",\"customfield_flg\":1,\"customfield_filters\":\"[\\\"user_name\\\",\\\"user_email\\\"]\",\"customfield_default\":\"yes\"}', '2019-01-23 14:09:18', 'yes', 1);
+(1, 'userdata', '[\"User Name\",\"User Email\"]', '[\"User Gender\",\"User Mobile\",\"\"]', '[\"user_name\",\"user_email\"]', 'admin', '{\"customfield_title\":\"User Data\",\"customfield_required\":\"[\\\"User Name\\\",\\\"User Email\\\"]\",\"customfield_optional\":\"[\\\"User Gender\\\",\\\"User Mobile\\\",\\\"\\\"]\",\"customfield_stamp\":\"2019-04-12 16:53:52\",\"customfield_flg\":1,\"customfield_filters\":\"[\\\"user_name\\\",\\\"user_email\\\"]\",\"customfield_default\":\"yes\"}', '2019-04-12 13:53:52', 'yes', 1);
 
 -- --------------------------------------------------------
 

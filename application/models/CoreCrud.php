@@ -3,12 +3,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class CoreCrud extends CI_Model {
 
-	/*
-	*
-	* To load libraries/Model/Helpers/Add custom code which will be used in this Model
-	* This can ease the loading work 
-	* 
-	*/
+  /*
+  *
+  * To load libraries/Model/Helpers/Add custom code which will be used in this Model
+  * This can ease the loading work 
+  * 
+  */
   public function __construct(){
 
       parent::__construct();
@@ -29,56 +29,56 @@ class CoreCrud extends CI_Model {
   * 1: Pass Module Name 
   * 2: Where clause values as Array
   */
- 	public function set_whereCRUD($module,$where)
- 	{
+  public function set_whereCRUD($module,$where)
+  {
 
-  	$module = $this->plural->singularize($module); //Make Sure Module Is Singular
+    $module = $this->plural->singularize($module); //Make Sure Module Is Singular
 
-  	foreach ($where as $key => $value) {
-  		//Set Clomun names
+    foreach ($where as $key => $value) {
+      //Set Clomun names
       $column = $this->CoreForm->get_column_name($module,$key);
-  		//Set key as column name and assign the value to look 
-  		$select_where[$column] = $value;
-  	}
+      //Set key as column name and assign the value to look 
+      $select_where[$column] = $value;
+    }
 
-  	//Return The Array
-  	return $select_where;
- 	}
+    //Return The Array
+    return $select_where;
+  }
 
- 	/*
- 	*
- 	* Set value To Select
- 	* 1: Pass module name
- 	* 2: Pass Column names as sting
- 	*/
- 	public function set_selectCRUD($module,$column)
- 	{
+  /*
+  *
+  * Set value To Select
+  * 1: Pass module name
+  * 2: Pass Column names as sting
+  */
+  public function set_selectCRUD($module,$column)
+  {
 
     $module = $this->plural->singularize($module); //Make Sure Module Is Singular
 
     //Get Array
     $column = explode(',',$column[0]);
 
-  	$i = 0; // Set Array Counter
-  	foreach ($column as $key) {
+    $i = 0; // Set Array Counter
+    foreach ($column as $key) {
 
-  		//Check If Column Requested As
-  		if (strpos(strtolower($key), 'as') !== false) {
+      //Check If Column Requested As
+      if (strpos(strtolower($key), 'as') !== false) {
 
-  			$exploded = explode("as",strtolower($key)); //Get Column name in Key 0 and As value Name in Key 1
+        $exploded = explode("as",strtolower($key)); //Get Column name in Key 0 and As value Name in Key 1
 
-  			$column_name = $this->CoreForm->get_column_name($module,$exploded[0]);//Set Column name
-  			$columns[$i] = $column_name.'AS'.$exploded[1];//Set Column name as
-  		}else{
-  			
+        $column_name = $this->CoreForm->get_column_name($module,$exploded[0]);//Set Column name
+        $columns[$i] = $column_name.'AS'.$exploded[1];//Set Column name as
+      }else{
+        
         $columns[$i] = $this->CoreForm->get_column_name($module,$key);//Set Column name
-  		}
-  		$i++;//Count
+      }
+      $i++;//Count
     }
 
-  	//Return The Array
-  	return implode(',',$columns);
- 	}
+    //Return The Array
+    return implode(',',$columns);
+  }
 
   /*
   * Use this function to select datble values from the database
@@ -87,29 +87,32 @@ class CoreCrud extends CI_Model {
   * 2: Clause (You can Pass Null to get all)
   * 3: what to select (You can Pass Null to get any)
   */
- 	public function selectCRUD($module,$where=null,$select=null,$clause='where')
- 	{
-	
-  	$module = $this->plural->singularize($module); //Make Sure Module Is Singular
-   		
- 		//Get Table Name
- 		$table = $this->plural->pluralize($module);
+  public function selectCRUD($module,$where=null,$select=null,$clause='where')
+  {
+  
+    $module = $this->plural->singularize($module); //Make Sure Module Is Singular
+      
+    //Get Table Name
+    $table = $this->plural->pluralize($module);
 
- 		if (!is_null($select)) {
+    if (!is_null($select)) {
 
- 			$columns = $this->set_selectCRUD($module,$select);
+      $columns = $this->set_selectCRUD($module,$select);
       $this->db->select($columns);
- 		}
-  	if (!is_null($where)) {	
+    }
+    if (!is_null($where)) { 
 
-  		$where = $this->set_whereCRUD($module,$where);
-  		$this->db->$clause($where);
-  	}
+      $where = $this->set_whereCRUD($module,$where);
+      $this->db->$clause($where);
+    }
 
-  	$this->db->from($table);
-  	$query = $this->db->get();
+    $this->db->from($table);
+    $query = $this->db->get();
 
-  	return $query->result();
+    $checkData = $this->checkResultFound($query); //Check If Value Found
+    $queryData = ($checkData == true)? $query->result() : null;
+
+    return $queryData;
   }
 
   /*
@@ -247,9 +250,15 @@ class CoreCrud extends CI_Model {
     //Check If Clause specified
     if (!is_null($clause)) {
 
-      $value = $this->db->select($select_column)->$clause($where_column)->limit(1)->get($table)->row()->$select_column; //Select Data
+      $selectData = $this->db->select($select_column)->$clause($where_column)->limit(1)->get($table);
+      $checkData = $this->checkResultFound($selectData); //Check If Value Found
+      $value = ($checkData == true)? $selectData->row()->$select_column : null;
+
     }else{
-      $value = $this->db->select($select_column)->where($where_column)->limit(1)->get($table)->row()->$select_column; //Select Data
+
+      $selectData = $this->db->select($select_column)->where($where_column)->limit(1)->get($table);
+      $checkData = $this->checkResultFound($selectData); //Check If Value Found
+      $value = ($checkData == true)? $selectData->row()->$select_column : null;
     }
 
     //Return Data
@@ -346,7 +355,7 @@ class CoreCrud extends CI_Model {
       //Select
       $columns = array('id');
       $where = array($where);
-      $data = $this->selectCRUD($table,$inheritance_where,$columns);
+      $data = $this->selectCRUD($table,$where,$columns);
 
     }else{
 
@@ -579,6 +588,23 @@ class CoreCrud extends CI_Model {
     }
     else{
       return $passedData; //All Data Without Unset
+    }
+  }
+
+  /*
+  *
+  * This function allow query to be counted before selection
+  * Means when you want to select a value use this query to make sure the value exist
+  * It will avoid error
+  * NB: This is mostly used by the system  
+  * 
+  */
+  public function checkResultFound($query)
+  {
+    if ($query->num_rows() > 0){
+      return true;
+    }else{
+      return false;
     }
   }
 

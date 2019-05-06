@@ -11,7 +11,7 @@
                             </div>
 
                             <div class="btn-group" role="group">
-                                <a type="button" class="btn btn-info">Theme Customization</a>
+                                <a type="button" class="btn btn-info">Customization</a>
                             </div>
 
                             <div class="btn-group" role="group">
@@ -146,7 +146,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <span>
-                                        <i class="zmdi zmdi-flower"></i> <a href=""> Theme Customize</a>
+                                        <i class="zmdi zmdi-flower"></i> <a href=""> Customize</a>
                                     </span>
                                 </div>
                             </div>

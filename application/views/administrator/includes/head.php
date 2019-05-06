@@ -92,7 +92,7 @@
             <div class="media-body h-search hidden-xs hidden-sm">
                 <div class="p-relative">
                     <span class="welcome-header">
-                        <?= $copyright_head; ?>
+                        <?php //$copyright_head; ?>
                     </span>
                 </div>
             </div>
@@ -110,7 +110,7 @@
 
                 <ul class="smm-alerts">
                     <li class="core-sub-item">
-                        <i class="zmdi zmdi-flash"></i> <?= $copyright_side; ?>
+                        <i class="zmdi zmdi-flash"></i> <?php //$copyright_side; ?>
                     </li>
                 </ul>
 
