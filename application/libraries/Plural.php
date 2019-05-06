@@ -142,24 +142,29 @@ class Plural
 
 	public static function pluralize( $string ) 
 	{
-		// save some time in the case that singular and plural are the same
-		if ( in_array( strtolower( $string ), self::$uncountable ) )
-			return $string;
-		  
-		// check for irregular singular forms
-		foreach ( self::$irregular as $pattern => $result )
-		{
-		  $pattern = '/' . $pattern . '$/i';
-		  
-			if ( preg_match( $pattern, $string ) )
-				return preg_replace( $pattern, $result, $string);
-		}
+		if (!is_null($string) && !empty($string)) {
+			// save some time in the case that singular and plural are the same
+			if ( in_array( strtolower( $string ), self::$uncountable ) )
+				return $string;
+			  
+			// check for irregular singular forms
+			foreach ( self::$irregular as $pattern => $result )
+			{
+			  $pattern = '/' . $pattern . '$/i';
+			  
+				if ( preg_match( $pattern, $string ) )
+					return preg_replace( $pattern, $result, $string);
+			}
 
-		// check for matches using regular expressions
-		foreach ( self::$plural as $pattern => $result )
-		{
-			if ( preg_match( $pattern, $string ) )
-				return preg_replace( $pattern, $result, $string );
+			// check for matches using regular expressions
+			foreach ( self::$plural as $pattern => $result )
+			{
+				if ( preg_match( $pattern, $string ) )
+					return preg_replace( $pattern, $result, $string );
+			}
+		}else{
+
+			$string = null; //Empty
 		}
 
 		return $string;
@@ -167,24 +172,30 @@ class Plural
 
 	public static function singularize( $string )
 	{
-		// save some time in the case that singular and plural are the same
-		if ( in_array( strtolower( $string ), self::$uncountable ) )
-			return $string;
+		if (!is_null($string) && !empty($string)) {
+			
+			// save some time in the case that singular and plural are the same
+			if ( in_array( strtolower( $string ), self::$uncountable ) )
+				return $string;
 
-		// check for irregular plural forms
-		foreach ( self::$irregular as $result => $pattern )
-		{
-		  	$pattern = '/' . $pattern . '$/i';
-		  
-			if ( preg_match( $pattern, $string ) )
-				return preg_replace( $pattern, $result, $string);
-		}
+			// check for irregular plural forms
+			foreach ( self::$irregular as $result => $pattern )
+			{
+			  	$pattern = '/' . $pattern . '$/i';
+			  
+				if ( preg_match( $pattern, $string ) )
+					return preg_replace( $pattern, $result, $string);
+			}
 
-		// check for matches using regular expressions
-		foreach ( self::$singular as $pattern => $result )
-		{
-			if ( preg_match( $pattern, $string ) )
-				return preg_replace( $pattern, $result, $string );
+			// check for matches using regular expressions
+			foreach ( self::$singular as $pattern => $result )
+			{
+				if ( preg_match( $pattern, $string ) )
+					return preg_replace( $pattern, $result, $string );
+			}
+		}else{
+
+			$string = null; //Empty
 		}
 
 		return $string;

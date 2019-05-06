@@ -138,8 +138,7 @@ class Home extends CI_Controller {
 	public function index($notifyMessage=null)
 	{
 		//Model Query
-		$data = $this->load('home');
-
+		$data = $this->load($this->plural->pluralize($this->Folder).$this->SubFolder."/home");
 
 		//Notification
 		$notify = $this->CoreNotify->notify();
@@ -167,8 +166,8 @@ class Home extends CI_Controller {
 
 		//Pluralize Module
 
-		//Model Query $this->SubFolder
-		$pageID = (is_numeric($pageID)) ? $pageID : $pageID;
+		//Model Query
+		$pageID = (is_numeric($pageID)) ? $pageID : $this->plural->pluralize($this->Folder).$this->SubFolder."/".$pageID;
 		$data = $this->load($pageID);
 
 		//Notification
