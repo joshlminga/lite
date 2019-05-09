@@ -274,8 +274,9 @@ class CoreProfiles extends CI_Controller {
 
 			//Form Validation Values
 			$this->form_validation->set_rules("user_name", "User Name", "required|trim|min_length[1]|max_length[200]");
-			$this->form_validation->set_rules("user_email", "User Email", "required|trim|min_length[1]|max_length[200]|valid_email");
-			$this->form_validation->set_rules("user_password", "User Password", "trim|max_length[20]");
+			$this->form_validation->set_rules("user_email", "User Email", "required|trim|min_length[1]|max_length[200]|valid_email|callback_logname_check");
+			$this->form_validation->set_rules("user_password", "New Password", "trim|max_length[20]");
+			$this->form_validation->set_rules("conf_password", "Confirm Changes Password", "required|trim|min_length[1]|callback_password_check");
 
 			$column_password = strtolower($this->CoreForm->get_column_name($this->Module,'password'));//Column Password
 			$column_id = strtolower($this->CoreForm->get_column_name($this->Module,'id'));//Column ID
@@ -283,31 +284,34 @@ class CoreProfiles extends CI_Controller {
 
 			//Select Value To Unset && Check If Password Requested
 			if (array_key_exists("$column_password",$updateData)) {
-				if (!empty($this->input->post($column_password))) {	$unsetData= array('id');/*valude To Unset */}
-				else{ $unsetData= array('id',$column_password);/*Unset Value*/	}
-			}else{$unsetData = array('id');/*value To Unset*/}
+				if (!empty($this->input->post($column_password))) {	$unsetData= array('id','conf_password');/*valude To Unset */}
+				else{ $unsetData= array('id','conf_password',$column_password);/*Unset Value*/	}
+			}else{$unsetData = array('id','conf_password');/*value To Unset*/}
 
 			//Form Validation
 			if ($this->form_validation->run() == TRUE) {
+
+				//Check Password
+				$updateData['user_password'] = (is_null($updateData['user_password']) || empty($updateData['user_password']))?array_push($unsetData,'user_password'):$updateData['user_password'];
 
 				//Update Table
 				if ($this->update($updateData,array($column_id =>$value_id),$unsetData)) {
 					$this->session->set_flashdata('notification','success'); //Notification Type
 					$message = 'Data was updated successful'; //Notification Message				
-					$this->edit('edit','id',$value_id);//Open Page
+					$this->edit('profile','id',$value_id);//Open Page
 				}else{
 					$this->session->set_flashdata('notification','error'); //Notification Type
-					$this->edit('edit','id',$value_id);//Open Page
+					$this->edit('profile','id',$value_id);//Open Page
 				}								
 			}else{
 				$this->session->set_flashdata('notification','error'); //Notification Type
 				$message = 'Please check the fields, and try again'; //Notification Message				
-				$this->edit('edit','id',$value_id,$message);//Open Page
+				$this->edit('profile','id',$value_id,$message);//Open Page
 			}		
 		}
 		else{
 			$this->session->set_flashdata('notification','notify'); //Notification Type
-			$this->edit('edit');//Open Page
+			$this->edit('profile');//Open Page
 		}
 	}
 
@@ -450,6 +454,74 @@ class CoreProfiles extends CI_Controller {
 	        $this->CoreCrud->destroySession($session_keys); //Destroy Session Values
 	    }
     }
+
+    /*
+    *
+    * Validate Email/Username (Logname)
+    * This function is used to validate if user email/logname already is used by another account
+    * Call this function to validate if nedited logname or email does not belong to another user
+    */
+   	public function logname_check($str)
+   	{
+   		$check = (filter_var($str, FILTER_VALIDATE_EMAIL))? 'email' : 'logname'; //Look Email / Phone Number
+   		if (strtolower($str) == strtolower(trim($this->CoreCrud->selectSingleValue('user',$check,array('id'=>$this->session->id))))) {
+            return true;
+        }elseif (count($this->CoreCrud->selectSingleValue('user','id',array($check=>$str))) <= 0) {        	
+            return true;
+   		}else{
+			$this->form_validation->set_message('logname_check', 'This {field} is already in use by another account');
+            return false;
+   		}
+   	}
+
+    /*
+    *
+    * Validate Confirm Password
+    * This function is used to validate user current password
+    * In case user has to confirm password before reseting/adding new password call this function to check if password match
+    * 
+    */
+   	public function password_check($str)
+   	{
+
+		//Pluralize Module
+		$module = 'user'; //Module
+		$user_id = $this->session->id; //User ID
+		$password = $str; //User Password
+		$tableName = $this->plural->pluralize($module);
+
+		//Pluralize Module
+		$column_password = $this->CoreForm->get_column_name($module,'password'); //Password Column
+		$column_stamp = $this->CoreForm->get_column_name($module,'stamp'); //Stamp Column
+		$column_flg = $this->CoreForm->get_column_name($module,'flg'); //Stamp FLG
+		$column_id = $this->CoreForm->get_column_name($module,'id'); //Stamp ID
+
+		//Get Date Time
+		$result = $this->db->select($column_stamp)->from($tableName)->where($column_id,$user_id)->limit(1)->get();
+		if ($result->num_rows() === 1) {
+
+			$row = $result->row();
+			$stamp = $row->$column_stamp; //Date Time
+
+			//Check If Enabled
+			if ($this->db->select($column_flg)->where($column_id,$user_id)->get($tableName)->row()->$column_flg) {			
+				$hased_password = sha1($this->config->item($stamp).$password);//Hashed Password
+				$where = array($column_password => $hased_password); // Where Clause
+				$query = $this->db->select("$column_id")->where($where)->limit(1)->get($tableName)->result(); //Set Query
+
+				if ($query) {							
+					return true; //Account Belong To User
+				}else{
+					$this->form_validation->set_message('password_check', 'The {field} is incorrect');
+		            return false;
+				}
+			}
+		}else{
+			$this->form_validation->set_message('password_check', 'The {field} could not be verified');
+            return false;
+		}
+   	}
+
 }
 
 /* End of file CoreProfiles.php */

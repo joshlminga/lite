@@ -41,24 +41,33 @@
 					        </div>
 					    </div>
 
-					    <div class="col-md-6 col-sm-12">
+					    <div class="col-md-4 col-sm-12">
 					        <div class="form-group">
 					            <div class="fg-line">
 					            	<label>User Logname <small>(login/user name)</small> <i class="fa fa-asterisk"></i></label>
-					                <input type="text" class="form-control" id="" autocomplete="off" value="<?= stripcslashes($resultList[0]->logname); ?>" disabled="">
+					                <input type="text" class="form-control" name="user_logname" autocomplete="off" value="<?= stripcslashes($resultList[0]->logname); ?>">
 					            </div>
 					            <span class="error"><?= form_error('user_logname') ?></span>
 					        </div>
 					    </div>
 
-					    <div class="col-md-6 col-sm-12">
+					    <div class="col-md-4 col-sm-12">
 					        <div class="form-group">
 					            <div class="fg-line">
-					            	<label>User Password </label>
-					                <input type="password" class="form-control" name="user_password" id="" autocomplete="new-password"
-					                value="<?= set_value('user_password'); ?>">
+					            	<label>New Password </label>
+					                <input type="text" class="form-control" name="user_password" id="" autocomplete="off" value="">
 					            </div>
 					            <span class="error"><?= form_error('user_password') ?></span>
+					        </div>
+					    </div>
+
+					    <div class="col-md-4 col-sm-12">
+					        <div class="form-group">
+					            <div class="fg-line">
+					            	<label>Confirm Changes <small>Put your current password</small></label>
+					                <input type="password" class="form-control" name="conf_password" id="" autocomplete="off"  value="">
+					            </div>
+					            <span class="error"><?= form_error('conf_password') ?></span>
 					        </div>
 					    </div>
 

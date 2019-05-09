@@ -87,7 +87,7 @@ class CoreUsers extends CI_Controller {
 		$data['ModuleName'] = $this->plural->pluralize($this->ModuleName);
 
 		//User Levels
-		$data['level'] = $this->CoreCrud->selectMultipleValue('levels','name',array('flg'=>1));
+		$data['level'] = $this->CoreCrud->selectMultipleValue('levels','name',array('flg'=>1,'default'=>'yes'));
 
 		//Form Submit URLs
 		$data['form_new'] = $this->New;
@@ -140,7 +140,7 @@ class CoreUsers extends CI_Controller {
 		$data = $this->load($this->plural->pluralize($this->Folder).$this->SubFolder."/list");
 
 		//Table Select & Clause
-		$where = array('level !=' => 'customer');
+		$where = array('level !=' => 'customer','default' => 'yes');
 	   	$columns = array('id,level as level,logname as username,name as full_name,email as email,flg as status');
 		$data['dataList'] = $this->CoreCrud->selectCRUD($module,$where,$columns);
 
@@ -274,8 +274,8 @@ class CoreUsers extends CI_Controller {
 			$this->form_validation->set_rules("user_name", "User Name", "required|trim|min_length[1]|max_length[200]");
 			$this->form_validation->set_rules("user_email", "User Email", "required|trim|min_length[1]|max_length[200]|valid_email|is_unique[users.user_email]");
 			$this->form_validation->set_rules("user_level", "User Level", "required|trim|min_length[1]|max_length[200]");
-			$this->form_validation->set_rules("user_logname", "User Logname", "required|trim|min_length[1]|max_length[200]|is_unique[users.user_logname]");
-			$this->form_validation->set_rules("user_password", "User Password", "trim|max_length[20]");
+			$this->form_validation->set_rules("user_logname", "User Logname", "required|trim|min_length[1]|max_length[20]|is_unique[users.user_logname]");
+			$this->form_validation->set_rules("user_password", "New Password", "trim|max_length[20]");
 
 			//Form Validation
 			if ($this->form_validation->run() == TRUE) {
@@ -338,8 +338,9 @@ class CoreUsers extends CI_Controller {
 
 			//Form Validation Values
 			$this->form_validation->set_rules("user_name", "User Name", "required|trim|min_length[1]|max_length[200]");
-			$this->form_validation->set_rules("user_email", "User Email", "required|trim|min_length[1]|max_length[200]|valid_email");
-			$this->form_validation->set_rules("user_password", "User Password", "trim|max_length[20]");
+			$this->form_validation->set_rules("user_logname", "Logname", "required|trim|min_length[1]|max_length[20]|callback_logname_check");
+			$this->form_validation->set_rules("user_email", "User Email", "required|trim|min_length[1]|max_length[200]|valid_email|callback_logname_check");
+			$this->form_validation->set_rules("user_password", "New Password", "trim|max_length[20]");
 			$this->form_validation->set_rules("user_level", "User Level", "required|trim|min_length[1]|max_length[200]");
 
 			//Select Value To Unset && Check If Password Requested
@@ -350,6 +351,10 @@ class CoreUsers extends CI_Controller {
 
 			//Form Validation
 			if ($this->form_validation->run() == TRUE) {
+
+				//Check Password
+				$updateData['user_password'] = (is_null($updateData['user_password']) || empty($updateData['user_password']))?array_push($unsetData,'user_password'):$updateData['user_password'];
+
 				//Update Table
 				if ($this->update($updateData,array($column_id =>$value_id),$unsetData)) {
 					$this->session->set_flashdata('notification','success'); //Notification Type
@@ -595,6 +600,26 @@ class CoreUsers extends CI_Controller {
 	        $this->CoreCrud->destroySession($session_keys); //Destroy Session Values
 	    }
     }
+
+    /*
+    *
+    * Validate Email/Username (Logname)
+    * This function is used to validate if user email/logname already is used by another account
+    * Call this function to validate if nedited logname or email does not belong to another user
+    */
+   	public function logname_check($str)
+   	{
+   		$check = (filter_var($str, FILTER_VALIDATE_EMAIL))? 'email' : 'logname'; //Look Email / Phone Number
+   		if (strtolower($str) == strtolower(trim($this->CoreCrud->selectSingleValue('user',$check,array('id'=>$this->session->id))))) {
+            return true;
+        }elseif (count($this->CoreCrud->selectSingleValue('user','id',array($check=>$str))) <= 0) {        	
+            return true;
+   		}else{
+			$this->form_validation->set_message('logname_check', 'This {field} is already in use by another account');
+            return false;
+   		}
+   	}
+
 }
 
 /* End of file CoreUsers.php */
