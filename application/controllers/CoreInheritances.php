@@ -146,7 +146,7 @@ class CoreInheritances extends CI_Controller {
 		$data = $this->load($this->plural->pluralize($this->Folder).$this->SubFolder."/list");
 
 		//Table Select & Clause
-	   	$columns = array('id,title as title,flg as status');
+	   	$columns = array('id,title as title,type as type,flg as status');
 	   	$where = null;
 		$data['dataList'] = $this->CoreCrud->selectCRUD($module,$where,$columns);
 

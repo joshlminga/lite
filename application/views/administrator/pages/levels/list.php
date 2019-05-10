@@ -9,7 +9,7 @@
                     <div class="col-md-4 col-sm-12">
                         <div class="card">
                             <div class="card-header">
-                                <h2><?= ucwords($ModuleName); ?> <small>Creat / Add new <?= strtolower($ModuleName); ?></small></h2>
+                                <h2><?= ucwords($ModuleName); ?> <small>Create / Add new <?= strtolower($ModuleName); ?></small></h2>
                             </div>
                             
                             <div class="card-body card-padding">

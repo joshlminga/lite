@@ -70,7 +70,7 @@
                 </li>
                 <li class="dropdown hm-profile">
                     <a data-toggle="dropdown" href="#">
-                        <img src="<?= base_url($assets); ?>/img/profile-pics/1.jpg" alt="">
+                        <img src="<?= base_url($assets); ?>/img/profile-pics/admin.jpg" alt="">
                     </a>
                     
                     <ul class="dropdown-menu pull-right dm-icon">

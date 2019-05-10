@@ -12,7 +12,7 @@
 
         <div class="card card-bg-grey">
             <div class="card-header">
-                <h2><?= ucwords(str_replace("_", " ",$ModuleName)); ?> <small>Creat / Add new <?= strtolower('post'); ?></small></h2>
+                <h2><?= ucwords(str_replace("_", " ",$ModuleName)); ?> <small>Create / Add new <?= strtolower('post'); ?></small></h2>
             </div>
 
             <div class="card-body card-header container card-padding">
