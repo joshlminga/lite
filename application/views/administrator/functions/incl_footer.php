@@ -1,0 +1,1 @@
+<?= ((method_exists('CoreField', 'incl_Footer')))? $this->CoreField->incl_Footer($load_script=null):''; ?>

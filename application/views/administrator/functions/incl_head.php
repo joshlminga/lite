@@ -1,0 +1,1 @@
+<?= ((method_exists('CoreField', 'incl_Head')))? $this->CoreField->incl_Head($load_style=null):''; ?>
