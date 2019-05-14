@@ -174,14 +174,14 @@ $route['userdatas/multiple'] = 'FieldUsers/valid/bulk'; //Bulk Action
 /////////////////////////// EXTENSIONS //////////////////////////
 
 //Customers
-$route['customers'] = 'ExtensionCustomers/index'; // List
-$route['customers/new'] = 'ExtensionCustomers/open/add'; // Create New
-$route['customers/edit'] = 'ExtensionCustomers/edit/edit'; // Edit 
-$route['customers/save'] = 'ExtensionCustomers/valid/save'; // Validate and Save
-$route['customers/update'] = 'ExtensionCustomers/valid/update'; // Validate and Update
-$route['customers/delete'] = 'ExtensionCustomers/valid/delete'; // Delete 
-$route['customers/multiple'] = 'ExtensionCustomers/valid/bulk'; // Bulk Action 
+$route['customers'] = 'ExtensionCustomers/index'; //Manage
+$route['customers/new'] = 'ExtensionCustomers/open/add'; //Create New
+$route['customers/edit'] = 'ExtensionCustomers/edit/edit'; //Edit 
+$route['customers/save'] = 'ExtensionCustomers/valid/save'; //Validate and Save
+$route['customers/update'] = 'ExtensionCustomers/valid/update'; //Validate and Update
+$route['customers/delete'] = 'ExtensionCustomers/valid/delete'; //Delete 
+$route['customers/multiple'] = 'ExtensionCustomers/valid/bulk'; //Bulk Action 
 
-//Choose SUB
-$route['category/select'] = 'AjaxList/categories'; //Dynamic Category
 $route['translate_uri_dashes'] = FALSE;
+
+/////////////////////////END IN-BUILT ROUTES ///////////////////
