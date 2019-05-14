@@ -178,6 +178,10 @@
             }
         </script>
 
+        <!-- Include Footer -->
+        <?php $this->load->view("administrator/functions/incl_footer"); ?>
+        <!-- End Include Footer -->
+
     </body>
   
 </html>

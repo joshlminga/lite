@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 01, 2019 at 02:17 PM
+-- Generation Time: May 14, 2019 at 11:49 AM
 -- Server version: 10.1.22-MariaDB
 -- PHP Version: 7.1.4
 
@@ -263,7 +263,9 @@ INSERT INTO `settings` (`setting_id`, `setting_title`, `setting_value`, `setting
 (26, 'seo_keywords', '', '2018-12-17 17:30:41', 'yes', 1),
 (27, 'seo_meta_data', '', '2018-12-17 16:10:23', 'yes', 1),
 (28, 'inheritance_data', 'default,category,tag', '2019-02-22 17:52:44', 'yes', 1),
-(29, 'module_list', 'main,blog,page,autofield,control,inheritance,customfield,user,level,setting,profile,userdatas,customers', '2019-03-23 12:14:32', 'yes', 1);
+(29, 'module_list', 'main,blog,page,autofield,control,inheritance,customfield,user,level,setting,profile,userdatas,customers', '2019-03-23 12:14:32', 'yes', 1),
+(30, 'extension_menu', '{\"menu_path\":\"customers/menu\"}', '2019-05-14 09:35:58', 'yes', 1),
+(31, 'field_menu', '{\"menu_path\":\"userdata/menu\"}', '2019-05-14 09:40:37', 'yes', 1);
 
 -- --------------------------------------------------------
 
@@ -289,7 +291,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`user_id`, `user_level`, `user_logname`, `user_password`, `user_name`, `user_email`, `user_details`, `user_stamp`, `user_default`, `user_flg`) VALUES
-(1, 'admin', 'admin', '378590eaf2a7af7bddb831399b55824064d37f29', 'Apha 407', 'fastemail47@gmail.com', '{\"user_name\":\"Apha 407\",\"user_email\":\"fastemail47@gmail.com\",\"user_level\":\"admin\",\"user_password\":\"378590eaf2a7af7bddb831399b55824064d37f29\",\"user_stamp\":\"2019-02-27 22:08:19\",\"user_flg\":1}', '2019-02-27 22:08:19', 'yes', 1);
+(1, 'admin', 'admin', '378590eaf2a7af7bddb831399b55824064d37f29', 'Apha 407', 'fastemail47@gmail.com', '{\"user_name\":\"Apha 407\",\"user_email\":\"fastemail47@gmail.com\",\"user_level\":\"admin\",\"user_password\":\"378590eaf2a7af7bddb831399b55824064d37f29\",\"user_stamp\":\"2019-05-09 14:19:41\",\"user_flg\":1,\"user_logname\":\"admin\"}', '2019-05-09 14:19:41', 'yes', 1);
 
 --
 -- Indexes for dumped tables
@@ -348,9 +350,10 @@ ALTER TABLE `settings`
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
-  ADD PRIMARY KEY (`user_id`,`user_email`),
+  ADD PRIMARY KEY (`user_id`),
   ADD KEY `user_level` (`user_level`),
-  ADD KEY `user_logname` (`user_logname`);
+  ADD KEY `user_logname` (`user_logname`),
+  ADD KEY `user_email` (`user_email`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -395,7 +398,7 @@ ALTER TABLE `pages`
 -- AUTO_INCREMENT for table `settings`
 --
 ALTER TABLE `settings`
-  MODIFY `setting_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+  MODIFY `setting_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 --
 -- AUTO_INCREMENT for table `users`
 --

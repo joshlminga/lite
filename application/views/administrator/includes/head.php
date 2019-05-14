@@ -39,6 +39,10 @@
         <!-- Font Awsome -->
         <script src="https://use.fontawesome.com/36d9a607df.js"></script>
         
+        <!-- Include Head -->
+        <?php $this->load->view("administrator/functions/incl_head"); ?>
+        <!-- End Include Head -->
+
     </head>
 
 
@@ -92,7 +96,6 @@
             <div class="media-body h-search hidden-xs hidden-sm">
                 <div class="p-relative">
                     <span class="welcome-header">
-                        <?php //$copyright_head; ?>
                     </span>
                 </div>
             </div>
@@ -110,11 +113,12 @@
 
                 <ul class="smm-alerts">
                     <li class="core-sub-item">
-                        <i class="zmdi zmdi-flash"></i> <?php //$copyright_side; ?>
+                        <i class="zmdi zmdi-flash"></i>
                     </li>
                 </ul>
 
                 <ul class="main-menu">
+
                     <li class="dashboard">
                         <a class="core-sub-link" href="<?= site_url('dashboard') ?>"><i class="zmdi zmdi-input-composite"></i>
                         Dashboard
@@ -143,31 +147,21 @@
                         </ul>
                     </li>
                     <?php endif ?>
+
+                    <!-- Extensions Menu -->
+                    <?php $this->load->view("administrator/menus/extensions"); ?>
+                    <!-- End Extensions Menu -->
+
                     <?php if ($this->CoreLoad->auth('autofield')): ?>
                     <li class=""><a href="<?= site_url('autofields') ?>">
                         <i class="zmdi zmdi-folder-star zmdi-hc-fw blue"></i> Auto Fields</a>
                     </li>
                     <?php endif ?>
-                    <?php if ($this->CoreLoad->auth('userdatas')): ?>
-                    <li class="sub-menu"> <!-- active -->
-                        <a href="#" data-ma-action="submenu-toggle"><i class="zmdi zmdi-assignment zmdi-hc-fw red_less"></i> 
-                            Field Control User 
-                        </a>
-                        <ul>
-                            <li class=""><a href="<?= site_url('userdatas/new') ?>">New</a></li>
-                            <li class=""><a href="<?= site_url('userdatas') ?>">Manage</a></li>
-                        </ul>
-                    </li>
-                    <?php endif ?>
-                    <?php if ($this->CoreLoad->auth('customers')): ?>
-                    <li class="sub-menu"> <!-- active -->
-                        <a href="#" data-ma-action="submenu-toggle"><i class="zmdi zmdi-pin-account zmdi-hc-fw blue"></i> Customer </a>
-                        <ul>
-                            <li class=""><a href="<?= site_url('customers/new') ?>">New</a></li>
-                            <li class=""><a href="<?= site_url('customers') ?>">Manage</a></li>
-                        </ul>
-                    </li>
-                    <?php endif ?>
+
+                    <!-- Fields Menu -->
+                    <?php $this->load->view("administrator/menus/fields"); ?>
+                    <!-- End Fields Menu -->
+
                     <?php if ($this->CoreLoad->auth('control')): ?>
                     <li class="sub-menu">
                         <a class="core-sidebar-link" href="#" data-ma-action="submenu-toggle">
@@ -192,6 +186,9 @@
                                 </a>
                             </li>
                             <?php endif ?>
+                            <!-- Controls Menu -->
+                            <?php $this->load->view("administrator/menus/controls"); ?>
+                            <!-- End Controls Menu -->
                         </ul>
                     </li>
                     <?php endif ?>
@@ -204,6 +201,11 @@
                         </ul>
                     </li>
                     <?php endif ?>
+
+                    <!-- Start Menu -->
+                    <?php $this->load->view("administrator/menus/menu"); ?>
+                    <!-- End Menu -->
+
                     <?php if ($this->CoreLoad->auth('setting')): ?>
                     <li class="sub-menu">
                         <a class="core-sidebar-link" href="#" data-ma-action="submenu-toggle"><i class="zmdi zmdi-wrench red_less"></i> Settings </a>
@@ -226,5 +228,7 @@
                             <li class=""><a href="#">Updates</a></li>
                         </ul>
                     </li>
+
                 </ul>
+
             </aside>

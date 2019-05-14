@@ -36,15 +36,15 @@ class CoreLoad extends CI_Model {
     {
 
 		//Loading Core CMS Version
-		$data['version'] = '3.6';
-		$data['copyright_head'] = "Welcome to Core Lite, you're running Lite version ".$data['version']." | Build Faster &amp; Smart.";
-		$data['copyright_side'] = "Core v".$data['version']." (Lite)";
-		$data['copyright_footer_1'] = "Copyright &copy; 2019 Core Lite ".$data['version']." | Published 10-May-2019";
+		$data['version'] = '4.0';
+		$data['copyright_footer_1'] = "Copyright &copy; 2019 Core Lite ".$data['version']." | Published 14-May-2019";
 		$data['copyright_footer_2'] = "Powered by Core-CMS Team";
 
     	//Values Assets
 		$data['assets'] = 'assets/admin';
 		$data['extension_dir'] = 'application/views/extensions/';
+		$data['load_style'] = $this->load_style($data['assets']);
+		$data['load_script'] = $this->load_script($data['assets']);
 
 		//Site Title
 		$data['site_title'] = $this->CoreCrud->selectSingleValue('settings','value',array('title'=>'site_title','flg'=>1));
@@ -289,28 +289,60 @@ class CoreLoad extends CI_Model {
 
 	/*
 	*
+	* This Function is used to load Administrator Menus
+	* Pass menu type Eg. Extension,Control,Field or Menu
+	* It will look mached menu Category in Setting Table
+	* Kindly note set title as extension_menu and in value add JSON ARRAY {"menu_path":"pathfolder/pathfile"}
+	*
+	* If it wont find any menu it will retun null
+	* 
+	*/
+	public function menuLoad($loadMenu=null)
+	{
+		if (!is_null($loadMenu)) {
+    		$findMenu = $this->plural->singularize($loadMenu); //Make It Singular
+    		$findMenu = $findMenu.'_menu';
+
+    		//Menu Found
+    		$foundMenu = $this->CoreCrud->selectMultipleValue('setting','value',array('title'=>$findMenu));
+    		for ($i=0; $i < count($foundMenu); $i++) { 
+    			$menuData = $foundMenu[$i]->setting_value; //Menu Data
+    			$menu = json_decode($menuData, True);
+
+    			$path[$i] = $menu['menu_path']; // Menu Path
+    		}
+
+    		$menuLoaded = (isset($path))? $path : null;
+		}else{
+			$menuLoaded = null;
+		}
+
+		return $menuLoaded; //Return Menu Loaded
+	}
+
+	/*
+	* NB: This might be override during Core Update
 	* Load Custom / Extension Styles Css
 	* 
 	*/
-	public function load_style()
+	public function load_style($assets='')
 	{
-		$style = array('/custom/custom.css'
-
-		);
+		$asset = base_url($assets); //Set Base URL
+		$style = "$asset";
 
 		return $style;
 	}
 
 	/*
-	*
+	* NB: This might be override during Core Update
 	* Load Custom / Extension Script Js 
 	* 
 	*/
-	public function load_script()
+	public function load_script($assets='')
 	{
-		$script = array('/custom/custom.js'
+		$asset = base_url($assets); //Set Base URL
+		$script = "$asset";
 
-		);
 
 		return $script;
 	}
