@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 14, 2019 at 11:49 AM
+-- Generation Time: May 15, 2019 at 07:41 PM
 -- Server version: 10.1.22-MariaDB
 -- PHP Version: 7.1.4
 
@@ -291,7 +291,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`user_id`, `user_level`, `user_logname`, `user_password`, `user_name`, `user_email`, `user_details`, `user_stamp`, `user_default`, `user_flg`) VALUES
-(1, 'admin', 'admin', '378590eaf2a7af7bddb831399b55824064d37f29', 'Apha 407', 'fastemail47@gmail.com', '{\"user_name\":\"Apha 407\",\"user_email\":\"fastemail47@gmail.com\",\"user_level\":\"admin\",\"user_password\":\"378590eaf2a7af7bddb831399b55824064d37f29\",\"user_stamp\":\"2019-05-09 14:19:41\",\"user_flg\":1,\"user_logname\":\"admin\"}', '2019-05-09 14:19:41', 'yes', 1);
+(1, 'admin', 'admin', 'd033e22ae348aeb5660fc2140aec35850c4da997', 'Apha 407', 'fastemail47@gmail.com', '{\"user_name\":\"Apha 407\",\"user_email\":\"fastemail47@gmail.com\",\"user_level\":\"admin\",\"user_password\":\"d033e22ae348aeb5660fc2140aec35850c4da997\",\"user_stamp\":\"2019-05-15 12:03:15\",\"user_flg\":1,\"user_logname\":\"admin\"}', '2019-05-15 12:03:15', 'yes', 1);
 
 --
 -- Indexes for dumped tables
