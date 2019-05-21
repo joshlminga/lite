@@ -377,8 +377,10 @@ class CoreCrud extends CI_Model {
   * -> Pass Input Location (Upload location)
   * 
   */
-  public function upload($inputName,$location,$rule='jpg|jpeg|png|doc|docx|pdf|xls|txt',$link=true)
+  public function upload($inputName,$location='../assets/admin/images/upload',$rule='jpg|jpeg|png|doc|docx|pdf|xls|txt',$link=true)
   {
+    //Prepaire Directory
+    
 
     //Upload Data
     $uploaded = $this->uploadFile($_FILES[$inputName],$rule,$location,$link);
@@ -405,13 +407,24 @@ class CoreCrud extends CI_Model {
     //Library
     $this->load->library('upload');
 
-    if (!is_null($input)) {
+    //Default COnfig Settings
+    $filePath = $this->uploadDirecory($file);
+    $file = $filePath[1];
+    $config['upload_path'] = $filePath[0];
+    $config['allowed_types'] = $valid;
+    $config['max_size'] = 2048;
+    $config['encrypt_name'] = TRUE;
 
-      //Upload        
-      $config['upload_path'] = realpath(APPPATH . $file);
-      $config['allowed_types'] = $valid;
-      $config['max_size'] = 2048;
-      $config['encrypt_name'] = TRUE;
+    //load ModelField
+    $this->load->model('CoreField');  
+    $customConfig = ((method_exists('CoreField', 'uploadSettings')))? $this->CoreField->uploadSettings(): false;
+    if ($customConfig) {
+      foreach ($customConfig as $key => $value) {
+        $config[$key] = $value; //Ovewrite Settings
+      }
+    }
+
+    if (!is_null($input)) {
 
       $this->upload->initialize($config);
 
@@ -445,6 +458,41 @@ class CoreCrud extends CI_Model {
 
       return null;
     }
+  }
+
+  /*
+  *
+  * File Path/Directory
+  * -> Pass where you wish file to be uploaded.
+  *
+  * This function will check if in the director Folder arranged by
+  * == Year - Month - Date
+  *
+  * If not it will create the folders and return appropiate URL to upload
+  *
+  * NB: To overide this function | pass FALSE after URL
+  * 
+  */
+  public function uploadDirecory($path='../assets/admin/images/upload',$default=true)
+  {
+
+    //Check IF Deafult
+    if ($default) {
+      $file_path = '/'.date('Y').'/'.date('m').'/'.date('d'); //Suggested Path
+      $pathFolder = realpath(APPPATH . $path); //Real Path
+
+      $newPath = $pathFolder.$file_path;// New Path
+      $newDirectory = str_replace('/',"\\",$newPath); //New APPATH Directory
+      if (!file_exists($newDirectory)) {
+        mkdir($newDirectory, 0755, true); // Create Directory
+      }
+      $uploadTo = $path.$file_path; //New Path
+      $path_url = array($newDirectory,$uploadTo); //Upload Path
+    }else{
+      $path_url = array(realpath(APPPATH . $path),$path);      
+    }
+
+    return $path_url; // Return PATH
   }
 
   /*

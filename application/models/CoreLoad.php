@@ -27,7 +27,7 @@ class CoreLoad extends CI_Model {
 
     /*
     *
-    * This function is used to load all data requred to be present for the system/website to oparate well
+    * This function is used to load all data requred to be present for the system/website to operate well
     * E.g Site Menu, Meta Data e.t.c
     * All values are return as one array (data)
     * 
@@ -37,7 +37,7 @@ class CoreLoad extends CI_Model {
 
 		//Loading Core CMS Version
 		$data['version'] = '3.8';
-		$data['copyright_footer_1'] = "Copyright &copy; 2019 Core Lite ".$data['version']." | Published 14-May-2019";
+		$data['copyright_footer_1'] = "Copyright &copy; 2019 Core Lite ".$data['version']." | Published 21-May-2019";
 		$data['copyright_footer_2'] = "Powered by Core-CMS Team";
 
     	//Values Assets
