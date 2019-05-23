@@ -229,6 +229,9 @@
                         </ul>
                     </li>
 
+                    <li class=""><a href="<?= site_url('admin/logout') ?>">
+                        <i class="zmdi zmdi-square-right zmdi-hc-fw"></i> Logout</a>
+                    </li>
                 </ul>
 
             </aside>

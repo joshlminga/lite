@@ -115,6 +115,42 @@ class CoreForm extends CI_Model {
         $this->session->set_userdata($file_upload_session);
     }
 
+    /*
+    *
+    * Get User Profile
+    * This function is used to get user profile is isset
+    *
+    * Pass user ID (If null -> session ID will be take)
+    * Pass user Profile Keyname (By default is user-profile)
+    * Pass Default Optional Profile [Pass either yes/no] (By default it will use level from user_level)
+    */
+    public function userProfile($userId=null,$profileKey='user_profile',$userDefault=null)
+    {
+        //User ID
+        $user = (is_null($userId))? $this->session->id : $userId;
+        //User Level
+        $level =  $this->CoreCrud->selectSingleValue('users','level',array('id'=>$user));
+
+        //Default Profile
+        $userDefault = $this->CoreCrud->selectSingleValue('levels','default',array('name'=>$level));
+        //Profile Name
+        $optionalProfile = ($userDefault == 'yes')? 'assets/admin/img/profile-pics/admin.jpg' : 'assets/admin/img/profile-pics/user.jpg';
+
+        //Get Profile
+        $details = $this->CoreCrud->selectSingleValue('users','details',array('id'=>$user));
+        $detail = json_decode($details, True);
+        //Check Profile
+        if (array_key_exists($profileKey,$detail)){
+            $user_profile = json_decode($detail[$profileKey], True); //User Profile Array
+            $profile = $user_profile[0]; //Profile Picture
+        }else{
+            $profile = null; //No Profile Set
+        }
+
+        //Get Profile
+        $profile = (is_null($profile)) ? $optionalProfile : $profile;
+        return $profile;
+    }
     
 }
 

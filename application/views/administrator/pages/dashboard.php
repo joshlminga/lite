@@ -1,25 +1,26 @@
 
 
+
+
             <section id="content">
                 <div class="container">
+
+                    <?php $level_name = $this->CoreCrud->selectSingleValue('users','level',array('id' =>$this->session->id)); ?>
+                    <?php $level_default = $this->CoreCrud->selectSingleValue('levels','default',array('name' =>$level_name)); ?>
+
+                    <?php if ($level_default == 'yes'): ?>
                     <div class="c-analytics row hidden-xs">
-
                         <div class="btn-group btn-group-justified" role="group" aria-label="...">
-
                             <div class="btn-group" role="group">
                                 <a type="button" class="btn btn-default" href="<?= site_url('pages/new') ?>">New Page</a>
                             </div>
-
                             <div class="btn-group" role="group">
                                 <a type="button" class="btn btn-info">Customization</a>
                             </div>
-
                             <div class="btn-group" role="group">
                                 <a type="button" class="btn btn-warning" href="<?= site_url('') ?>" target="_blank">View Website</a>
                             </div>
-
                         </div>
-
                     </div>
 
                     <div class="row dash-margin">
@@ -37,12 +38,11 @@
                             </div>
                         </div>
                     </div>
+                    <?php endif ?>
 
-                    <div class="" style="display: none;">
-                        <div class="alert alert-default alert-dismissible alert-core-1" role="alert">
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            Well done! You successfully read this important alert message.
-                        </div>
+                    <div>
+                        <!-- Notification -->
+                        <?= (!is_null($notify) && !empty($notify))? $notify : ''; ?>
                     </div>
 
                     <div id="c-grid" class="clearfix" data-columns>
@@ -151,115 +151,7 @@
                                 </div>
                             </div>
                         </div>
-
-                        <div class="card palette-Red-400 bg" style="display: none;">
-                            <div class="pie-grid clearfix text-center">
-                                <div class="col-xs-4 col-sm-6 col-md-4 pg-item">
-                                    <div class="easy-pie-2 easy-pie" data-percent="92">
-                                        <span class="ep-value">92</span>
-                                    </div>
-                                    <div class="pgi-title">Site Visit<br> Daily</div>
-                                </div>
-                                <div class="col-xs-4 col-sm-6 col-md-4 pg-item">
-                                    <div class="easy-pie-3 easy-pie" data-percent="11">
-                                        <span class="ep-value">11</span>
-                                    </div>
-                                    <div class="pgi-title">Email<br> Bounced</div>
-                                </div>
-                                <div class="col-xs-4 col-sm-6 col-md-4 pg-item">
-                                    <div class="easy-pie-4 easy-pie" data-percent="52">
-                                        <span class="ep-value">52</span>
-                                    </div>
-                                    <div class="pgi-title">Email<br> Opened</div>
-                                </div>
-                                <div class="col-xs-4 col-sm-6 col-md-4 pg-item">
-                                    <div class="easy-pie-2 easy-pie" data-percent="44">
-                                        <span class="ep-value">44</span>
-                                    </div>
-                                    <div class="pgi-title">Storage<br>Remaining</div>
-                                </div>
-                                <div class="col-xs-4 col-sm-6 col-md-4 pg-item">
-                                    <div class="easy-pie-3 easy-pie" data-percent="78">
-                                        <span class="ep-value">78</span>
-                                    </div>
-                                    <div class="pgi-title">Web Page<br> Views</div>
-                                </div>
-                                <div class="col-xs-4 col-sm-6 col-md-4 pg-item">
-                                    <div class="easy-pie-4 easy-pie" data-percent="32">
-                                        <span class="ep-value">32</span>
-                                    </div>
-                                    <div class="pgi-title">Server<br> Processing</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="card c-dark palette-Amber bg" style="display: none;">
-                            <div class="card-header p-b-0">
-                                <h2>For the past 30 days <small>Core Statistics V1.0</small></h2>
-                                <ul class="actions a-alt">
-                                    <li class="dropdown">
-                                        <a href="#" data-toggle="dropdown">
-                                            <i class="zmdi zmdi-more-vert"></i>
-                                        </a>
-
-                                        <ul class="dropdown-menu dropdown-menu-right">
-                                            <li>
-                                                <a href="#">Change Date Range</a>
-                                            </li>
-                                            <li>
-                                                <a href="#">Change Graph Type</a>
-                                            </li>
-                                            <li>
-                                                <a href="#">Other Settings</a>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="card-body">
-                                <div class="chart-edge">
-                                    <div class="ns-chart flot-chart m-b-20" id="number-stats-chart"></div>
-                                </div>
-
-                                <div class="list-group lg-alt lg-even-white">
-                                    <div class="list-group-item media">
-                                        <div class="pull-right hidden-sm">
-                                            <div class="sparkline-bar-1"></div>
-                                        </div>
-
-                                        <div class="media-body ns-item">
-                                            <small>Page Views</small>
-                                            <h3>47,896,536</h3>
-                                        </div>
-                                    </div>
-
-                                    <div class="list-group-item media">
-                                        <div class="pull-right hidden-sm">
-                                            <div class="sparkline-bar-2"></div>
-                                        </div>
-
-                                        <div class="media-body ns-item">
-                                            <small>Site Visitors</small>
-                                            <h3>24,456,799</h3>
-                                        </div>
-                                    </div>
-
-                                    <div class="list-group-item media">
-                                        <div class="pull-right hidden-sm">
-                                            <div class="sparkline-bar-3"></div>
-                                        </div>
-
-                                        <div class="media-body ns-item">
-                                            <small>Total Clicks</small>
-                                            <h3>13,965</h3>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="p-5"></div>
-                            </div>
-                        </div>
-
                     </div>
                 </div>
             </section>
+
