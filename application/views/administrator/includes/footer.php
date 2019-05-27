@@ -1,6 +1,4 @@
 
-            <input type="hidden" id="categorySELECT" value="<?= site_url('category/select') ?>">
-
             <footer id="footer">
                 <?= $copyright_footer_1; ?>
                 <center><?= $copyright_footer_2; ?></center>

@@ -9,7 +9,7 @@ class CoreAutoFields extends CI_Controller {
 	* -> The controller require to login as Administrator
 	*/
 
-	private $Core = 'Extension'; //Lite Main Core
+	private $Core = 'core'; //Core Lite Base Name | Change this if your Controller Name does not start with word Core
 	private $Module = 'autofield'; //Module
 	private $Folder = 'autofields'; //Set Default Folder For html files and Front End Use
 	private $SubFolder = ''; //Set Default Sub Folder For html files and Front End Use Start with /
