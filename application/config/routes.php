@@ -141,6 +141,13 @@ $route['autofields/update'] = 'CoreAutoFields/valid/update'; // Validate and Upd
 $route['autofields/delete'] = 'CoreAutoFields/valid/delete'; // Delete 
 $route['autofields/multiple'] = 'CoreAutoFields/valid/bulk'; // Bulk Action 
 
+//Extensions
+$route['extensions'] = 'CoreExtensions/index'; //List
+$route['extensions/new'] = 'CoreExtensions/open/add'; //Create New
+$route['extensions/save'] = 'CoreExtensions/valid/save'; // Validate and Save
+$route['extensions/delete'] = 'CoreExtensions/valid/delete'; // Delete 
+$route['extensions/multiple'] = 'CoreExtensions/valid/bulk'; // Bulk Action 
+
 //Custom Fields
 $route['customfields'] = 'CoreCustomFields/index'; //Manage
 $route['customfields/new'] = 'CoreCustomFields/open/add'; //Create New 

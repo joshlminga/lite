@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class CoreCustomFields extends CI_Controller {
+class CoreExtensions extends CI_Controller {
 
 	/*
 	*
@@ -9,20 +9,20 @@ class CoreCustomFields extends CI_Controller {
 	* -> The controller require to login as Administrator
 	*/
 
-	private $Core = ''; //Lite Main Core
-	private $Module = 'customfield'; //Module
+	private $Core = 'core'; //Core Lite Base Name | Change this if your Controller Name does not start with word Core
+	private $Module = 'extension'; //Module
 	private $Folder = 'configs'; //Set Default Folder For html files and Front End Use
-	private $SubFolder = '/customfield'; //Set Default Sub Folder For html files and Front End Use Start with /
+	private $SubFolder = '/extension'; //Set Default Sub Folder For html files and Front End Use Start with /
+	
+	private $AllowedFile = 'zip'; //Set Default allowed file extension, remember you can pass this upon upload to override default allowed file type. Allowed File Extensions Separated by | also leave null to validate using jpg|jpeg|png|doc|docx|pdf|xls|txt change this on validation function at the bottom
 
-	private $AllowedFile = null; //Set Default allowed file extension, remember you can pass this upon upload to override default allowed file type. Allowed File Extensions Separated by | also leave null to validate using jpg|jpeg|png|doc|docx|pdf|xls|txt change this on validation function at the bottom
+	private $Route = 'extensions'; //If you have different route Name to Module name State it here |This wont be pluralized
 
-	private $Route = 'customfields'; //If you have different route Name to Module name State it here |This wont be pluralized
+	private $New = 'extensions/new'; //New 
+	private $Save = 'extensions/save'; //Add New 
+	private $Edit = ''; //Update 
 
-	private $New = 'customfields/new'; //New 
-	private $Save = 'customfields/save'; //Add New 
-	private $Edit = 'customfields/update'; //Update 
-
-	private $ModuleName = 'custom field'; //Module Nmae
+	private $ModuleName = 'Extension'; //Module Name
 
 	/* Functions
 	* -> __construct () = Load the most required operations E.g Class Module
@@ -87,7 +87,7 @@ class CoreCustomFields extends CI_Controller {
 		$data['ModuleName'] = $this->plural->pluralize($this->ModuleName);
 
 		//Levels
-		$data['level'] = $this->db->select('level_name')->where('level_flg',1)->get('levels')->result();
+
 		//Form Submit URLs
 		$data['form_new'] = $this->New;
 		$data['form_save'] = $this->Save;
@@ -144,7 +144,7 @@ class CoreCustomFields extends CI_Controller {
 		$data = $this->load($this->plural->pluralize($this->Folder).$this->SubFolder."/list");
 
 		//Table Select & Clause
-	   	$columns = array('id as id,title as title,flg as status');
+	   	$columns = array('id as id,name as name,data as author,flg as status');
 		$data['dataList'] = $this->CoreCrud->selectCRUD($module,null,$columns);
 
 		//Notification
@@ -228,7 +228,7 @@ class CoreCustomFields extends CI_Controller {
 		if (!is_null($inputTYPE) || !is_null($inputID)) {
 			//Table Select & Clause
 			$where = array($inputTYPE =>$inputID);
-	   		$columns = array('id as id,title as title,required as required,optional as optional,filters as filters,default as default,flg as status');
+	   		$columns = array('id as id,name as name,data as data,default as default,flg as status');
 			$data['resultList'] = $this->CoreCrud->selectCRUD($module,$where,$columns);
 
 			//Notification
@@ -266,39 +266,32 @@ class CoreCustomFields extends CI_Controller {
 		$routeURL = (is_null($this->Route)) ? $module : $this->Route;
 
 		//Set Allowed Files
-		$allowed_files = (is_null($this->AllowedFile))? 'jpg|jpeg|png|doc|docx|pdf|xls|txt' : $this->AllowedFile;
+		$allowed_files = (is_null($this->AllowedFile))? 'zip' : $this->AllowedFile;
+
+		//Set Upload File Values
+		$file_upload_session = array("file_name" => "extension", "file_required" => true);
+		$this->session->set_userdata($file_upload_session);
+
+		$upoadDirectory = "../assets/admin/custom/temp"; //Upload Location
 
 		//Check Validation
 		if ($type == 'save') {
 
 			$formData = $this->CoreLoad->input(); //Input Data
 
-			$this->form_validation->set_rules("customfield_title", "Custom Field Title", "trim");
+			$this->form_validation->set_rules("extension", "ZIP File", "trim|callback_validation");
 
 			//Form Validation
 			if ($this->form_validation->run() == TRUE) {
 
-				$column_required = strtolower($this->CoreForm->get_column_name($this->Module,'required'));
-				$formData[$column_required] = json_encode($this->CoreLoad->input($column_required)); //Set Required
-
-				$column_optional = strtolower($this->CoreForm->get_column_name($this->Module,'optional'));
-				$formData[$column_optional] = json_encode($this->CoreLoad->input($column_optional)); //Set Optional
-				$formData['customfield_title'] = preg_replace('/\s+/', '', strtolower($formData['customfield_title']));
-
-				$column_filters = strtolower($this->CoreForm->get_column_name($this->Module,'filters'));
-				$formData[$column_filters] = strtolower(json_encode($this->CoreLoad->input($column_required))); //Set Filters
-
-				$column_default= strtolower($this->CoreForm->get_column_name($this->Module,'default'));
-				$formData[$column_default] = 'yes'; //Set Default					
-
-				if ($this->create($formData)) {
-					$this->session->set_flashdata('notification','success'); //Notification Type
-					$message = 'Data was saved successful'; //Notification Message				
-					redirect($this->New, 'refresh');//Redirect to Page
-				}else{
-					$this->session->set_flashdata('notification','error'); //Notification Type
-					$this->open('add');//Open Page
-				}
+				// if ($this->create($formData,$unsetData)) {
+				// 	$this->session->set_flashdata('notification','success'); //Notification Type
+				// 	$message = 'Extension was added successful'; //Notification Message				
+				// 	redirect($this->New, 'refresh');//Redirect to Page
+				// }else{
+				// 	$this->session->set_flashdata('notification','error'); //Notification Type
+				// 	$this->open('add');//Open Page
+				// }
 			}else{
 				$this->session->set_flashdata('notification','error'); //Notification Type
 				$message = 'Please check the fields, and try again'; //Notification Message				
@@ -341,47 +334,6 @@ class CoreCustomFields extends CI_Controller {
 				$message = 'Please make a selection first, and try again'; //Notification Message				
 				$this->index($message);//Open Page
 			}
-		}
-		elseif ($type == 'update') {
-
-			$updateData = $this->CoreLoad->input(); //Input Data		
-			$column_password = strtolower($this->CoreForm->get_column_name($this->Module,'password'));//Column Password
-			$column_id = strtolower($this->CoreForm->get_column_name($this->Module,'id'));//Column ID
-			$value_id = $this->CoreLoad->input('id'); //Input Value
-
-			$unsetData = array('id');/*value To Unset*/
-
-			$this->form_validation->set_rules("customfield_title", "Custom Field Title", "trim");
-
-			//Form Validation
-			if ($this->form_validation->run() == TRUE) {
-
-				$column_required = strtolower($this->CoreForm->get_column_name($this->Module,'required'));
-				$updateData[$column_required] = json_encode($this->CoreLoad->input($column_required)); //Set Required
-
-				$column_optional = strtolower($this->CoreForm->get_column_name($this->Module,'optional'));
-				$updateData[$column_optional] = json_encode($this->CoreLoad->input($column_optional)); //Set Optional
-
-				$column_filters = strtolower($this->CoreForm->get_column_name($this->Module,'filters'));
-				$column_default= strtolower($this->CoreForm->get_column_name($this->Module,'default'));
-
-				$updateData[$column_filters] = strtolower(json_encode($this->CoreLoad->input($column_filters))); //Set Filters
-				$updateData[$column_default] = 'yes'; //Set Default					
-
-				//Update Table
-				if ($this->update($updateData,array($column_id =>$value_id),$unsetData)) {
-					$this->session->set_flashdata('notification','success'); //Notification Type
-					$message = 'Data was updated successful'; //Notification Message				
-					$this->edit('edit','id',$value_id);//Open Page
-				}else{
-					$this->session->set_flashdata('notification','error'); //Notification Type
-					$this->edit('edit','id',$value_id);//Open Page
-				}								
-			}else{
-				$this->session->set_flashdata('notification','error'); //Notification Type
-				$message = 'Please check the fields, and try again'; //Notification Message				
-				$this->edit('edit','id',$value_id,$message);//Open Page
-			}		
 		}
 		elseif ($type == 'delete') {
 			$value_id = $this->input->get('inputID'); //Get Selected Data
@@ -426,7 +378,15 @@ class CoreCustomFields extends CI_Controller {
 			$flg = strtolower($this->CoreForm->get_column_name($this->Module,'flg'));
 			$insertData["$flg"] = 1;
 
+			//Column Password
+			$column_password = strtolower($this->CoreForm->get_column_name($this->Module,'password'));
+
 			$insertData = $this->CoreCrud->unsetData($insertData,$unsetData); //Unset Data
+
+			//Check IF there is Password
+			if (array_key_exists($column_password,$insertData)) {
+				$insertData[$column_password] = sha1($this->config->item($insertData["$stamp"]).$insertData[$column_password]);
+			}
 
 			$details = strtolower($this->CoreForm->get_column_name($this->Module,'details'));
 			$insertData["$details"] = json_encode($insertData);
@@ -465,7 +425,15 @@ class CoreCustomFields extends CI_Controller {
 			$stamp = $this->CoreForm->get_column_name($this->Module,'stamp');
 			$updateData["$stamp"] = date('Y-m-d H:i:s',time());
 
+			//Column Password
+			$column_password = strtolower($this->CoreForm->get_column_name($this->Module,'password'));
+
 			$updateData = $this->CoreCrud->unsetData($updateData,$unsetData); //Unset Data
+
+			//Check IF there is Password
+			if (array_key_exists($column_password,$updateData)) {
+				$updateData[$column_password] = sha1($this->config->item($updateData["$stamp"]).$updateData[$column_password]);
+			}
 
 			//Details Column Update
 			$details = strtolower($this->CoreForm->get_column_name($this->Module,'details'));
@@ -597,5 +565,5 @@ class CoreCustomFields extends CI_Controller {
 
 }
 
-/* End of file CoreCustomFields.php */
-/* Location: ./application/controllers/CoreCustomFields.php */
+/* End of file CoreExtensions.php */
+/* Location: ./application/controllers/CoreExtensions.php */

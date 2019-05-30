@@ -158,6 +158,16 @@
                     </li>
                     <?php endif ?>
 
+                    <!-- Extensions -->
+                    <?php if ($this->CoreLoad->auth('extension')): ?>
+                    <li class="sub-menu"> <!-- active -->
+                        <a href="#" data-ma-action="submenu-toggle"><i class="zmdi zmdi-puzzle-piece green"></i> Extensions </a>
+                        <ul>
+                            <li class=""><a href="<?= site_url('extensions') ?>">Manage</a></li>
+                            <li class=""><a href="<?= site_url('extensions/new') ?>">New</a></li>
+                        </ul>
+                    </li>
+                    <?php endif ?>
                     <!-- Fields Menu -->
                     <?php $this->load->view("administrator/menus/fields"); ?>
                     <!-- End Fields Menu -->
