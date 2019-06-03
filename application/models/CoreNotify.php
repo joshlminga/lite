@@ -3,12 +3,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class CoreNotify extends CI_Model {
 
-	/*
-	*
-	* To load libraries/Model/Helpers/Add custom code which will be used in this Model
-	* This can ease the loading work 
-	* 
-	*/
+    /*
+    *
+    * To load libraries/Model/Helpers/Add custom code which will be used in this Model
+    * This can ease the loading work 
+    * 
+    */
     public function __construct(){
 
         parent::__construct();
@@ -34,8 +34,8 @@ class CoreNotify extends CI_Model {
     */
     public function blank($value=null)
     {
-    	//Empty Notifiaction
-    	return "<small></small>";
+        //Empty Notifiaction
+        return "<small></small>";
     }
 
     /*
@@ -47,17 +47,17 @@ class CoreNotify extends CI_Model {
     public function success($value=null)
     {
         //Check Value
-    	$message = (!empty($value) && !is_null($value))? $value : 'Activity was successful.';
+        $message = (!empty($value) && !is_null($value))? $value : 'Activity was successful.';
 
         //Message
-    	$notify = 	"
-	    				<div class='alert alert-success alert-dismissible' role='alert'>
-		                	<button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button>
-		                    $message
-		                </div>
-					";
+        $notify =   "
+                        <div class='alert alert-success alert-dismissible' role='alert'>
+                            <button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button>
+                            $message
+                        </div>
+                    ";
 
-		return $notify;
+        return $notify;
     }
 
     /*
@@ -69,18 +69,41 @@ class CoreNotify extends CI_Model {
     public function error($value=null)
     {
 
-    	//Check Value
-    	$message = (!is_null($value))? $value: 'Change a few things up and try again.';
+        //Check Value
+        $message = (!is_null($value))? $value: 'Change a few things up and try again.';
 
         //Message
-    	$notify = 	"
-	                    <div class='alert alert-danger alert-dismissible' role='alert'>
-	                    	<button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button>
-	                        $message
-	                    </div>
-				   	";
+        $notify =   "
+                        <div class='alert alert-danger alert-dismissible' role='alert'>
+                            <button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button>
+                            $message
+                        </div>
+                    ";
 
-		return $notify;
+        return $notify;
+    }
+
+    /*
+    *
+    *  This pass info/note notification
+    *  When you want to pass an info
+    *  The variable value passed is the message you wish user to see, by default message is set to 'Highlight and some info below.'
+    */
+    public function attention($value=null)
+    {
+
+        //Check Value
+        $message = (!is_null($value))? $value: 'Highlight and some info below.';
+
+        //Message
+        $notify =   "
+                        <div class='alert alert-info alert-dismissible' role='alert'>
+                            <button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button>
+                            $message
+                        </div>
+                    ";
+
+        return $notify;
     }
 
     /*
@@ -93,7 +116,7 @@ class CoreNotify extends CI_Model {
     public function notify($key='notification')
     {
         //Check Inside Notification
-		$notify = $this->session->flashdata("$key");
+        $notify = $this->session->flashdata("$key");
 
         if (!empty($notify) || !is_null($notify)) {
             
@@ -113,8 +136,8 @@ class CoreNotify extends CI_Model {
     */
     public function set($type='blank',$key='notification')
     {
-    	//Set Message
-		$this->session->set_flashdata($key,$type);
+        //Set Message
+        $this->session->set_flashdata($key,$type);
     }
 
     /*
@@ -136,21 +159,21 @@ class CoreNotify extends CI_Model {
     */
     public function updates($value=null)
     {
-    	//Check Value
-    	if (is_null($value)) {
+        //Check Value
+        if (is_null($value)) {
 
-    		return null;
-    	}else{
-	        //Message
-	    	$notify = 	"
-		                    <div class='alert alert-info alert-dismissible' role='alert'>
-		                    	<button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button>
-		                        $value
-		                    </div>
-					   	";
+            return null;
+        }else{
+            //Message
+            $notify =   "
+                            <div class='alert alert-info alert-dismissible' role='alert'>
+                                <button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button>
+                                $value
+                            </div>
+                        ";
 
-			return $notify;
-    	}
+            return $notify;
+        }
     }
 
 }
