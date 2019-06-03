@@ -151,7 +151,90 @@ class CoreForm extends CI_Model {
         $profile = (is_null($profile)) ? $optionalProfile : $profile;
         return $profile;
     }
-    
+
+    /*
+    *
+    * Get Form and Set Data into Field Format
+    *
+    * 1: Pass FormData 
+    * 2: Pass 'customfields' ID/Title to macth the Field Form
+    * 3: Pass unsetData By Default is null
+    * 4: Pass Unset Before/After NB: By Default it will unset Before, To Unset After Pass | after
+    *
+    * retuned DATA is ready for Inserting
+    */
+    public function getFieldFormatData($formData,$fieldSet,$unsetData=null,$unsetKey='before')
+    {
+
+        //Module
+        $Module = 'field';
+
+        //Check Field Type
+        $whereTYPE = (is_numeric($fieldSet))? 'id' : 'title';
+
+        //Table Select & Clause
+        $customFieldTable = $this->plural->pluralize('customfields');
+
+        $columns = array('title as title,filters as filters,default as default');
+        $where = array($whereTYPE => $fieldSet);
+        $fieldList = $this->CoreCrud->selectCRUD($customFieldTable,$where,$columns);
+
+        $field_title = $fieldList[0]->title; //Title Title
+        $field_filter = json_decode($fieldList[0]->filters, True); //FIlter List
+        $field_default = $fieldList[0]->default; //Default
+
+        //Set Filters
+        $column_filters = strtolower($this->CoreForm->get_column_name($Module,'filters'));
+
+        //Set Values For Filter
+        for($i = 0; $i < count($field_filter); $i++){
+            $valueFilter = $field_filter[$i]; //Current Value
+            $newFilterDataValue[$valueFilter] = $formData[$valueFilter];
+        }
+        $tempo_filter = json_encode($newFilterDataValue); /* Set Filters */
+
+        //Set Field Data
+        $column_data = strtolower($this->CoreForm->get_column_name($Module,'data'));
+        $formData[$column_data] = json_encode($formData); //Set Data
+
+        //Prepaire Data To Store
+        foreach ($formData as $key => $value) {
+            if ($key !== $column_data) {
+                $children[$key] = $value;
+                $formData = $this->CoreCrud->unsetData($formData,array($key)); //Unset Data
+            }
+        }
+
+        //Set Filters
+        $formData[$column_filters] = $tempo_filter; /* Set Filters */
+
+        //Set Title/Name
+        $column_title = strtolower($this->CoreForm->get_column_name($Module,'title'));
+        $formData[$column_title] = $field_title; //Set Title
+
+        //Column Stamp
+        $stamp = strtolower($this->CoreForm->get_column_name($Module,'stamp'));
+        $formData[$stamp] = date('Y-m-d H:i:s',time());
+        //Column Flg
+        $flg = strtolower($this->CoreForm->get_column_name($Module,'flg'));
+        $formData[$flg] = 1;
+
+        //Column Details
+        $details = strtolower($this->CoreForm->get_column_name($Module,'details'));
+
+        //Check Unset Key
+        if (strtolower($unsetKey) == 'before') {
+            $formData = $this->CoreCrud->unsetData($formData,$unsetData); //Unset Data
+            $formData[$details] = json_encode($formData); //Details
+        }else{
+
+            $formData[$details] = json_encode($formData); //Details
+            $formData = $this->CoreCrud->unsetData($formData,$unsetData); //Unset Data
+        }
+
+        return $formData; //Return Data
+    }
+
 }
 
 /* End of file CoreForm.php */
