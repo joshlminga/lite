@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 15, 2019 at 07:41 PM
+-- Generation Time: Jun 04, 2019 at 10:10 PM
 -- Server version: 10.1.22-MariaDB
 -- PHP Version: 7.1.4
 
@@ -79,7 +79,7 @@ CREATE TABLE `blogs` (
 --
 
 INSERT INTO `blogs` (`blog_id`, `blog_category`, `blog_title`, `blog_url`, `blog_post`, `blog_control`, `blog_tag`, `blog_format`, `blog_show`, `blog_author`, `blog_seo`, `blog_data`, `blog_createdat`, `blog_editor`, `blog_editedat`, `blog_details`, `blog_stamp`, `blog_default`, `blog_flg`) VALUES
-(1, 'uncategorised', 'Welcome To Core', 'welcome-to-core', '<p>Welcome to core blog</p>', '{\"thumbnail\":\"[\\\"assets\\\\\\/admin\\\\\\/images\\\\\\/upload\\\\\\/media\\\\\\/e146b95b2a62b136fa2a07432482d393.png\\\"]\"}', '', 'default', 'public', 'admin', NULL, NULL, '2019-03-21 19:55:27', NULL, NULL, '{\"blog_title\":\"Welcome To Core\",\"blog_post\":\"<p>Welcome to core blog<\\/p>\",\"blog_category\":\"uncategorised\",\"blog_show\":\"public\",\"blog_format\":\"default\",\"blog_control\":\"{\\\"thumbnail\\\":\\\"[\\\\\\\"assets\\\\\\\\\\\\\\/admin\\\\\\\\\\\\\\/images\\\\\\\\\\\\\\/upload\\\\\\\\\\\\\\/media\\\\\\\\\\\\\\/e146b95b2a62b136fa2a07432482d393.png\\\\\\\"]\\\"}\",\"blog_tag\":\"\",\"blog_stamp\":\"2019-03-21 19:55:27\",\"blog_createdat\":\"2019-03-21 19:55:27\",\"blog_author\":\"admin\",\"blog_flg\":1}', '2019-03-21 19:55:27', 'yes', 1);
+(1, 'uncategorised', 'Welcome To Core', 'welcome-to-core', '<p>Welcome to core blog</p>', '{\"thumbnail\":\"[\\\"assets\\\\\\/media\\\\\\/2019\\\\\\/06\\\\\\/04\\\\\\/e7de94e294ec2c6d23ee957a93ba4145.png\\\"]\"}', '', 'default', 'public', 'admin', NULL, NULL, '2019-03-21 19:55:27', NULL, NULL, '{\"blog_title\":\"Welcome To Core\",\"blog_post\":\"<p>Welcome to core blog<\\/p>\",\"blog_category\":\"uncategorised\",\"blog_show\":\"public\",\"blog_format\":\"default\",\"blog_control\":\"{\\\"thumbnail\\\":\\\"[\\\\\\\"assets\\\\\\\\\\\\\\/media\\\\\\\\\\\\\\/2019\\\\\\\\\\\\\\/06\\\\\\\\\\\\\\/04\\\\\\\\\\\\\\/e7de94e294ec2c6d23ee957a93ba4145.png\\\\\\\"]\\\"}\",\"blog_tag\":\"\",\"blog_stamp\":\"2019-06-04 20:48:34\",\"blog_createdat\":\"2019-03-21 19:55:27\",\"blog_author\":\"admin\",\"blog_flg\":1,\"blog_url\":\"welcome-to-core\"}', '2019-06-04 20:48:34', 'yes', 1);
 
 -- --------------------------------------------------------
 
@@ -106,6 +106,26 @@ CREATE TABLE `customfields` (
 
 INSERT INTO `customfields` (`customfield_id`, `customfield_title`, `customfield_required`, `customfield_optional`, `customfield_filters`, `customfield_show`, `customfield_details`, `customfield_stamp`, `customfield_default`, `customfield_flg`) VALUES
 (1, 'userdata', '[\"User Name\",\"User Email\"]', '[\"User Gender\",\"User Mobile\",\"\"]', '[\"user_name\",\"user_email\"]', 'admin', '{\"customfield_title\":\"User Data\",\"customfield_required\":\"[\\\"User Name\\\",\\\"User Email\\\"]\",\"customfield_optional\":\"[\\\"User Gender\\\",\\\"User Mobile\\\",\\\"\\\"]\",\"customfield_stamp\":\"2019-04-12 16:53:52\",\"customfield_flg\":1,\"customfield_filters\":\"[\\\"user_name\\\",\\\"user_email\\\"]\",\"customfield_default\":\"yes\"}', '2019-04-12 13:53:52', 'yes', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `extensions`
+--
+
+CREATE TABLE `extensions` (
+  `extension_id` bigint(20) NOT NULL,
+  `extension_key` varchar(200) NOT NULL,
+  `extension_name` varchar(1000) NOT NULL,
+  `extension_menu` varchar(2000) DEFAULT NULL,
+  `extension_table` mediumtext,
+  `extension_style` mediumtext,
+  `extension_data` mediumtext,
+  `extension_details` longtext,
+  `extension_stamp` datetime NOT NULL,
+  `extension_default` varchar(5) DEFAULT 'yes',
+  `extension_flg` int(1) NOT NULL DEFAULT '1'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -317,6 +337,13 @@ ALTER TABLE `customfields`
   ADD UNIQUE KEY `customfield_title` (`customfield_title`);
 
 --
+-- Indexes for table `extensions`
+--
+ALTER TABLE `extensions`
+  ADD PRIMARY KEY (`extension_id`),
+  ADD UNIQUE KEY `extension_key` (`extension_key`);
+
+--
 -- Indexes for table `fields`
 --
 ALTER TABLE `fields`
@@ -374,6 +401,11 @@ ALTER TABLE `blogs`
 --
 ALTER TABLE `customfields`
   MODIFY `customfield_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+--
+-- AUTO_INCREMENT for table `extensions`
+--
+ALTER TABLE `extensions`
+  MODIFY `extension_id` bigint(20) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `fields`
 --

@@ -10,9 +10,9 @@ class CoreExtensions extends CI_Controller {
 	*/
 
 	private $Core = 'core'; //Core Lite Base Name | Change this if your Controller Name does not start with word Core
-	private $Module = 'extension'; //Module
-	private $Folder = 'configs'; //Set Default Folder For html files and Front End Use
-	private $SubFolder = '/extension'; //Set Default Sub Folder For html files and Front End Use Start with /
+	private $Module = 'extensions'; //Module
+	private $Folder = 'extensions'; //Set Default Folder For html files and Front End Use
+	private $SubFolder = ''; //Set Default Sub Folder For html files and Front End Use Start with /
 	
 	private $AllowedFile = 'zip'; //Set Default allowed file extension, remember you can pass this upon upload to override default allowed file type. Allowed File Extensions Separated by | also leave null to validate using jpg|jpeg|png|doc|docx|pdf|xls|txt change this on validation function at the bottom
 

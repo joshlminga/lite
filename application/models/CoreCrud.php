@@ -377,7 +377,7 @@ class CoreCrud extends CI_Model {
   * -> Pass Input Location (Upload location)
   * 
   */
-  public function upload($inputName,$location='../assets/admin/images/upload',$rule='jpg|jpeg|png|doc|docx|pdf|xls|txt',$link=true)
+  public function upload($inputName,$location='../assets/media',$rule='jpg|jpeg|png|doc|docx|pdf|xls|txt',$link=true)
   {
     //Prepaire Directory
     

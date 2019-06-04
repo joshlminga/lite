@@ -5,7 +5,7 @@
 <?php if (!is_null($fieldMenu)): ?>
 	<?php foreach ($fieldMenu as $key => $menu_path): ?>
 	    <!-- Field -->
-	    <?php $this->load->view("administrator/pages/customfields/$menu_path"); ?>
+	    <?php $this->load->view("extend/customfields/$menu_path"); ?>
 	    <!-- End Field -->
 	<?php endforeach ?>
 <?php endif ?>

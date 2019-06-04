@@ -12,7 +12,7 @@
         <meta name="robots" content="noindex, nofollow">
 
         <!-- Favicon Load -->
-        <link rel="shortcut icon" href="<?= base_url($assets); ?>/img/favicon.ico" type="image/x-icon">
+        <link rel="shortcut icon" href="<?= base_url($assets); ?>/favicon.ico" type="image/x-icon">
 
         <!-- Vendor CSS -->
         <link href="<?= base_url($assets); ?>/vendors/bower_components/fullcalendar/dist/fullcalendar.min.css" rel="stylesheet">

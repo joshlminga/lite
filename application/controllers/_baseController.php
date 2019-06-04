@@ -274,7 +274,7 @@ class _baseController extends CI_Controller {
 		$file_upload_session = array("file_name" => "upload_file_name", "file_required" => true);
 		$this->session->set_userdata($file_upload_session);
 
-		$upoadDirectory = "../assets/admin/images/upload/media"; //Upload Location
+		$upoadDirectory = "../assets/media"; //Upload Location
 
 		//Check Validation
 		if ($type == 'save') {

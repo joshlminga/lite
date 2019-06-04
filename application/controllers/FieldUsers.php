@@ -108,7 +108,7 @@ class FieldUsers extends CI_Controller {
 	* ** If your page is public ignore the use of auth method
 	* 
 	*/
-    public function pages($data,$layout='main')
+    public function pages($data,$layout='extend')
     {
     	//Check if site is online
     	if ($this->CoreLoad->site_status() == TRUE) {
@@ -171,7 +171,7 @@ class FieldUsers extends CI_Controller {
     * 	Page layout can be passed via $layout
 	* 
     */
-	public function open($pageID,$message=null,$layout='main')
+	public function open($pageID,$message=null,$layout='extend')
 	{
 
 		//Pluralize Module
@@ -223,7 +223,7 @@ class FieldUsers extends CI_Controller {
     *  If either inputTYPE or inputID is not passed error message will be generated
 	* 
 	*/
-	public function edit($pageID,$inputTYPE='id',$inputID=null,$message=null,$layout='main')
+	public function edit($pageID,$inputTYPE='id',$inputID=null,$message=null,$layout='extend')
 	{
 		//Pluralize Module
 		$module = $this->plural->pluralize($this->Module);

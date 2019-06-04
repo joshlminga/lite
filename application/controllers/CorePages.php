@@ -268,7 +268,7 @@ class CorePages extends CI_Controller {
 		$file_upload_session = array("file_name" => "thumbnail", "file_required" => false);
 		$this->session->set_userdata($file_upload_session);
 
-		$upoadDirectory = "../assets/admin/images/upload/media"; //Upload Location
+		$upoadDirectory = "../assets/media"; //Upload Location
 
 		//Check Validation
 		if ($type == 'save') {
