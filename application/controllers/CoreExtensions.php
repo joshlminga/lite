@@ -114,7 +114,7 @@ class CoreExtensions extends CI_Controller {
 	    	//Chech allowed Access
 			if ($this->CoreLoad->auth($this->Module)) { //Authentication
 				//Layout
-				$this->load->view("administrator/layouts/$layout",$data);
+				$this->load->view("admin/layouts/$layout",$data);
 			}else{
     			$this->CoreLoad->notAllowed(); //Not Allowed To Access
 			}
@@ -272,7 +272,7 @@ class CoreExtensions extends CI_Controller {
 		$file_upload_session = array("file_name" => "extension", "file_required" => true);
 		$this->session->set_userdata($file_upload_session);
 
-		$upoadDirectory = "../assets/admin/custom/temp"; //Upload Location
+		$upoadDirectory = "../assets/extend/temp"; //Upload Location
 
 		//Check Validation
 		if ($type == 'save') {

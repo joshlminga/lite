@@ -323,6 +323,105 @@ class CoreForm extends CI_Model {
         return $updateData; //Return Data
     }
 
+    /*
+    *
+    * This function is to check if array key Exist
+    * 1: Pass key Required (can be single value, array, ore string separated by comma)
+    * 2: Optional ArrayData to check if it has a particular key | else set this using session 'arrayData'
+    * 
+    * NB:
+    * If you pass single key value, the result will be True/False
+    * Else is an array will be returned
+    * 
+    */
+    public function checkKeyExist($key,$array=null)
+    {
+
+        //By Default - Not Found
+        $found = false;
+
+        //Check Array Data
+        $arrayData = (!is_null($array))? $array : $this->session->arrayData;
+
+        //Check Passed Data
+        if (count($arrayData) > 0) {
+            //If Key Is not array
+            if (!is_array($key)) {
+                $keyData = explode(',',$key);
+            }
+
+            //Check Data
+            for ($i=0; $i < count($keyData); $i++) { 
+                $currentKey = $keyData[0];
+                if (array_key_exists($currentKey,$arrayData)) {
+                    $found[$currentKey] = true; //Found
+                }else{
+                    $found[$currentKey] = false; //Not Found
+                }
+            }
+
+            //Count Found | if is equal to 1 return single value else return array of results
+            if (count($found) == 1) {
+                $arratKeys = array_keys($found); //Found Key
+                $foundKey = $arratKeys[0]; //Single Key
+                $found = $found[$foundKey]; //Return Value
+            }
+        }
+
+        return $found; //Found-NotFound (True,False)   
+    }
+
+    /*
+    *
+    * This function checks if directory/file exists
+    * 1: Pass dir/file full path/ path & name | as required by Core Lite
+    * 2: Create dir/file (By default dir/file will be created)
+    * 3: Permission By default is 0755
+    *
+    * NB:
+    * You can override this by creating function dirCreate() in CoreField
+    * -> This will return false if director do not exist
+    * -> Also you can overide permission form 0755
+    *
+    * --> By default dir will be created hence returned TRUE
+    * 
+    */
+    public function checkDir($path,$create=true,$permission=0755)
+    {
+        //load ModelField
+        $this->load->model('CoreField');  
+        $dirConfig = ((method_exists('CoreField', 'dirCreate')))? $this->CoreField->dirCreate(): false;
+
+        //Unknown/Added Path
+        $start_index = strpos($path, 'media/') + 5; 
+        $file_path = substr_replace($path, "", 0,$start_index);
+
+        //Folder Path
+        $pathFolder = realpath(APPPATH . '../assets/media'); //Real Path
+        $newPath = $pathFolder.$file_path;// New Path
+        $newDirectory = str_replace('/',"\\",$newPath); //New APPATH Directory
+
+        //Configs
+        if ($dirConfig) {
+            $create = ($this->checkKeyExist('create',$dirConfig))? $dirConfig['create'] : $create; //Create
+            $permission = ($this->checkKeyExist('permission',$dirConfig))? $dirConfig['permission'] : $permission; //Permission
+        }
+
+        //Check Dir/File 
+        if (!file_exists($newDirectory)) {
+            if ($create) {
+                mkdir($newDirectory, $permission, true); // Create Directory
+                $status = true;// //Folder or file created
+            }else{
+                $status = false;// Folder or file could not be created
+            }
+        }else{
+            $status = true;// //Folder or file exist
+        }
+
+        return $status; //Return Status
+    }
+
 }
 
 /* End of file CoreForm.php */

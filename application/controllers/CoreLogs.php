@@ -109,7 +109,7 @@ class CoreLogs extends CI_Controller {
     {
 
 		//Layout
-		$this->load->view("administrator/layouts/$layout",$data);
+		$this->load->view("admin/layouts/$layout",$data);
 
     }
 

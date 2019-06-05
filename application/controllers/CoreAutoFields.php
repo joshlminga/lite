@@ -115,7 +115,7 @@ class CoreAutoFields extends CI_Controller {
 	    	//Chech allowed Access
 			if ($this->CoreLoad->auth($this->Module)) { //Authentication
 				//Layout
-				$this->load->view("administrator/layouts/$layout",$data);
+				$this->load->view("admin/layouts/$layout",$data);
 			}else{
     			$this->CoreLoad->notAllowed(); //Not Allowed To Access
 			}

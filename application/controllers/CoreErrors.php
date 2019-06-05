@@ -76,7 +76,7 @@ class CoreErrors extends CI_Controller {
     public function pages($data,$layout='error')
     {
 		//Layout
-		$this->load->view("administrator/layouts/$layout",$data);
+		$this->load->view("admin/layouts/$layout",$data);
     }
 
     /*

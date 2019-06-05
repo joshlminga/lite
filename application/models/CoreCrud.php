@@ -401,7 +401,7 @@ class CoreCrud extends CI_Model {
   * Return Link or Name | By Default it return Name
   * 
   */
-  public function uploadFile($input=null,$valid='jpg|jpeg|png|doc|docx|pdf|xls|txt',$file='../assets/admin/images/upload',$link=false)
+  public function uploadFile($input=null,$valid='jpg|jpeg|png|doc|docx|pdf|xls|txt',$file='../assets/media',$link=false)
   {
     
     //Library
@@ -473,8 +473,11 @@ class CoreCrud extends CI_Model {
   * NB: To overide this function | pass FALSE after URL
   * 
   */
-  public function uploadDirecory($path='../assets/admin/images/upload',$default=true)
+  public function uploadDirecory($path='../assets/media',$default=true)
   {
+
+    //Check if Folder/Dir Exist | IF Not Create
+    $this->CoreForm->checkDir($path);
 
     //Check IF Deafult
     if ($default) {
@@ -509,11 +512,14 @@ class CoreCrud extends CI_Model {
 
     //Base FIle URL
     $realpath = realpath(APPPATH . $file);
+    $filelocated = str_replace('/',"\\",$realpath); //New APPATH Directory
 
-    //Check If File Exist
-    if (file_exists($realpath) === True) {
-      //Delete FIle
-      unlink($realpath);
+    if ($filelocated) {
+      //Check If File Exist
+      if (file_exists($filelocated) === True) {
+        //Delete FIle
+        unlink($filelocated);
+      }
     }
   }
 

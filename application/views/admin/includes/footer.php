@@ -177,7 +177,7 @@
         </script>
 
         <!-- Include Footer -->
-        <?php $this->load->view("administrator/functions/incl_footer"); ?>
+        <?php $this->load->view("admin/functions/incl_footer"); ?>
         <!-- End Include Footer -->
 
     </body>

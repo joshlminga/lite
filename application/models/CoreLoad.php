@@ -37,8 +37,8 @@ class CoreLoad extends CI_Model {
 
 		//Loading Core CMS Version
 		$data['version'] = '4.0';
-		$data['copyright_footer_1'] = "Copyright &copy; 2019 Core Lite ".$data['version']." | Published 3-June-2019";
-		$data['copyright_footer_2'] = "Powered by Core-CMS Team";
+		$data['copyright_footer_1'] = "Copyright &copy; 2019 Core Lite ".$data['version']." | Published 5-June-2019";
+		$data['copyright_footer_2'] = "Powered by Core-Lite Team";
 
     	//Values Assets
 		$data['assets'] = 'assets/admin';

@@ -1,6 +1,6 @@
 
 <!-- Main Header -->
-<?php $this->load->view("administrator/includes/head"); ?>
+<?php $this->load->view("admin/includes/head"); ?>
 <!-- End Main Header -->
 
 
@@ -10,7 +10,7 @@
 
 
 <!-- Main Footer -->
-<?php $this->load->view("administrator/includes/footer"); ?>
+<?php $this->load->view("admin/includes/footer"); ?>
 <!-- End Main Footer -->
 
 

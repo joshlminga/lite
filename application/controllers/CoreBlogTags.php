@@ -84,7 +84,7 @@ class CoreBlogTags extends CI_Controller {
 		$data['routeURL'] = (is_null($this->Route)) ? $this->plural->pluralize($this->Folder) : $this->Route;
 
 		//Extension Route
-		$data['extRoute'] = "administrator/pages/".$this->plural->pluralize($this->Folder).$this->SubFolder."/";
+		$data['extRoute'] = "admin/pages/".$this->plural->pluralize($this->Folder).$this->SubFolder."/";
 
 	    //Select Inheritance
 	    $data['inheritance_parent'] = $this->CoreCrud->selectInheritanceItem(array('flg'=>1,'type'=>'tag'),'id,type,parent,title');
@@ -116,7 +116,7 @@ class CoreBlogTags extends CI_Controller {
     	//Chech allowed Access
 		if ($this->CoreLoad->auth($this->Module)) { //Authentication
 			//Layout
-			$this->load->view("administrator/layouts/$layout",$data);
+			$this->load->view("admin/layouts/$layout",$data);
 		}else{
 			$this->CoreLoad->notAllowed(); //Not Allowed To Access
 		}

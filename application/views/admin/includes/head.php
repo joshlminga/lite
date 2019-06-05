@@ -8,7 +8,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title><?= $site_title; ?></title>
 
-        <meta name="author" content="Core CMS Lite Team">
+        <meta name="author" content="Core Lite Team">
         <meta name="robots" content="noindex, nofollow">
 
         <!-- Favicon Load -->
@@ -37,10 +37,10 @@
         <link href="<?= base_url($assets); ?>/custom/custom.css" rel="stylesheet"> 
 
         <!-- Font Awsome -->
-        <script src="https://use.fontawesome.com/36d9a607df.js"></script>
+        <script src="<?= base_url($assets); ?>/js/fontawesome.js"></script>
         
         <!-- Include Head -->
-        <?php $this->load->view("administrator/functions/incl_head"); ?>
+        <?php $this->load->view("admin/functions/incl_head"); ?>
         <!-- End Include Head -->
 
     </head>
@@ -74,13 +74,14 @@
                 </li>
                 <li class="dropdown hm-profile">
                     <a data-toggle="dropdown" href="#">
-                        <img src="<?= base_url($assets); ?>/img/profile-pics/admin.jpg" alt="">
+                        <img src="<?= base_url($this->CoreForm->userProfile()); ?>" alt="">
                     </a>
                     
                     <ul class="dropdown-menu pull-right dm-icon">
                         <li>
                             <a class="core-sub-link" href="<?= site_url('') ?>" target="_blank">
-                                <i class="zmdi zmdi-view-web"></i> View Website
+                                <i class="zmdi zmdi-view-web"></i> View Website <?php $found = array('data1' =>1); ?>
+                                <?php print_r(array_keys($found)); ?>
                             </a>
                         </li>
                         <li>
@@ -149,7 +150,7 @@
                     <?php endif ?>
 
                     <!-- Extensions Menu -->
-                    <?php $this->load->view("administrator/menus/extensions"); ?>
+                    <?php $this->load->view("admin/menus/extensions"); ?>
                     <!-- End Extensions Menu -->
 
                     <?php if ($this->CoreLoad->auth('autofield')): ?>
@@ -169,7 +170,7 @@
                     </li>
                     <?php endif ?>
                     <!-- Fields Menu -->
-                    <?php $this->load->view("administrator/menus/fields"); ?>
+                    <?php $this->load->view("admin/menus/fields"); ?>
                     <!-- End Fields Menu -->
 
                     <?php if ($this->CoreLoad->auth('control')): ?>
@@ -197,7 +198,7 @@
                             </li>
                             <?php endif ?>
                             <!-- Controls Menu -->
-                            <?php $this->load->view("administrator/menus/controls"); ?>
+                            <?php $this->load->view("admin/menus/controls"); ?>
                             <!-- End Controls Menu -->
                         </ul>
                     </li>
@@ -213,7 +214,7 @@
                     <?php endif ?>
 
                     <!-- Start Menu -->
-                    <?php $this->load->view("administrator/menus/menu"); ?>
+                    <?php $this->load->view("admin/menus/menu"); ?>
                     <!-- End Menu -->
 
                     <?php if ($this->CoreLoad->auth('setting')): ?>
