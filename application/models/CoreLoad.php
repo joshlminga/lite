@@ -41,10 +41,9 @@ class CoreLoad extends CI_Model {
 		$data['copyright_footer_2'] = "Powered by Core-Lite Team";
 
     	//Values Assets
-		$data['assets'] = 'assets/admin';
-		$data['extension_dir'] = 'application/views/extensions/';
-		$data['load_style'] = $this->load_style($data['assets']);
-		$data['load_script'] = $this->load_script($data['assets']);
+		$data['assets'] = $this->CoreCrud->selectSingleValue('settings','value',array('title'=>'assets','flg'=>1));
+		$data['ext_dir'] = $this->CoreCrud->selectSingleValue('settings','value',array('title'=>'ext_dir','flg'=>1));
+		$data['ext_assets'] = $this->ext_asset();
 
 		//Site Title
 		$data['site_title'] = $this->CoreCrud->selectSingleValue('settings','value',array('title'=>'site_title','flg'=>1));
@@ -321,30 +320,17 @@ class CoreLoad extends CI_Model {
 	}
 
 	/*
-	* NB: This might be override during Core Update
-	* Load Custom / Extension Styles Css
+	* Quick get path to your  Extends Assests
+	* By Default path start by including Extend Folder and /customfields-or-extensions/filed-or-extension folername
 	* 
 	*/
-	public function load_style($assets='')
+	public function ext_asset($type='')
 	{
-		$asset = base_url($assets); //Set Base URL
-		$style = "$asset";
+		// Extension Path
+		$ext_path = $this->CoreCrud->selectSingleValue('settings','value',array('title'=>'ext_assets','flg'=>1)); 
+		$path = $ext_path.$type; //New Path
 
-		return $style;
-	}
-
-	/*
-	* NB: This might be override during Core Update
-	* Load Custom / Extension Script Js 
-	* 
-	*/
-	public function load_script($assets='')
-	{
-		$asset = base_url($assets); //Set Base URL
-		$script = "$asset";
-
-
-		return $script;
+		return $path; //Return Path
 	}
 
 }
