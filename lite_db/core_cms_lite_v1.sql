@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 04, 2019 at 10:10 PM
+-- Generation Time: Jun 08, 2019 at 08:31 PM
 -- Server version: 10.1.22-MariaDB
 -- PHP Version: 7.1.4
 
@@ -284,8 +284,17 @@ INSERT INTO `settings` (`setting_id`, `setting_title`, `setting_value`, `setting
 (27, 'seo_meta_data', '', '2018-12-17 16:10:23', 'yes', 1),
 (28, 'inheritance_data', 'default,category,tag', '2019-02-22 17:52:44', 'yes', 1),
 (29, 'module_list', 'main,blog,page,autofield,control,inheritance,customfield,user,level,setting,profile,userdatas,customers', '2019-03-23 12:14:32', 'yes', 1),
-(30, 'extension_menu', '{\"menu_path\":\"customers/menu\"}', '2019-05-14 09:35:58', 'yes', 1),
-(31, 'field_menu', '{\"menu_path\":\"userdata/menu\"}', '2019-05-14 09:40:37', 'yes', 1);
+(30, 'assets', 'assets/admin', '2019-06-08 15:22:55', 'yes', 1),
+(31, 'ext_dir', 'application/views/extend/', '2019-06-08 15:23:06', 'yes', 1),
+(32, 'ext_assets', 'assets/extend', '2019-06-08 17:25:52', 'yes', 1),
+(33, 'theme_name', 'starter', '2019-06-08 18:24:02', 'yes', 1),
+(34, 'theme_dir', 'application/views/themes/starter', '2019-06-08 18:29:59', 'yes', 1),
+(35, 'theme_assets', 'assets/themes/starter', '2019-06-08 18:30:02', 'yes', 1),
+(36, 'child_theme', '', '2019-06-08 18:30:26', 'yes', 1),
+(37, 'child_theme_dir', '', '2019-06-08 18:30:29', 'yes', 1),
+(38, 'child_theme_assets', '', '2019-06-08 18:30:34', 'yes', 1),
+(39, 'extension_menu', '{\"menu_path\":\"customers/menu\"}', '2019-06-08 18:30:39', 'yes', 1),
+(40, 'field_menu', '{\"menu_path\":\"userdata/menu\"}', '2019-06-08 18:30:43', 'yes', 1);
 
 -- --------------------------------------------------------
 
@@ -430,7 +439,7 @@ ALTER TABLE `pages`
 -- AUTO_INCREMENT for table `settings`
 --
 ALTER TABLE `settings`
-  MODIFY `setting_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+  MODIFY `setting_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
 --
 -- AUTO_INCREMENT for table `users`
 --
