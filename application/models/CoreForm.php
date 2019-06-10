@@ -422,6 +422,71 @@ class CoreForm extends CI_Model {
         return $status; //Return Status
     }
 
+    /*
+    *
+    * Get Parent Children
+    * Pass Parent Element ID
+    * 
+    */
+    public function childTreee($parent_id=0,$sub_mark='',$selectedID=null,$type=null)
+    {
+
+        //load ModelField
+        if (is_null($type)) {
+            $this->load->model('CoreField');  
+            $setChildTree = ((method_exists('CoreField', 'setChildTree')))? $this->CoreField->setChildTree(): false;
+
+            //Set Type
+            $type = (!setChildTree)?'category' : $setChildTree;
+        }
+
+        //Select Data
+        $inheritance = $this->CoreCrud->selectInheritanceItem(array('parent' =>$parent_id,'flg'=>1,'type'=>$type)
+            ,'id,parent,title');
+
+        // Check IF Result Found
+        if (count($inheritance) > 0) {
+            for ($i=0; $i < count($inheritance); $i++) { 
+                $parent = $inheritance[$i]->inheritance_parent; //Parent
+                $title = $inheritance[$i]->inheritance_title; //Title
+                $id = $inheritance[$i]->inheritance_id; //Id
+
+                //Echo Data
+                if ($selectedID == $id) {
+                    echo "<option class='$id' value='$id' selected>";
+                        echo $sub_mark.ucwords($title);
+                    echo "</option>";
+                }else{
+                    echo "<option class='$id' value='$id'>";
+                        echo $sub_mark.ucwords($title);
+                    echo "</option>";
+                }
+
+                //Check More Child
+                return $this->childTreee($id,$sub_mark='---',$selectedID);
+            }
+        }
+    }
+
+    /*
+    *
+    * Get Element Parent ID
+    *
+    * Pass elementID and it will return it's Parent ID
+    * 
+    */
+    public function getParentInheritance($inheritanceID)
+    {
+        //Select Parent
+        $parent = $this->CoreCrud->selectSingleValue('inheritances','parent',array('id'=>$inheritanceID));
+
+        //Check If is Parent
+        if ($parent == 0) {
+            return $parent; //Parent Value
+        }else{
+            $this->getParentInheritance($parent); //Find Parent
+        }
+    }
 }
 
 /* End of file CoreForm.php */
