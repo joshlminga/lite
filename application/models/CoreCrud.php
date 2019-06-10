@@ -377,13 +377,13 @@ class CoreCrud extends CI_Model {
   * -> Pass Input Location (Upload location)
   * 
   */
-  public function upload($inputName,$location='../assets/media',$rule='jpg|jpeg|png|doc|docx|pdf|xls|txt',$link=true)
+  public function upload($inputName,$location='../assets/media',$rule='jpg|jpeg|png|doc|docx|pdf|xls|txt',$link=true,$configs=null)
   {
     //Prepaire Directory
     
 
     //Upload Data
-    $uploaded = $this->uploadFile($_FILES[$inputName],$rule,$location,$link);
+    $uploaded = $this->uploadFile($_FILES[$inputName],$rule,$location,$link,$configs);
     if (!is_null($uploaded)) {
       $file_link = json_encode($uploaded, true);
     }else{
@@ -401,7 +401,7 @@ class CoreCrud extends CI_Model {
   * Return Link or Name | By Default it return Name
   * 
   */
-  public function uploadFile($input=null,$valid='jpg|jpeg|png|doc|docx|pdf|xls|txt',$file='../assets/media',$link=false)
+  public function uploadFile($input=null,$valid='jpg|jpeg|png|doc|docx|pdf|xls|txt',$file='../assets/media',$link=false,$configs=null)
   {
     
     //Library
@@ -424,6 +424,18 @@ class CoreCrud extends CI_Model {
       }
     }
 
+    //Additional Configs - Passed Through FUnction
+    if (!is_null($configs)) {
+      foreach ($configs as $key => $value) {
+        if ($key == 'compress') {
+          $compressLoad = true;
+        }else{
+          $config[$key] = $value; //Ovewrite Settings
+        }
+      }
+    }
+
+    //Check Input
     if (!is_null($input)) {
 
       $this->upload->initialize($config);
@@ -440,8 +452,35 @@ class CoreCrud extends CI_Model {
 
         if ($this->upload->do_upload('photo')) {
           $data_upload = array('upload_data' => $this->upload->data());
+
           //Uploaded
           $file_name = $data_upload['upload_data']['file_name'];
+
+          //Custom Compress Settings
+          $compressSettings = ((method_exists('CoreField', 'compressSettings')))? $this->CoreField->compressSettings(): false;
+          if ($compressSettings) {
+            foreach ($compressSettings as $key => $value) {
+              $compess[$key] = $value; //Compress Settings
+            }
+          }
+
+          //Check Additional Compress Configs
+          if (isset($compressLoad)) {
+            $configsCompress = $configs['compress'];
+            foreach ($configsCompress as $key => $value) {
+              $compess[$key] = $value; //Ovewrite  Compress Settings
+            }
+          }
+
+          //Compresss File
+          if (isset($compess)) {
+            $image_source = trim(str_replace("../", " ",trim($file)).'/'.$file_name);
+            //Source
+            $compess['source_image'] = "./$image_source";
+            $file_name = ((method_exists('CoreField', 'compressImage')))? $this->CoreField->compressImage($compess): $file_name;
+          }
+
+          //Return
           if ($link == true) {
             $file_uploaded[$key] = trim(str_replace("../", " ",trim($file)).'/'.$file_name);
             $key++;

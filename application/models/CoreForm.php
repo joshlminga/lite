@@ -475,16 +475,16 @@ class CoreForm extends CI_Model {
     * Pass elementID and it will return it's Parent ID
     * 
     */
-    public function getParentInheritance($inheritanceID)
+    public function getParentInheritance($inheritanceID,$parentID=0)
     {
         //Select Parent
         $parent = $this->CoreCrud->selectSingleValue('inheritances','parent',array('id'=>$inheritanceID));
 
         //Check If is Parent
-        if ($parent == 0) {
-            return $parent; //Parent Value
+        if ($parent == $parentID) {
+            return $inheritanceID; //Parent Value
         }else{
-            $this->getParentInheritance($parent); //Find Parent
+            return $this->getParentInheritance($parent); //Find Parent
         }
     }
 }

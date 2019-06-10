@@ -80,8 +80,7 @@
                     <ul class="dropdown-menu pull-right dm-icon">
                         <li>
                             <a class="core-sub-link" href="<?= site_url('') ?>" target="_blank">
-                                <i class="zmdi zmdi-view-web"></i> View Website <?php $found = array('data1' =>1); ?>
-                                <?php print_r(array_keys($found)); ?>
+                                <i class="zmdi zmdi-view-web"></i> View Website
                             </a>
                         </li>
                         <li>
