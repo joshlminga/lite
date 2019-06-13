@@ -393,8 +393,13 @@ class CoreForm extends CI_Model {
         $dirConfig = ((method_exists('CoreField', 'dirCreate')))? $this->CoreField->dirCreate(): false;
 
         //Unknown/Added Path
-        $start_index = strpos($path, 'media/') + 5; 
+        $start_index = strpos($path,'media'); 
+        $start_index = ($start_index == '')? strpos($path,'media') : $start_index;
+        $start_index = $start_index + 5; //Add Media Section 
         $file_path = substr_replace($path, "", 0,$start_index);
+
+        //Check Additional Path
+        $file_path = ($file_path == '/')? '' : $file_path;
 
         //Folder Path
         $pathFolder = realpath(APPPATH . '../assets/media'); //Real Path
