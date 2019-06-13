@@ -492,6 +492,50 @@ class CoreForm extends CI_Model {
             return $this->getParentInheritance($parent); //Find Parent
         }
     }
+
+    /*
+    *
+    * Email
+    * Get email data & configuration
+    * 
+    */
+    public function email_config()
+    {
+        //Get Send Data
+        $settings['mail_protocol'] = $this->CoreCrud->selectSingleValue('settings','value',array('title'=>'mail_protocol'));
+        $settings['smtp_host'] = $this->CoreCrud->selectSingleValue('settings','value',array('title'=>'smtp_host'));
+        $settings['smtp_user'] = $this->CoreCrud->selectSingleValue('settings','value',array('title'=>'smtp_user'));
+        $settings['smtp_pass'] = $this->CoreCrud->selectSingleValue('settings','value',array('title'=>'smtp_pass'));
+        $settings['smtp_port'] = $this->CoreCrud->selectSingleValue('settings','value',array('title'=>'smtp_port'));
+        $settings['smtp_timeout'] = $this->CoreCrud->selectSingleValue('settings','value',array('title'=>'smtp_timeout'));
+        $settings['smtp_crypto'] = $this->CoreCrud->selectSingleValue('settings','value',array('title'=>'smtp_crypto'));
+        $settings['wordwrap'] = $this->CoreCrud->selectSingleValue('settings','value',array('title'=>'wordwrap'));
+        $settings['wrapchars'] = $this->CoreCrud->selectSingleValue('settings','value',array('title'=>'wrapchars'));
+        $settings['mailtype'] = $this->CoreCrud->selectSingleValue('settings','value',array('title'=>'mailtype'));
+        $settings['charset'] = $this->CoreCrud->selectSingleValue('settings','value',array('title'=>'charset'));
+
+        //load ModelField
+        $this->load->model('CoreField');  
+        $emailConfig = ((method_exists('CoreField', 'emailConfig')))? $this->CoreField->emailConfig(): false;
+
+        //Configs
+        if ($emailConfig) {
+            foreach ($emailConfig as $key => $value) {
+              $settings[$key] = $value; //Settings
+            }
+        }
+
+        //Check For Null Values
+        foreach ($settings as $key => $value) {
+            if (is_null($value) || empty($value)) {
+                $this->CoreCrud->unsetData($settings,array($key));
+            }else{
+                $config[$key] = $value; //Clean Values
+            }
+        }
+
+        return $config; //Return Configs
+    }
 }
 
 /* End of file CoreForm.php */
