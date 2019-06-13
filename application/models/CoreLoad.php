@@ -45,6 +45,11 @@ class CoreLoad extends CI_Model {
 		$data['ext_dir'] = $this->CoreCrud->selectSingleValue('settings','value',array('title'=>'ext_dir','flg'=>1));
 		$data['ext_assets'] = $this->ext_asset();
 
+		//Theme Assets
+		$data['theme_name'] = $this->CoreCrud->selectSingleValue('settings','value',array('title'=>'theme_name','flg'=>1));
+		$data['theme_dir'] = $this->CoreCrud->selectSingleValue('settings','value',array('title'=>'theme_dir','flg'=>1));
+		$data['theme_assets'] = $this->CoreCrud->selectSingleValue('settings','value',array('title'=>'theme_assets','flg'=>1));
+
 		//Site Title
 		$data['site_title'] = $this->CoreCrud->selectSingleValue('settings','value',array('title'=>'site_title','flg'=>1));
 		$data['description'] = $this->CoreCrud->selectSingleValue('settings','value',array('title'=>'seo_description','flg'=>1));
@@ -158,7 +163,6 @@ class CoreLoad extends CI_Model {
     }
 
 
-
     /*
     *
     *  This is function to help get corret URL
@@ -234,7 +238,6 @@ class CoreLoad extends CI_Model {
 		}else{
 			return false; //Not logged In
 		}
-		
 	}
 
 	/*
@@ -253,8 +256,47 @@ class CoreLoad extends CI_Model {
 			return true; //Logged IN
 		}else{
 			return false; //Not logged In
-		}
-		
+		}	
+	}
+
+	/*
+	*
+	* Get Cookie Name
+	* Pass URL
+	* Pass Generator
+	* 
+	*/
+	public function getCookieName($url=null,$generator='')
+	{
+
+		//Domain
+		$cookie_name = $this->getDomainName($url); //Host
+		$path = $this->getDomainName($url,'path'); //Path
+
+		$cookie =  preg_replace('/[^a-z\d]+/i','_',strtolower(trim($cookie_name.$path.$generator))); //Cookie Name
+		return $cookie; //Return
+	}
+
+	/*
+	*
+	* Get Domain Name
+	* Fore Cookie USE
+	* 
+	*/
+	public function getDomainName($url=null,$return='host')
+	{
+		//URL
+		$url = (is_null($url) || empty($url))? base_url() : $url;
+		$url = parse_url($url); //Base URL
+
+		$host_path['host'] = str_replace('www.','',$url['host']); //Host
+
+		$path = (array_key_exists('path', $url))? $url['path'] : ''; //Get Path
+		$path = (substr($path, -1) == '/')? substr_replace($path,"",-1) : $path; //Remove last '/' from string
+
+		$host_path['path'] = $path; //Get Path
+
+		return ($return == 'all')? $host_path : $host_path[$return]; //Return Data
 	}
 
 	/*
@@ -324,10 +366,10 @@ class CoreLoad extends CI_Model {
 	* By Default path start by including Extend Folder and /customfields-or-extensions/filed-or-extension folername
 	* 
 	*/
-	public function ext_asset($type='')
+	public function ext_asset($type='',$load='ext_assets')
 	{
 		// Extension Path
-		$ext_path = $this->CoreCrud->selectSingleValue('settings','value',array('title'=>'ext_assets','flg'=>1)); 
+		$ext_path = $this->CoreCrud->selectSingleValue('settings','value',array('title'=>$load,'flg'=>1)); 
 		$path = $ext_path.$type; //New Path
 
 		return $path; //Return Path
