@@ -273,7 +273,6 @@ class CoreAutoFields extends CI_Controller {
 		if ($type == 'save') {
 
 			$formData = $this->CoreLoad->input(); //Input Data
-			$validData['autofield_title'] = "trim|min_length[1]|max_length[200]"; //Validate Data Rules
 
 			$this->form_validation->set_rules("autofield_title", "Autofield Title", "trim|min_length[1]|max_length[200]");
 			$this->form_validation->set_rules("autofield_select", "Autofield Select", "trim|max_length[5000]");

@@ -523,8 +523,7 @@ class CoreCrud extends CI_Model {
       $file_path = '/'.date('Y').'/'.date('m').'/'.date('d'); //Suggested Path
       $pathFolder = realpath(APPPATH . $path); //Real Path
 
-      $newPath = $pathFolder.$file_path;// New Path
-      $newDirectory = str_replace('/',"\\",$newPath); //New APPATH Directory
+      $newDirectory = $pathFolder.$file_path;// New Path | New APPATH Directory
       if (!file_exists($newDirectory)) {
         mkdir($newDirectory, 0755, true); // Create Directory
       }
@@ -550,8 +549,7 @@ class CoreCrud extends CI_Model {
     $file = "../".$path;
 
     //Base FIle URL
-    $realpath = realpath(APPPATH . $file);
-    $filelocated = str_replace('/',"\\",$realpath); //New APPATH Directory
+    $filelocated = realpath(APPPATH . $file);//New APPATH Directory
 
     if ($filelocated) {
       //Check If File Exist

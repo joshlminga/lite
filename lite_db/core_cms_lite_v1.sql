@@ -279,7 +279,7 @@ INSERT INTO `settings` (`setting_id`, `setting_title`, `setting_value`, `setting
 (22, 'post_show', 'summary', '2019-03-21 16:53:57', 'yes', 1),
 (23, 'seo_visibility', 'noindex, nofollow', '2019-03-18 16:26:50', 'yes', 1),
 (24, 'seo_global', 'any', '2019-03-18 16:37:13', 'yes', 1),
-(25, 'seo_description ', '', '2018-12-17 16:09:31', 'yes', 1),
+(25, 'seo_description', '', '2018-12-17 16:09:31', 'yes', 1),
 (26, 'seo_keywords', '', '2018-12-17 17:30:41', 'yes', 1),
 (27, 'seo_meta_data', '', '2018-12-17 16:10:23', 'yes', 1),
 (28, 'inheritance_data', 'default,category,tag', '2019-02-22 17:52:44', 'yes', 1),

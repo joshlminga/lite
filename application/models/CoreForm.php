@@ -403,8 +403,7 @@ class CoreForm extends CI_Model {
 
         //Folder Path
         $pathFolder = realpath(APPPATH . '../assets/media'); //Real Path
-        $newPath = $pathFolder.$file_path;// New Path
-        $newDirectory = str_replace('/',"\\",$newPath); //New APPATH Directory
+        $newDirectory = $pathFolder.$file_path;// New Path | New APPATH Directory
 
         //Configs
         if ($dirConfig) {
