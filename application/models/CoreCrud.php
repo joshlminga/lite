@@ -524,9 +524,19 @@ class CoreCrud extends CI_Model {
       $pathFolder = realpath(APPPATH . $path); //Real Path
 
       $newDirectory = $pathFolder.$file_path;// New Path | New APPATH Directory
-      if (!file_exists($newDirectory)) {
-        mkdir($newDirectory, 0755, true); // Create Directory
+      $permission = 0755; //Deafault
+      $recursive = True; //Deafult
+
+      //Check Additonal Config
+      $changeDirData = ((method_exists('CoreField', 'changeDirData')))? True: false;
+      if (method_exists('CoreField', 'changeDirData')) {
+        //Config
+        $configDir = $this->CoreField->changeDirData($newDirectory,$permission,$recursive);
+        $newDirectory = $configDir['dir']; // New Path | New APPATH Directory
+        $permission = $configDir['permission']; //Deafault
+        $recursive = $configDir['recursive']; //Deafult
       }
+
       $uploadTo = $path.$file_path; //New Path
       $path_url = array($newDirectory,$uploadTo); //Upload Path
     }else{
