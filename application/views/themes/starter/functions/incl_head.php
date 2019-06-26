@@ -1,0 +1,1 @@
+<?= ((method_exists('CoreField', 'theme_Head')))? $this->CoreField->theme_Head($load_style=null):''; ?>

@@ -23,7 +23,6 @@ class Home extends CI_Controller {
 	private $Edit = ''; //Update 
 
 	private $ModuleName = '';
-	private $Theme = 'starter';
 
 	/* Functions
 	* -> __construct () = Load the most required operations E.g Class Module
@@ -86,8 +85,6 @@ class Home extends CI_Controller {
 		$data['str_to_time'] = strtotime(date('Y-m-d, H:i:s'));
 		$data['Module'] = $this->plural->pluralize($this->Route);//Module Show
 		$data['routeURL'] = (is_null($this->Route)) ? $this->plural->pluralize($this->Folder) : $this->Route;
-		$data['assets'] = "assets/themes/".$this->Theme;
-		$data['theme_name'] = $this->Theme;
 
 		//Article
 		$data['pages'] = $this->CoreCrud->selectMultipleValue('pages','title,post',array('flg'=>1));
