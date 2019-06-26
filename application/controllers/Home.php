@@ -111,10 +111,14 @@ class Home extends CI_Controller {
 	*/
     public function pages($data,$layout='main')
     {
+
+    	//Theme Name
+		$theme_name = $this->CoreCrud->selectSingleValue('settings','value',array('title'=>'theme_name','flg'=>1));
+		
     	//Check if site is online
     	if ($this->CoreLoad->site_status() == TRUE) {
 			//Layout
-			$this->load->view("themes/$this->Theme/layouts/$layout",$data);
+			$this->load->view("themes/$theme_name/layouts/$layout",$data);
     	}else{
     		$this->CoreLoad->siteOffline(); //Site is offline
     	}
