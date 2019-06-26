@@ -130,7 +130,6 @@ class CoreCrud extends CI_Model {
   
     // Select Inheritance Data
     $columns = array($inheritance_select);
-    $where = array($inheritance_where);
     $data = $this->selectCRUD('inheritances',$inheritance_where,$columns);
 
     return $data; //Return Data
