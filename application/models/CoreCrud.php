@@ -377,9 +377,7 @@ class CoreCrud extends CI_Model {
   * 
   */
   public function upload($inputName,$location='../assets/media',$rule='jpg|jpeg|png|doc|docx|pdf|xls|txt',$link=true,$configs=null)
-  {
-    //Prepaire Directory
-    
+  {   
 
     //Upload Data
     $uploaded = $this->uploadFile($_FILES[$inputName],$rule,$location,$link,$configs);
@@ -514,9 +512,6 @@ class CoreCrud extends CI_Model {
   public function uploadDirecory($path='../assets/media',$default=true)
   {
 
-    //Check if Folder/Dir Exist | IF Not Create
-    $this->CoreForm->checkDir($path);
-
     //Check IF Deafult
     if ($default) {
       $file_path = '/'.date('Y').'/'.date('m').'/'.date('d'); //Suggested Path
@@ -527,13 +522,17 @@ class CoreCrud extends CI_Model {
       $recursive = True; //Deafult
 
       //Check Additonal Config
-      $changeDirData = ((method_exists('CoreField', 'changeDirData')))? True: false;
       if (method_exists('CoreField', 'changeDirData')) {
         //Config
         $configDir = $this->CoreField->changeDirData($newDirectory,$permission,$recursive);
         $newDirectory = $configDir['dir']; // New Path | New APPATH Directory
         $permission = $configDir['permission']; //Deafault
         $recursive = $configDir['recursive']; //Deafult
+      }
+
+      // Create Directory
+      if (!file_exists($newDirectory)) {
+        mkdir($newDirectory, $permission, $recursive);
       }
 
       $uploadTo = $path.$file_path; //New Path

@@ -386,35 +386,28 @@ class CoreForm extends CI_Model {
     * --> By default dir will be created hence returned TRUE
     * 
     */
-    public function checkDir($path,$create=true,$permission=0755)
+    public function checkDir($path,$create=true,$defaultpath='../assets/media',$permission=0755,$recursive=true)
     {
         //load ModelField
         $this->load->model('CoreField');  
-        $dirConfig = ((method_exists('CoreField', 'dirCreate')))? $this->CoreField->dirCreate(): false;
-
-        //Unknown/Added Path
-        $start_index = strpos($path,'media'); 
-        $start_index = ($start_index == '')? strpos($path,'media') : $start_index;
-        $start_index = $start_index + 5; //Add Media Section 
-        $file_path = substr_replace($path, "", 0,$start_index);
-
-        //Check Additional Path
-        $file_path = ($file_path == '/')? '' : $file_path;
 
         //Folder Path
-        $pathFolder = realpath(APPPATH . '../assets/media'); //Real Path
-        $newDirectory = $pathFolder.$file_path;// New Path | New APPATH Directory
+        $pathFolder = realpath(APPPATH . $defaultpath); //Real Path
+        $newDirectory = $pathFolder.$path;// New Path | New APPATH Directory
 
-        //Configs
-        if ($dirConfig) {
-            $create = ($this->checkKeyExist('create',$dirConfig))? $dirConfig['create'] : $create; //Create
-            $permission = ($this->checkKeyExist('permission',$dirConfig))? $dirConfig['permission'] : $permission; //Permission
+        //Check Additonal Config
+        if (method_exists('CoreField', 'changeDirData')) {
+            //Config
+            $configDir = $this->CoreField->changeDirData($newDirectory,$permission,$recursive);
+            $newDirectory = $configDir['dir']; // New Path | New APPATH Directory
+            $permission = $configDir['permission']; //Deafault
+            $recursive = $configDir['recursive']; //Deafult
         }
 
         //Check Dir/File 
         if (!file_exists($newDirectory)) {
             if ($create) {
-                mkdir($newDirectory, $permission, true); // Create Directory
+                mkdir($newDirectory, $permission, $recursive); // Create Directory
                 $status = true;// //Folder or file created
             }else{
                 $status = false;// Folder or file could not be created
