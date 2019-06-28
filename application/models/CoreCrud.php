@@ -363,7 +363,11 @@ class CoreCrud extends CI_Model {
     }
 
     //Count Number of result
-    $row_num = count($data);
+    if (is_array($data)) {
+      $row_num = count($data);
+    }else{
+      $row_num = 0;
+    }
 
     return $row_num; //Number Of Rows
   }
@@ -674,12 +678,14 @@ class CoreCrud extends CI_Model {
   public function unsetData($passedData,$unsetData=null)
   {
     if (!is_null($unsetData)) {
+      //Set Array If it is String
+      if (!is_array($unsetData)) {
+        $unsetData = explode(" ",$unsetData); //Produce Array
+      }
 
       //Unset Data
       for($i = 0; $i < count($unsetData); $i++){
-
         $unset = $unsetData[$i]; //Key Value To Remove
-        
         unset($passedData["$unset"]); //Remove Item
       }
 

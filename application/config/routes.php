@@ -50,6 +50,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 |		my-controller/my-method	-> my_controller/my_method
 */
 $route['default_controller'] = 'Home'; //Main (Home) Page
+$route['404'] = 'HomeError'; //Theme Error Page For Front-end
 $route['404_override'] = 'CoreErrors/index'; //Default Error Page
 
 //Administrator
