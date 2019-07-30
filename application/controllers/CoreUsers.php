@@ -612,6 +612,8 @@ class CoreUsers extends CI_Controller {
    		$check = (filter_var($str, FILTER_VALIDATE_EMAIL))? 'email' : 'logname'; //Look Email / Phone Number
    		if (strtolower($str) == strtolower(trim($this->CoreCrud->selectSingleValue('user',$check,array('id'=>$this->session->id))))) {
             return true;
+        }elseif ($this->CoreLoad->auth($this->Module)) {
+            return true;
         }elseif (count($this->CoreCrud->selectSingleValue('user','id',array($check=>$str))) <= 0) {        	
             return true;
    		}else{
