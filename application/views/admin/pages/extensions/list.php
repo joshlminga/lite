@@ -56,7 +56,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php for ($i=0; $i < count((array)$dataList); $i++): ?>
+                                    <?php for ($i=0; $i < count($dataList); $i++): ?>
                                     <tr>
                                         <?php for ($k=0; $k < count($ths); $k++):  $key = $ths[$k];?>
                                             <?php $active_column = strtolower($this->plural->singularize($Module)).'_'.'flg'; ?>

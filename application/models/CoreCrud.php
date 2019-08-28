@@ -680,7 +680,7 @@ class CoreCrud extends CI_Model {
     if (!is_null($unsetData)) {
       //Set Array If it is String
       if (!is_array($unsetData)) {
-        $unsetData = explode(" ",$unsetData); //Produce Array
+        $unsetData = explode(",",$unsetData); //Produce Array
       }
 
       //Unset Data
