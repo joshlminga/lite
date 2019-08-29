@@ -428,11 +428,7 @@ class CoreCrud extends CI_Model {
     //Additional Configs - Passed Through FUnction
     if (!is_null($configs)) {
       foreach ($configs as $key => $value) {
-        if ($key == 'compress') {
-          $compressLoad = true;
-        }else{
-          $config[$key] = $value; //Ovewrite Settings
-        }
+        $config[$key] = $value; //Ovewrite Settings
       }
     }
 
@@ -457,28 +453,34 @@ class CoreCrud extends CI_Model {
           //Uploaded
           $file_name = $data_upload['upload_data']['file_name'];
 
-          //Custom Compress Settings
-          $compressSettings = ((method_exists('CoreField', 'compressSettings')))? $this->CoreField->compressSettings(): false;
+          //Compress Settings
+          $compressSettings = ((method_exists('CoreField', 'compressSettings')))? $this->CoreField->compressSettings($file,$file_name): false;
           if ($compressSettings) {
-            foreach ($compressSettings as $key => $value) {
-              $compess[$key] = $value; //Compress Settings
+            foreach ($compressSettings as $compress_key => $compress_value) {
+              $compess[$compress_key] = $compress_value; //Compress Settings
             }
+
+            //Compress Image
+            $this->load->library('image_lib', $compess);
+            $this->image_lib->initialize($compess);
+            if (!$this->image_lib->resize()){
+                echo $this->image_lib->display_errors();
+            }        
           }
 
-          //Check Additional Compress Configs
-          if (isset($compressLoad)) {
-            $configsCompress = $configs['compress'];
-            foreach ($configsCompress as $key => $value) {
-              $compess[$key] = $value; //Ovewrite  Compress Settings
+          //Watermark Configs
+          $watermarkSettings = ((method_exists('CoreField', 'watermarkSettings')))? $this->CoreField->watermarkSettings($file,$file_name): false;
+          if ($watermarkSettings) {
+            foreach ($watermarkSettings as $watermark_key => $watermark_value) {
+              $watermark[$watermark_key] = $watermark_value; //Ovewrite  Watermark Settings
             }
-          }
 
-          //Compresss File
-          if (isset($compess)) {
-            $image_source = trim(str_replace("../", " ",trim($file)).'/'.$file_name);
-            //Source
-            $compess['source_image'] = "./$image_source";
-            $file_name = ((method_exists('CoreField', 'compressImage')))? $this->CoreField->compressImage($compess): $file_name;
+            //Add Watermark
+            $this->load->library('image_lib', $watermark);
+            $this->image_lib->initialize($watermark);
+            if (!$this->image_lib->watermark()){
+                echo $this->image_lib->display_errors();
+            }        
           }
 
           //Return
@@ -486,7 +488,7 @@ class CoreCrud extends CI_Model {
             $file_uploaded[$key] = trim(str_replace("../", " ",trim($file)).'/'.$file_name);
             $key++;
           }else{
-            $file_uploaded[$key] = $file_name;
+            $file_uploaded[$key] = $file_name;            
             $key++;
           }
         }else{
@@ -680,7 +682,7 @@ class CoreCrud extends CI_Model {
     if (!is_null($unsetData)) {
       //Set Array If it is String
       if (!is_array($unsetData)) {
-        $unsetData = explode(",",$unsetData); //Produce Array
+        $unsetData = explode(',',$unsetData); //Produce Array
       }
 
       //Unset Data
