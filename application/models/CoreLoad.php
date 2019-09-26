@@ -36,8 +36,8 @@ class CoreLoad extends CI_Model {
     {
 
 		//Loading Core CMS Version
-		$data['version'] = '4.2';
-		$data['copyright_footer_1'] = "Copyright &copy; 2019 Core Lite ".$data['version']." | Published 29-Aug-2019";
+		$data['version'] = '4.3';
+		$data['copyright_footer_1'] = "Copyright &copy; 2019 Core Lite ".$data['version']." | Published 26-Sep-2019";
 		$data['copyright_footer_2'] = "Powered by Core-Lite Team";
 
     	//Values Assets
@@ -374,6 +374,20 @@ class CoreLoad extends CI_Model {
 
 		return $path; //Return Path
 	}
+
+    /*
+    *
+    * Access ext_Assets and Return proper url path and URL
+    * Return URL
+    *
+    */
+    public function loadAssets($ext,$type='extensions')
+    {
+
+        $load = "/$type/$ext"; //Load Path
+        $asset = base_url($this->ext_asset($load));
+        return $asset; //Return Aseets
+    }
 
 }
 

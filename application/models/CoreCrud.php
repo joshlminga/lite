@@ -464,8 +464,9 @@ class CoreCrud extends CI_Model {
             $this->load->library('image_lib', $compess);
             $this->image_lib->initialize($compess);
             if (!$this->image_lib->resize()){
-                echo $this->image_lib->display_errors();
-            }        
+              echo $this->image_lib->display_errors();
+            }      
+            $this->image_lib->clear();
           }
 
           //Watermark Configs
@@ -479,8 +480,9 @@ class CoreCrud extends CI_Model {
             $this->load->library('image_lib', $watermark);
             $this->image_lib->initialize($watermark);
             if (!$this->image_lib->watermark()){
-                echo $this->image_lib->display_errors();
-            }        
+              echo $this->image_lib->display_errors();
+            }     
+            $this->image_lib->clear();
           }
 
           //Return
@@ -517,6 +519,10 @@ class CoreCrud extends CI_Model {
   */
   public function uploadDirecory($path='../assets/media',$default=true)
   {
+
+    //Check Default
+    $default = ((method_exists('CoreField', 'uploadDefault')))? $this->CoreField->uploadDefault(): true;
+
 
     //Check IF Deafult
     if ($default) {
@@ -568,8 +574,12 @@ class CoreCrud extends CI_Model {
     if ($filelocated) {
       //Check If File Exist
       if (file_exists($filelocated) === True) {
-        //Delete FIle
-        unlink($filelocated);
+        //Check Default
+        $unlick = ((method_exists('CoreField', 'unlinkSetting')))? $this->CoreField->unlinkSetting(): true;
+        if ($unlick) {
+          //Delete FIle
+          unlink($filelocated);
+        }
       }
     }
   }

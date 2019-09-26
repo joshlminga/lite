@@ -528,6 +528,30 @@ class CoreForm extends CI_Model {
 
         return $config; //Return Configs
     }
+
+    /*
+    *
+    * Set session name
+    * -> This function used to generate session names
+    * 1: Pass name of the session you wish to generate
+    * 2: Pass Optional custom prefix
+    */
+    public function sessionName($name,$prefix=null)
+    {
+
+        //Load
+        $CoreCrud = new CoreCrud;
+
+        //Check if prefix is given
+        $prefix = (is_null($prefix))? $CoreCrud->selectSingleValue('setting','value',array('title'=>'theme_title','flg'=>1)): $prefix;
+        $prefix = substr(preg_replace("/[^ \w-]/", "", stripcslashes($prefix)),0, 7);
+        $prefix = str_replace(" ", "",strtolower(trim($prefix)));
+
+        //Return Session Name
+        $session = $prefix."_".$name;
+        return $session;
+    }
+
 }
 
 /* End of file CoreForm.php */
