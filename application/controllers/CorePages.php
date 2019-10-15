@@ -430,6 +430,9 @@ class CorePages extends CI_Controller {
 
 		if ($this->CoreLoad->auth($this->Module)) { //Authentication
 			
+			//Session ID
+			$session_id = $this->CoreLoad->session('id');
+
 			//Pluralize Module
 			$tableName = $this->plural->pluralize($this->Module);
 
@@ -441,7 +444,7 @@ class CorePages extends CI_Controller {
 			$insertData["$createdat"] = date('Y-m-d H:i:s',time());
 
 	   		//Site Status
-			$author_name = $this->db->select('user_logname')->where('user_id',$this->session->id)->get('users')->row()->user_logname;
+			$author_name = $this->db->select('user_logname')->where('user_id',$session_id)->get('users')->row()->user_logname;
 			$author = strtolower($this->CoreForm->get_column_name($this->Module,'author'));
 			$insertData["$author"] = $author_name;
 
@@ -490,6 +493,9 @@ class CorePages extends CI_Controller {
 
 		if ($this->CoreLoad->auth($this->Module)) { //Authentication
 			
+			//Session ID
+			$session_id = $this->CoreLoad->session('id');
+
 			//Pluralize Module
 			$tableName = $this->plural->pluralize($this->Module);
 
@@ -500,7 +506,7 @@ class CorePages extends CI_Controller {
 			$insertData["$editedat"] = date('Y-m-d H:i:s',time());
 
 	   		//Site Status
-			$editor_name = $this->db->select('user_logname')->where('user_id',$this->session->id)->get('users')->row()->user_logname;
+			$editor_name = $this->db->select('user_logname')->where('user_id',$session_id)->get('users')->row()->user_logname;
 			$editor = strtolower($this->CoreForm->get_column_name($this->Module,'editor'));
 			$insertData["$editor"] = $editor_name;
 

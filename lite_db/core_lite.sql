@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.7.0
+-- version 4.9.0.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 04, 2019 at 09:30 PM
--- Server version: 10.1.22-MariaDB
--- PHP Version: 7.1.4
+-- Generation Time: Oct 15, 2019 at 02:23 PM
+-- Server version: 10.4.6-MariaDB
+-- PHP Version: 7.1.31
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -19,7 +19,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `core_cms_lite_v1`
+-- Database: `core_lite`
 --
 
 -- --------------------------------------------------------
@@ -33,10 +33,10 @@ CREATE TABLE `autofields` (
   `autofield_title` varchar(200) NOT NULL,
   `autofield_select` varchar(5000) DEFAULT NULL,
   `autofield_data` longtext NOT NULL,
-  `autofield_details` longtext,
+  `autofield_details` longtext DEFAULT NULL,
   `autofield_stamp` datetime NOT NULL,
   `autofield_default` varchar(5) DEFAULT 'yes',
-  `autofield_flg` int(1) NOT NULL DEFAULT '1'
+  `autofield_flg` int(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -57,21 +57,21 @@ CREATE TABLE `blogs` (
   `blog_category` varchar(200) DEFAULT 'post',
   `blog_title` varchar(200) NOT NULL,
   `blog_url` varchar(200) DEFAULT NULL,
-  `blog_post` longtext,
+  `blog_post` longtext DEFAULT NULL,
   `blog_control` varchar(2000) DEFAULT NULL,
   `blog_tag` varchar(1000) DEFAULT NULL,
   `blog_format` varchar(100) DEFAULT 'none',
   `blog_show` varchar(10) DEFAULT 'public',
   `blog_author` varchar(20) NOT NULL,
-  `blog_seo` longtext,
-  `blog_data` longtext,
+  `blog_seo` longtext DEFAULT NULL,
+  `blog_data` longtext DEFAULT NULL,
   `blog_createdat` datetime NOT NULL,
   `blog_editor` varchar(20) DEFAULT NULL,
   `blog_editedat` datetime DEFAULT NULL,
   `blog_details` longtext NOT NULL,
   `blog_stamp` datetime NOT NULL,
   `blog_default` varchar(5) DEFAULT 'yes',
-  `blog_flg` int(1) NOT NULL DEFAULT '1'
+  `blog_flg` int(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -91,13 +91,13 @@ CREATE TABLE `customfields` (
   `customfield_id` bigint(20) NOT NULL,
   `customfield_title` varchar(500) NOT NULL,
   `customfield_required` varchar(2000) DEFAULT NULL,
-  `customfield_optional` longtext,
-  `customfield_filters` longtext,
+  `customfield_optional` longtext DEFAULT NULL,
+  `customfield_filters` longtext DEFAULT NULL,
   `customfield_show` varchar(20) DEFAULT 'admin',
-  `customfield_details` longtext,
-  `customfield_stamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `customfield_details` longtext DEFAULT NULL,
+  `customfield_stamp` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `customfield_default` varchar(5) DEFAULT 'no',
-  `customfield_flg` int(11) NOT NULL DEFAULT '1'
+  `customfield_flg` int(11) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -118,13 +118,13 @@ CREATE TABLE `extensions` (
   `extension_key` varchar(200) NOT NULL,
   `extension_name` varchar(1000) NOT NULL,
   `extension_menu` varchar(2000) DEFAULT NULL,
-  `extension_table` mediumtext,
-  `extension_style` mediumtext,
-  `extension_data` mediumtext,
-  `extension_details` longtext,
+  `extension_table` mediumtext DEFAULT NULL,
+  `extension_style` mediumtext DEFAULT NULL,
+  `extension_data` mediumtext DEFAULT NULL,
+  `extension_details` longtext DEFAULT NULL,
   `extension_stamp` datetime NOT NULL,
   `extension_default` varchar(5) DEFAULT 'yes',
-  `extension_flg` int(1) NOT NULL DEFAULT '1'
+  `extension_flg` int(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -137,12 +137,12 @@ CREATE TABLE `fields` (
   `field_id` bigint(20) NOT NULL,
   `field_title` varchar(500) NOT NULL,
   `field_filters` varchar(2000) DEFAULT NULL,
-  `field_data` longtext,
+  `field_data` longtext DEFAULT NULL,
   `field_show` varchar(500) DEFAULT 'public',
-  `field_details` longtext,
-  `field_stamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `field_details` longtext DEFAULT NULL,
+  `field_stamp` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `field_default` varchar(5) DEFAULT 'yes',
-  `field_flg` int(1) NOT NULL DEFAULT '1'
+  `field_flg` int(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -161,12 +161,12 @@ INSERT INTO `fields` (`field_id`, `field_title`, `field_filters`, `field_data`, 
 CREATE TABLE `inheritances` (
   `inheritance_id` bigint(20) NOT NULL,
   `inheritance_type` varchar(100) NOT NULL,
-  `inheritance_parent` bigint(20) DEFAULT '0',
+  `inheritance_parent` bigint(20) DEFAULT 0,
   `inheritance_title` varchar(500) NOT NULL,
-  `inheritance_details` longtext,
+  `inheritance_details` longtext DEFAULT NULL,
   `inheritance_stamp` datetime NOT NULL,
   `inheritance_default` varchar(5) DEFAULT 'yes',
-  `inheritance_flg` int(1) NOT NULL DEFAULT '1'
+  `inheritance_flg` int(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -187,10 +187,10 @@ CREATE TABLE `levels` (
   `level_id` bigint(20) NOT NULL,
   `level_name` varchar(20) NOT NULL,
   `level_module` longtext NOT NULL,
-  `level_details` longtext,
-  `level_stamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `level_details` longtext DEFAULT NULL,
+  `level_stamp` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `level_default` varchar(5) DEFAULT 'yes',
-  `level_flg` int(1) NOT NULL DEFAULT '0'
+  `level_flg` int(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -213,19 +213,19 @@ CREATE TABLE `pages` (
   `page_id` bigint(20) NOT NULL,
   `page_title` varchar(200) NOT NULL,
   `page_url` varchar(200) DEFAULT NULL,
-  `page_post` longtext,
+  `page_post` longtext DEFAULT NULL,
   `page_control` varchar(2000) DEFAULT NULL,
   `page_show` varchar(10) DEFAULT 'public',
   `page_author` varchar(20) NOT NULL,
-  `page_seo` longtext,
-  `page_data` longtext,
+  `page_seo` longtext DEFAULT NULL,
+  `page_data` longtext DEFAULT NULL,
   `page_createdat` datetime NOT NULL,
   `page_editor` varchar(20) DEFAULT NULL,
   `page_editedat` datetime DEFAULT NULL,
   `page_details` longtext NOT NULL,
   `page_stamp` datetime NOT NULL,
   `page_default` varchar(5) DEFAULT 'yes',
-  `page_flg` int(1) NOT NULL DEFAULT '1'
+  `page_flg` int(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -244,10 +244,10 @@ INSERT INTO `pages` (`page_id`, `page_title`, `page_url`, `page_post`, `page_con
 CREATE TABLE `settings` (
   `setting_id` bigint(20) NOT NULL,
   `setting_title` varchar(200) NOT NULL,
-  `setting_value` longtext,
-  `setting_stamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `setting_value` longtext DEFAULT NULL,
+  `setting_stamp` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `setting_default` varchar(5) DEFAULT 'yes',
-  `setting_flg` int(1) DEFAULT '1'
+  `setting_flg` int(1) DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -261,7 +261,7 @@ INSERT INTO `settings` (`setting_id`, `setting_title`, `setting_value`, `setting
 (4, 'site_status', 'online', '2018-12-17 08:52:06', 'yes', 1),
 (5, 'offline_message', 'We are offline', '2018-12-17 08:50:58', 'yes', 1),
 (6, 'current_url', 'title', '2018-12-17 17:54:02', 'yes', 1),
-(7, 'mail_protocol', 'mail', '2018-12-17 15:57:54', 'yes', 1),
+(7, 'mail_protocol', 'mail', '2019-09-21 11:34:13', 'yes', 1),
 (8, 'smtp_host', '', '2018-12-17 15:24:08', 'yes', 1),
 (9, 'smtp_user', '', '2018-12-17 15:24:29', 'yes', 1),
 (10, 'smtp_pass', '', '2018-12-17 15:24:29', 'yes', 1),
@@ -292,7 +292,9 @@ INSERT INTO `settings` (`setting_id`, `setting_title`, `setting_value`, `setting
 (35, 'theme_assets', 'assets/themes/starter', '2019-06-08 18:30:02', 'yes', 1),
 (36, 'child_theme', '', '2019-06-08 18:30:26', 'yes', 1),
 (37, 'child_theme_dir', '', '2019-06-08 18:30:29', 'yes', 1),
-(38, 'child_theme_assets', '', '2019-06-08 18:30:34', 'yes', 1);
+(38, 'child_theme_assets', '', '2019-06-08 18:30:34', 'yes', 1),
+(39, 'site_url', 'http://127.0.0.1/', '2019-10-15 11:39:37', 'yes', 1),
+(40, 'session_key', 'wlqDYpXrlZ', '2019-10-15 12:11:36', 'yes', 1);
 
 -- --------------------------------------------------------
 
@@ -307,10 +309,10 @@ CREATE TABLE `users` (
   `user_password` varchar(500) NOT NULL,
   `user_name` varchar(50) NOT NULL,
   `user_email` varchar(50) NOT NULL,
-  `user_details` longtext,
+  `user_details` longtext DEFAULT NULL,
   `user_stamp` datetime NOT NULL,
   `user_default` varchar(5) DEFAULT 'yes',
-  `user_flg` int(1) NOT NULL DEFAULT '0'
+  `user_flg` int(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -398,51 +400,61 @@ ALTER TABLE `users`
 --
 ALTER TABLE `autofields`
   MODIFY `autofield_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
 --
 -- AUTO_INCREMENT for table `blogs`
 --
 ALTER TABLE `blogs`
   MODIFY `blog_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
 --
 -- AUTO_INCREMENT for table `customfields`
 --
 ALTER TABLE `customfields`
   MODIFY `customfield_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
 --
 -- AUTO_INCREMENT for table `extensions`
 --
 ALTER TABLE `extensions`
   MODIFY `extension_id` bigint(20) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `fields`
 --
 ALTER TABLE `fields`
   MODIFY `field_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
 --
 -- AUTO_INCREMENT for table `inheritances`
 --
 ALTER TABLE `inheritances`
   MODIFY `inheritance_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
 --
 -- AUTO_INCREMENT for table `levels`
 --
 ALTER TABLE `levels`
   MODIFY `level_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
 --
 -- AUTO_INCREMENT for table `pages`
 --
 ALTER TABLE `pages`
   MODIFY `page_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
 --
 -- AUTO_INCREMENT for table `settings`
 --
 ALTER TABLE `settings`
-  MODIFY `setting_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
+  MODIFY `setting_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
+
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;COMMIT;
+  MODIFY `user_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

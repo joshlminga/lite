@@ -221,7 +221,7 @@ class CoreProfiles extends CI_Controller {
 		// $inputTYPE = (is_null($inputTYPE)) ? $this->CoreLoad->input('inputTYPE','GET') : $inputTYPE; //Access Value
 		// $inputID = (is_null($inputID)) ? $this->CoreLoad->input('inputID','GET') : $inputID; //Access Value
 		$inputTYPE = 'id';
-		$inputID = $this->session->id;
+		$inputID = $this->CoreLoad->session('id');
 
 
 		if (!is_null($inputTYPE) || !is_null($inputID)) {
@@ -464,7 +464,7 @@ class CoreProfiles extends CI_Controller {
    	public function logname_check($str)
    	{
    		$check = (filter_var($str, FILTER_VALIDATE_EMAIL))? 'email' : 'logname'; //Look Email / Phone Number
-   		if (strtolower($str) == strtolower(trim($this->CoreCrud->selectSingleValue('user',$check,array('id'=>$this->session->id))))) {
+   		if (strtolower($str) == strtolower(trim($this->CoreCrud->selectSingleValue('user',$check,array('id'=>$this->CoreLoad->session('id')))))) {
             return true;
         }elseif (count($this->CoreCrud->selectSingleValue('user','id',array($check=>$str))) <= 0) {        	
             return true;
@@ -486,7 +486,7 @@ class CoreProfiles extends CI_Controller {
 
 		//Pluralize Module
 		$module = 'user'; //Module
-		$user_id = $this->session->id; //User ID
+		$user_id = $this->CoreLoad->session('id'); //User ID
 		$password = $str; //User Password
 		$tableName = $this->plural->pluralize($module);
 

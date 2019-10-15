@@ -278,8 +278,20 @@ class CoreLogs extends CI_Controller {
 				$where = array($column_logname => $logname, $column_password => $hased_password); // Where Clause
 				$query = $this->db->select("$column_id, $column_level")->where($where)->limit(1)->get($tableName)->result(); //Set Query Select
 
-				if ($query) {							
-					$newsession = array('id'=>$query[0]->$column_id,'level'=>$query[0]->$column_level,'logged'=>TRUE); //Set Session Data
+				if ($query) {	
+
+					//Session ID
+					$session_id = $this->CoreLoad->sessionName('id');
+					$newsession[$session_id] = $query[0]->$column_id;
+
+					//Session LEVEL
+					$session_level = $this->CoreLoad->sessionName('level');
+					$newsession[$session_level] = $query[0]->$column_level;
+
+					//Session LOGGED
+					$session_logged = $this->CoreLoad->sessionName('logged');
+					$newsession[$session_logged] = TRUE;
+
 					$this->session->set_userdata($newsession); //Create Session
 					return 'success'; //Logged In
 				}else{

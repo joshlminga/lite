@@ -127,7 +127,7 @@ class CoreForm extends CI_Model {
     public function userProfile($userId=null,$profileKey='user_profile',$userDefault=null)
     {
         //User ID
-        $user = (is_null($userId))? $this->session->id : $userId;
+        $user = (is_null($userId))? $this->CoreLoad->session('id') : $userId;
         //User Level
         $level =  $this->CoreCrud->selectSingleValue('users','level',array('id'=>$user));
 
@@ -531,25 +531,75 @@ class CoreForm extends CI_Model {
 
     /*
     *
-    * Set session name
-    * -> This function used to generate session names
-    * 1: Pass name of the session you wish to generate
-    * 2: Pass Optional custom prefix
+    * This function help user to access / get account profile picture
+    * Account Profile
     */
-    public function sessionName($name,$prefix=null)
+    public function accountProfile($useraccount=null,$profile_name='user_profile')
     {
+        //Check Account
+        $account = (is_null($useraccount)) ? array('id'=>$this->CoreLoad->session('id')) : $useraccount;
+        //User Details
+        $userDetails = json_decode($this->CoreCrud->selectSingleValue('user','details',$account), True); 
+        $profile = (array_key_exists($profile_name, $userDetails))? json_decode($userDetails[$profile_name]) : array(null);
 
-        //Load
-        $CoreCrud = new CoreCrud;
+        //Check Found
+        $profile = (!is_null($profile[0]) && !empty($profile[0]))? $profile[0] : null;
+        $userProfile[$profile_name] = $profile; //Profile
 
-        //Check if prefix is given
-        $prefix = (is_null($prefix))? $CoreCrud->selectSingleValue('setting','value',array('title'=>'theme_title','flg'=>1)): $prefix;
-        $prefix = substr(preg_replace("/[^ \w-]/", "", stripcslashes($prefix)),0, 7);
-        $prefix = str_replace(" ", "",strtolower(trim($prefix)));
+        //Return Data
+        return $userProfile;
+    }
 
-        //Return Session Name
-        $session = $prefix."_".$name;
-        return $session;
+    /*
+    *
+    *
+    * This function help you to get file name
+    *
+    * 1: Pass file line
+    * 2: State if you want extension returned of not | Default 'True'
+    * 3: Pass file separator value | Default '/'
+    *
+    * Get File Name From Attached Link
+    */
+    public function getfileName($assetLink,$ext=true,$separator='/')
+    {
+        //Change link to array
+        $file_link = (!is_array($assetLink))? explode($separator,$assetLink) : $assetLink;
+
+        //Get end of array
+        $file_full = end($file_link);
+        if (!$ext) {
+            $get = explode('.', $file_full);
+            $file_name = $get[0];
+        }else{
+            $file_name = $file_full;
+        }
+
+        //File Name
+        return $file_name;
+    }
+
+    /*
+    *
+    * This function is a subfunction of getting file name, this function will only retur extension of the file
+    *
+    * 1: Pass file line
+    * 2: State if you want extension returned of not | Default 'True'
+    * 3: Pass file separator value | Default '/'
+    *
+    * Get File Extension Only
+    */
+    public function getfileExt($assetLink,$file=false,$separator='/')
+    {
+        //Get File Name
+        $file_name = (!$file) ? $this->getfileName($assetLink,true,$separator) : $assetLink;
+
+        //Get Extension
+        $get = explode('.', $file_name);
+        $extension = $get[0];
+
+        //File Extension
+        return $extension;
     }
 
 }

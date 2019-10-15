@@ -5,7 +5,7 @@
             <section id="content">
                 <div class="container">
 
-                    <?php $level_name = $this->CoreCrud->selectSingleValue('users','level',array('id' =>$this->session->id)); ?>
+                    <?php $level_name = $this->CoreCrud->selectSingleValue('users','level',array('id' =>$this->CoreLoad->session('id'))); ?>
                     <?php $level_default = $this->CoreCrud->selectSingleValue('levels','default',array('name' =>$level_name)); ?>
 
                     <?php if ($level_default == 'yes'): ?>
