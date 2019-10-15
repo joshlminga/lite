@@ -21,7 +21,7 @@ class CoreLoad extends CI_Model {
         $this->load->model('CoreField');
         $this->load->model('CoreCrud');
 
-        // Your own constructor code
+        // Your own constructor code 
         
     }
 
