@@ -328,6 +328,301 @@ class CoreCrud extends CI_Model {
     return $values;
   }
 
+
+
+  /*
+  *
+  * Custom Field Handler
+  * This function will save custom field Data
+  * Note that once data is saved the function will return the input (insert ID) as array('id'=>inputIDNO)
+  * 
+  * If you opt for field_data data to be returned set data option as TRUE
+  *   array('field_data'=>data)
+  *
+  ** By Default is True
+  *
+  * 
+  * This function accept 
+  * 1: Data to Insert
+  * 2: return Data Option
+  * 
+  */
+  public function saveField($insertData,$returnData=true)
+  {
+
+    //Pluralize Module
+    $tableName = $this->plural->pluralize('field');
+
+    //Insert Data Into Table
+    $this->db->insert($tableName,$insertData);
+    if ($this->db->affected_rows() > 0) {
+
+      $fieldID = $this->db->insert_id(); //Insert ID
+      $field_data = json_decode($insertData['field_data'], true); //Field Data
+      return ($returnData == true)? array('id'=>$fieldID,'field_data'=>$field_data) : array('id'=>$fieldID); //Data Inserted
+    }else{
+      return false; //Data Insert Failed
+    }
+  }
+
+  /*
+  *
+  * Custom Field Handler
+  * This function will update custom field Data
+  * Note that once data is updated the function will return the input (insert ID) as array('id'=>inputIDNO)
+  * 
+  * If you opt for field_data data to be returned set data option as TRUE
+  *   array('field_data'=>data)
+  *
+  ** By Default is True
+  * 
+  *
+  * This function accept 
+  * 1: Data to Updated
+  * 2: field ID (Where to afftect)
+  * 3: return Data Option
+  *
+  */
+  public function updateField($updateData,$fieldID,$returnData=true)
+  {
+
+    //Pluralize Module
+    $tableName = $this->plural->pluralize('field');
+
+    //Check Field Type
+    $whereTYPE = (is_numeric($fieldID))? 'id' : 'title';
+    $where = array($whereTYPE => $fieldID);
+
+    //Update Data In The Table
+    $this->db->update($tableName,$updateData,$where);
+    if ($this->db->affected_rows() > 0) {
+
+      $field_data = json_decode($updateData['field_data'], true); //Field Data
+      return ($returnData == true)? array('id'=>$fieldID,'field_data'=>$field_data) : array('id'=>$fieldID); //Data Inserted
+    }else{
+      return false; //Data Updated Failed
+    }
+  }
+
+  /*
+  *
+  * Custom Field Handler
+  * This function will delete custom field Data
+  * Note that once data is delete the function will return the input (insert ID) as array('id'=>inputIDNO)
+  *  
+  *
+  * This function accept 
+  * 1: fieldID (Where to afftect)
+  * 2: Module affeted => By Defult is 'field'
+  *
+  */
+  public function deleteField($fieldID)
+  {
+
+    //Pluralize Module
+    $tableName = $this->plural->pluralize('fields');
+
+    //Check Field Type
+    $whereTYPE = (is_numeric($fieldID))? 'id' : 'title';
+    $where = array($whereTYPE => $fieldID);
+
+    //Deleted Data In The Table
+    $this->db->delete($tableName,$where);
+    if ($this->db->affected_rows() > 0) {
+      return array('id'=>$fieldID); //Data Deleted
+    }else{
+      return false; //Data Deletion Failed
+    }
+  }
+
+  /*
+  * This Function Manage CustomFields Data
+  * By default CoreLite will save data and return response
+  *
+  *
+  * This function accept 
+  * 1: Status (save|update|delete)
+  * 2: Route (NB: this must match your customfield -> title)
+  * 3: FormData (field_data) Values
+  * 4: fieldID (fieldID)
+  *
+  */
+  public function customFieldAuto($status,$route=null,$formValues,$fieldID=null)
+  {
+
+    //Check Route
+    if (!is_null($route)) {
+      //Table Name
+      $table = $this->plural->pluralize($route);
+
+      //Check If Table Exist
+      if ($this->db->table_exists($table)) {
+
+        //load ModelField
+        $this->load->model('CoreField');  
+        $autosave = ((method_exists('CoreField', 'customFieldAuto')))? $this->CoreField->customFieldAuto($route): true;
+
+        //Check Auto Save
+        if ($autosave) {
+          //Get Columns
+          $column_data = $this->get_column_data($table);
+          $column_type = $this->CoreForm->get_column_name_type($column_data);
+
+          $columns = $this->CoreForm->get_label_name($column_type);
+          $columns = array_values($this->CoreCrud->unsetData($columns,array(0)));
+
+          //Check Field Data
+          if (array_key_exists('field_data', $formValues)) {
+
+            $field_data = $formValues['field_data']; //Field Data
+            $formData['field'] = (!is_null($fieldID))? $fieldID : $formValues['id']; //Field ID
+
+            //Assign Data
+            for ($i=0; $i < count($columns); $i++) { 
+              $column_name = $columns[$i];
+              if (array_key_exists($column_name,$field_data)) {
+                $formData[$column_name] = $field_data[$column_name]; //Field Value
+              }
+            }
+
+            //Flg, Default & Time Stamp
+            $formData['stamp'] = $this->CoreCrud->selectSingleValue('fields','stamp',array('id'=>$fieldID));
+            $formData['default'] = $this->CoreCrud->selectSingleValue('fields','default',array('id'=>$fieldID));
+            $formData['flg']  = $this->CoreCrud->selectSingleValue('fields','flg',array('id'=>$fieldID));
+            //Details
+            $formData['details'] = json_encode($filterData);
+
+            //Get Column Names
+            foreach ($formData as $key => $value) {
+              $column_name = $this->CoreForm->get_column_name($table,$key);
+              $extendData[$column_name] = $value;
+            }
+          }else{
+            //Flg, Default & Time Stamp
+            $formData['stamp'] = $this->CoreCrud->selectSingleValue('fields','stamp',array('id'=>$fieldID));
+            $formData['default'] = $this->CoreCrud->selectSingleValue('fields','default',array('id'=>$fieldID));
+            $formData['flg']  = $this->CoreCrud->selectSingleValue('fields','flg',array('id'=>$fieldID));
+
+            //Get Column Names
+            foreach ($formData as $key => $value) {
+              $column_name = $this->CoreForm->get_column_name($table,$key);
+              $extendData[$column_name] = $value;
+            }
+          }
+
+          //Check Status
+          $status = strtolower($status);
+          switch ($status) {
+            case 'save':
+                $this->db->insert($table, $extendData); //Insert Data Into Table
+                if ($this->db->affected_rows() > 0) {
+                 return $this->db->insert_id(); 
+                }else{
+                  return false;
+                }
+              break;
+
+            case 'update':
+                //Check Field Data
+                $field_column = $this->CoreForm->get_column_name($table,'fields');
+                $this->db->update($table,$extendData,array($field_column=>$fieldID)); //Update Data 
+                if ($this->db->affected_rows() > 0) {
+                 return $fieldID; 
+                }else{
+                  return false;
+                }
+              break;
+
+            case 'delete':
+                //Check Field Data
+                $field_column = $this->CoreForm->get_column_name($table,'fields');
+                $this->db->delete($table,array($field_column=>$fieldID)); //Delete Data
+                if ($this->db->affected_rows() > 0) {
+                 return $fieldID; 
+                }else{
+                  return false;
+                }
+              break;
+
+            default:
+              return false; //Failed
+              break;
+          }
+        }else{
+          return $fieldID; //Return ID
+        }
+      }else{
+        return false; //Not Successful
+      }
+    }else{
+      return false; //Not Successful
+    }
+  }
+
+  /*
+  *
+  * Custom Field Auto Manager Helper
+  *
+  * This helper will help the operation of SAVE & UPDATE
+  * NB: This helper will also affect customfields *extended* tables
+  *
+  *
+  * This function accept 
+  * 1: Status (save|update|delete)
+  * 2: FormData (field_data) Values
+  * 3: fieldID (fieldID)
+  * 4: Route (NB: this must match your customfield -> title)
+  * 5: return Data Option
+  *
+  */
+  public function customFieldHelper($status,$formData,$fieldID=null,$route=null,$returnData=true)
+  {
+
+    //Check Status
+    $status = strtolower($status);
+    switch ($status) {
+      case 'save':
+          //Save Data
+          $formData = $this->saveField($formData,$returnData,'fields');
+          $this->customFieldAuto($status,$route,$formData,$fieldID);
+        break;
+      case 'update':
+          //Update Data
+          $formData = $this->updateField($formData,$fieldID,$returnData,'fields');
+          $this->customFieldAuto($status,$route,$formData,$fieldID);
+        break;
+      case 'delete':
+          //Update Data
+          $formData = $this->deleteField($fieldID,'fields');
+          $this->customFieldAuto($status,$route,$formData,$fieldID);
+        break;
+      default:
+          $formData = array('id'=>false);
+        break;
+    }
+
+    //Check Action
+    return ($formData['id']) ? true : false;
+  }
+
+  /*
+  * 
+  * This function Check field Helpers Status
+  *
+  * 1: Passed Returned Data
+  */
+  public function fieldStatus($returnedData)
+  {
+    //Check If is array
+    if (is_array($returnedData)) {
+      $status = (array_key_exists('id', $returnedData)) ? $returnedData['id'] : false;
+    }else{
+      $status = ($returnedData > 0)? true : false;
+    }
+
+    return $status; //Return Status
+  }
+
   /*
   *
   * Count Table Rows
@@ -751,6 +1046,26 @@ class CoreCrud extends CI_Model {
     }else{
       $this->session->sess_destroy();// Destroy all session data
     }
+  }
+
+  /*
+  *
+  * Get Table Column Name and Column Type
+  * Function accept Module name then it pluralize it to get table name
+  * 
+  */
+  public function get_column_data($module,$database=null)
+  {
+    //Get Table Name
+    $table = $this->plural->pluralize($module);
+    $database = (is_null($database))? $this->db->database : $database;
+
+    //Query
+    $query = $this->db->query("SELECT COLUMN_NAME, COLUMN_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = '$database' 
+        AND TABLE_NAME = '$table'");
+
+    //Return
+    return $query->result();
   }
 
 }

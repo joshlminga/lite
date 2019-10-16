@@ -299,49 +299,18 @@ class FieldUsers extends CI_Controller {
 			//Form Validation
 			if ($this->form_validation->run() == TRUE) {
 
+				//Input ID
+				$inputID = $this->CoreLoad->input('id');
 				//Table Select & Clause
 				$fieldTable = $this->plural->pluralize($this->Route);
-				$customFieldTable = $this->plural->pluralize('customfields');
 
-		   		$columns = array('title as title,filters as filters,default as default');
-			   	$where = array('id' => $this->CoreLoad->input('id'));
-				$fieldList = $this->CoreCrud->selectCRUD($customFieldTable,$where,$columns);
+				//Column Stamp
+				$formData['stamp'] = date('Y-m-d H:i:s',time());
+				//Column Flg
+				$formData['flg'] = 1;
 
-				$field_title = $fieldList[0]->title; //Title Title
-				$field_filter = json_decode($fieldList[0]->filters, True); //FIlter List
-				$field_default = $fieldList[0]->default; //Default
-
-				//UnSet ID
-				$formData = $this->CoreCrud->unsetData($formData,array('id'));
-
-				//Set Filters
-				$column_filters = strtolower($this->CoreForm->get_column_name($this->Module,'filters'));
-
-				//Set Values For Filter
-				for($i = 0; $i < count($field_filter); $i++){
-					$valueFilter = $field_filter[$i]; //Current Value
-					$newFilterDataValue[$valueFilter] = $formData[$valueFilter];
-				}
-				$tempo_filter = json_encode($newFilterDataValue); /* Set Filters */
-
-				//Set Field Data
-				$column_data = strtolower($this->CoreForm->get_column_name($this->Module,'data'));
-				$formData[$column_data] = json_encode($formData); //Set Data
-
-				//Prepaire Data To Store
-				foreach ($formData as $key => $value) {
-					if ($key !== $column_data) {
-						$children[$key] = $value;
-						$formData = $this->CoreCrud->unsetData($formData,array($key)); //Unset Data
-					}
-				}
-
-				//Set Filters
-				$formData[$column_filters] = $tempo_filter; /* Set Filters */
-
-				//Set Title/Name
-				$column_title = strtolower($this->CoreForm->get_column_name($this->Module,'title'));
-				$formData[$column_title] = $field_title; //Set Title
+				//Get Form Data
+				$formData = $this->CoreForm->saveFormField($formData,$inputID);
 
 				if ($this->create($formData)) {
 					$this->session->set_flashdata('notification','success'); //Notification Type
@@ -506,25 +475,9 @@ class FieldUsers extends CI_Controller {
 
 		if ($this->CoreLoad->auth($this->Route)) { //Authentication
 			
-			//Pluralize Module
-			$tableName = $this->plural->pluralize($this->Module);
-
-			//Column Stamp
-			$stamp = strtolower($this->CoreForm->get_column_name($this->Module,'stamp'));
-			$insertData["$stamp"] = date('Y-m-d H:i:s',time());
-			//Column Flg
-			$flg = strtolower($this->CoreForm->get_column_name($this->Module,'flg'));
-			$insertData["$flg"] = 1;
-
-			//Column Password
-			$insertData = $this->CoreCrud->unsetData($insertData,$unsetData); //Unset Data
-
-			$details = strtolower($this->CoreForm->get_column_name($this->Module,'details'));
-			$insertData["$details"] = json_encode($insertData);
-
-			//Insert Data Into Table
-			$this->db->insert($tableName, $insertData);
-			if ($this->db->affected_rows() > 0) {
+			//Save
+			$savedData = $this->CoreCrud->saveField($insertData);
+			if ($this->CoreCrud->fieldStatus($savedData)) {
 				
 				return true; //Data Inserted
 			}else{

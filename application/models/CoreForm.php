@@ -26,6 +26,33 @@ class CoreForm extends CI_Model {
 
     /*
     *
+    * Function to generate columns name or Type Array
+    * Pass columns Name & Type array
+    * 
+    */
+    public function get_column_name_type($column_name_type,$get='name')
+    {
+        //Array to store Data
+        $name_type = array();
+        //Get Type/Name
+        if (strtolower($get) == 'type') {
+            //Get Type
+            for($i = 0; $i < count($column_name_type); $i++){
+                $name_type[$i] = $column_name_type[$i]->COLUMN_TYPE;// Assign Column Type
+            }
+        }else{
+            //Get Name
+            for($i = 0; $i < count($column_name_type); $i++){
+                $name_type[$i] = $column_name_type[$i]->COLUMN_NAME;// Assign Column Name
+            }
+        }
+
+        //Return Data
+        return $name_type;
+    }
+
+    /*
+    *
     * The function generate proper multiple/single column names
     * The function accepts
     * 1: Module Name
@@ -70,28 +97,6 @@ class CoreForm extends CI_Model {
         }
         
         return $label;//Return Label List
-    }
-
-    /*
-    *
-    * Function to remove column Name and Return Column Label Name
-    * Pass columns name(s) array/string
-    * 
-    */
-    public function get_column_label_name($column)
-    {
-
-        if (!is_array($column) && strpos($column,",") == False) {
-            $column_label = ucwords(str_replace('_',' ',$column));
-        }else{
-            if (!is_array($column) && strpos($column,",") == True) { $column = explode(",", $column); /* Get Column Name */ }
-            for($i = 0; $i < count($column); $i++){
-                $column_name = $column[$i]; //Set Current Column Name
-                $column_label[$i] =  ucwords(str_replace('_',' ',$column_name)); //Get Current Column Label Name
-            }
-        }
-
-        return $column_label; //Column Label Name
     }
 
     /*
@@ -154,6 +159,244 @@ class CoreForm extends CI_Model {
 
     /*
     *
+    * Form Save Field
+    * This function will prepaire data to be saved
+    *
+    * Function will return form Data Ready To Save
+    *
+    * This function accept 
+    * 1: Form Data To Save
+    * 2: Input ID To Get CustomFields
+    * 3: Pass unsetData By Default is null
+    * 4: Pass Unset Before/After NB: By Default it will unset Before, To Unset After Pass | after
+    * 5: Additional Optional Filters
+    * 6: Module affeted => By Defult is 'field'
+    * 
+    */
+    public function saveFormField($formData,$inputID,$unsetData=null,$unsetKey='before',$addFilters=null,$Module='field')
+    {
+
+        //Check Field -> Stamp | Default | Flg
+        $stamp_column = strtolower($this->CoreForm->get_column_name($Module,'stamp'));
+        $default_column = strtolower($this->CoreForm->get_column_name($Module,'default'));
+        $flg_column = strtolower($this->CoreForm->get_column_name($Module,'flg'));
+        $formCheck = $formData; 
+        $formData = $this->CoreCrud->unsetData($formData,array('stamp',$stamp_column,'default',$default_column,'flg',$flg_column));
+
+        //Table Select & Clause
+        $customFieldTable = $this->plural->pluralize('customfields');
+
+        //Columns
+        $columns = array('title as title,filters as filters,default as default');
+
+        //Check Field Type
+        $whereTYPE = (is_numeric($inputID))? 'id' : 'title';
+        $where = array($whereTYPE => $inputID);
+
+        //Select
+        $fieldList = $this->CoreCrud->selectCRUD($customFieldTable,$where,$columns);
+
+        $field_title = $fieldList[0]->title; //Title Title
+        $field_filter = json_decode($fieldList[0]->filters, True); //FIlter List
+        $field_default = $fieldList[0]->default; //Default
+
+        //UnSet ID
+        $formData = $this->CoreCrud->unsetData($formData,array('id'));
+
+        //Set Values For Filter
+        for($i = 0; $i < count($field_filter); $i++){
+          $valueFilter = trim($field_filter[$i]); //Current Value
+          $newFilterDataValue[$valueFilter] = $formData[$valueFilter];
+        }
+
+        //Check Additional Filters
+        $dataFilters = (!is_null($addFilters))? array_merge($newFilterDataValue,$addFilters) : $newFilterDataValue;
+        $tempo_filter = json_encode($dataFilters); /* Set Filters */
+
+        //Set Field Data
+        $column_data = strtolower($this->CoreForm->get_column_name($Module,'data'));
+        $formData[$column_data] = json_encode($formData); //Set Data
+
+        //Prepaire Data To Store
+        foreach ($formData as $key => $value) {
+          if ($key !== $column_data) {
+            $children[$key] = $value;
+            $formData = $this->CoreCrud->unsetData($formData,array($key)); //Unset Data
+          }
+        }
+
+        //Set Filters
+        $column_filters = strtolower($this->CoreForm->get_column_name($Module,'filters'));
+        $formData[$column_filters] = $tempo_filter; /* Set Filters */
+
+        //Set Title/Name
+        $column_title = strtolower($this->CoreForm->get_column_name($Module,'title'));
+        $formData[$column_title] = $field_title; //Set Title
+
+        //Details Column Update
+        $details = strtolower($this->CoreForm->get_column_name('field','details'));
+
+        //Apply Field -> Stamp | Default | Flg
+        $formData = $this->applyCheckFieldTable($formData,$formCheck,$Module);
+
+        //Check Unset Key
+        if (strtolower($unsetKey) == 'before') {
+            $formData = $this->CoreCrud->unsetData($formData,$unsetData); //Unset Data
+            $formData[$details] = json_encode($formData); //Details
+        }else{
+
+            $formData[$details] = json_encode($formData); //Details
+            $formData = $this->CoreCrud->unsetData($formData,$unsetData); //Unset Data
+        }
+
+        //Form Data
+        $formData = $this->applyCheckFieldTable($formData,$formCheck,$Module);
+
+        //Form Data
+        return $formData;
+    }
+
+    /*
+    *
+    * Form Update Field
+    * This function will prepaire data to be updated
+    *
+    * Function will return form Data Ready To Update
+    *
+    * This function accept 
+    * 1: Form Data To Update
+    * 2: Input ID To Get CustomFields
+    * 3: Pass unsetData By Default is null
+    * 4: Pass Unset Before/After NB: By Default it will unset Before, To Unset After Pass | after
+    * 5: Additional Optional Filters
+    * 6: Module affeted => By Defult is 'field'
+    * 
+    */
+    public function updateFormField($updateData,$inputID,$unsetData=null,$unsetKey='before',$addFilters=null,$Module='field')
+    {
+
+        //Check Field -> Stamp | Default | Flg
+        $stamp_column = strtolower($this->CoreForm->get_column_name($Module,'stamp'));
+        $default_column = strtolower($this->CoreForm->get_column_name($Module,'default'));
+        $flg_column = strtolower($this->CoreForm->get_column_name($Module,'flg'));
+        $formCheck = $updateData; 
+        $updateData = $this->CoreCrud->unsetData($updateData,array('stamp',$stamp_column,'default',$default_column,'flg',$flg_column));
+
+        //Table
+        $customFieldTable = $this->plural->pluralize('customfields');
+
+        //Check Field Type
+        $whereTYPE = (is_numeric($inputID))? 'id' : 'title';
+        $where = array($whereTYPE => $inputID);
+
+        //Table Select & Clause
+        $columns = array('id as id,title as title,data as data');
+        $resultList = $this->CoreCrud->selectCRUD($Module,$where,$columns);
+
+        //Table Select & Clause
+        $columns = array('id as id,required as required,optional as optional,filters as filters,default as default');
+        $where = array('title' => $resultList[0]->title);
+        $fieldList = $this->CoreCrud->selectCRUD($customFieldTable,$where,$columns,'like');
+
+        //FIlter List
+        $field_filter = json_decode($fieldList[0]->filters, True); //FIlter List
+        $field_default = $fieldList[0]->default; //Default
+
+        //Get Current Data
+        $current_data = json_decode($resultList[0]->data, True);
+        //Set Filters
+        $column_filters = strtolower($this->CoreForm->get_column_name($Module,'filters'));
+
+        //Set Values FOr Filter
+        for($i = 0; $i < count($field_filter); $i++){
+          $valueFilter = $field_filter[$i]; //Current Value
+          $newFilterDataValue[$valueFilter] = $updateData[$valueFilter];
+        }
+
+        //Check Additional Filters
+        $dataFilters = (!is_null($addFilters))? array_merge($newFilterDataValue,$addFilters) : $newFilterDataValue;
+        $tempo_filter = json_encode($dataFilters); /* Set Filters */
+
+        //Set Field Data
+        $column_data = strtolower($this->CoreForm->get_column_name($Module,'data'));
+        $updateData[$column_data] = json_encode($updateData); //Set Data
+
+        //Prepaire Data To Store
+        foreach ($updateData as $key => $value) {
+          if ($key !== $column_data) {
+            $children[$key] = $value;
+            $updateData = $this->CoreCrud->unsetData($updateData,array($key)); //Unset Data
+          }
+        }
+
+        //Set Filters
+        $updateData[$column_filters] = $tempo_filter; /* Set Filters */
+
+        //Details Column Update
+        $details = strtolower($this->CoreForm->get_column_name('field','details'));
+        $current_details = json_decode($resultList[0]->details, true);
+
+        //Check Unset Key
+        if (strtolower($unsetKey) == 'before') {
+            $updateData = $this->CoreCrud->unsetData($updateData,$unsetData); //Unset Data
+            foreach ($updateData as $key => $value) { $current_details["$key"] = $value; /* Update -> Details */ }
+            $updateData["$details"] = json_encode($current_details);
+        }else{
+            foreach ($updateData as $key => $value) { $current_details["$key"] = $value; /* Update -> Details */ }
+            $updateData["$details"] = json_encode($current_details);
+            $updateData = $this->CoreCrud->unsetData($updateData,$unsetData); //Unset Data
+        }
+
+        //Update Data
+        return $updateData;
+    }
+
+    /*
+    * 
+    * This function will apply stamp | default | flg
+    *
+    * This function accept 
+    * 1: Current Form Data
+    * 2: Reserved Form Data
+    * 3: Module affeted => By Defult is 'field'
+    *
+    */
+    public function applyCheckFieldTable($formData,$formCheck,$Module='field')
+    {
+
+        //Columns
+        $stamp_column = strtolower($this->CoreForm->get_column_name($Module,'stamp'));
+        $default_column = strtolower($this->CoreForm->get_column_name($Module,'default'));
+        $flg_column = strtolower($this->CoreForm->get_column_name($Module,'flg'));
+
+        //Check Stamp
+        $stamp = (array_key_exists('stamp', $formCheck))? $formCheck['stamp'] : null;
+        $stamp = (array_key_exists($stamp_column, $formCheck))? $formCheck[$stamp_column] : $stamp;
+        $formData[$stamp_column] = $stamp;
+
+        //Check Default
+        $default = (array_key_exists('default', $formCheck))? $formCheck['default'] : null;
+        $default = (array_key_exists($default_column, $formCheck))? $formCheck[$default_column] : $default;
+        $formData[$default_column] = $default;
+
+        //Check Flg
+        $flg = (array_key_exists('flg', $formCheck))? $formCheck['flg'] : null;
+        $flg = (array_key_exists($flg_column, $formCheck))? $formCheck[$flg_column] : $flg;
+        $formData[$flg_column] = $flg;
+
+
+
+        //Remove Null Values
+        foreach ($formData as $key => $value) {
+            $formData = (is_null($value)) ? $this->CoreCrud->unsetData($formData,array($key)) : $formData;
+        }
+
+        //Return Data
+        return $formData;
+    }
+
+    /*
+    *
     * Get Form and Set Data into Field Format
     *
     * 1: Pass FormData 
@@ -166,72 +409,8 @@ class CoreForm extends CI_Model {
     public function getFieldFormatData($formData,$fieldSet,$unsetData=null,$unsetKey='before')
     {
 
-        //Module
-        $Module = 'field';
-
-        //Check Field Type
-        $whereTYPE = (is_numeric($fieldSet))? 'id' : 'title';
-
-        //Table Select & Clause
-        $customFieldTable = $this->plural->pluralize('customfields');
-
-        $columns = array('title as title,filters as filters,default as default');
-        $where = array($whereTYPE => $fieldSet);
-        $fieldList = $this->CoreCrud->selectCRUD($customFieldTable,$where,$columns);
-
-        $field_title = $fieldList[0]->title; //Title Title
-        $field_filter = json_decode($fieldList[0]->filters, True); //FIlter List
-        $field_default = $fieldList[0]->default; //Default
-
-        //Set Filters
-        $column_filters = strtolower($this->CoreForm->get_column_name($Module,'filters'));
-
-        //Set Values For Filter
-        for($i = 0; $i < count($field_filter); $i++){
-            $valueFilter = $field_filter[$i]; //Current Value
-            $newFilterDataValue[$valueFilter] = $formData[$valueFilter];
-        }
-        $tempo_filter = json_encode($newFilterDataValue); /* Set Filters */
-
-        //Set Field Data
-        $column_data = strtolower($this->CoreForm->get_column_name($Module,'data'));
-        $formData[$column_data] = json_encode($formData); //Set Data
-
-        //Prepaire Data To Store
-        foreach ($formData as $key => $value) {
-            if ($key !== $column_data) {
-                $children[$key] = $value;
-                $formData = $this->CoreCrud->unsetData($formData,array($key)); //Unset Data
-            }
-        }
-
-        //Set Filters
-        $formData[$column_filters] = $tempo_filter; /* Set Filters */
-
-        //Set Title/Name
-        $column_title = strtolower($this->CoreForm->get_column_name($Module,'title'));
-        $formData[$column_title] = $field_title; //Set Title
-
-        //Column Stamp
-        $stamp = strtolower($this->CoreForm->get_column_name($Module,'stamp'));
-        $formData[$stamp] = date('Y-m-d H:i:s',time());
-        //Column Flg
-        $flg = strtolower($this->CoreForm->get_column_name($Module,'flg'));
-        $formData[$flg] = 1;
-
-        //Column Details
-        $details = strtolower($this->CoreForm->get_column_name($Module,'details'));
-
-        //Check Unset Key
-        if (strtolower($unsetKey) == 'before') {
-            $formData = $this->CoreCrud->unsetData($formData,$unsetData); //Unset Data
-            $formData[$details] = json_encode($formData); //Details
-        }else{
-
-            $formData[$details] = json_encode($formData); //Details
-            $formData = $this->CoreCrud->unsetData($formData,$unsetData); //Unset Data
-        }
-
+        //FormData
+        $formData = $this->saveFormField($formData,$fieldSet);
         return $formData; //Return Data
     }
 
@@ -250,76 +429,8 @@ class CoreForm extends CI_Model {
     public function getFieldUpdateData($updateData,$fieldSet,$unsetData=null,$unsetKey='before')
     {
 
-        //Module
-        $Module = 'field';
-
-        //Check Field Type
-        $whereTYPE = (is_numeric($fieldSet))? 'id' : 'title';
-
-        //Table
-        $fieldTable = $this->plural->pluralize($Module);
-        $customFieldTable = $this->plural->pluralize('customfields');
-
-        //Table Select & Clause
-        $where = array($whereTYPE => $fieldSet);
-        $columns = array('id as id,title as title,filters as filters,data as data,details as details');
-        $resultList = $this->CoreCrud->selectCRUD($fieldTable,$where,$columns);
-
-        //Table Select & Clause
-        $columns = array('id as id,required as required,optional as optional,filters as filters,default as default');
-        $where = array('title' => $resultList[0]->title);
-        $fieldList = $this->CoreCrud->selectCRUD($customFieldTable,$where,$columns,'like');
-
-        //$field_filter = $fieldList[0]->filters; //FIlter List
-        $field_filter = json_decode($fieldList[0]->filters, True); //FIlter List
-        $field_default = $fieldList[0]->default; //Default
-
-        //Set Filters
-        $column_filters = strtolower($this->CoreForm->get_column_name($Module,'filters'));
-        //Set Values FOr Filter
-        for($i = 0; $i < count($field_filter); $i++){
-            $valueFilter = $field_filter[$i]; //Current Value
-            if (array_key_exists($valueFilter,$updateData)) {
-                $newFilterDataValue[$valueFilter] = $updateData[$valueFilter];
-            }
-        }
-        $current_filter = json_decode($resultList[0]->filters, True); //FIlter List
-        foreach ($newFilterDataValue as $key => $value) { $current_filter["$key"] = $value; /* Update -> Data */ }
-
-        $tempo_filter = json_encode($current_filter); /* Set Filters */
-
-        //Set Field Data
-        $column_data = strtolower($this->CoreForm->get_column_name($Module,'data'));
-        $current_data = json_decode($resultList[0]->data, True); //Get Current Data
-        foreach ($updateData as $key => $value) { $current_data["$key"] = $value; /* Update -> Data */ }
-        $updateData[$column_data] = json_encode($current_data); //Set Data
-
-        //Prepaire Data To Store
-        foreach ($updateData as $key => $value) {
-            if ($key !== $column_data) {
-                $children[$key] = $value;
-                $updateData = $this->CoreCrud->unsetData($updateData,array($key)); //Unset Data
-            }
-        }
-
-        //Set Filters
-        $updateData[$column_filters] = $tempo_filter; /* Set Filters */
-
-        //Details Column Update
-        $details = strtolower($this->CoreForm->get_column_name($Module,'details'));
-        $current_details = json_decode($resultList[0]->details, true);
-
-        //Check Unset Key
-        if (strtolower($unsetKey) == 'before') {
-            $updateData = $this->CoreCrud->unsetData($updateData,$unsetData); //Unset Data
-            foreach ($updateData as $key => $value) { $current_details["$key"] = $value; /* Update -> Details */ }
-            $updateData["$details"] = json_encode($current_details);
-        }else{
-            foreach ($updateData as $key => $value) { $current_details["$key"] = $value; /* Update -> Details */ }
-            $updateData["$details"] = json_encode($current_details);
-            $updateData = $this->CoreCrud->unsetData($updateData,$unsetData); //Unset Data
-        }
-
+        //FormData
+        $updateData = $this->updateFormField($updateData,$fieldSet);
         return $updateData; //Return Data
     }
 
@@ -601,7 +712,6 @@ class CoreForm extends CI_Model {
         //File Extension
         return $extension;
     }
-
 }
 
 /* End of file CoreForm.php */
