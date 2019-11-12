@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 15, 2019 at 02:23 PM
+-- Generation Time: Nov 12, 2019 at 10:43 AM
 -- Server version: 10.4.6-MariaDB
 -- PHP Version: 7.1.31
 
@@ -150,7 +150,9 @@ CREATE TABLE `fields` (
 --
 
 INSERT INTO `fields` (`field_id`, `field_title`, `field_filters`, `field_data`, `field_show`, `field_details`, `field_stamp`, `field_default`, `field_flg`) VALUES
-(1, 'userdata', '{\"user_name\":\"Andrew\",\"user_email\":\"njenga@gmail.com\"}', '{\"user_name\":\"Andrew\",\"user_email\":\"njenga@gmail.com\",\"user_gender\":\"male\",\"user_mobile\":\"070854960\"}', 'public', '{\"field_data\":\"{\\\"user_name\\\":\\\"Andrew\\\",\\\"user_email\\\":\\\"njenga@gmail.com\\\",\\\"user_gender\\\":\\\"male\\\",\\\"user_mobile\\\":\\\"070854960\\\"}\",\"field_filters\":\"{\\\"user_name\\\":\\\"Andrew\\\",\\\"user_email\\\":\\\"njenga@gmail.com\\\"}\",\"field_title\":\"userdata\",\"field_stamp\":\"2019-02-06 18:34:25\",\"field_flg\":1}', '2019-02-06 15:34:25', 'yes', 1);
+(1, 'userdata', '{\"user_name\":\"Andrew\",\"user_email\":\"njenga@gmail.com\"}', '{\"user_name\":\"Andrew\",\"user_email\":\"njenga@gmail.com\",\"user_gender\":\"male\",\"user_mobile\":\"070854960\"}', 'public', '{\"field_data\":\"{\\\"user_name\\\":\\\"Andrew\\\",\\\"user_email\\\":\\\"njenga@gmail.com\\\",\\\"user_gender\\\":\\\"male\\\",\\\"user_mobile\\\":\\\"070854960\\\"}\",\"field_filters\":\"{\\\"user_name\\\":\\\"Andrew\\\",\\\"user_email\\\":\\\"njenga@gmail.com\\\"}\",\"field_title\":\"userdata\",\"field_stamp\":\"2019-02-06 18:34:25\",\"field_flg\":1}', '2019-02-06 15:34:25', 'yes', 1),
+(2, 'userdata', '{\"user_name\":\"testmember\",\"user_email\":\"test@gmail.com\"}', '{\"user_name\":\"testmember\",\"user_email\":\"test@gmail.com\",\"user_gender\":\"male\",\"user_mobile\":\"07008890\"}', 'public', '{\"field_data\":\"{\\\"user_name\\\":\\\"testmember\\\",\\\"user_email\\\":\\\"test@gmail.com\\\",\\\"user_gender\\\":\\\"male\\\",\\\"user_mobile\\\":\\\"07008890\\\"}\",\"field_filters\":\"{\\\"user_name\\\":\\\"testmember\\\",\\\"user_email\\\":\\\"test@gmail.com\\\"}\",\"field_title\":\"userdata\",\"field_stamp\":\"2019-10-16 18:43:36\",\"field_flg\":1}', '2019-10-16 15:43:36', 'yes', 1),
+(4, 'userdata', '{\"user_name\":\"testuser\",\"user_email\":\"kimnag@gmail.com\"}', '{\"user_name\":\"testuser\",\"user_email\":\"kimnag@gmail.com\",\"user_gender\":\"male\",\"user_mobile\":\"0755661123\"}', 'public', '{\"field_data\":\"{\\\"user_name\\\":\\\"testuser\\\",\\\"user_email\\\":\\\"kimnag@gmail.com\\\",\\\"user_gender\\\":\\\"male\\\",\\\"user_mobile\\\":\\\"0755661123\\\"}\",\"field_filters\":\"{\\\"user_name\\\":\\\"testuser\\\",\\\"user_email\\\":\\\"kimnag@gmail.com\\\"}\",\"field_title\":\"userdata\",\"field_stamp\":\"2019-10-16 21:44:09\",\"field_flg\":1}', '2019-10-16 18:44:09', 'yes', 1);
 
 -- --------------------------------------------------------
 
@@ -294,7 +296,8 @@ INSERT INTO `settings` (`setting_id`, `setting_title`, `setting_value`, `setting
 (37, 'child_theme_dir', '', '2019-06-08 18:30:29', 'yes', 1),
 (38, 'child_theme_assets', '', '2019-06-08 18:30:34', 'yes', 1),
 (39, 'site_url', 'http://127.0.0.1/', '2019-10-15 11:39:37', 'yes', 1),
-(40, 'session_key', 'wlqDYpXrlZ', '2019-10-15 12:11:36', 'yes', 1);
+(40, 'session_key', 'wlqDYpXrlZ', '2019-10-15 12:11:36', 'yes', 1),
+(41, 'field_menu', '{\"menu_path\":\"userdata/menu\"}', '2019-10-16 18:39:46', 'yes', 1);
 
 -- --------------------------------------------------------
 
@@ -423,7 +426,7 @@ ALTER TABLE `extensions`
 -- AUTO_INCREMENT for table `fields`
 --
 ALTER TABLE `fields`
-  MODIFY `field_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `field_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `inheritances`
@@ -447,7 +450,7 @@ ALTER TABLE `pages`
 -- AUTO_INCREMENT for table `settings`
 --
 ALTER TABLE `settings`
-  MODIFY `setting_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
+  MODIFY `setting_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
 
 --
 -- AUTO_INCREMENT for table `users`
