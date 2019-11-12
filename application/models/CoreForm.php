@@ -707,7 +707,7 @@ class CoreForm extends CI_Model {
 
         //Get Extension
         $get = explode('.', $file_name);
-        $extension = $get[0];
+        $extension = end($get);
 
         //File Extension
         return $extension;

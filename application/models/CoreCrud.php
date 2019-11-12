@@ -65,10 +65,10 @@ class CoreCrud extends CI_Model {
       //Check If Column Requested As
       if (strpos(strtolower($key), 'as') !== false) {
 
-        $exploded = explode("as",strtolower($key)); //Get Column name in Key 0 and As value Name in Key 1
+        $exploded = explode(" as ",strtolower($key)); //Get Column name in Key 0 and As value Name in Key 1
 
         $column_name = $this->CoreForm->get_column_name($module,$exploded[0]);//Set Column name
-        $columns[$i] = $column_name.'AS'.$exploded[1];//Set Column name as
+        $columns[$i] = $column_name.' AS '.$exploded[1];//Set Column name as
       }else{
         
         $columns[$i] = $this->CoreForm->get_column_name($module,$key);//Set Column name
@@ -188,7 +188,7 @@ class CoreCrud extends CI_Model {
           for ($f=0; $f < count($fiel_select); $f++) { 
             $select = $fiel_select[$f];//Selectd value
             if (strpos($select, 'as') !== false) {
-              $key_as = explode('as', $select);//Get array Key and As value
+              $key_as = explode(' as ', $select);//Get array Key and As value
               $key = trim($key_as[0]); //Set Key
               $as = trim($key_as[1]); //Set As value
               $field_values[$as] = $field_data_values[$key]; //Set Value

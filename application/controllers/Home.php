@@ -286,48 +286,60 @@ class Home extends CI_Controller {
 	        $file_name = $this->session->file_name; //Upload File Name
 			$file_requred = (!isset($this->session->file_required))? true : $this->session->file_required; //Check if file is requred
 
-	        //Loop through uploaded values
-	        for ($i=0; $i < count($_FILES[$file_name]['name']); $i++) {
+			//Check Array
+			if (array_key_exists($file_name,$_FILES)) {
+		        //Loop through uploaded values
+		        for ($i=0; $i < count($_FILES[$file_name]['name']); $i++) {
 
-	        	$file = $_FILES[$file_name]['name'][$i]; //Current Selected File
-		        if(isset($file) && !empty($file) && !is_null($file)){
+		        	$file = $_FILES[$file_name]['name'][$i]; //Current Selected File
+			        if(isset($file) && !empty($file) && !is_null($file)){
 
-					$file_ext = pathinfo($file, PATHINFO_EXTENSION); //Get current file extension
+						$file_ext = pathinfo($file, PATHINFO_EXTENSION); //Get current file extension
 
-					//Check If file extension allowed
-		            if(in_array($file_ext, $allowed_extension_array)){
-		                $validation_status[$i] = true; //Succeeded
-		            }else{
-		                $validation_status[$i] = false; //Error
-		            }
-		        }else{
-		        	//Input Is Blank... So check if it is requred
-		        	if ($file_requred == TRUE) {
-			            $validation_status[$i] = 'empty'; //Error Input required
-		        	}else{
-		                $validation_status[$i] = true; //Succeeded , This input is allowed to be empty
-		        	}
+						//Check If file extension allowed
+			            if(in_array($file_ext, $allowed_extension_array)){
+			                $validation_status[$i] = true; //Succeeded
+			            }else{
+			                $validation_status[$i] = false; //Error
+			            }
+			        }else{
+			        	//Input Is Blank... So check if it is requred
+			        	if ($file_requred == TRUE) {
+				            $validation_status[$i] = 'empty'; //Error Input required
+			        	}else{
+			                $validation_status[$i] = true; //Succeeded , This input is allowed to be empty
+			        	}
+			        }
 		        }
-	        }
 
-	        //Check If any validated value has an error
-	        if (in_array('empty',$validation_status, true)) {
+		        //Check - validation_status
+		        if (isset($validation_status)) {
+			        //Check If any validated value has an error
+			        if (in_array('empty',$validation_status, true)) {
+					    $this->form_validation->set_message('validation', 'Please choose a file to upload.');
+
+			        	$this->CoreCrud->destroySession($session_keys); //Destroy Session Values
+			        	return false; // Validation has an error, Input is required and is set to empty
+			        }
+			        elseif (in_array(false,$validation_status, true)) {
+				        $this->form_validation->set_message("validation", "Please select only ".str_replace('|',',',$allowed_extension)." file(s).");
+
+			        	$this->CoreCrud->destroySession($session_keys); //Destroy Session Values
+			        	return false; // Validation has an error
+			        }
+			        else{
+
+			        	$this->CoreCrud->destroySession($session_keys); //Destroy Session Values
+			        	return true; // Validation was successful
+			        }
+		        }else{
+				    $this->form_validation->set_message('validation', 'Please choose a file to upload.');
+		        	return false; // Validation was successful
+		        }
+			}else{
 			    $this->form_validation->set_message('validation', 'Please choose a file to upload.');
-
-	        	$this->CoreCrud->destroySession($session_keys); //Destroy Session Values
-	        	return false; // Validation has an error, Input is required and is set to empty
-	        }
-	        elseif (in_array(false,$validation_status, true)) {
-		        $this->form_validation->set_message("validation", "Please select only ".str_replace('|',',',$allowed_extension)." file(s).");
-
-	        	$this->CoreCrud->destroySession($session_keys); //Destroy Session Values
-	        	return false; // Validation has an error
-	        }
-	        else{
-
-	        	$this->CoreCrud->destroySession($session_keys); //Destroy Session Values
-	        	return true; // Validation was successful
-	        }
+	        	return false; // Validation was successful
+			}
 	    }else{
 
 	    	/* Your custom Validation Code Here */

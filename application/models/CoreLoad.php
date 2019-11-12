@@ -36,8 +36,8 @@ class CoreLoad extends CI_Model {
     {
 
 		//Loading Core CMS Version
-		$data['version'] = '4.42';
-		$data['copyright_footer_1'] = "Copyright &copy; 2019 Core Lite ".$data['version']." | Published 16-Oct-2019";
+		$data['version'] = '4.45';
+		$data['copyright_footer_1'] = "Copyright &copy; 2019 Core Lite ".$data['version']." | Published 12-Nov-2019";
 		$data['copyright_footer_2'] = "Powered by Core-Lite Team";
 
     	//Values Assets
@@ -191,7 +191,7 @@ class CoreLoad extends CI_Model {
 	*  How It Works
 	*   -> Module : they are more like access level allowed to access the particluar modules
 	*   -> level : the currect level of the user as in users(Table) - user_level(column)
-	*              by default the level is accessed by the system via user logged session data $this->session('level') so it's not must you pass the user level
+	*              by default the level is accessed by the system via user logged session data $this->CoreLoad->session('level') so it's not must you pass the user level
 	*
 	*   -> If user hasn't logged in it will return FALSE
 	*   -> If user access level doesn't allow him/her to access the Module it will break the process and oped Access Not Allowed Page
@@ -202,8 +202,8 @@ class CoreLoad extends CI_Model {
 	public function auth($module,$level=null)
 	{
 		//Check If Loged In
-		if ($this->session('logged')) {
-			$level = (is_null($level))? $this->session('level') : $level; //Access Level	
+		if ($this->CoreLoad->session('logged')) {
+			$level = (is_null($level))? $this->CoreLoad->session('level') : $level; //Access Level	
 
 			$module = $this->plural->singularize($module); //Module Name
 			$modules_list = $this->CoreCrud->selectSingleValue('levels','module',array('name'=>$level,'flg'=>1)); //Module List
@@ -227,13 +227,13 @@ class CoreLoad extends CI_Model {
 	* The function checks if user has logged in Only
 	* The function should only be used to the pages that does not require access level
 	*
-	* Remember you can do this direct by just checking with if statement $this->session('logged')
+	* Remember you can do this direct by just checking with if statement $this->CoreLoad->session('logged')
 	* This function does not accept paramenters
 	*/
 	public function logged()
 	{
 		//Check If Logged In
-		if ($this->session('logged')) {
+		if ($this->CoreLoad->session('logged')) {
 			return true; //Logged IN
 		}else{
 			return false; //Not logged In
@@ -246,13 +246,13 @@ class CoreLoad extends CI_Model {
 	* The function checks if user access level Only
 	* The function should only be used to the pages that require access level
 	*
-	* Remember you can do this direct by just checking with if statement $this->session('level')
+	* Remember you can do this direct by just checking with if statement $this->CoreLoad->session('level')
 	* This function does not accept paramenters
 	*/
 	public function level()
 	{
 		//Check If Logged In
-		if ($this->session('level')) {
+		if ($this->CoreLoad->session('level')) {
 			return true; //Logged IN
 		}else{
 			return false; //Not logged In
