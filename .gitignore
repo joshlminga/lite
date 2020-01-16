@@ -8,6 +8,15 @@ application/logs/*
 
 !application/*/.htaccess
 
+# Custom Ignore
+application/config/*
+!application/config/routes.php
+
+assets/media/*
+vendor/
+index.php
+
+.htaccess
 composer.lock
 
 user_guide_src/build/*
@@ -29,3 +38,6 @@ user_guide_src/cilexer/pycilexer.egg-info/*
 *.sublime-project
 /tests/tests/
 /tests/results/
+
+
+
