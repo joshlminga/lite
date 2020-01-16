@@ -9,14 +9,14 @@ application/logs/*
 !application/*/.htaccess
 
 # Custom Ignore
-application/config/*
-!application/config/routes.php
+#application/config/*
+#!application/config/routes.php
 
-assets/media/*
-vendor/
-index.php
+#assets/media/*
+#vendor/
+#index.php
 
-.htaccess
+#.htaccess
 composer.lock
 
 user_guide_src/build/*
