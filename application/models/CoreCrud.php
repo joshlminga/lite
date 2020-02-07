@@ -748,22 +748,6 @@ class CoreCrud extends CI_Model {
           //Uploaded
           $file_name = $data_upload['upload_data']['file_name'];
 
-          //Compress Settings
-          $compressSettings = ((method_exists('CoreField', 'compressSettings')))? $this->CoreField->compressSettings($file,$file_name): false;
-          if ($compressSettings) {
-            foreach ($compressSettings as $compress_key => $compress_value) {
-              $compess[$compress_key] = $compress_value; //Compress Settings
-            }
-
-            //Compress Image
-            $this->load->library('image_lib', $compess);
-            $this->image_lib->initialize($compess);
-            if (!$this->image_lib->resize()){
-              echo $this->image_lib->display_errors();
-            }      
-            $this->image_lib->clear();
-          }
-
           //Watermark Configs
           $watermarkSettings = ((method_exists('CoreField', 'watermarkSettings')))? $this->CoreField->watermarkSettings($file,$file_name): false;
           if ($watermarkSettings) {
@@ -777,6 +761,22 @@ class CoreCrud extends CI_Model {
             if (!$this->image_lib->watermark()){
               echo $this->image_lib->display_errors();
             }     
+            $this->image_lib->clear();
+          }
+
+          //Compress Settings
+          $compressSettings = ((method_exists('CoreField', 'compressSettings')))? $this->CoreField->compressSettings($file,$file_name): false;
+          if ($compressSettings) {
+            foreach ($compressSettings as $compress_key => $compress_value) {
+              $compess[$compress_key] = $compress_value; //Compress Settings
+            }
+
+            //Compress Image
+            $this->load->library('image_lib', $compess);
+            $this->image_lib->initialize($compess);
+            if (!$this->image_lib->resize()){
+              echo $this->image_lib->display_errors();
+            }      
             $this->image_lib->clear();
           }
 

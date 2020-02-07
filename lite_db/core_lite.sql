@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 12, 2019 at 10:43 AM
+-- Generation Time: Feb 07, 2020 at 05:53 PM
 -- Server version: 10.4.6-MariaDB
 -- PHP Version: 7.1.31
 
@@ -285,11 +285,11 @@ INSERT INTO `settings` (`setting_id`, `setting_title`, `setting_value`, `setting
 (26, 'seo_keywords', '', '2018-12-17 17:30:41', 'yes', 1),
 (27, 'seo_meta_data', '', '2018-12-17 16:10:23', 'yes', 1),
 (28, 'inheritance_data', 'default,category,tag', '2019-02-22 17:52:44', 'yes', 1),
-(29, 'module_list', 'main,blog,page,autofield,control,inheritance,customfield,user,level,setting,profile,userdatas,customers', '2019-03-23 12:14:32', 'yes', 1),
+(29, 'module_list', 'main,blog,page,autofield,control,inheritance,customfield,user,level,setting,profile,userdata,customer', '2020-02-07 16:50:45', 'yes', 1),
 (30, 'assets', 'assets/admin', '2019-06-08 15:22:55', 'yes', 1),
 (31, 'ext_dir', 'extend/', '2019-06-11 07:54:39', 'yes', 1),
 (32, 'ext_assets', 'assets/extend', '2019-06-08 17:25:52', 'yes', 1),
-(33, 'theme_name', 'starter', '2019-06-08 18:24:02', 'yes', 1),
+(33, 'theme_name', 'starter', '2020-01-15 12:28:43', 'yes', 1),
 (34, 'theme_dir', 'themes/starter', '2019-06-11 07:54:50', 'yes', 1),
 (35, 'theme_assets', 'assets/themes/starter', '2019-06-08 18:30:02', 'yes', 1),
 (36, 'child_theme', '', '2019-06-08 18:30:26', 'yes', 1),
@@ -311,7 +311,7 @@ CREATE TABLE `users` (
   `user_logname` varchar(50) NOT NULL,
   `user_password` varchar(500) NOT NULL,
   `user_name` varchar(50) NOT NULL,
-  `user_email` varchar(50) NOT NULL,
+  `user_email` varchar(50) DEFAULT NULL,
   `user_details` longtext DEFAULT NULL,
   `user_stamp` datetime NOT NULL,
   `user_default` varchar(5) DEFAULT 'yes',
