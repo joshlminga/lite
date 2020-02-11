@@ -347,7 +347,7 @@ class CoreCrud extends CI_Model {
   * 2: return Data Option
   * 
   */
-  public function saveField($insertData,$returnData=true)
+  public function saveField($insertData,$returnData=true,$pushData=null,$esacapeData=array('id','details','stamp','default','flg'))
   {
 
     //Pluralize Module
@@ -358,6 +358,33 @@ class CoreCrud extends CI_Model {
     if ($this->db->affected_rows() > 0) {
 
       $fieldID = $this->db->insert_id(); //Insert ID
+
+      // Check Filter Table
+      $field_title = $this->plural->pluralize($insertData['field_title']);
+      if($this->CoreForm->checkTable($field_title)){
+        $filter_columns = $this->CoreForm->getFilterColumns($field_title,$pushData,$esacapeData);
+
+        // InsertFilter
+        $insertFilter = $this->CoreForm->fieldFiltered($filter_columns,$insertData['field_filters']);
+        $insertFilter['field'] = $fieldID;
+        $insertFilter['stamp'] = date('Y-m-d H:i:s',time());
+        $insertFilter['flg'] = 1;
+
+        // Get Columns Name
+        foreach ($insertFilter as $key => $value) {
+          $new_key = strtolower($this->CoreForm->get_column_name($field_title,$key));
+          $newFilterData[$new_key] = $value;
+        }
+
+        // Details
+        $details = strtolower($this->CoreForm->get_column_name($field_title,'details'));
+        $newFilterData[$details] = json_encode($newFilterData);
+
+        // Insert Data
+        $this->db->insert($field_title,$newFilterData);
+      }
+
+      // Return
       $field_data = json_decode($insertData['field_data'], true); //Field Data
       return ($returnData == true)? array('id'=>$fieldID,'field_data'=>$field_data) : array('id'=>$fieldID); //Data Inserted
     }else{

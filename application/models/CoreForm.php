@@ -24,6 +24,46 @@ class CoreForm extends CI_Model {
         
     }
 
+
+    /*
+    *
+    * Get Table Column Name and Column Type
+    * Function accept Module name then it pluralize it to get table name
+    * 
+    */
+    public function get_column_data($module)
+    {
+        //Get Table Name
+        $table = $this->plural->pluralize($module);
+        $database = $this->db->database;
+
+        //Query
+        $query = $this->db->query("SELECT COLUMN_NAME, COLUMN_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = '$database' AND TABLE_NAME = '$table' ");
+        return $query->result();
+    }
+
+    /*
+    *
+    * This function help you to check if Table exist
+    *
+    * 1: Pass Tablename
+    *
+    */
+    public function checkTable($tableName)
+    {
+        // Get Custom Field Title
+        $tableName = $this->plural->pluralize($tableName);
+
+        // Show DB Tables
+        $result = $this->db->query("SHOW TABLES LIKE '".$tableName."'");
+        if ($result->result_id->num_rows == 1) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
     /*
     *
     * Function to generate columns name or Type Array
@@ -711,6 +751,89 @@ class CoreForm extends CI_Model {
 
         //File Extension
         return $extension;
+    }
+
+    /*
+    *
+    * This function help you to get filter table columns ready to match filter custom field values
+    *
+    * 1: Pass customfield title/id
+    * 2: Pass Addirional Columns (as array or as comma separated string)
+    * 3: Pass escaped values (Values you wish system to handle ot it's own) | id,details,stamp,default,flg
+    *
+    * Get Filter Tables
+    */
+    public function getFilterColumns($titleID,$pusharray=null,$escaped_columns=array('id','details','stamp','default','flg'))
+    {
+
+        // Get Custom Field Title
+        if (is_numeric($titleID)) {
+            $titleID = $this->CoreCrud->selectSingleValue('customfields','title',array('id'=>$titleID)); // Main Site URL
+        }
+        $tableName = $this->plural->pluralize($titleID);
+
+        $table_desc = $this->CoreForm->get_column_data($tableName);
+        $columns = $this->CoreForm->get_column_name_type($table_desc);
+
+        // Escape Columns
+        if (!is_null($escaped_columns)) {
+            for ($i=0; $i < count($escaped_columns); $i++) {
+                $escape = $escaped_columns[$i];
+
+                // Columns Name
+                $column_escape = strtolower($this->CoreForm->get_column_name($tableName,$escape));
+                if (in_array($column_escape,$columns)) {
+                    $key = array_search ($column_escape, $columns);
+                    $columns = $this->CoreCrud->unsetData($columns,$key); //Unset Data
+                }
+            }
+            // Set Array
+            $columns = array_values($columns);
+        }        
+
+        // Get Labels
+        $filter_columns_name = $this->CoreForm->get_label_name($columns);
+
+        // Push Columns
+        if (!is_null($pusharray)) {
+            if (!is_array($pusharray)) {
+                $pusharray = explode(',',$pusharray);
+            }
+            for ($i=0; $i < count($pusharray); $i++) { 
+                array_push($filter_columns_name,$pusharray[$i]);
+            }
+        }
+
+        // Return Columns
+        return $filter_columns_name;
+    }
+
+    /*
+    * This functions takes your custom filter data and assign them to insert array 
+    *
+    * 1: Pass Filter Columns
+    * 2: Pass Insert Data
+    *
+    */
+    public function fieldFiltered($columns,$data)
+    {
+
+        // Decode Filter Data
+        $filter_data = json_decode($data, True);
+
+        // Insert Data
+        $insertData = null;
+
+        // Columns
+        for ($i=0; $i < count($columns); $i++) { 
+            $key = strtolower($columns[$i]);
+            if (array_key_exists($key,$filter_data)) {
+                $insertData[$key] = $filter_data[$key];
+            }
+        }
+
+        // Return
+        return $insertData;
     }
 }
 
