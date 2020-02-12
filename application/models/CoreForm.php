@@ -330,7 +330,7 @@ class CoreForm extends CI_Model {
         $where = array($whereTYPE => $inputID);
 
         //Table Select & Clause
-        $columns = array('id as id,title as title,data as data');
+        $columns = array('id as id,title as title,data as data,details as details');
         $resultList = $this->CoreCrud->selectCRUD($Module,$where,$columns);
 
         //Table Select & Clause
