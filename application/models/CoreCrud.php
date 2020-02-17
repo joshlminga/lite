@@ -428,34 +428,59 @@ class CoreCrud extends CI_Model {
     $this->db->update($tableName,$updateData,$where);
     if ($this->db->affected_rows() > 0) {
 
-      // Check Filter Table
+      // Filter Table Name
       $field_title = $this->plural->pluralize($this->CoreCrud->selectSingleValue('field','title',array($whereTYPE=>$fieldID)));
-      if($this->CoreForm->checkTable($field_title)){
-        $filter_columns = $this->CoreForm->getFilterColumns($field_title,$pushData,$esacapeData);
+      if (array_key_exists('field_data', $updateData)) {
+        // Check Filter Table
+        if($this->CoreForm->checkTable($field_title)){
+          $filter_columns = $this->CoreForm->getFilterColumns($field_title,$pushData,$esacapeData);
 
-        // UpdateFilter
-        $updateFilter = $this->CoreForm->fieldFiltered($filter_columns,$updateData['field_filters']);
+          // UpdateFilter
+          $updateFilter = $this->CoreForm->fieldFiltered($filter_columns,$updateData['field_filters']);
 
-        // Get Columns Name
-        foreach ($updateFilter as $key => $value) {
-          $new_key = strtolower($this->CoreForm->get_column_name($field_title,$key));
-          $newFilterData[$new_key] = $value;
+          // Get Columns Name
+          foreach ($updateFilter as $key => $value) {
+            $new_key = strtolower($this->CoreForm->get_column_name($field_title,$key));
+            $newFilterData[$new_key] = $value;
+          }
+
+          // Details
+          $details = strtolower($this->CoreForm->get_column_name($field_title,'details'));
+          $newFilterData[$details] = json_encode($newFilterData);
+
+          // Where
+          $column_filter = strtolower($this->CoreForm->get_column_name($field_title,'field'));
+          $whereFilter = array($column_filter=>$fieldID);
+
+          // Updated Data
+          $this->db->update($field_title,$newFilterData,$whereFilter);
+          $field_data = json_decode($updateData['field_data'], true); //Field Data
+          return ($returnData == true)? array('id'=>$fieldID,'field_data'=>$field_data) : array('id'=>$fieldID); //Data Updated
         }
+      }else{
+        if($this->CoreForm->checkTable($field_title)){
+          $column_set = strtolower($this->CoreForm->get_column_name($field_title,'field'));//Column ID
+          $where_filter = array($column_set => $fieldID);
 
-        // Details
-        $details = strtolower($this->CoreForm->get_column_name($field_title,'details'));
-        $newFilterData[$details] = json_encode($newFilterData);
+          // Updated Data
+          $filterUpdate = null;
+          $keys_values = array_keys($updateData);
+          for ($i=0; $i < count($keys_values); $i++) { 
+            $key = $keys_values[$i];
+            $value = $updateData[$key];
 
-        // Where
-        $column_filter = strtolower($this->CoreForm->get_column_name($field_title,'field'));
-        $whereFilter = array($column_filter=>$fieldID);
+            $column_label = $this->CoreForm->get_label_name($key);
+            $column_set = strtolower($this->CoreForm->get_column_name($field_title,$column_label));//Column ID
+            $filterUpdate[$column_set] = $value;
+          }
 
-        // Updated Data
-        $this->db->update($field_title,$newFilterData,$whereFilter);
+          // Update Filter
+          if (!is_null($filterUpdate)) {
+            $this->db->update($field_title, $filterUpdate,$where_filter); //Update Data 
+          }
+        }
+        return true; //Data Updated
       }
-
-      $field_data = json_decode($updateData['field_data'], true); //Field Data
-      return ($returnData == true)? array('id'=>$fieldID,'field_data'=>$field_data) : array('id'=>$fieldID); //Data Inserted
     }else{
       return false; //Data Updated Failed
     }
@@ -481,11 +506,20 @@ class CoreCrud extends CI_Model {
 
     //Check Field Type
     $whereTYPE = (is_numeric($fieldID))? 'id' : 'title';
-    $where = array($whereTYPE => $fieldID);
+    $column_id = strtolower($this->CoreForm->get_column_name($tableName,$whereTYPE));//Column ID
+    $where = array($column_id => $fieldID);
 
+    // Filter Table Name
+    $field_title = $this->plural->pluralize($this->CoreCrud->selectSingleValue('field','title',array($whereTYPE =>$fieldID)));
+    
     //Deleted Data In The Table
-    $this->db->delete($tableName,$where);
-    if ($this->db->affected_rows() > 0) {
+    if ($this->db->delete($tableName,$where)) {
+      // Filter Table
+      if($this->CoreForm->checkTable($field_title)){
+        $column_set = strtolower($this->CoreForm->get_column_name($field_title,'field'));//Column ID
+        $where_filter = array($column_set => $fieldID);
+        $this->db->delete($field_title,$where_filter);
+      }
       return array('id'=>$fieldID); //Data Deleted
     }else{
       return false; //Data Deletion Failed
