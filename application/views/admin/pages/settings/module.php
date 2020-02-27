@@ -17,8 +17,7 @@
 						        <div class="form-group">
 						            <div class="fg-line">
 						            	<label><?= ucwords(str_replace("_", " ",$row->setting_title));?></label>
-						                <input type="text" class="form-control" name="<?= $row->setting_title;?>" id="" autocomplete="off" 
-						                value="<?= $row->setting_value; ?>">
+		                                <textarea class="form-control auto-size" autocomplete="off"name="<?= $row->setting_title;?>"><?= $row->setting_value; ?></textarea>
 						            </div>
 			                        <span class="error"><?= form_error("$row->setting_title") ?></span>
 						        </div>

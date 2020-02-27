@@ -835,6 +835,121 @@ class CoreForm extends CI_Model {
         // Return
         return $insertData;
     }
+
+    /*
+    *
+    * Base URL
+    *
+    * This function help you to get proper base/site URL
+    * 1: Pass Page URL
+    * 2: Pass Type [base_url | site_url]
+    */
+    public function proper_url($url,$type='base_url')
+    {
+        // Load Settings
+        $url = (is_array($url)) ? $url[0] : $url;
+        $urlsettings = ((method_exists('CoreField', 'urlSettings')))? $this->CoreField->urlSettings(): false;
+        if ($urlsettings) {
+            $site_url = $this->CoreCrud->selectSingleValue('settings','value',array('title'=>'site_url','flg'=>1));
+            $last_url = substr($site_url, -1);
+            if ($last_url != '/') {
+                $site_url = $site_url.'/';
+            }
+            // URL
+            $url = $site_url.$url;
+        }else{
+            $url = (strtolower($type) == 'base_url') ? base_url($url) : site_url($url);
+        }
+
+        // Return
+        return $url;
+    }
+
+    /*
+    * --- Variable Format : #{[variable_name]} ---
+    * Preg Match Varible Settings
+    * Pass String
+    * 
+    */
+    public function get_variable($string,$variables=null)
+    {
+        // Load
+        $data = $this->CoreLoad->load();
+
+        // Session
+        $this->session->set_flashdata('data',$data);
+        $this->session->set_flashdata('variables',$variables);
+
+        // Check Pregmatch Settings
+        if (!function_exists('replace_variable')) {
+            function replace_variable($string)
+            {
+                // Get Data
+                $CoreCrud = new CoreCrud;
+                $CoreField = new CoreField;
+                $CI =& get_instance();
+
+                // Data
+                $data =  $CI->session->flashdata('data');
+                $variables = $CI->session->flashdata('variables');
+
+                // Match
+                $match = $CoreCrud->selectSingleValue('settings','value',array('title'=>'string_variable','flg'=>1));
+                $show_variable = ((method_exists('CoreField', 'showGetVaribale')))? $CoreField->showGetVaribale(): true;
+                if ($match) {
+
+                    // Find Replace
+                    if (is_array($string)) {
+                        $key = $string[1];
+
+                        // Chech Data If is Array
+                        if (is_array($data) && !is_null($data)) {
+                            if (array_key_exists($key, $data)) {
+                                $replace_output = $data[$key];
+                            }else{
+                                // Assign
+                                $value = $string[1];
+                                // $value = $$value;
+                                if (is_array($variables)) {
+                                    if (array_key_exists($value, $variables)) {
+                                        $replace_output = $variables[$value];
+                                    }else{
+                                        $replace_output = ($show_variable) ? "_{[$value]}" : '';
+                                    }
+                                }else{
+                                    $replace_output = ($show_variable) ? "_{[$value]}" : '';
+                                }
+                            }
+                        }else{
+                            // Assign
+                            $value = $string[1];
+                            // $value = $$value;
+                            if (is_array($variables)) {
+                                if (array_key_exists($value, $variables)) {
+                                    $replace_output = $variables[$value];
+                                }else{
+                                    $replace_output = ($show_variable) ? "_{[$value]}" : '';
+                                }
+                            }else{
+                                $replace_output = ($show_variable) ? "_{[$value]}" : '';
+                            }
+                        }
+
+                        // Write
+                        $string = $replace_output;
+                    }
+
+                    // Replace
+                    return preg_replace_callback($match,'replace_variable', $string);
+                }else{
+                    return $string;
+                }
+            }
+        }else{
+            return replace_variable($string);
+        }
+        return replace_variable($string);
+    }
 }
 
 /* End of file CoreForm.php */

@@ -36,9 +36,9 @@ class CoreLoad extends CI_Model {
     {
 
 		//Loading Core CMS Version
-		$data['version'] = '4.47';
-		$data['copyright_footer_1'] = "Copyright &copy; 2019 Core Lite ".$data['version']." | Published 17-FEB-2020";
-		$data['copyright_footer_2'] = "Powered by Core-Lite Team";
+		$data['version'] = '4.48';
+		$data['copyright_footer_1'] = "v".$data['version'];
+		$data['copyright_footer_2'] = "Published 27-FEB-2020";
 
     	//Values Assets
 		$data['assets'] = $this->CoreCrud->selectSingleValue('settings','value',array('title'=>'assets','flg'=>1));
@@ -379,7 +379,7 @@ class CoreLoad extends CI_Model {
     		$findMenu = $findMenu.'_menu';
 
     		//Menu Found
-    		$foundMenu = $this->CoreCrud->selectMultipleValue('setting','value',array('title'=>$findMenu));
+    		$foundMenu = $this->CoreCrud->selectMultipleValue('setting','value',array('title'=>$findMenu,'flg'=>1));
     		for ($i=0; $i < count($foundMenu); $i++) { 
     			$menuData = $foundMenu[$i]->setting_value; //Menu Data
     			$menu = json_decode($menuData, True);
