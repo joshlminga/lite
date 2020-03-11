@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 07, 2020 at 05:53 PM
+-- Generation Time: Mar 11, 2020 at 05:32 PM
 -- Server version: 10.4.6-MariaDB
 -- PHP Version: 7.1.31
 
@@ -297,7 +297,8 @@ INSERT INTO `settings` (`setting_id`, `setting_title`, `setting_value`, `setting
 (38, 'child_theme_assets', '', '2019-06-08 18:30:34', 'yes', 1),
 (39, 'site_url', 'http://127.0.0.1/', '2019-10-15 11:39:37', 'yes', 1),
 (40, 'session_key', 'wlqDYpXrlZ', '2019-10-15 12:11:36', 'yes', 1),
-(41, 'field_menu', '{\"menu_path\":\"userdata/menu\"}', '2019-10-16 18:39:46', 'yes', 1);
+(41, 'field_menu', '{\"menu_path\":\"userdata/menu\",\"route\":{\"userdatas\":\"FieldUsers/index\",\"userdatas/new\":\"FieldUsers/open/add\", \"userdatas/edit\":\"FieldUsers/edit/edit\",\"userdatas/save\":\"FieldUsers/valid/save\",\"userdatas/update\":\"FieldUsers/valid/update\",\"userdatas/delete\":\"FieldUsers/valid/delete\", \"userdatas/multiple\":\"FieldUsers/valid/bulk\"}\r\n}', '2020-03-11 15:31:58', 'yes', 1),
+(43, 'extension_menu', '{\"menu_path\":\"customers/menu\",\"route\":{\"customers\":\"ExtensionCustomers/index\",\"customers/new\":\"ExtensionCustomers/open/add\", \"customers/edit\":\"ExtensionCustomers/edit/edit\",\"customers/save\":\"ExtensionCustomers/valid/save\",\"customers/update\":\"ExtensionCustomers/valid/update\",\"customers/delete\":\"ExtensionCustomers/valid/delete\", \"customers/multiple\":\"ExtensionCustomers/valid/bulk\"}\r\n}', '2020-03-11 16:31:37', 'yes', 1);
 
 -- --------------------------------------------------------
 
@@ -450,7 +451,7 @@ ALTER TABLE `pages`
 -- AUTO_INCREMENT for table `settings`
 --
 ALTER TABLE `settings`
-  MODIFY `setting_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
+  MODIFY `setting_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
 
 --
 -- AUTO_INCREMENT for table `users`
