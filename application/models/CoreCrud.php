@@ -456,6 +456,10 @@ class CoreCrud extends CI_Model {
           $this->db->update($field_title,$newFilterData,$whereFilter);
           $field_data = json_decode($updateData['field_data'], true); //Field Data
           return ($returnData == true)? array('id'=>$fieldID,'field_data'=>$field_data) : array('id'=>$fieldID); //Data Updated
+        }else{
+          // Return
+          $field_data = json_decode($insertData['field_data'], true); //Field Data
+          return ($returnData == true)? array('id'=>$fieldID,'field_data'=>$field_data) : array('id'=>$fieldID); //Data Inserted
         }
       }else{
         if($this->CoreForm->checkTable($field_title)){
