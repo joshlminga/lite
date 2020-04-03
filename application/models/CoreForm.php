@@ -877,8 +877,8 @@ class CoreForm extends CI_Model {
         $data = $this->CoreLoad->load();
 
         // Session
-        $this->session->set_flashdata('data',$data);
-        $this->session->set_flashdata('variables',$variables);
+        $_SESSION["data"] = $data;
+        $_SESSION["variables"] = $variables;
 
         // Check Pregmatch Settings
         if (!function_exists('replace_variable')) {
@@ -890,8 +890,8 @@ class CoreForm extends CI_Model {
                 $CI =& get_instance();
 
                 // Data
-                $data =  $CI->session->flashdata('data');
-                $variables = $CI->session->flashdata('variables');
+                $data =  $_SESSION["data"];
+                $variables = $_SESSION["variables"];
 
                 // Match
                 $match = $CoreCrud->selectSingleValue('settings','value',array('title'=>'string_variable','flg'=>1));
