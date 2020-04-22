@@ -613,6 +613,7 @@ class CoreUsers extends CI_Controller {
 	    }
     }
 
+
     /*
     *
     * Validate Email/Username (Logname)
@@ -624,13 +625,87 @@ class CoreUsers extends CI_Controller {
    		$check = (filter_var($str, FILTER_VALIDATE_EMAIL))? 'email' : 'logname'; //Look Email / Phone Number
    		if (strtolower($str) == strtolower(trim($this->CoreCrud->selectSingleValue('user',$check,array('id'=>$this->CoreLoad->session('id')))))) {
             return true;
-        }elseif ($this->CoreLoad->auth($this->Module)) {
-            return true;
         }elseif (count($this->CoreCrud->selectSingleValue('user','id',array($check=>$str))) <= 0) {        	
             return true;
+   		}elseif ($this->CoreLoad->auth($this->Route)) {
+   			return true;
    		}else{
 			$this->form_validation->set_message('logname_check', 'This {field} is already in use by another account');
             return false;
+   		}
+   	}
+
+   	/*
+   	*
+   	* Validate Mobile/Phone NUmber
+   	* This function accept/take input field value / Session  mobile_check
+   	*
+   	*/
+   	public function mobile_check($str=null)
+   	{
+   		//Get The Phone/Mobile Number
+   		$number = (is_null($str))? $this->session->mobile_check : $str;
+
+   		//Check Rule
+   		$rules_validate = (method_exists('CoreField','mobile_check'))? $this->CoreField->mobile_check($number) : false;
+		$column_name = (filter_var($number, FILTER_VALIDATE_EMAIL))? 'email' : 'logname'; //Look Email / Phone Number
+   		//Validation
+		if (!$rules_validate) {
+			//Check First Letter if does not start with 0
+			if (0 == substr($number, 0, 1)) {
+				//Check If it Phone number belongs to you
+		   		if (strtolower($number) == strtolower(trim($this->CoreCrud->selectSingleValue('user',$column_name,array('id'=>$this->CoreLoad->session('id')))))) {
+		            return true;
+		        }
+		        //Check If user access is allowed
+		        elseif ($this->CoreLoad->auth('customer')) {
+		            return true;
+	        	}
+				//Must Be Unique
+	        	elseif (strlen($this->CoreCrud->selectSingleValue('user','id',array($column_name=>$number))) <= 0) {
+	        		//Must be integer
+	        		if (is_numeric($number) && strlen($number) == 10) {
+
+						//Load Library
+						$this->load->library('getcountry');
+
+						//Host IP
+						$ip = $this->getcountry->getuseripAddress(); //IP
+						//Location | Country Code
+						$country_code = $this->getcountry->ip_info($ip,'country_code');
+						$dial_code = $this->getcountry->countryCode(array('code' =>$country_code));//Dial Code
+						$max_count = strlen($dial_code) - 1;
+						//First Two Character
+						$firstTwoNumbers = "+".substr($number, 0, $max_count);
+						//Check If number starts with country code
+						if ($firstTwoNumbers != $dial_code) {
+		            		return true;
+						}else{
+							$this->form_validation->set_message('mobile_check', 'This {field} make sure your number start with "0"');
+				            return false;
+						}
+	        		}else{
+						$this->form_validation->set_message('mobile_check', '{field} must be 10 numbers and should not include the country code. Example: 07xxxxxxxx');
+			            return false;
+	        		}
+				}else{
+					$this->form_validation->set_message('mobile_check', 'This {field} is already in use by another account');
+		            return false;
+				}
+			}else{
+				$this->form_validation->set_message('mobile_check', 'This {field} make sure your number start with "0"');
+	            return false;
+			}
+   		}else{
+   			//Check Status
+   			$status = $rules_validate['status'];
+   			$message = $rules_validate['message'];
+   			if ($status) {
+	            return true;
+   			}else{
+				$this->form_validation->set_message('mobile_check', "{field} $message");
+	            return false;
+   			}
    		}
    	}
 

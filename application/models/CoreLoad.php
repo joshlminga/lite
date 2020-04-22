@@ -38,7 +38,7 @@ class CoreLoad extends CI_Model {
 		//Loading Core CMS Version
 		$data['version'] = '4.52';
 		$data['copyright_footer_1'] = "v".$data['version'];
-		$data['copyright_footer_2'] = "Published 24-MAR-2020";
+		$data['copyright_footer_2'] = "Published 23-APR-2020";
 
     	//Values Assets
 		$data['assets'] = $this->CoreCrud->selectSingleValue('settings','value',array('title'=>'assets','flg'=>1));
