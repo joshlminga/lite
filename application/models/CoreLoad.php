@@ -36,9 +36,9 @@ class CoreLoad extends CI_Model {
     {
 
 		//Loading Core CMS Version
-		$data['version'] = '4.52';
+		$data['version'] = '4.53';
 		$data['copyright_footer_1'] = "v".$data['version'];
-		$data['copyright_footer_2'] = "Published 23-APR-2020";
+		$data['copyright_footer_2'] = "Published 26-APR-2020";
 
     	//Values Assets
 		$data['assets'] = $this->CoreCrud->selectSingleValue('settings','value',array('title'=>'assets','flg'=>1));
@@ -423,6 +423,60 @@ class CoreLoad extends CI_Model {
         return $asset; //Return Aseets
     }
 
+    /*
+    *
+    * Load Auto Complete, By default from autofields set
+    * 
+    * 1: Pass where condintion as an array('column'=>value)
+    * 2: What to return (from the json data), set null for all
+    * 3: Pass table name by default autofields
+    * 4: Which column to select by default is 'data'
+    *
+    * Return value as array
+    */
+    public function autoData($where,$return=null,$table='autofields',$select='data')
+    {
+        //load Ext
+        return $this->extData($where,$return,$table,$select);
+    }
+
+    /*
+    *
+    * Load EXT Data, By default from settings set
+    * 
+    * 1: Pass where condintion as an array('column'=>value)
+    * 2: What to return (from the json data), set null for all
+    * 3: Pass table name by default settings
+    * 4: Which column to select by default is 'value'
+    *
+    * Return value as array
+    */
+    public function extData($where,$return=null,$table='settings',$select='value')
+    {
+
+        $data = null; //Storage
+        if(is_array($where)){
+            $extseo = $this->CoreCrud->selectSingleValue($table,$select,$where); // Select Ext SEO
+            //Check Selected
+            if(!is_null($extseo) && !empty($extseo)){ 
+                $extseo_array = json_decode($extseo, True);
+                if (is_array($extseo_array)) {
+                    if (!is_null($return)) {
+                        if (array_key_exists($return,$extseo_array)) {
+                            $data[$return] = $extseo_array[$return];
+                        }
+                    }else{
+                        foreach ($extseo_array as $key => $value) {
+                            $data[$key] = $value;
+                        }
+                    }
+                }
+            }
+        }
+
+        //Return Data
+        return (!is_null($data) && is_array($data)) ? $data : null;
+    }
 }
 
 /* End of file CoreLoad.php */
