@@ -378,16 +378,20 @@ class CoreLoad extends CI_Model {
     		$findMenu = $this->plural->singularize($loadMenu); //Make It Singular
     		$findMenu = $findMenu.'_menu';
 
+    		$path = null;
     		//Menu Found
     		$foundMenu = $this->CoreCrud->selectMultipleValue('setting','value',array('title'=>$findMenu,'flg'=>1));
     		for ($i=0; $i < count($foundMenu); $i++) { 
     			$menuData = $foundMenu[$i]->setting_value; //Menu Data
     			$menu = json_decode($menuData, True);
 
-    			$path[$i] = $menu['menu_path']; // Menu Path
+    			if(array_key_exists('menu_path', $menu)){
+    				$path[$i] = $menu['menu_path'] ; // Menu Path
+    			}
     		}
 
-    		$menuLoaded = (isset($path))? $path : null;
+    		$path = (is_array($path) && count($path) > 0) ? array_values($path) : null;
+    		$menuLoaded = (!is_null($path))? $path : null;
 		}else{
 			$menuLoaded = null;
 		}
