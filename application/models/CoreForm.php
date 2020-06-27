@@ -344,6 +344,13 @@ class CoreForm extends CI_Model {
 
         //Get Current Data
         $current_data = json_decode($resultList[0]->data, True);
+
+        // Arrange Data
+        foreach ($current_data as $key => $value) {
+            if (!array_key_exists($key,$updateData)) {
+                $updateData[$key] = $value;
+            }
+        }
         //Set Filters
         $column_filters = strtolower($this->CoreForm->get_column_name($Module,'filters'));
 
@@ -871,10 +878,17 @@ class CoreForm extends CI_Model {
     * Pass String
     * 
     */
-    public function get_variable($string,$variables=null)
+    public function get_variable($string,$variables=null,$skip=false)
     {
         // Load
         $data = $this->CoreLoad->load();
+        if($skip==false){
+            if (is_array($variables) && !is_null($variables)) {
+                $data = array_merge($data, $variables);
+            }
+        }else{
+            $data = $variables;
+        }
 
         // Session
         $_SESSION["data"] = $data;
