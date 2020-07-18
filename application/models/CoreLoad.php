@@ -36,9 +36,9 @@ class CoreLoad extends CI_Model {
     {
 
 		//Loading Core CMS Version
-		$data['version'] = '4.53';
+		$data['version'] = '4.6';
 		$data['copyright_footer_1'] = "v".$data['version'];
-		$data['copyright_footer_2'] = "Published 26-APR-2020";
+		$data['copyright_footer_2'] = "Published 18-JUL-2020";
 
     	//Values Assets
 		$data['assets'] = $this->CoreCrud->selectSingleValue('settings','value',array('title'=>'assets','flg'=>1));
@@ -217,8 +217,89 @@ class CoreLoad extends CI_Model {
 				return false;//Auth Not Allowed
 			}
 		}else{
-			return false;//User Not Logged In
+			// Check Cookie
+    		$cookie_use = ((method_exists('CoreField', 'setCookie')))? $this->CoreField->setCookie(): false;
+    		if ($cookie_use) {
+	    		if(!$this->CoreLoad->logged()) { 
+	    			if($this->CoreLoad->authCookie()){
+						redirect(uri_string(), 'refresh'); 
+					}else{
+						return false; //User Not Logged In
+					}
+	    		}
+	    	}else{
+				return false; //User Not Logged In
+	    	}
 		}
+	}
+
+	/*
+	*
+	* This function help to log user back by checking if cookie is available
+	* 	By default cookie name is 'logged'
+	*
+	*	If you wish to change just use custom filed
+	*	add function setCookie and setup array like
+	*
+        // CookieSetup
+        $cookie = array(
+            'status' => true,
+            'name' => 'remember'
+        );
+
+        // Check
+        return (array_key_exists($name,$cookie)) ? $cookie[$name] : false;
+	* 
+	* 
+	*/
+	public function authCookie()
+	{
+
+		// CookieName
+    	$cookie_name = ((method_exists('CoreField', 'setCookie')))? $this->CoreField->setCookie('name'): 'logged';
+
+    	// Check Cookie
+    	$cookie_value = $this->cookie($cookie_name);
+    	if (!is_null($cookie_value)) {
+    		
+			//Pluralize Module
+			$tableName = $this->plural->pluralize('user');
+			$column_id = $this->CoreForm->get_column_name($tableName,'id'); //ID Column
+			$column_logname = $this->CoreForm->get_column_name($tableName,'logname'); //Logname Column
+			$column_password = $this->CoreForm->get_column_name($tableName,'password'); //Password Column
+			$column_stamp = $this->CoreForm->get_column_name($tableName,'stamp'); //Stamp Column
+			$column_level = $this->CoreForm->get_column_name($tableName,'level'); //Stamp Level
+			$column_flg = $this->CoreForm->get_column_name($tableName,'flg'); //Stamp FLG
+
+			// Check User Account
+			if ($this->db->select($column_flg)->where($column_id,$cookie_value)->get($tableName)->row()->$column_flg) {	
+				$where = array($column_id => $cookie_value); // Where Clause
+				$query = $this->db->select("$column_id, $column_level")->where($where)->limit(1)->get($tableName)->result(); //Set Query Select
+
+				if ($query) {	
+
+					//Session ID
+					$session_id = $this->sessionName('id');
+					$newsession[$session_id] = $query[0]->$column_id;
+
+					//Session LEVEL
+					$session_level = $this->sessionName('level');
+					$newsession[$session_level] = $query[0]->$column_level;
+
+					//Session LOGGED
+					$session_logged = $this->sessionName('logged');
+					$newsession[$session_logged] = TRUE;
+
+					$this->session->set_userdata($newsession); //Create Session
+
+					// Return 
+					return true;
+				}
+			}
+    	}
+
+    	// If Failes any where
+    	return false;
 	}
 
 	/*
@@ -293,23 +374,56 @@ class CoreLoad extends CI_Model {
         return $this->session->$name;
     }
 
-	/*
-	*
-	* Get Cookie Name
-	* Pass URL
-	* Pass Generator
-	* 
-	*/
-	public function getCookieName($url=null,$generator='')
-	{
+    /*
+    *
+    * Set cookie name
+    * -> This function used to generate cookie names
+    * 1: Pass name of the cookie you wish to generate
+    * 2: Pass Optional custom prefix
+    */
+    public function getCookieName($name=null,$prefix=null)
+    {
+    	// Security Helper
+		$this->load->helper('security');
 
-		//Domain
-		$cookie_name = $this->getDomainName($url); //Host
-		$path = $this->getDomainName($url,'path'); //Path
+		// CookieName
+    	$cookie_name = ((method_exists('CoreField', 'setCookieName')))? $this->CoreField->setCookieName(): 'logged';
+    	$name = (is_null($name)) ? $cookie_name : $name;
 
-		$cookie =  preg_replace('/[^a-z\d]+/i','_',strtolower(trim($cookie_name.$path.$generator))); //Cookie Name
-		return $cookie; //Return
-	}
+        //Check if prefix is given
+        $prefix = (is_null($prefix))? $this->CoreCrud->selectSingleValue('setting','value',array('title'=>'session_key','flg'=>1)): $prefix;
+        $prefix = substr(preg_replace("/[^ \w-]/", "", stripcslashes($prefix)),0, 10);
+        $prefix = str_replace(" ", "",trim($prefix));
+
+        //Return Cookie Name
+        $cookie_name = $prefix."_".$name;
+        $cookie = do_hash($cookie_name);
+
+        return $cookie;
+    }
+
+    /*
+    *
+    *
+    * This Function help you to get cookie Value
+    * 1:Pass cookie name
+    * Return cookie Value
+    */
+    public function cookie($cookie='remember')
+    {
+    	// Encryption Library
+        $this->load->library('encryption');
+        $cookie_value = null;
+
+        //Get Cookie Full Name
+        $name = $this->getCookieName($cookie);
+        $value = get_cookie($name); 
+        if (!empty($value) && !is_null($value)) {
+        	$cookie_value = $this->encryption->decrypt($value);
+        }
+
+        return $cookie_value;
+    }
 
 	/*
 	*
