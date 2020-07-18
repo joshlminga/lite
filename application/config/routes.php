@@ -180,12 +180,19 @@ $routeNames = null;
 for ($i=0; $i < count($settValue); $i++) { 
 	$setting_value = $settValue[$i]->setting_value; //Menu Data
 	$values = json_decode($setting_value, True);
-	$routeNames[$i] = $values['route']; // Menu Path
+	if (array_key_exists('route', $values)) {
+		$routeNames[$i] = $values['route']; // Menu Path
+	}
 }
-for ($i=0; $i < count($routeNames); $i++) { 
-	$routeLine = $routeNames[$i];
-	foreach ($routeLine as $key => $value) {
-		$route[$key] = "$value"; // Assign Route
+
+// Values
+$routeNames = (is_array($routeNames)) ? array_values($routeNames) : null;
+if (is_array($routeNames)) {
+	for ($i=0; $i < count($routeNames); $i++) { 
+		$routeLine = $routeNames[$i];
+		foreach ($routeLine as $key => $value) {
+			$route[$key] = "$value"; // Assign Route
+		}
 	}
 }
 /////////////////////////// FIELDS //////////////////////////
@@ -197,12 +204,19 @@ $routeNames = null;
 for ($i=0; $i < count($settValue); $i++) { 
 	$setting_value = $settValue[$i]->setting_value; //Menu Data
 	$values = json_decode($setting_value, True);
-	$routeNames[$i] = $values['route']; // Menu Path
+	if (array_key_exists('route', $values)) {
+		$routeNames[$i] = $values['route']; // Menu Path
+	}
 }
-for ($i=0; $i < count($routeNames); $i++) { 
-	$routeLine = $routeNames[$i];
-	foreach ($routeLine as $key => $value) {
-		$route[$key] = "$value"; // Assign Route
+
+// Values
+$routeNames = (is_array($routeNames)) ? array_values($routeNames) : null;
+if (is_array($routeNames)) {
+	for ($i=0; $i < count($routeNames); $i++) { 
+		$routeLine = $routeNames[$i];
+		foreach ($routeLine as $key => $value) {
+			$route[$key] = "$value"; // Assign Route
+		}
 	}
 }
 
@@ -215,12 +229,18 @@ $routeNames = null;
 for ($i=0; $i < count($settValue); $i++) { 
 	$setting_value = $settValue[$i]->setting_value; //Menu Data
 	$values = json_decode($setting_value, True);
-	$routeNames[$i] = $values['route']; // Menu Path
+	if (array_key_exists('route', $values)) {
+		$routeNames[$i] = $values['route']; // Menu Path
+	}
 }
-for ($i=0; $i < count($routeNames); $i++) { 
-	$routeLine = $routeNames[$i];
-	foreach ($routeLine as $key => $value) {
-		$route[$key] = "$value"; // Assign Route
+// Values
+$routeNames = (is_array($routeNames)) ? array_values($routeNames) : null;
+if (is_array($routeNames)) {
+	for ($i=0; $i < count($routeNames); $i++) { 
+		$routeLine = $routeNames[$i];
+		foreach ($routeLine as $key => $value) {
+			$route[$key] = "$value"; // Assign Route
+		}
 	}
 }
 
@@ -233,12 +253,18 @@ $routeNames = null;
 for ($i=0; $i < count($settValue); $i++) { 
 	$setting_value = $settValue[$i]->setting_value; //Menu Data
 	$values = json_decode($setting_value, True);
-	$routeNames[$i] = $values['route']; // Menu Path
+	if (array_key_exists('route', $values)) {
+		$routeNames[$i] = $values['route']; // Menu Path
+	}
 }
-for ($i=0; $i < count($routeNames); $i++) { 
-	$routeLine = $routeNames[$i];
-	foreach ($routeLine as $key => $value) {
-		$route[$key] = "$value"; // Assign Route
+// Values
+$routeNames = (is_array($routeNames)) ? array_values($routeNames) : null;
+if (is_array($routeNames)) {
+	for ($i=0; $i < count($routeNames); $i++) { 
+		$routeLine = $routeNames[$i];
+		foreach ($routeLine as $key => $value) {
+			$route[$key] = "$value"; // Assign Route
+		}
 	}
 }
 
