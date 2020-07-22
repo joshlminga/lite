@@ -36,7 +36,7 @@ class CoreLoad extends CI_Model {
     {
 
 		//Loading Core CMS Version
-		$data['version'] = '4.6';
+		$data['version'] = '4.61';
 		$data['copyright_footer_1'] = "v".$data['version'];
 		$data['copyright_footer_2'] = "Published 18-JUL-2020";
 
@@ -381,14 +381,14 @@ class CoreLoad extends CI_Model {
     * 1: Pass name of the cookie you wish to generate
     * 2: Pass Optional custom prefix
     */
-    public function getCookieName($name=null,$prefix=null)
+    public function getCookieName($name='logged',$prefix=null)
     {
     	// Security Helper
 		$this->load->helper('security');
 
 		// CookieName
-    	$cookie_name = ((method_exists('CoreField', 'setCookieName')))? $this->CoreField->setCookieName(): 'logged';
-    	$name = (is_null($name)) ? $cookie_name : $name;
+    	$cookie_name = ((method_exists('CoreField', 'setCookie')))? $this->CoreField->setCookie('name'): 'logged';
+    	$name = (!is_null($cookie_name) && $cookie_name != false) ? $cookie_name : $name;
 
         //Check if prefix is given
         $prefix = (is_null($prefix))? $this->CoreCrud->selectSingleValue('setting','value',array('title'=>'session_key','flg'=>1)): $prefix;
@@ -409,7 +409,7 @@ class CoreLoad extends CI_Model {
     * 1:Pass cookie name
     * Return cookie Value
     */
-    public function cookie($cookie='remember')
+    public function cookie($cookie='logged')
     {
     	// Encryption Library
         $this->load->library('encryption');
