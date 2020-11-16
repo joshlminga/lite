@@ -36,9 +36,9 @@ class CoreLoad extends CI_Model {
     {
 
 		//Loading Core CMS Version
-		$data['version'] = '4.6';
+		$data['version'] = '4.7';
 		$data['copyright_footer_1'] = "v".$data['version'];
-		$data['copyright_footer_2'] = "Published 18-JUL-2020";
+		$data['copyright_footer_2'] = "Published 16-NOV-2020";
 
     	//Values Assets
 		$data['assets'] = $this->CoreCrud->selectSingleValue('settings','value',array('title'=>'assets','flg'=>1));
@@ -218,18 +218,15 @@ class CoreLoad extends CI_Model {
 			}
 		}else{
 			// Check Cookie
-    		$cookie_use = ((method_exists('CoreField', 'setCookie')))? $this->CoreField->setCookie(): false;
-    		if ($cookie_use) {
-	    		if(!$this->CoreLoad->logged()) { 
-	    			if($this->CoreLoad->authCookie()){
-						redirect(uri_string(), 'refresh'); 
-					}else{
-						return false; //User Not Logged In
-					}
-	    		}
-	    	}else{
-				return false; //User Not Logged In
-	    	}
+    		if(!$this->CoreLoad->logged()) { 
+    			if($this->CoreLoad->authCookie()){
+					redirect(uri_string(), 'refresh'); 
+				}else{
+					return false; //User Not Logged In
+				}
+			}else{
+				return false;//Auth Not Allowed
+			}
 		}
 	}
 

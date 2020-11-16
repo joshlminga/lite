@@ -1,14 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 4.9.0.1
+-- version 5.0.2
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Mar 11, 2020 at 05:32 PM
--- Server version: 10.4.6-MariaDB
--- PHP Version: 7.1.31
+-- Host: localhost
+-- Generation Time: Nov 16, 2020 at 09:44 AM
+-- Server version: 5.7.26
+-- PHP Version: 7.4.2
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -33,10 +32,10 @@ CREATE TABLE `autofields` (
   `autofield_title` varchar(200) NOT NULL,
   `autofield_select` varchar(5000) DEFAULT NULL,
   `autofield_data` longtext NOT NULL,
-  `autofield_details` longtext DEFAULT NULL,
+  `autofield_details` longtext,
   `autofield_stamp` datetime NOT NULL,
   `autofield_default` varchar(5) DEFAULT 'yes',
-  `autofield_flg` int(1) NOT NULL DEFAULT 1
+  `autofield_flg` int(1) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -57,21 +56,21 @@ CREATE TABLE `blogs` (
   `blog_category` varchar(200) DEFAULT 'post',
   `blog_title` varchar(200) NOT NULL,
   `blog_url` varchar(200) DEFAULT NULL,
-  `blog_post` longtext DEFAULT NULL,
+  `blog_post` longtext,
   `blog_control` varchar(2000) DEFAULT NULL,
   `blog_tag` varchar(1000) DEFAULT NULL,
   `blog_format` varchar(100) DEFAULT 'none',
   `blog_show` varchar(10) DEFAULT 'public',
   `blog_author` varchar(20) NOT NULL,
-  `blog_seo` longtext DEFAULT NULL,
-  `blog_data` longtext DEFAULT NULL,
+  `blog_seo` longtext,
+  `blog_data` longtext,
   `blog_createdat` datetime NOT NULL,
   `blog_editor` varchar(20) DEFAULT NULL,
   `blog_editedat` datetime DEFAULT NULL,
   `blog_details` longtext NOT NULL,
   `blog_stamp` datetime NOT NULL,
   `blog_default` varchar(5) DEFAULT 'yes',
-  `blog_flg` int(1) NOT NULL DEFAULT 1
+  `blog_flg` int(1) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -91,13 +90,13 @@ CREATE TABLE `customfields` (
   `customfield_id` bigint(20) NOT NULL,
   `customfield_title` varchar(500) NOT NULL,
   `customfield_required` varchar(2000) DEFAULT NULL,
-  `customfield_optional` longtext DEFAULT NULL,
-  `customfield_filters` longtext DEFAULT NULL,
+  `customfield_optional` longtext,
+  `customfield_filters` longtext,
   `customfield_show` varchar(20) DEFAULT 'admin',
-  `customfield_details` longtext DEFAULT NULL,
-  `customfield_stamp` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `customfield_details` longtext,
+  `customfield_stamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `customfield_default` varchar(5) DEFAULT 'no',
-  `customfield_flg` int(11) NOT NULL DEFAULT 1
+  `customfield_flg` int(11) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -118,13 +117,13 @@ CREATE TABLE `extensions` (
   `extension_key` varchar(200) NOT NULL,
   `extension_name` varchar(1000) NOT NULL,
   `extension_menu` varchar(2000) DEFAULT NULL,
-  `extension_table` mediumtext DEFAULT NULL,
-  `extension_style` mediumtext DEFAULT NULL,
-  `extension_data` mediumtext DEFAULT NULL,
-  `extension_details` longtext DEFAULT NULL,
+  `extension_table` mediumtext,
+  `extension_style` mediumtext,
+  `extension_data` mediumtext,
+  `extension_details` longtext,
   `extension_stamp` datetime NOT NULL,
   `extension_default` varchar(5) DEFAULT 'yes',
-  `extension_flg` int(1) NOT NULL DEFAULT 1
+  `extension_flg` int(1) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -137,12 +136,12 @@ CREATE TABLE `fields` (
   `field_id` bigint(20) NOT NULL,
   `field_title` varchar(500) NOT NULL,
   `field_filters` varchar(2000) DEFAULT NULL,
-  `field_data` longtext DEFAULT NULL,
+  `field_data` longtext,
   `field_show` varchar(500) DEFAULT 'public',
-  `field_details` longtext DEFAULT NULL,
-  `field_stamp` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `field_details` longtext,
+  `field_stamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `field_default` varchar(5) DEFAULT 'yes',
-  `field_flg` int(1) NOT NULL DEFAULT 1
+  `field_flg` int(1) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -163,12 +162,12 @@ INSERT INTO `fields` (`field_id`, `field_title`, `field_filters`, `field_data`, 
 CREATE TABLE `inheritances` (
   `inheritance_id` bigint(20) NOT NULL,
   `inheritance_type` varchar(100) NOT NULL,
-  `inheritance_parent` bigint(20) DEFAULT 0,
+  `inheritance_parent` bigint(20) DEFAULT '0',
   `inheritance_title` varchar(500) NOT NULL,
-  `inheritance_details` longtext DEFAULT NULL,
+  `inheritance_details` longtext,
   `inheritance_stamp` datetime NOT NULL,
   `inheritance_default` varchar(5) DEFAULT 'yes',
-  `inheritance_flg` int(1) NOT NULL DEFAULT 1
+  `inheritance_flg` int(1) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -189,10 +188,10 @@ CREATE TABLE `levels` (
   `level_id` bigint(20) NOT NULL,
   `level_name` varchar(20) NOT NULL,
   `level_module` longtext NOT NULL,
-  `level_details` longtext DEFAULT NULL,
-  `level_stamp` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `level_details` longtext,
+  `level_stamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `level_default` varchar(5) DEFAULT 'yes',
-  `level_flg` int(1) NOT NULL DEFAULT 0
+  `level_flg` int(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -215,19 +214,19 @@ CREATE TABLE `pages` (
   `page_id` bigint(20) NOT NULL,
   `page_title` varchar(200) NOT NULL,
   `page_url` varchar(200) DEFAULT NULL,
-  `page_post` longtext DEFAULT NULL,
+  `page_post` longtext,
   `page_control` varchar(2000) DEFAULT NULL,
   `page_show` varchar(10) DEFAULT 'public',
   `page_author` varchar(20) NOT NULL,
-  `page_seo` longtext DEFAULT NULL,
-  `page_data` longtext DEFAULT NULL,
+  `page_seo` longtext,
+  `page_data` longtext,
   `page_createdat` datetime NOT NULL,
   `page_editor` varchar(20) DEFAULT NULL,
   `page_editedat` datetime DEFAULT NULL,
   `page_details` longtext NOT NULL,
   `page_stamp` datetime NOT NULL,
   `page_default` varchar(5) DEFAULT 'yes',
-  `page_flg` int(1) NOT NULL DEFAULT 1
+  `page_flg` int(1) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -246,10 +245,10 @@ INSERT INTO `pages` (`page_id`, `page_title`, `page_url`, `page_post`, `page_con
 CREATE TABLE `settings` (
   `setting_id` bigint(20) NOT NULL,
   `setting_title` varchar(200) NOT NULL,
-  `setting_value` longtext DEFAULT NULL,
-  `setting_stamp` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `setting_value` longtext,
+  `setting_stamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `setting_default` varchar(5) DEFAULT 'yes',
-  `setting_flg` int(1) DEFAULT 1
+  `setting_flg` int(1) DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -295,8 +294,8 @@ INSERT INTO `settings` (`setting_id`, `setting_title`, `setting_value`, `setting
 (36, 'child_theme', '', '2019-06-08 18:30:26', 'yes', 1),
 (37, 'child_theme_dir', '', '2019-06-08 18:30:29', 'yes', 1),
 (38, 'child_theme_assets', '', '2019-06-08 18:30:34', 'yes', 1),
-(39, 'site_url', 'http://127.0.0.1/', '2019-10-15 11:39:37', 'yes', 1),
-(40, 'session_key', 'wlqDYpXrlZ', '2019-10-15 12:11:36', 'yes', 1),
+(39, 'site_url', 'http://127.0.0.1', '2020-11-16 09:44:50', 'yes', 1),
+(40, 'session_key', '3S02TKD4vf', '2020-11-16 09:43:20', 'yes', 1),
 (41, 'field_menu', '{\"menu_path\":\"userdata/menu\",\"route\":{\"userdatas\":\"FieldUsers/index\",\"userdatas/new\":\"FieldUsers/open/add\", \"userdatas/edit\":\"FieldUsers/edit/edit\",\"userdatas/save\":\"FieldUsers/valid/save\",\"userdatas/update\":\"FieldUsers/valid/update\",\"userdatas/delete\":\"FieldUsers/valid/delete\", \"userdatas/multiple\":\"FieldUsers/valid/bulk\"}\r\n}', '2020-03-11 15:31:58', 'yes', 1),
 (43, 'extension_menu', '{\"menu_path\":\"customers/menu\",\"route\":{\"customers\":\"ExtensionCustomers/index\",\"customers/new\":\"ExtensionCustomers/open/add\", \"customers/edit\":\"ExtensionCustomers/edit/edit\",\"customers/save\":\"ExtensionCustomers/valid/save\",\"customers/update\":\"ExtensionCustomers/valid/update\",\"customers/delete\":\"ExtensionCustomers/valid/delete\", \"customers/multiple\":\"ExtensionCustomers/valid/bulk\"}\r\n}', '2020-03-11 16:31:37', 'yes', 1);
 
@@ -313,10 +312,10 @@ CREATE TABLE `users` (
   `user_password` varchar(500) NOT NULL,
   `user_name` varchar(50) NOT NULL,
   `user_email` varchar(50) DEFAULT NULL,
-  `user_details` longtext DEFAULT NULL,
+  `user_details` longtext,
   `user_stamp` datetime NOT NULL,
   `user_default` varchar(5) DEFAULT 'yes',
-  `user_flg` int(1) NOT NULL DEFAULT 0
+  `user_flg` int(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --

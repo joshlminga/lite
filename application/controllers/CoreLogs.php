@@ -34,6 +34,8 @@ class CoreLogs extends CI_Controller {
 
 		//Libraries
 		$this->load->library('form_validation');
+        $this->load->library('encryption');
+		$this->load->helper('cookie');
 
 		//Helpers
 		date_default_timezone_set('Africa/Nairobi');
@@ -293,6 +295,21 @@ class CoreLogs extends CI_Controller {
 					$newsession[$session_logged] = TRUE;
 
 					$this->session->set_userdata($newsession); //Create Session
+
+					/********** Cookie ***********/
+			        $value  = $newsession[$session_id];                          
+			        $expire = 604800;      // 1 week in seconds                                                                             
+			        $secure = False;
+			        $domain = base_url();
+
+			        // CookieName
+			        $name = $this->CoreLoad->getCookieName();
+
+					// Get Cookie Value
+					$value = $this->encryption->encrypt($value);
+			        set_cookie($name,$value,$expire,$secure);
+
+
 					return 'success'; //Logged In
 				}else{
 					return 'wrong'; //Wrong Account Password / Logname
