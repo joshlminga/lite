@@ -36,9 +36,9 @@ class CoreLoad extends CI_Model {
     {
 
 		//Loading Core CMS Version
-		$data['version'] = '4.7';
+		$data['version'] = '4.73';
 		$data['copyright_footer_1'] = "v".$data['version'];
-		$data['copyright_footer_2'] = "Published 16-NOV-2020";
+		$data['copyright_footer_2'] = "Published 19-DEC-2020";
 
     	//Values Assets
 		$data['assets'] = $this->CoreCrud->selectSingleValue('settings','value',array('title'=>'assets','flg'=>1));
@@ -412,6 +412,7 @@ class CoreLoad extends CI_Model {
     {
     	// Encryption Library
         $this->load->library('encryption');
+        $this->load->helper('cookie');
         $cookie_value = null;
 
         //Get Cookie Full Name
