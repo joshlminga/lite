@@ -9,11 +9,11 @@ application/logs/*
 !application/*/.htaccess
 
 # Custom Ignore
-#application/config/*
-#!application/config/routes.php
+application/config/*
+!application/config/routes.php
 
-#assets/media/*
-#vendor/
+assets/media/*
+vendor/
 #index.php
 
 #.htaccess
