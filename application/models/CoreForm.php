@@ -187,7 +187,11 @@ class CoreForm extends CI_Model {
         //Check Profile
         if (array_key_exists($profileKey,$detail)){
             $user_profile = json_decode($detail[$profileKey], True); //User Profile Array
-            $profile = $user_profile[0]; //Profile Picture
+            if(is_array($user_profile)){
+                $profile = $user_profile[0]; //Profile Picture
+            }else{
+                $profile = null; //No Profile Set
+            }
         }else{
             $profile = null; //No Profile Set
         }
@@ -357,7 +361,9 @@ class CoreForm extends CI_Model {
         //Set Values FOr Filter
         for($i = 0; $i < count($field_filter); $i++){
           $valueFilter = $field_filter[$i]; //Current Value
-          $newFilterDataValue[$valueFilter] = $updateData[$valueFilter];
+          if (array_key_exists($valueFilter, $updateData)) {
+            $newFilterDataValue[$valueFilter] = $updateData[$valueFilter];
+          }
         }
 
         //Check Additional Filters
