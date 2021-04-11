@@ -89,6 +89,20 @@
                     rowSelect: true,
                     keepSelection: true
                 });
+
+                //Data Normal
+                $("#data-table-normal").bootgrid({
+                    formatters: {
+                        "commands": function(column, row) {  
+                            return "<a onclick=\"actionSingle(\'edit,"+ row.id +"\');\" class=\"btn btn-icon command-edit waves-effect waves-circle\" data-row-id=\"" + row.id + "\"><span class=\"zmdi zmdi-edit\"></span></a> " + 
+                                "<a onclick=\"actionSingleDelete(\'delete,"+ row.id +"\');\" class=\"btn btn-icon command-delete waves-effect waves-circle\" data-row-id=\"" + row.id + "\"><span class=\"zmdi zmdi-delete\"></span></a>";
+                        }
+                    },
+                    selection: true,
+                    multiSelect: true,
+                    rowSelect: true,
+                    keepSelection: true
+                });
                 
                 //Command Buttons
                 $("#data-table-command").bootgrid({
@@ -102,7 +116,7 @@
                     formatters: {
                         "commands": function(column, row) {  
                             return "<a onclick=\"actionSingle(\'edit,"+ row.id +"\');\" class=\"btn btn-icon command-edit waves-effect waves-circle\" data-row-id=\"" + row.id + "\"><span class=\"zmdi zmdi-edit\"></span></a> " + 
-                                "<a onclick=\"actionSingle(\'delete,"+ row.id +"\');\" class=\"btn btn-icon command-delete waves-effect waves-circle\" data-row-id=\"" + row.id + "\"><span class=\"zmdi zmdi-delete\"></span></a>";
+                                "<a onclick=\"actionSingleDelete(\'delete,"+ row.id +"\');\" class=\"btn btn-icon command-delete waves-effect waves-circle\" data-row-id=\"" + row.id + "\"><span class=\"zmdi zmdi-delete\"></span></a>";
                         }
                     },
                     selection: true,
@@ -173,6 +187,24 @@
                 //Url to Action
                 var action_url = base_url+action_id;
                 window.location.href =action_url;
+            }
+
+            //Edit / Delete One
+            function actionSingleDelete(argument) {
+
+                var result = confirm("Are you sure you want to delete?");
+                if (result) {
+                    //Logic to delete the item
+                    var dataSelected = argument.split(",");
+
+                    //base URL as found in config-base URL
+                    var base_url = "<?= site_url(strtolower($routeURL)) ?>";
+                    //Action and Element ID/Name/Data
+                    var action_id = '/' + dataSelected[0] + '?inputID=' + dataSelected[1];
+                    //Url to Action
+                    var action_url = base_url+action_id;
+                    window.location.href =action_url;
+                }
             }
         </script>
 

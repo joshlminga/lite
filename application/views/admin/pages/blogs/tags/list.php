@@ -78,9 +78,9 @@
                                             ?>
                                             <?php for ($i=0; $i < count($ths); $i++): ?>
                                                 <?php if ($i==0): ?>
-                                                <th data-column-id="id" data-type="numeric" data-identifier="true">ID</th>
+                                                <th data-column-id="id" data-type="numeric"   data-identifier="true" data-order="desc">ID</th>
                                                 <?php else: ?>
-                                                <th data-column-id="<?= $ths[$i]; ?>" data-order="desc">
+                                                <th data-column-id="<?= $ths[$i]; ?>" >
                                                     <?= ucwords(str_replace("_", " ",$ths[$i]));?>                                                    
                                                 </th>
                                                 <?php endif ?>
