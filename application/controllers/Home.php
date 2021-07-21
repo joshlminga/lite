@@ -9,7 +9,6 @@ class Home extends CI_Controller {
 	* -> The controller require to login as Administrator
 	*/
 
-	private $Core = ''; //Lite Main Core
 	private $Module = ''; //Module
 	private $Folder = ''; //Set Default Folder For html files and Front End Use
 	private $SubFolder = ''; //Set Default Sub Folder For html files and Front End Use Start with /
@@ -58,14 +57,10 @@ class Home extends CI_Controller {
 	public function load($pageID=null)
 	{
 
-		//Model
-
+		//load Passed
+		$passed = $this->passed();
 		//Model Query
-		$data = $this->CoreLoad->open($pageID);
-
-		$passed = $this->passed(); //Passed Data
-
-		$data = array_merge($data,$passed);
+		$data = $this->CoreLoad->open($pageID, $passed);
 
 		return $data;
 	}

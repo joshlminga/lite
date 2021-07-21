@@ -9,7 +9,6 @@ class CoreExtensions extends CI_Controller {
 	* -> The controller require to login as Administrator
 	*/
 
-	private $Core = 'core'; //Core Lite Base Name | Change this if your Controller Name does not start with word Core
 	private $Module = 'extensions'; //Module
 	private $Folder = 'extensions'; //Set Default Folder For html files and Front End Use
 	private $SubFolder = ''; //Set Default Sub Folder For html files and Front End Use Start with /
@@ -56,13 +55,11 @@ class CoreExtensions extends CI_Controller {
 	*/
 	public function load($pageID=null)
 	{
-
-		//Model
-
-		//Model Query
-		$data = $this->CoreLoad->open($pageID);
+		
+		//load Passed
 		$passed = $this->passed();
-		$data = array_merge($data,$passed);
+		//Model Query
+		$data = $this->CoreLoad->open($pageID, $passed);
 
 		return $data;
 	}

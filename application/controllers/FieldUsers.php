@@ -9,7 +9,6 @@ class FieldUsers extends CI_Controller {
 	* -> The controller require to login as Administrator
 	*/
 
-	private $Core = ''; //Lite Main Core
 	private $Module = 'field'; //Module
 	private $Folder = 'customfields'; //Set Default Folder For html files and Front End Use
 	private $SubFolder = '/userdata'; //Set Default Sub Folder For html files and Front End Use Start with /
@@ -57,12 +56,10 @@ class FieldUsers extends CI_Controller {
 	public function load($pageID=null)
 	{
 
-		//Model
-
-		//Model Query
-		$data = $this->CoreLoad->open($pageID);
+		//load Passed
 		$passed = $this->passed();
-		$data = array_merge($data,$passed);
+		//Model Query
+		$data = $this->CoreLoad->open($pageID, $passed);
 
 		return $data;
 	}

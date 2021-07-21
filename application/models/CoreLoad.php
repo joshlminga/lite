@@ -1,7 +1,8 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
-class CoreLoad extends CI_Model {
+class CoreLoad extends CI_Model
+{
 
 	/*
 	*
@@ -9,107 +10,110 @@ class CoreLoad extends CI_Model {
 	* This can ease the loading work 
 	* 
 	*/
-    public function __construct(){
+	public function __construct()
+	{
 
-        parent::__construct();
+		parent::__construct();
 
-        //libraries
-        
-        //Helpers
+		//libraries
 
-        //Models
-        $this->load->model('CoreField');
-        $this->load->model('CoreCrud');
+		//Helpers
 
-        // Your own constructor code 
-        
-    }
+		//Models
+		$this->load->model('CoreField');
+		$this->load->model('CoreCrud');
 
-    /*
+		// Your own constructor code 
+
+	}
+
+	/*
     *
     * This function is used to load all data requred to be present for the system/website to operate well
     * E.g Site Menu, Meta Data e.t.c
     * All values are return as one array (data)
     * 
     */
-    public function load()
-    {
+	public function load()
+	{
 
 		//Loading Core CMS Version
-		$data['version'] = '4.74';
-		$data['copyright_footer_1'] = "v".$data['version'];
-		$data['copyright_footer_2'] = "Published 11-APR-2021";
+		$data['version'] = '4.80';
+		$data['copyright_footer_1'] = "v" . $data['version'];
+		$data['copyright_footer_2'] = "Published 21-JULY-2021";
 
-    	//Values Assets
-		$data['assets'] = $this->CoreCrud->selectSingleValue('settings','value',array('title'=>'assets','flg'=>1));
-		$data['ext_dir'] = $this->CoreCrud->selectSingleValue('settings','value',array('title'=>'ext_dir','flg'=>1));
+		//Values Assets
+		$data['assets'] = $this->CoreCrud->selectSingleValue('settings', 'value', array('title' => 'assets', 'flg' => 1));
+		$data['ext_dir'] = $this->CoreCrud->selectSingleValue('settings', 'value', array('title' => 'ext_dir', 'flg' => 1));
 		$data['ext_assets'] = $this->ext_asset();
 
 		//Theme Assets
-		$data['theme_name'] = $this->CoreCrud->selectSingleValue('settings','value',array('title'=>'theme_name','flg'=>1));
-		$data['theme_dir'] = $this->CoreCrud->selectSingleValue('settings','value',array('title'=>'theme_dir','flg'=>1));
-		$data['theme_assets'] = $this->CoreCrud->selectSingleValue('settings','value',array('title'=>'theme_assets','flg'=>1));
+		$data['theme_name'] = $this->CoreCrud->selectSingleValue('settings', 'value', array('title' => 'theme_name', 'flg' => 1));
+		$data['theme_dir'] = $this->CoreCrud->selectSingleValue('settings', 'value', array('title' => 'theme_dir', 'flg' => 1));
+		$data['theme_assets'] = $this->CoreCrud->selectSingleValue('settings', 'value', array('title' => 'theme_assets', 'flg' => 1));
 
 		//Site Title
-		$data['site_title'] = $this->CoreCrud->selectSingleValue('settings','value',array('title'=>'site_title','flg'=>1));
-		$data['description'] = $this->CoreCrud->selectSingleValue('settings','value',array('title'=>'seo_description','flg'=>1));
-		$data['keywords'] = $this->CoreCrud->selectSingleValue('settings','value',array('title'=>'seo_keywords','flg'=>1));
-		$data['site_robots'] = $this->CoreCrud->selectSingleValue('settings','value',array('title'=>'seo_visibility','flg'=>1));
-		$data['site_global'] = $this->CoreCrud->selectSingleValue('settings','value',array('title'=>'seo_global','flg'=>1));
-		$data['seo_data'] = $this->CoreCrud->selectSingleValue('settings','value',array('title'=>'seo_meta_data','flg'=>1));
+		$data['site_title'] = $this->CoreCrud->selectSingleValue('settings', 'value', array('title' => 'site_title', 'flg' => 1));
+		$data['description'] = $this->CoreCrud->selectSingleValue('settings', 'value', array('title' => 'seo_description', 'flg' => 1));
+		$data['keywords'] = $this->CoreCrud->selectSingleValue('settings', 'value', array('title' => 'seo_keywords', 'flg' => 1));
+		$data['site_robots'] = $this->CoreCrud->selectSingleValue('settings', 'value', array('title' => 'seo_visibility', 'flg' => 1));
+		$data['site_global'] = $this->CoreCrud->selectSingleValue('settings', 'value', array('title' => 'seo_global', 'flg' => 1));
+		$data['seo_data'] = $this->CoreCrud->selectSingleValue('settings', 'value', array('title' => 'seo_meta_data', 'flg' => 1));
 
 		//Load Custom Data
 		$customData = $this->CoreField->load();
-		$data = array_merge($data,$customData);
+		$data = array_merge($data, $customData);
 
-   		//returned DATA
-    	return $data;
-    }
+		//returned DATA
+		return $data;
+	}
 
-    /*
+	/*
     *
     * This function help the system to load the values needed for a particular page to oparate
     * Thing like page articles, page templates etc are loaded here
     * It accept value page ID/ page Template (if you do not wish to load other page assest)
-    * 
+    * Pass passed data to be merged
     */
-   	public function open($pageSET=null)
-   	{
+	public function open($pageSET = null, $passed = array())
+	{
 
 		//Call Requred Site Data
 		$data = $this->load();
-   		//Check Page Type
-   		if (is_numeric($pageSET)) {
-	    	//Values
-   		}else{
-	    	//Page Name
-	    	$data['site_page'] = $pageSET;
-   		}
-   		//returned DATA
-   		return $data;
-   	}
 
-   	/*
+		//Page Name
+		$data['site_page'] = $pageSET;
+
+		//Merge Data
+		foreach ($passed as $key => $value) {
+			$data[$key] = $value;
+		}
+
+		//returned DATA
+		return $data;
+	}
+
+	/*
    	*
    	* This Function is for checking if the system is set to be online.
    	* When this function is called it will check if site_status on settings table is set to be online
    	* if is online it will return TRUE else it will return FALSE
    	* 
    	*/
-   	public function site_status()
-   	{
-   		//Site Status
-		$status = $this->CoreCrud->selectSingleValue('settings','value',array('title'=>'site_status','flg'=>1));
+	public function site_status()
+	{
+		//Site Status
+		$status = $this->CoreCrud->selectSingleValue('settings', 'value', array('title' => 'site_status', 'flg' => 1));
 
 		//Check if is online
 		if (strtolower($status) == 'online') {
 			return TRUE; //Site is online
-		}else{
+		} else {
 			return FALSE; //Site is offline
 		}
-   	}
+	}
 
-    /*
+	/*
     * This function allow user to generate random string or integer to be used as unique ID
     * The function accept variable lenght as integer 
     *  -- This variable set the lenght of your random string or variable, by default is set to 4
@@ -118,20 +122,20 @@ class CoreLoad extends CI_Model {
     * E.g If you pass '12345' the random integer will be generated from randomized number 1 2 3 4 5  
     *     If you do not pass anything here we advise you only do this when generating password
     */
-    public function random($length=4, $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ{[}}-+*#')
-    {
+	public function random($length = 4, $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ{[}}-+*#')
+	{
 
-    	//Generate Random String
-	    $charactersLength = strlen($characters);
-	    $randomString = '';
-	    for ($i = 0; $i < $length; $i++) {
-	        $randomString .= $characters[rand(0, $charactersLength - 1)];
-	    }
+		//Generate Random String
+		$charactersLength = strlen($characters);
+		$randomString = '';
+		for ($i = 0; $i < $length; $i++) {
+			$randomString .= $characters[rand(0, $charactersLength - 1)];
+		}
 
 		return $randomString; // Return Random String
-    }
+	}
 
-    /*
+	/*
     *
     *  This function clean and return the inputs from your POST or Get request
     *  The function accept two parameters
@@ -146,36 +150,37 @@ class CoreLoad extends CI_Model {
     *  2: the rule parameter is to determine if you want data from POST/GET value
     *  
     */
-    public function input($value=null,$rule='post')
-    {
-    	//Set the rule to lower string
+	public function input($value = null, $rule = 'post')
+	{
+		//Set the rule to lower string
 		$rule = strtolower($rule);
-    	//Input Value
+		//Input Value
 		if (is_null($value)) {
 			//Check the whole Post/Get Array
 			$input = $this->db->escape_str($this->input->$rule());
-		}else{
+		} else {
 			//Check specific value in Post/Get Array
 			$input = $this->db->escape_str($this->input->$rule($value));
 		}
-   		//returned DATA
+		//returned DATA
 		return $input;
-    }
+	}
 
 
-    /*
+	/*
     *
     *  This is function to help get corret URL
     *  N:B site_url and base_url can do simillar thing
     * 
     */
-	public function siteURL($url=null) {
+	public function siteURL($url = null)
+	{
 
-	    $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";	    
-	    $domainName = $_SERVER['HTTP_HOST'] . '/';
+		$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
+		$domainName = $_SERVER['HTTP_HOST'] . '/';
 
-   		//returned DATA
-	    return $protocol . $domainName.$url;
+		//returned DATA
+		return $protocol . $domainName . $url;
 	}
 
 	/*
@@ -199,33 +204,33 @@ class CoreLoad extends CI_Model {
 	*   -> If all permission are true/valid it will return TRUE
 	* 
 	*/
-	public function auth($module,$level=null)
+	public function auth($module, $level = null)
 	{
 		//Check If Loged In
 		if ($this->CoreLoad->session('logged')) {
-			$level = (is_null($level))? $this->CoreLoad->session('level') : $level; //Access Level	
+			$level = (is_null($level)) ? $this->CoreLoad->session('level') : $level; //Access Level	
 
 			$module = $this->plural->singularize($module); //Module Name
-			$modules_list = $this->CoreCrud->selectSingleValue('levels','module',array('name'=>$level,'flg'=>1)); //Module List
-			$modules = explode(",",strtolower($modules_list)); //Allowed Modules
+			$modules_list = $this->CoreCrud->selectSingleValue('levels', 'module', array('name' => $level, 'flg' => 1)); //Module List
+			$modules = explode(",", strtolower($modules_list)); //Allowed Modules
 
-			if (in_array(strtolower($module), $modules)) { 
-				return true;//Auth Allowed
-			}elseif (strtolower($level) == 'admin') {
-				return true;//Auth Allowed
-			}else{
-				return false;//Auth Not Allowed
+			if (in_array(strtolower($module), $modules)) {
+				return true; //Auth Allowed
+			} elseif (strtolower($level) == 'admin') {
+				return true; //Auth Allowed
+			} else {
+				return false; //Auth Not Allowed
 			}
-		}else{
+		} else {
 			// Check Cookie
-    		if(!$this->CoreLoad->logged()) { 
-    			if($this->CoreLoad->authCookie()){
-					redirect(uri_string(), 'refresh'); 
-				}else{
+			if (!$this->CoreLoad->logged()) {
+				if ($this->CoreLoad->authCookie()) {
+					redirect(uri_string(), 'refresh');
+				} else {
 					return false; //User Not Logged In
 				}
-			}else{
-				return false;//Auth Not Allowed
+			} else {
+				return false; //Auth Not Allowed
 			}
 		}
 	}
@@ -253,27 +258,27 @@ class CoreLoad extends CI_Model {
 	{
 
 		// CookieName
-    	$cookie_name = ((method_exists('CoreField', 'setCookie')))? $this->CoreField->setCookie('name'): 'logged';
+		$cookie_name = ((method_exists('CoreField', 'setCookie'))) ? $this->CoreField->setCookie('name') : 'logged';
 
-    	// Check Cookie
-    	$cookie_value = $this->cookie($cookie_name);
-    	if (!is_null($cookie_value)) {
-    		
+		// Check Cookie
+		$cookie_value = $this->cookie($cookie_name);
+		if (!is_null($cookie_value)) {
+
 			//Pluralize Module
 			$tableName = $this->plural->pluralize('user');
-			$column_id = $this->CoreForm->get_column_name($tableName,'id'); //ID Column
-			$column_logname = $this->CoreForm->get_column_name($tableName,'logname'); //Logname Column
-			$column_password = $this->CoreForm->get_column_name($tableName,'password'); //Password Column
-			$column_stamp = $this->CoreForm->get_column_name($tableName,'stamp'); //Stamp Column
-			$column_level = $this->CoreForm->get_column_name($tableName,'level'); //Stamp Level
-			$column_flg = $this->CoreForm->get_column_name($tableName,'flg'); //Stamp FLG
+			$column_id = $this->CoreForm->get_column_name($tableName, 'id'); //ID Column
+			$column_logname = $this->CoreForm->get_column_name($tableName, 'logname'); //Logname Column
+			$column_password = $this->CoreForm->get_column_name($tableName, 'password'); //Password Column
+			$column_stamp = $this->CoreForm->get_column_name($tableName, 'stamp'); //Stamp Column
+			$column_level = $this->CoreForm->get_column_name($tableName, 'level'); //Stamp Level
+			$column_flg = $this->CoreForm->get_column_name($tableName, 'flg'); //Stamp FLG
 
 			// Check User Account
-			if ($this->db->select($column_flg)->where($column_id,$cookie_value)->get($tableName)->row()->$column_flg) {	
+			if ($this->db->select($column_flg)->where($column_id, $cookie_value)->get($tableName)->row()->$column_flg) {
 				$where = array($column_id => $cookie_value); // Where Clause
 				$query = $this->db->select("$column_id, $column_level")->where($where)->limit(1)->get($tableName)->result(); //Set Query Select
 
-				if ($query) {	
+				if ($query) {
 
 					//Session ID
 					$session_id = $this->sessionName('id');
@@ -293,10 +298,10 @@ class CoreLoad extends CI_Model {
 					return true;
 				}
 			}
-    	}
+		}
 
-    	// If Failes any where
-    	return false;
+		// If Failes any where
+		return false;
 	}
 
 	/*
@@ -313,7 +318,7 @@ class CoreLoad extends CI_Model {
 		//Check If Logged In
 		if ($this->CoreLoad->session('logged')) {
 			return true; //Logged IN
-		}else{
+		} else {
 			return false; //Not logged In
 		}
 	}
@@ -332,98 +337,98 @@ class CoreLoad extends CI_Model {
 		//Check If Logged In
 		if ($this->CoreLoad->session('level')) {
 			return true; //Logged IN
-		}else{
+		} else {
 			return false; //Not logged In
-		}	
+		}
 	}
 
-    /*
+	/*
     *
     * Set session name
     * -> This function used to generate session names
     * 1: Pass name of the session you wish to generate
     * 2: Pass Optional custom prefix
     */
-    public function sessionName($name,$prefix=null)
-    {
+	public function sessionName($name, $prefix = null)
+	{
 
-        //Check if prefix is given
-        $prefix = (is_null($prefix))? $this->CoreCrud->selectSingleValue('setting','value',array('title'=>'session_key','flg'=>1)): $prefix;
-        $prefix = substr(preg_replace("/[^ \w-]/", "", stripcslashes($prefix)),0, 10);
-        $prefix = str_replace(" ", "",trim($prefix));
+		//Check if prefix is given
+		$prefix = (is_null($prefix)) ? $this->CoreCrud->selectSingleValue('setting', 'value', array('title' => 'session_key', 'flg' => 1)) : $prefix;
+		$prefix = substr(preg_replace("/[^ \w-]/", "", stripcslashes($prefix)), 0, 10);
+		$prefix = str_replace(" ", "", trim($prefix));
 
-        //Return Session Name
-        $session = $prefix."_".$name;
-        return $session;
-    }
+		//Return Session Name
+		$session = $prefix . "_" . $name;
+		return $session;
+	}
 
-    /*
+	/*
     *
     *
     * This Function help you to get Session Value
     * 1:Pass session name
     * Return Session Value
     */
-    public function session($session)
-    {
-        //Get Session Full Name
-        $name = $this->sessionName($session);
-        return $this->session->$name;
-    }
+	public function session($session)
+	{
+		//Get Session Full Name
+		$name = $this->sessionName($session);
+		return $this->session->$name;
+	}
 
-    /*
+	/*
     *
     * Set cookie name
     * -> This function used to generate cookie names
     * 1: Pass name of the cookie you wish to generate
     * 2: Pass Optional custom prefix
     */
-    public function getCookieName($name='logged',$prefix=null)
-    {
-    	// Security Helper
+	public function getCookieName($name = 'logged', $prefix = null)
+	{
+		// Security Helper
 		$this->load->helper('security');
 
 		// CookieName
-    	if ($name == 'logged') {
-	    	$cookie_name = ((method_exists('CoreField', 'setCookie')))? $this->CoreField->setCookie('name'): 'logged';
-	    	$name = (!is_null($cookie_name) && $cookie_name != false) ? $cookie_name : $name;
-    	}
+		if ($name == 'logged') {
+			$cookie_name = ((method_exists('CoreField', 'setCookie'))) ? $this->CoreField->setCookie('name') : 'logged';
+			$name = (!is_null($cookie_name) && $cookie_name != false) ? $cookie_name : $name;
+		}
 
-        //Check if prefix is given
-        $prefix = (is_null($prefix))? $this->CoreCrud->selectSingleValue('setting','value',array('title'=>'session_key','flg'=>1)): $prefix;
-        $prefix = substr(preg_replace("/[^ \w-]/", "", stripcslashes($prefix)),0, 10);
-        $prefix = str_replace(" ", "",trim($prefix));
+		//Check if prefix is given
+		$prefix = (is_null($prefix)) ? $this->CoreCrud->selectSingleValue('setting', 'value', array('title' => 'session_key', 'flg' => 1)) : $prefix;
+		$prefix = substr(preg_replace("/[^ \w-]/", "", stripcslashes($prefix)), 0, 10);
+		$prefix = str_replace(" ", "", trim($prefix));
 
-        //Return Cookie Name
-        $cookie_name = $prefix."_".$name;
-        $cookie = do_hash($cookie_name);
+		//Return Cookie Name
+		$cookie_name = $prefix . "_" . $name;
+		$cookie = do_hash($cookie_name);
 
-        return $cookie;
-    }
+		return $cookie;
+	}
 
-    /*
+	/*
     *
     *
     * This Function help you to get cookie Value
     * 1:Pass cookie name
     * Return cookie Value
     */
-    public function cookie($cookie='logged')
-    {
-    	// Encryption Library
-        $this->load->library('encryption');
-        $this->load->helper('cookie');
-        $cookie_value = null;
+	public function cookie($cookie = 'logged')
+	{
+		// Encryption Library
+		$this->load->library('encryption');
+		$this->load->helper('cookie');
+		$cookie_value = null;
 
-        //Get Cookie Full Name
-        $name = $this->getCookieName($cookie);
-        $value = get_cookie($name); 
-        if (!empty($value) && !is_null($value)) {
-        	$cookie_value = $this->encryption->decrypt($value);
-        }
+		//Get Cookie Full Name
+		$name = $this->getCookieName($cookie);
+		$value = get_cookie($name);
+		if (!empty($value) && !is_null($value)) {
+			$cookie_value = $this->encryption->decrypt($value);
+		}
 
-        return $cookie_value;
-    }
+		return $cookie_value;
+	}
 
 	/*
 	*
@@ -431,20 +436,20 @@ class CoreLoad extends CI_Model {
 	* Fore Cookie USE
 	* 
 	*/
-	public function getDomainName($url=null,$return='host')
+	public function getDomainName($url = null, $return = 'host')
 	{
 		//URL
-		$url = (is_null($url) || empty($url))? base_url() : $url;
+		$url = (is_null($url) || empty($url)) ? base_url() : $url;
 		$url = parse_url($url); //Base URL
 
-		$host_path['host'] = str_replace('www.','',$url['host']); //Host
+		$host_path['host'] = str_replace('www.', '', $url['host']); //Host
 
-		$path = (array_key_exists('path', $url))? $url['path'] : ''; //Get Path
-		$path = (substr($path, -1) == '/')? substr_replace($path,"",-1) : $path; //Remove last '/' from string
+		$path = (array_key_exists('path', $url)) ? $url['path'] : ''; //Get Path
+		$path = (substr($path, -1) == '/') ? substr_replace($path, "", -1) : $path; //Remove last '/' from string
 
 		$host_path['path'] = $path; //Get Path
 
-		return ($return == 'all')? $host_path : $host_path[$return]; //Return Data
+		return ($return == 'all') ? $host_path : $host_path[$return]; //Return Data
 	}
 
 	/*
@@ -455,13 +460,13 @@ class CoreLoad extends CI_Model {
 	public function siteOffline()
 	{
 		//Offline Message
-		$offlineMessage = $this->CoreCrud->selectSingleValue('settings','value',array('title'=>'offline_message','flg'=>1)); //Module List
+		$offlineMessage = $this->CoreCrud->selectSingleValue('settings', 'value', array('title' => 'offline_message', 'flg' => 1)); //Module List
 
 		//Message
 		$htmlDetails = htmlspecialchars_decode($offlineMessage);
 
 		//Return
-		echo $htmlDetails; 
+		echo $htmlDetails;
 	}
 
 	/*
@@ -469,7 +474,7 @@ class CoreLoad extends CI_Model {
 	* User access level is invalid E.g Client tries to access Administartor Page
 	* 
 	*/
-	public function notAllowed($error=null)
+	public function notAllowed($error = null)
 	{
 
 		//Return
@@ -486,27 +491,27 @@ class CoreLoad extends CI_Model {
 	* If it wont find any menu it will retun null
 	* 
 	*/
-	public function menuLoad($loadMenu=null)
+	public function menuLoad($loadMenu = null)
 	{
 		if (!is_null($loadMenu)) {
-    		$findMenu = $this->plural->singularize($loadMenu); //Make It Singular
-    		$findMenu = $findMenu.'_menu';
+			$findMenu = $this->plural->singularize($loadMenu); //Make It Singular
+			$findMenu = $findMenu . '_menu';
 
-    		$path = null;
-    		//Menu Found
-    		$foundMenu = $this->CoreCrud->selectMultipleValue('setting','value',array('title'=>$findMenu,'flg'=>1));
-    		for ($i=0; $i < count($foundMenu); $i++) { 
-    			$menuData = $foundMenu[$i]->setting_value; //Menu Data
-    			$menu = json_decode($menuData, True);
+			$path = null;
+			//Menu Found
+			$foundMenu = $this->CoreCrud->selectMultipleValue('setting', 'value', array('title' => $findMenu, 'flg' => 1));
+			for ($i = 0; $i < count($foundMenu); $i++) {
+				$menuData = $foundMenu[$i]->setting_value; //Menu Data
+				$menu = json_decode($menuData, True);
 
-    			if(array_key_exists('menu_path', $menu)){
-    				$path[$i] = $menu['menu_path'] ; // Menu Path
-    			}
-    		}
+				if (array_key_exists('menu_path', $menu)) {
+					$path[$i] = $menu['menu_path']; // Menu Path
+				}
+			}
 
-    		$path = (is_array($path) && count($path) > 0) ? array_values($path) : null;
-    		$menuLoaded = (!is_null($path))? $path : null;
-		}else{
+			$path = (is_array($path) && count($path) > 0) ? array_values($path) : null;
+			$menuLoaded = (!is_null($path)) ? $path : null;
+		} else {
 			$menuLoaded = null;
 		}
 
@@ -518,30 +523,30 @@ class CoreLoad extends CI_Model {
 	* By Default path start by including Extend Folder and /customfields-or-extensions/filed-or-extension folername
 	* 
 	*/
-	public function ext_asset($type='',$load='ext_assets')
+	public function ext_asset($type = '', $load = 'ext_assets')
 	{
 		// Extension Path
-		$ext_path = $this->CoreCrud->selectSingleValue('settings','value',array('title'=>$load,'flg'=>1)); 
-		$path = $ext_path.$type; //New Path
+		$ext_path = $this->CoreCrud->selectSingleValue('settings', 'value', array('title' => $load, 'flg' => 1));
+		$path = $ext_path . $type; //New Path
 
 		return $path; //Return Path
 	}
 
-    /*
+	/*
     *
     * Access ext_Assets and Return proper url path and URL
     * Return URL
     *
     */
-    public function loadAssets($ext,$type='extensions')
-    {
+	public function loadAssets($ext, $type = 'extensions')
+	{
 
-        $load = "/$type/$ext"; //Load Path
-        $asset = base_url($this->ext_asset($load));
-        return $asset; //Return Aseets
-    }
+		$load = "/$type/$ext"; //Load Path
+		$asset = base_url($this->ext_asset($load));
+		return $asset; //Return Aseets
+	}
 
-    /*
+	/*
     *
     * Load Auto Complete, By default from autofields set
     * 
@@ -552,13 +557,13 @@ class CoreLoad extends CI_Model {
     *
     * Return value as array
     */
-    public function autoData($where,$return=null,$table='autofields',$select='data')
-    {
-        //load Ext
-        return $this->extData($where,$return,$table,$select);
-    }
+	public function autoData($where, $return = null, $table = 'autofields', $select = 'data')
+	{
+		//load Ext
+		return $this->extData($where, $return, $table, $select);
+	}
 
-    /*
+	/*
     *
     * Load EXT Data, By default from settings set
     * 
@@ -569,32 +574,48 @@ class CoreLoad extends CI_Model {
     *
     * Return value as array
     */
-    public function extData($where,$return=null,$table='settings',$select='value')
-    {
+	public function extData($where, $return = null, $table = 'settings', $select = 'value')
+	{
 
-        $data = null; //Storage
-        if(is_array($where)){
-            $extseo = $this->CoreCrud->selectSingleValue($table,$select,$where); // Select Ext SEO
-            //Check Selected
-            if(!is_null($extseo) && !empty($extseo)){ 
-                $extseo_array = json_decode($extseo, True);
-                if (is_array($extseo_array)) {
-                    if (!is_null($return)) {
-                        if (array_key_exists($return,$extseo_array)) {
-                            $data[$return] = $extseo_array[$return];
-                        }
-                    }else{
-                        foreach ($extseo_array as $key => $value) {
-                            $data[$key] = $value;
-                        }
-                    }
-                }
-            }
-        }
+		$data = null; //Storage
+		if (is_array($where)) {
+			$extseo = $this->CoreCrud->selectSingleValue($table, $select, $where); // Select Ext SEO
+			//Check Selected
+			if (!is_null($extseo) && !empty($extseo)) {
+				$extseo_array = json_decode($extseo, True);
+				if (is_array($extseo_array)) {
+					if (!is_null($return)) {
+						if (array_key_exists($return, $extseo_array)) {
+							$data[$return] = $extseo_array[$return];
+						}
+					} else {
+						foreach ($extseo_array as $key => $value) {
+							$data[$key] = $value;
+						}
+					}
+				}
+			}
+		}
 
-        //Return Data
-        return (!is_null($data) && is_array($data)) ? $data : null;
-    }
+		//Return Data
+		return (!is_null($data) && is_array($data)) ? $data : null;
+	}
+
+	/*
+    * loadAutoData | QuickLoadData in Json-format
+    *
+    * Pass
+    * 1: Where condition, for sql search in autofields | array('title'=>'auto_field','flg'=>1)
+    * 2: Pass (optional. By default all key will be returned) what to be returned by it's key(label name) | add_item_1
+    * 3: Pass table name (optional) | by default 'autofields'
+    * 4: Pass column name to select from (optional) | By default 'data' column will be selected
+    * 
+    */
+	public function loadAutoData($where, $return = null, $table = 'autofields', $select = 'data')
+	{
+		//Return Data Found
+		return $this->CoreCrud->loadJsonData($where, $return, $table, $select);
+	}
 }
 
 /* End of file CoreLoad.php */

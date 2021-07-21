@@ -1,7 +1,8 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
-class CoreLogs extends CI_Controller {
+class CoreLogs extends CI_Controller
+{
 
 	/*
 	*
@@ -9,7 +10,6 @@ class CoreLogs extends CI_Controller {
 	* -> The controller require user to login as Administrator
 	*/
 
-	private $Core = 'core'; //Lite
 	private $Module = 'user'; //Module
 	private $Folder = '/* HTML Source Folder Name */'; //Set Default Folder For html files
 	private $SubFolder = ''; //Set Default Sub Folder For html files and Front End Use Start with /
@@ -34,18 +34,18 @@ class CoreLogs extends CI_Controller {
 
 		//Libraries
 		$this->load->library('form_validation');
-        $this->load->library('encryption');
+		$this->load->library('encryption');
 		$this->load->helper('cookie');
 
 		//Helpers
 		date_default_timezone_set('Africa/Nairobi');
 
-        //Models
+		//Models
 		$this->load->model('CoreCrud');
 		$this->load->model('CoreForm');
-		
-        // Your own constructor code
-        
+
+		// Your own constructor code
+
 	}
 
 	/*
@@ -56,15 +56,13 @@ class CoreLogs extends CI_Controller {
 	* Initially what is passed is a pageID or Page Template Name
 	* 
 	*/
-	public function load($pageID=null)
+	public function load($pageID = null)
 	{
 
-		//Model
-
-		//Model Query
-		$data = $this->CoreLoad->open($pageID);
+		//load Passed
 		$passed = $this->passed();
-		$data = array_merge($data,$passed);
+		//Model Query
+		$data = $this->CoreLoad->open($pageID, $passed);
 
 		return $data;
 	}
@@ -76,13 +74,13 @@ class CoreLogs extends CI_Controller {
 	* It only can reach and expand to this controller only
 	* 
 	*/
-	public function passed($values=null)
+	public function passed($values = null)
 	{
 
 		//Time Zone
 		date_default_timezone_set('Africa/Nairobi');
 		$data['str_to_time'] = strtotime(date('Y-m-d, H:i:s'));
-		$data['Module'] = $this->plural->pluralize($this->Module);//Module Show
+		$data['Module'] = $this->plural->pluralize($this->Module); //Module Show
 		$data['routeURL'] = (is_null($this->Route)) ? $this->plural->pluralize($this->Folder) : $this->Route;
 
 		//Module Name - For Forms Title
@@ -107,15 +105,14 @@ class CoreLogs extends CI_Controller {
 	* ** If your page is public ignore the use of auth method
 	* 
 	*/
-    public function pages($data,$layout='log')
-    {
+	public function pages($data, $layout = 'log')
+	{
 
 		//Layout
-		$this->load->view("admin/layouts/$layout",$data);
+		$this->load->view("admin/layouts/$layout", $data);
+	}
 
-    }
-
-    /*
+	/*
     *
     * This is the first function to be accessed when a user open this controller
     * In here we can call the load function and pass data to passed as an array inorder to manupulate it inside passed function
@@ -127,7 +124,7 @@ class CoreLogs extends CI_Controller {
     * 	However we advise to use custom notification message while opening index utilize another function called open
 	* 
     */
-	public function index($notifyMessage=null)
+	public function index($notifyMessage = null)
 	{
 		//Pluralize Module
 		$module = $this->plural->pluralize($this->Module);
@@ -140,10 +137,10 @@ class CoreLogs extends CI_Controller {
 		$data['notify'] = $this->CoreNotify->$notify($notifyMessage);
 
 		//Open Page
-		$this->pages($data);		
+		$this->pages($data);
 	}
 
-    /*
+	/*
     *
     * This is the function to be accessed when a user want to open specific page which deals with same controller E.g Edit data after saving
     * In here we can call the load function and pass data to passed as an array inorder to manupulate it inside passed function
@@ -156,14 +153,14 @@ class CoreLogs extends CI_Controller {
     * 	Page layout can be passed via $layout
 	* 
     */
-	public function open($pageID,$message=null,$layout='log')
+	public function open($pageID, $message = null, $layout = 'log')
 	{
 
 		//Pluralize Module
 		$module = $this->plural->pluralize($this->Module);
 
 		//Model Query
-		$pageID = (is_numeric($pageID)) ? $pageID : $this->plural->pluralize($this->Folder).$this->SubFolder."/".$pageID;
+		$pageID = (is_numeric($pageID)) ? $pageID : $this->plural->pluralize($this->Folder) . $this->SubFolder . "/" . $pageID;
 		$data = $this->load($pageID);
 
 		//Notification
@@ -171,7 +168,7 @@ class CoreLogs extends CI_Controller {
 		$data['notify'] = $this->CoreNotify->$notify($message);
 
 		//Open Page
-		$this->pages($data,$layout);
+		$this->pages($data, $layout);
 	}
 
 	/*
@@ -192,7 +189,7 @@ class CoreLogs extends CI_Controller {
 		$routeURL = (is_null($this->Route)) ? $module : $this->Route;
 
 		//Set Allowed Files
-		$allowed_files = (is_null($this->AllowedFile))? 'jpg|jpeg|png|doc|docx|pdf|xls|txt' : $this->AllowedFile;
+		$allowed_files = (is_null($this->AllowedFile)) ? 'jpg|jpeg|png|doc|docx|pdf|xls|txt' : $this->AllowedFile;
 
 		//Check Validation
 		if ($type == 'login') {
@@ -205,39 +202,36 @@ class CoreLogs extends CI_Controller {
 			//Form Validation
 			if ($this->form_validation->run() == TRUE) {
 				if ($this->login($formData) == 'success') {
-					$this->session->set_flashdata('notification','notify'); //Notification Type
-					redirect("dashboard","refresh");//Redirect to Page
-				}elseif ($this->login($formData) == 'wrong') {
-					$this->session->set_flashdata('notification','error'); //Notification Type
+					$this->session->set_flashdata('notification', 'notify'); //Notification Type
+					redirect("dashboard", "refresh"); //Redirect to Page
+				} elseif ($this->login($formData) == 'wrong') {
+					$this->session->set_flashdata('notification', 'error'); //Notification Type
 					$message = 'Failed!, wrong password or username'; //Notification Message				
-					$this->index($message);//Open Page
-				}elseif ($this->login($formData) == 'deactivated') {
-					$this->session->set_flashdata('notification','error'); //Notification Type
+					$this->index($message); //Open Page
+				} elseif ($this->login($formData) == 'deactivated') {
+					$this->session->set_flashdata('notification', 'error'); //Notification Type
 					$message = 'Failed!, your account is suspended'; //Notification Message				
-					$this->index($message);//Open Page
-				}
-				else{
-					$this->session->set_flashdata('notification','error'); //Notification Type
+					$this->index($message); //Open Page
+				} else {
+					$this->session->set_flashdata('notification', 'error'); //Notification Type
 					$message = 'Failed!, account does not exist'; //Notification Message				
-					$this->index($message);//Open Page
+					$this->index($message); //Open Page
 				}
-			}else{
-				$this->session->set_flashdata('notification','error'); //Notification Type
+			} else {
+				$this->session->set_flashdata('notification', 'error'); //Notification Type
 				$message = 'Please check the fields, and try again'; //Notification Message				
-				$this->index($message);//Open Page
-			}			
-		}elseif ($type == 'reset') {
-			$this->session->set_flashdata('notification','error'); //Notification Type
+				$this->index($message); //Open Page
+			}
+		} elseif ($type == 'reset') {
+			$this->session->set_flashdata('notification', 'error'); //Notification Type
 			$message = 'Sorry!, reset password will be available later'; //Notification Message				
-			$this->index($message);//Open Page
-		}
-		elseif ($type == 'logout') {
-			$this->session->sess_destroy();//User Logout
-			$this->index();//Open Page
-		}
-		else{
-			$this->session->set_flashdata('notification','notify'); //Notification Type
-			$this->index();//Open Page
+			$this->index($message); //Open Page
+		} elseif ($type == 'logout') {
+			$this->session->sess_destroy(); //User Logout
+			$this->index(); //Open Page
+		} else {
+			$this->session->set_flashdata('notification', 'notify'); //Notification Type
+			$this->index(); //Open Page
 		}
 	}
 
@@ -251,36 +245,36 @@ class CoreLogs extends CI_Controller {
 	{
 		//Pluralize Module
 		$tableName = $this->plural->pluralize($this->Module);
-		$column_logname = $this->CoreForm->get_column_name($this->Module,'logname'); //Logname Column
-		$column_password = $this->CoreForm->get_column_name($this->Module,'password'); //Password Column
-		$column_stamp = $this->CoreForm->get_column_name($this->Module,'stamp'); //Stamp Column
-		$column_level = $this->CoreForm->get_column_name($this->Module,'level'); //Stamp Level
-		$column_flg = $this->CoreForm->get_column_name($this->Module,'flg'); //Stamp FLG
-		$column_id = $this->CoreForm->get_column_name($this->Module,'id'); //Stamp ID
+		$column_logname = $this->CoreForm->get_column_name($this->Module, 'logname'); //Logname Column
+		$column_password = $this->CoreForm->get_column_name($this->Module, 'password'); //Password Column
+		$column_stamp = $this->CoreForm->get_column_name($this->Module, 'stamp'); //Stamp Column
+		$column_level = $this->CoreForm->get_column_name($this->Module, 'level'); //Stamp Level
+		$column_flg = $this->CoreForm->get_column_name($this->Module, 'flg'); //Stamp FLG
+		$column_id = $this->CoreForm->get_column_name($this->Module, 'id'); //Stamp ID
 
 		//Get Array Data
 		foreach ($formData as $key => $value) {
 			if (strtolower($key) == $column_logname) {
 				$logname = $value; //Set user logname
-			}else{
+			} else {
 				$password = $value; //Set user Password
 			}
 		}
 
 		//Get Date Time
-		$result = $this->db->select($column_stamp)->from($tableName)->where($column_logname,$logname)->limit(1)->get();
+		$result = $this->db->select($column_stamp)->from($tableName)->where($column_logname, $logname)->limit(1)->get();
 		if ($result->num_rows() === 1) {
 
 			$row = $result->row();
 			$stamp = $row->$column_stamp; //Date Time
 
 			//Check If Enabled
-			if ($this->db->select($column_flg)->where($column_logname,$logname)->get($tableName)->row()->$column_flg) {			
-				$hased_password = sha1($this->config->item($stamp).$password);//Hashed Password
+			if ($this->db->select($column_flg)->where($column_logname, $logname)->get($tableName)->row()->$column_flg) {
+				$hased_password = sha1($this->config->item($stamp) . $password); //Hashed Password
 				$where = array($column_logname => $logname, $column_password => $hased_password); // Where Clause
 				$query = $this->db->select("$column_id, $column_level")->where($where)->limit(1)->get($tableName)->result(); //Set Query Select
 
-				if ($query) {	
+				if ($query) {
 
 					//Session ID
 					$session_id = $this->CoreLoad->sessionName('id');
@@ -297,27 +291,27 @@ class CoreLogs extends CI_Controller {
 					$this->session->set_userdata($newsession); //Create Session
 
 					/********** Cookie ***********/
-			        $value  = $newsession[$session_id];                          
-			        $expire = 604800;      // 1 week in seconds                                                                             
-			        $secure = False;
-			        $domain = base_url();
+					$value  = $newsession[$session_id];
+					$expire = 604800;      // 1 week in seconds                                                                             
+					$secure = False;
+					$domain = base_url();
 
-			        // CookieName
-			        $name = $this->CoreLoad->getCookieName();
+					// CookieName
+					$name = $this->CoreLoad->getCookieName();
 
 					// Get Cookie Value
 					$value = $this->encryption->encrypt($value);
-			        set_cookie($name,$value,$expire,$secure);
+					set_cookie($name, $value, $expire, $secure);
 
 
 					return 'success'; //Logged In
-				}else{
+				} else {
 					return 'wrong'; //Wrong Account Password / Logname
 				}
-			}else{
+			} else {
 				return 'deactivated'; //Account Deactivated
 			}
-		}else{
+		} else {
 			return 'error'; //Account Don't Exist
 		}
 	}
@@ -339,84 +333,82 @@ class CoreLogs extends CI_Controller {
 	* the check with comparison/conditional operator under else statement
 	*
 	*/
-    public function validation($value){
+	public function validation($value)
+	{
 
-    	//Used Session Key ID/Name
-    	$session_keys = array('file_rule','file_name','file_required');
+		//Used Session Key ID/Name
+		$session_keys = array('file_rule', 'file_name', 'file_required');
 
-    	//Check Which Rule To Apply
-    	if (!isset($this->session->file_rule) || empty($this->session->file_rule) || is_null($this->session->file_rule)) {
+		//Check Which Rule To Apply
+		if (!isset($this->session->file_rule) || empty($this->session->file_rule) || is_null($this->session->file_rule)) {
 
-	    	// Get Allowed File Extension
-	    	$allowed_extension = (!is_null($this->AllowedFile))? $this->AllowedFile : 'jpg|jpeg|png|doc|docx|pdf|xls|txt';
-	    	$allowed_extension_array = explode('|',$allowed_extension);
+			// Get Allowed File Extension
+			$allowed_extension = (!is_null($this->AllowedFile)) ? $this->AllowedFile : 'jpg|jpeg|png|doc|docx|pdf|xls|txt';
+			$allowed_extension_array = explode('|', $allowed_extension);
 
-	        $file_name = $this->session->file_name; //Upload File Name
-			$file_requred = (!isset($this->session->file_required))? true : $this->session->file_required; //Check if file is requred
+			$file_name = $this->session->file_name; //Upload File Name
+			$file_requred = (!isset($this->session->file_required)) ? true : $this->session->file_required; //Check if file is requred
 
 			//Check Array
-			if (array_key_exists($file_name,$_FILES)) {
-		        //Loop through uploaded values
-		        for ($i=0; $i < count($_FILES[$file_name]['name']); $i++) {
+			if (array_key_exists($file_name, $_FILES)) {
+				//Loop through uploaded values
+				for ($i = 0; $i < count($_FILES[$file_name]['name']); $i++) {
 
-		        	$file = $_FILES[$file_name]['name'][$i]; //Current Selected File
-			        if(isset($file) && !empty($file) && !is_null($file)){
+					$file = $_FILES[$file_name]['name'][$i]; //Current Selected File
+					if (isset($file) && !empty($file) && !is_null($file)) {
 
 						$file_ext = pathinfo($file, PATHINFO_EXTENSION); //Get current file extension
 
 						//Check If file extension allowed
-			            if(in_array($file_ext, $allowed_extension_array)){
-			                $validation_status[$i] = true; //Succeeded
-			            }else{
-			                $validation_status[$i] = false; //Error
-			            }
-			        }else{
-			        	//Input Is Blank... So check if it is requred
-			        	if ($file_requred == TRUE) {
-				            $validation_status[$i] = 'empty'; //Error Input required
-			        	}else{
-			                $validation_status[$i] = true; //Succeeded , This input is allowed to be empty
-			        	}
-			        }
-		        }
+						if (in_array($file_ext, $allowed_extension_array)) {
+							$validation_status[$i] = true; //Succeeded
+						} else {
+							$validation_status[$i] = false; //Error
+						}
+					} else {
+						//Input Is Blank... So check if it is requred
+						if ($file_requred == TRUE) {
+							$validation_status[$i] = 'empty'; //Error Input required
+						} else {
+							$validation_status[$i] = true; //Succeeded , This input is allowed to be empty
+						}
+					}
+				}
 
-		        //Check - validation_status
-		        if (isset($validation_status)) {
-			        //Check If any validated value has an error
-			        if (in_array('empty',$validation_status, true)) {
-					    $this->form_validation->set_message('validation', 'Please choose a file to upload.');
+				//Check - validation_status
+				if (isset($validation_status)) {
+					//Check If any validated value has an error
+					if (in_array('empty', $validation_status, true)) {
+						$this->form_validation->set_message('validation', 'Please choose a file to upload.');
 
-			        	$this->CoreCrud->destroySession($session_keys); //Destroy Session Values
-			        	return false; // Validation has an error, Input is required and is set to empty
-			        }
-			        elseif (in_array(false,$validation_status, true)) {
-				        $this->form_validation->set_message("validation", "Please select only ".str_replace('|',',',$allowed_extension)." file(s).");
+						$this->CoreCrud->destroySession($session_keys); //Destroy Session Values
+						return false; // Validation has an error, Input is required and is set to empty
+					} elseif (in_array(false, $validation_status, true)) {
+						$this->form_validation->set_message("validation", "Please select only " . str_replace('|', ',', $allowed_extension) . " file(s).");
 
-			        	$this->CoreCrud->destroySession($session_keys); //Destroy Session Values
-			        	return false; // Validation has an error
-			        }
-			        else{
+						$this->CoreCrud->destroySession($session_keys); //Destroy Session Values
+						return false; // Validation has an error
+					} else {
 
-			        	$this->CoreCrud->destroySession($session_keys); //Destroy Session Values
-			        	return true; // Validation was successful
-			        }
-		        }else{
-				    $this->form_validation->set_message('validation', 'Please choose a file to upload.');
-		        	return false; // Validation was successful
-		        }
-			}else{
-			    $this->form_validation->set_message('validation', 'Please choose a file to upload.');
-	        	return false; // Validation was successful
+						$this->CoreCrud->destroySession($session_keys); //Destroy Session Values
+						return true; // Validation was successful
+					}
+				} else {
+					$this->form_validation->set_message('validation', 'Please choose a file to upload.');
+					return false; // Validation was successful
+				}
+			} else {
+				$this->form_validation->set_message('validation', 'Please choose a file to upload.');
+				return false; // Validation was successful
 			}
-	    }else{
+		} else {
 
-	    	/* Your custom Validation Code Here */
+			/* Your custom Validation Code Here */
 
-	    	//Before returning validation status destroy session
-	        $this->CoreCrud->destroySession($session_keys); //Destroy Session Values
-	    }
-    }
-
+			//Before returning validation status destroy session
+			$this->CoreCrud->destroySession($session_keys); //Destroy Session Values
+		}
+	}
 }
 
 /* End of file CoreLogs.php */

@@ -35,12 +35,10 @@ class HomeError extends CI_Controller {
 	public function load($pageID=null)
 	{
 
-		//Model
-
-		//Model Query
-		$data = $this->CoreLoad->open($pageID);
+		//load Passed
 		$passed = $this->passed();
-		$data = array_merge($data,$passed);
+		//Model Query
+		$data = $this->CoreLoad->open($pageID, $passed);
 
 		return $data;
 	}

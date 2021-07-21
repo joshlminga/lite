@@ -1,7 +1,8 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
-class CoreForm extends CI_Model {
+class CoreForm extends CI_Model
+{
 
 
     /*
@@ -10,18 +11,19 @@ class CoreForm extends CI_Model {
     * This can ease the loading work 
     * 
     */
-    public function __construct(){
+    public function __construct()
+    {
 
         parent::__construct();
 
         //libraries
-        
+
         //Helpers
 
         //Models
-        
+
         // Your own constructor code
-        
+
     }
 
 
@@ -55,11 +57,10 @@ class CoreForm extends CI_Model {
         $tableName = $this->plural->pluralize($tableName);
 
         // Show DB Tables
-        $result = $this->db->query("SHOW TABLES LIKE '".$tableName."'");
+        $result = $this->db->query("SHOW TABLES LIKE '" . $tableName . "'");
         if ($result->result_id->num_rows == 1) {
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     }
@@ -70,20 +71,20 @@ class CoreForm extends CI_Model {
     * Pass columns Name & Type array
     * 
     */
-    public function get_column_name_type($column_name_type,$get='name')
+    public function get_column_name_type($column_name_type, $get = 'name')
     {
         //Array to store Data
         $name_type = array();
         //Get Type/Name
         if (strtolower($get) == 'type') {
             //Get Type
-            for($i = 0; $i < count($column_name_type); $i++){
-                $name_type[$i] = $column_name_type[$i]->COLUMN_TYPE;// Assign Column Type
+            for ($i = 0; $i < count($column_name_type); $i++) {
+                $name_type[$i] = $column_name_type[$i]->COLUMN_TYPE; // Assign Column Type
             }
-        }else{
+        } else {
             //Get Name
-            for($i = 0; $i < count($column_name_type); $i++){
-                $name_type[$i] = $column_name_type[$i]->COLUMN_NAME;// Assign Column Name
+            for ($i = 0; $i < count($column_name_type); $i++) {
+                $name_type[$i] = $column_name_type[$i]->COLUMN_NAME; // Assign Column Name
             }
         }
 
@@ -99,17 +100,19 @@ class CoreForm extends CI_Model {
     * 2: Column simple name(s)
     * 
     */
-    public function get_column_name($module,$column)
+    public function get_column_name($module, $column)
     {
         //Singularize Module
         $module = $this->plural->singularize($module);
 
-        if (!is_array($column) && strpos($column,",") == False) {
-            $column_name = $module.'_'.$column; //Column Name
-        }else{
-            if (!is_array($column) && strpos($column,",") == True) { $column = explode(",", $column); /* Get Column Name */ }
-            for($i = 0; $i < count($column); $i++){
-                $column_name[$i] = $this->get_column_name($module,$column[$i]); //Column Name
+        if (!is_array($column) && strpos($column, ",") == False) {
+            $column_name = $module . '_' . $column; //Column Name
+        } else {
+            if (!is_array($column) && strpos($column, ",") == True) {
+                $column = explode(",", $column); /* Get Column Name */
+            }
+            for ($i = 0; $i < count($column); $i++) {
+                $column_name[$i] = $this->get_column_name($module, $column[$i]); //Column Name
             }
         }
 
@@ -125,18 +128,20 @@ class CoreForm extends CI_Model {
     public function get_label_name($column)
     {
         //Check If Value Passed is Not Array
-        if (!is_array($column) && strpos($column,",") == False) {
-            $label =  substr($column,strpos($column, "_") +1); //Get Current Label Name
-        }else{            
-            if (!is_array($column) && strpos($column,",") == True) { $column = explode(",", $column); /* Get Column Name */ }
+        if (!is_array($column) && strpos($column, ",") == False) {
+            $label =  substr($column, strpos($column, "_") + 1); //Get Current Label Name
+        } else {
+            if (!is_array($column) && strpos($column, ",") == True) {
+                $column = explode(",", $column); /* Get Column Name */
+            }
             //Remove Module Name
-            for($i = 0; $i < count($column); $i++){
+            for ($i = 0; $i < count($column); $i++) {
                 $column_name = $column[$i]; //Set Current Column Name
-                $label[$i] =  substr($column_name,strpos($column_name, "_") +1); //Get Current Label Name
+                $label[$i] =  substr($column_name, strpos($column_name, "_") + 1); //Get Current Label Name
             }
         }
-        
-        return $label;//Return Label List
+
+        return $label; //Return Label List
     }
 
     /*
@@ -152,11 +157,11 @@ class CoreForm extends CI_Model {
     public function validation_session($validation)
     {
         //Set Session Data
-        $filename = (array_key_exists("file_name",$validation))? $validation['file_name'] : $this->session->file_name; //File Name
-        $required = (array_key_exists("file_required",$validation))? $validation['file_required'] : $this->session->file_required; //Required
+        $filename = (array_key_exists("file_name", $validation)) ? $validation['file_name'] : $this->session->file_name; //File Name
+        $required = (array_key_exists("file_required", $validation)) ? $validation['file_required'] : $this->session->file_required; //Required
 
         //Set Upload File Values
-        $file_upload_session = array('file_name'=>$filename,'file_required'=>$required);
+        $file_upload_session = array('file_name' => $filename, 'file_required' => $required);
         $this->session->set_userdata($file_upload_session);
     }
 
@@ -169,30 +174,34 @@ class CoreForm extends CI_Model {
     * Pass user Profile Keyname (By default is user-profile)
     * Pass Default Optional Profile [Pass either yes/no] (By default it will use level from user_level)
     */
-    public function userProfile($userId=null,$profileKey='user_profile',$userDefault=null)
+    public function userProfile($userId = null, $profileKey = 'user_profile', $userDefault = null)
     {
         //User ID
-        $user = (is_null($userId))? $this->CoreLoad->session('id') : $userId;
+        $user = (is_null($userId)) ? $this->CoreLoad->session('id') : $userId;
         //User Level
-        $level =  $this->CoreCrud->selectSingleValue('users','level',array('id'=>$user));
+        $level =  $this->CoreCrud->selectSingleValue('users', 'level', array('id' => $user));
 
         //Default Profile
-        $userDefault = $this->CoreCrud->selectSingleValue('levels','default',array('name'=>$level));
+        $userDefault = $this->CoreCrud->selectSingleValue('levels', 'default', array('name' => $level));
         //Profile Name
-        $optionalProfile = ($userDefault == 'yes')? 'assets/admin/img/profile-pics/admin.jpg' : 'assets/admin/img/profile-pics/user.jpg';
+        $optionalProfile = ($userDefault == 'yes') ? 'assets/admin/img/profile-pics/admin.jpg' : 'assets/admin/img/profile-pics/user.jpg';
 
         //Get Profile
-        $details = $this->CoreCrud->selectSingleValue('users','details',array('id'=>$user));
+        $details = $this->CoreCrud->selectSingleValue('users', 'details', array('id' => $user));
         $detail = json_decode($details, True);
         //Check Profile
-        if (array_key_exists($profileKey,$detail)){
-            $user_profile = json_decode($detail[$profileKey], True); //User Profile Array
-            if(is_array($user_profile)){
-                $profile = $user_profile[0]; //Profile Picture
-            }else{
+        if (!is_null($detail)) {
+            if (array_key_exists($profileKey, $detail)) {
+                $user_profile = json_decode($detail[$profileKey], True); //User Profile Array
+                if (is_array($user_profile)) {
+                    $profile = $user_profile[0]; //Profile Picture
+                } else {
+                    $profile = null; //No Profile Set
+                }
+            } else {
                 $profile = null; //No Profile Set
             }
-        }else{
+        } else {
             $profile = null; //No Profile Set
         }
 
@@ -217,15 +226,15 @@ class CoreForm extends CI_Model {
     * 6: Module affeted => By Defult is 'field'
     * 
     */
-    public function saveFormField($formData,$inputID,$unsetData=null,$unsetKey='before',$addFilters=null,$Module='field')
+    public function saveFormField($formData, $inputID, $unsetData = null, $unsetKey = 'before', $addFilters = null, $Module = 'field')
     {
 
         //Check Field -> Stamp | Default | Flg
-        $stamp_column = strtolower($this->CoreForm->get_column_name($Module,'stamp'));
-        $default_column = strtolower($this->CoreForm->get_column_name($Module,'default'));
-        $flg_column = strtolower($this->CoreForm->get_column_name($Module,'flg'));
-        $formCheck = $formData; 
-        $formData = $this->CoreCrud->unsetData($formData,array('stamp',$stamp_column,'default',$default_column,'flg',$flg_column));
+        $stamp_column = strtolower($this->get_column_name($Module, 'stamp'));
+        $default_column = strtolower($this->get_column_name($Module, 'default'));
+        $flg_column = strtolower($this->get_column_name($Module, 'flg'));
+        $formCheck = $formData;
+        $formData = $this->CoreCrud->unsetData($formData, array('stamp', $stamp_column, 'default', $default_column, 'flg', $flg_column));
 
         //Table Select & Clause
         $customFieldTable = $this->plural->pluralize('customfields');
@@ -234,67 +243,64 @@ class CoreForm extends CI_Model {
         $columns = array('title as title,filters as filters,default as default');
 
         //Check Field Type
-        $whereTYPE = (is_numeric($inputID))? 'id' : 'title';
+        $whereTYPE = (is_numeric($inputID)) ? 'id' : 'title';
         $where = array($whereTYPE => $inputID);
 
         //Select
-        $fieldList = $this->CoreCrud->selectCRUD($customFieldTable,$where,$columns);
+        $fieldList = $this->CoreCrud->selectCRUD($customFieldTable, $where, $columns);
 
         $field_title = $fieldList[0]->title; //Title Title
         $field_filter = json_decode($fieldList[0]->filters, True); //FIlter List
         $field_default = $fieldList[0]->default; //Default
 
         //UnSet ID
-        $formData = $this->CoreCrud->unsetData($formData,array('id'));
+        $formData = $this->CoreCrud->unsetData($formData, array('id'));
 
         //Set Values For Filter
-        for($i = 0; $i < count($field_filter); $i++){
-          $valueFilter = trim($field_filter[$i]); //Current Value
-          $newFilterDataValue[$valueFilter] = $formData[$valueFilter];
+        for ($i = 0; $i < count($field_filter); $i++) {
+            $valueFilter = trim($field_filter[$i]); //Current Value
+            $newFilterDataValue[$valueFilter] = $formData[$valueFilter];
         }
 
         //Check Additional Filters
-        $dataFilters = (!is_null($addFilters))? array_merge($newFilterDataValue,$addFilters) : $newFilterDataValue;
+        $dataFilters = (!is_null($addFilters)) ? array_merge($newFilterDataValue, $addFilters) : $newFilterDataValue;
         $tempo_filter = json_encode($dataFilters); /* Set Filters */
 
         //Set Field Data
-        $column_data = strtolower($this->CoreForm->get_column_name($Module,'data'));
+        $column_data = strtolower($this->get_column_name($Module, 'data'));
         $formData[$column_data] = json_encode($formData); //Set Data
 
         //Prepaire Data To Store
         foreach ($formData as $key => $value) {
-          if ($key !== $column_data) {
-            $children[$key] = $value;
-            $formData = $this->CoreCrud->unsetData($formData,array($key)); //Unset Data
-          }
+            if ($key !== $column_data) {
+                $children[$key] = $value;
+                $formData = $this->CoreCrud->unsetData($formData, array($key)); //Unset Data
+            }
         }
 
         //Set Filters
-        $column_filters = strtolower($this->CoreForm->get_column_name($Module,'filters'));
+        $column_filters = strtolower($this->get_column_name($Module, 'filters'));
         $formData[$column_filters] = $tempo_filter; /* Set Filters */
 
         //Set Title/Name
-        $column_title = strtolower($this->CoreForm->get_column_name($Module,'title'));
+        $column_title = strtolower($this->get_column_name($Module, 'title'));
         $formData[$column_title] = $field_title; //Set Title
 
         //Details Column Update
-        $details = strtolower($this->CoreForm->get_column_name('field','details'));
+        $details = strtolower($this->get_column_name('field', 'details'));
 
         //Apply Field -> Stamp | Default | Flg
-        $formData = $this->applyCheckFieldTable($formData,$formCheck,$Module);
+        $formData = $this->applyCheckFieldTable($formData, $formCheck, $Module);
 
         //Check Unset Key
         if (strtolower($unsetKey) == 'before') {
-            $formData = $this->CoreCrud->unsetData($formData,$unsetData); //Unset Data
+            $formData = $this->CoreCrud->unsetData($formData, $unsetData); //Unset Data
             $formData[$details] = json_encode($formData); //Details
-        }else{
+        } else {
 
             $formData[$details] = json_encode($formData); //Details
-            $formData = $this->CoreCrud->unsetData($formData,$unsetData); //Unset Data
+            $formData = $this->CoreCrud->unsetData($formData, $unsetData); //Unset Data
         }
-
-        //Form Data
-        $formData = $this->applyCheckFieldTable($formData,$formCheck,$Module);
 
         //Form Data
         return $formData;
@@ -316,31 +322,33 @@ class CoreForm extends CI_Model {
     * 6: Module affeted => By Defult is 'field'
     * 
     */
-    public function updateFormField($updateData,$inputID,$unsetData=null,$unsetKey='before',$addFilters=null,$Module='field')
+    public function updateFormField($updateData, $inputID, $unsetData = null, $unsetKey = 'before', $addFilters = null, $Module = 'field')
     {
 
         //Check Field -> Stamp | Default | Flg
-        $stamp_column = strtolower($this->CoreForm->get_column_name($Module,'stamp'));
-        $default_column = strtolower($this->CoreForm->get_column_name($Module,'default'));
-        $flg_column = strtolower($this->CoreForm->get_column_name($Module,'flg'));
-        $formCheck = $updateData; 
-        $updateData = $this->CoreCrud->unsetData($updateData,array('stamp',$stamp_column,'default',$default_column,'flg',$flg_column));
+        $stamp_column = strtolower($this->get_column_name($Module, 'stamp'));
+        $default_column = strtolower($this->get_column_name($Module, 'default'));
+        $flg_column = strtolower($this->get_column_name($Module, 'flg'));
+        $formCheck = $updateData;
+
+        //Unset Stamp,Default,flg
+        $updateData = $this->CoreCrud->unsetData($updateData, array('stamp', $stamp_column, 'default', $default_column, 'flg', $flg_column));
 
         //Table
         $customFieldTable = $this->plural->pluralize('customfields');
 
         //Check Field Type
-        $whereTYPE = (is_numeric($inputID))? 'id' : 'title';
+        $whereTYPE = (is_numeric($inputID)) ? 'id' : 'title';
         $where = array($whereTYPE => $inputID);
 
         //Table Select & Clause
         $columns = array('id as id,title as title,data as data,details as details');
-        $resultList = $this->CoreCrud->selectCRUD($Module,$where,$columns);
+        $resultList = $this->CoreCrud->selectCRUD($Module, $where, $columns);
 
         //Table Select & Clause
         $columns = array('id as id,required as required,optional as optional,filters as filters,default as default');
         $where = array('title' => $resultList[0]->title);
-        $fieldList = $this->CoreCrud->selectCRUD($customFieldTable,$where,$columns,'like');
+        $fieldList = $this->CoreCrud->selectCRUD($customFieldTable, $where, $columns, 'like');
 
         //FIlter List
         $field_filter = json_decode($fieldList[0]->filters, True); //FIlter List
@@ -351,53 +359,60 @@ class CoreForm extends CI_Model {
 
         // Arrange Data
         foreach ($current_data as $key => $value) {
-            if (!array_key_exists($key,$updateData)) {
+            if (!array_key_exists($key, $updateData)) {
                 $updateData[$key] = $value;
             }
         }
         //Set Filters
-        $column_filters = strtolower($this->CoreForm->get_column_name($Module,'filters'));
+        $column_filters = strtolower($this->get_column_name($Module, 'filters'));
 
         //Set Values FOr Filter
-        for($i = 0; $i < count($field_filter); $i++){
-          $valueFilter = $field_filter[$i]; //Current Value
-          if (array_key_exists($valueFilter, $updateData)) {
-            $newFilterDataValue[$valueFilter] = $updateData[$valueFilter];
-          }
+        for ($i = 0; $i < count($field_filter); $i++) {
+            $valueFilter = $field_filter[$i]; //Current Value
+            if (array_key_exists($valueFilter, $updateData)) {
+                $newFilterDataValue[$valueFilter] = $updateData[$valueFilter];
+            }
         }
 
         //Check Additional Filters
-        $dataFilters = (!is_null($addFilters))? array_merge($newFilterDataValue,$addFilters) : $newFilterDataValue;
+        $dataFilters = (!is_null($addFilters)) ? array_merge($newFilterDataValue, $addFilters) : $newFilterDataValue;
         $tempo_filter = json_encode($dataFilters); /* Set Filters */
 
         //Set Field Data
-        $column_data = strtolower($this->CoreForm->get_column_name($Module,'data'));
+        $column_data = strtolower($this->get_column_name($Module, 'data'));
         $updateData[$column_data] = json_encode($updateData); //Set Data
 
         //Prepaire Data To Store
         foreach ($updateData as $key => $value) {
-          if ($key !== $column_data) {
-            $children[$key] = $value;
-            $updateData = $this->CoreCrud->unsetData($updateData,array($key)); //Unset Data
-          }
+            if ($key !== $column_data) {
+                $children[$key] = $value;
+                $updateData = $this->CoreCrud->unsetData($updateData, array($key)); //Unset Data
+            }
         }
 
         //Set Filters
         $updateData[$column_filters] = $tempo_filter; /* Set Filters */
 
         //Details Column Update
-        $details = strtolower($this->CoreForm->get_column_name('field','details'));
+        $details = strtolower($this->get_column_name('field', 'details'));
         $current_details = json_decode($resultList[0]->details, true);
+
+        //Apply Field -> Stamp | Default | Flg
+        $updateData = $this->applyCheckFieldTable($updateData, $formCheck, $Module);
 
         //Check Unset Key
         if (strtolower($unsetKey) == 'before') {
-            $updateData = $this->CoreCrud->unsetData($updateData,$unsetData); //Unset Data
-            foreach ($updateData as $key => $value) { $current_details["$key"] = $value; /* Update -> Details */ }
+            $updateData = $this->CoreCrud->unsetData($updateData, $unsetData); //Unset Data
+            foreach ($updateData as $key => $value) {
+                $current_details["$key"] = $value; /* Update -> Details */
+            }
             $updateData["$details"] = json_encode($current_details);
-        }else{
-            foreach ($updateData as $key => $value) { $current_details["$key"] = $value; /* Update -> Details */ }
+        } else {
+            foreach ($updateData as $key => $value) {
+                $current_details["$key"] = $value; /* Update -> Details */
+            }
             $updateData["$details"] = json_encode($current_details);
-            $updateData = $this->CoreCrud->unsetData($updateData,$unsetData); //Unset Data
+            $updateData = $this->CoreCrud->unsetData($updateData, $unsetData); //Unset Data
         }
 
         //Update Data
@@ -414,34 +429,71 @@ class CoreForm extends CI_Model {
     * 3: Module affeted => By Defult is 'field'
     *
     */
-    public function applyCheckFieldTable($formData,$formCheck,$Module='field')
+    public function applyCheckFieldTable($formData, $formCheck, $Module = 'field')
     {
 
         //Columns
-        $stamp_column = strtolower($this->CoreForm->get_column_name($Module,'stamp'));
-        $default_column = strtolower($this->CoreForm->get_column_name($Module,'default'));
-        $flg_column = strtolower($this->CoreForm->get_column_name($Module,'flg'));
+        $stamp_column = strtolower($this->get_column_name($Module, 'stamp'));
+        $default_column = strtolower($this->get_column_name($Module, 'default'));
+        $flg_column = strtolower($this->get_column_name($Module, 'flg'));
 
         //Check Stamp
-        $stamp = (array_key_exists('stamp', $formCheck))? $formCheck['stamp'] : null;
-        $stamp = (array_key_exists($stamp_column, $formCheck))? $formCheck[$stamp_column] : $stamp;
+        $stamp = (array_key_exists('stamp', $formCheck)) ? $formCheck['stamp'] : null;
+        $stamp = (array_key_exists($stamp_column, $formCheck)) ? $formCheck[$stamp_column] : $stamp;
         $formData[$stamp_column] = $stamp;
 
         //Check Default
-        $default = (array_key_exists('default', $formCheck))? $formCheck['default'] : null;
-        $default = (array_key_exists($default_column, $formCheck))? $formCheck[$default_column] : $default;
+        $default = (array_key_exists('default', $formCheck)) ? $formCheck['default'] : null;
+        $default = (array_key_exists($default_column, $formCheck)) ? $formCheck[$default_column] : $default;
         $formData[$default_column] = $default;
 
         //Check Flg
-        $flg = (array_key_exists('flg', $formCheck))? $formCheck['flg'] : null;
-        $flg = (array_key_exists($flg_column, $formCheck))? $formCheck[$flg_column] : $flg;
+        $flg = (array_key_exists('flg', $formCheck)) ? $formCheck['flg'] : null;
+        $flg = (array_key_exists($flg_column, $formCheck)) ? $formCheck[$flg_column] : $flg;
         $formData[$flg_column] = $flg;
-
-
 
         //Remove Null Values
         foreach ($formData as $key => $value) {
-            $formData = (is_null($value)) ? $this->CoreCrud->unsetData($formData,array($key)) : $formData;
+            $formData = (is_null($value)) ? $this->CoreCrud->unsetData($formData, array($key)) : $formData;
+        }
+
+        //Return Data
+        return $formData;
+    }
+
+    /*
+    * 
+    * This function will apply stamp | default | flg
+    * -> This is only used for Filter Table
+    *
+    * This function accept 
+    * 1: Current Form Data
+    * 2: Reserved Form Data
+    * 3: Module affeted
+    *
+    */
+    public function applyCheckFilterTable($formData, $formCheck, $Module)
+    {
+        //Columns
+        $stamp_column = strtolower($this->get_column_name($Module, 'stamp'));
+        $default_column = strtolower($this->get_column_name($Module, 'default'));
+        $flg_column = strtolower($this->get_column_name($Module, 'flg'));
+
+        //Check Stamp
+        $stamp = (array_key_exists('field_stamp', $formCheck)) ? $formCheck['field_stamp'] : date('Y-m-d H:i:s', time());
+        $formData[$stamp_column] = $stamp;
+
+        //Check Default
+        $default = (array_key_exists('field_default', $formCheck)) ? $formCheck['field_default'] : null;
+        $formData[$default_column] = $default;
+
+        //Check Flg
+        $flg = (array_key_exists('field_flg', $formCheck)) ? $formCheck['field_flg'] : null;
+        $formData[$flg_column] = $flg;
+
+        //Remove Null Values
+        foreach ($formData as $key => $value) {
+            $formData = (is_null($value)) ? $this->CoreCrud->unsetData($formData, array($key)) : $formData;
         }
 
         //Return Data
@@ -459,11 +511,11 @@ class CoreForm extends CI_Model {
     *
     * retuned DATA is ready for Inserting
     */
-    public function getFieldFormatData($formData,$fieldSet,$unsetData=null,$unsetKey='before')
+    public function getFieldFormatData($formData, $fieldSet, $unsetData = null, $unsetKey = 'before')
     {
 
         //FormData
-        $formData = $this->saveFormField($formData,$fieldSet);
+        $formData = $this->saveFormField($formData, $fieldSet);
         return $formData; //Return Data
     }
 
@@ -479,11 +531,11 @@ class CoreForm extends CI_Model {
     *
     * retuned DATA is ready for Updating
     */
-    public function getFieldUpdateData($updateData,$fieldSet,$unsetData=null,$unsetKey='before')
+    public function getFieldUpdateData($updateData, $fieldSet, $unsetData = null, $unsetKey = 'before')
     {
 
         //FormData
-        $updateData = $this->updateFormField($updateData,$fieldSet);
+        $updateData = $this->updateFormField($updateData, $fieldSet);
         return $updateData; //Return Data
     }
 
@@ -498,28 +550,28 @@ class CoreForm extends CI_Model {
     * Else is an array will be returned
     * 
     */
-    public function checkKeyExist($key,$array=null)
+    public function checkKeyExist($key, $array = null)
     {
 
         //By Default - Not Found
-        $found = false;
+        $found = array();
 
         //Check Array Data
-        $arrayData = (!is_null($array))? $array : $this->session->arrayData;
+        $arrayData = (!is_null($array)) ? $array : $this->session->arrayData;
 
         //Check Passed Data
         if (count($arrayData) > 0) {
             //If Key Is not array
             if (!is_array($key)) {
-                $keyData = explode(',',$key);
+                $keyData = explode(',', $key);
             }
 
             //Check Data
-            for ($i=0; $i < count($keyData); $i++) { 
+            for ($i = 0; $i < count($keyData); $i++) {
                 $currentKey = $keyData[0];
-                if (array_key_exists($currentKey,$arrayData)) {
+                if (array_key_exists($currentKey, $arrayData)) {
                     $found[$currentKey] = true; //Found
-                }else{
+                } else {
                     $found[$currentKey] = false; //Not Found
                 }
             }
@@ -550,19 +602,19 @@ class CoreForm extends CI_Model {
     * --> By default dir will be created hence returned TRUE
     * 
     */
-    public function checkDir($path,$create=true,$defaultpath='../assets/media',$permission=0755,$recursive=true)
+    public function checkDir($path, $create = true, $defaultpath = '../assets/media', $permission = 0755, $recursive = true)
     {
         //load ModelField
-        $this->load->model('CoreField');  
+        $this->load->model('CoreField');
 
         //Folder Path
         $pathFolder = realpath(APPPATH . $defaultpath); //Real Path
-        $newDirectory = $pathFolder.$path;// New Path | New APPATH Directory
+        $newDirectory = $pathFolder . $path; // New Path | New APPATH Directory
 
         //Check Additonal Config
         if (method_exists('CoreField', 'changeDirData')) {
             //Config
-            $configDir = $this->CoreField->changeDirData($newDirectory,$permission,$recursive);
+            $configDir = $this->CoreField->changeDirData($newDirectory, $permission, $recursive);
             $newDirectory = $configDir['dir']; // New Path | New APPATH Directory
             $permission = $configDir['permission']; //Deafault
             $recursive = $configDir['recursive']; //Deafult
@@ -572,12 +624,12 @@ class CoreForm extends CI_Model {
         if (!file_exists($newDirectory)) {
             if ($create) {
                 mkdir($newDirectory, $permission, $recursive); // Create Directory
-                $status = true;// //Folder or file created
-            }else{
-                $status = false;// Folder or file could not be created
+                $status = true; // //Folder or file created
+            } else {
+                $status = false; // Folder or file could not be created
             }
-        }else{
-            $status = true;// //Folder or file exist
+        } else {
+            $status = true; // //Folder or file exist
         }
 
         return $status; //Return Status
@@ -589,25 +641,28 @@ class CoreForm extends CI_Model {
     * Pass Parent Element ID
     * 
     */
-    public function childTreee($parent_id=0,$sub_mark='',$selectedID=null,$type=null)
+    public function childTreee($parent_id = 0, $sub_mark = '', $selectedID = null, $type = null)
     {
+        $setChildTree = false;
 
         //load ModelField
         if (is_null($type)) {
-            $this->load->model('CoreField');  
-            $setChildTree = ((method_exists('CoreField', 'setChildTree')))? $this->CoreField->setChildTree(): false;
+            $this->load->model('CoreField');
+            $setChildTree = ((method_exists('CoreField', 'setChildTree'))) ? $this->CoreField->setChildTree() : $setChildTree;
 
             //Set Type
-            $type = (!setChildTree)?'category' : $setChildTree;
+            $type = (!$setChildTree) ? 'category' : $setChildTree;
         }
 
         //Select Data
-        $inheritance = $this->CoreCrud->selectInheritanceItem(array('parent' =>$parent_id,'flg'=>1,'type'=>$type)
-            ,'id,parent,title');
+        $inheritance = $this->CoreCrud->selectInheritanceItem(
+            array('parent' => $parent_id, 'flg' => 1, 'type' => $type),
+            'id,parent,title'
+        );
 
         // Check IF Result Found
         if (count($inheritance) > 0) {
-            for ($i=0; $i < count($inheritance); $i++) { 
+            for ($i = 0; $i < count($inheritance); $i++) {
                 $parent = $inheritance[$i]->inheritance_parent; //Parent
                 $title = $inheritance[$i]->inheritance_title; //Title
                 $id = $inheritance[$i]->inheritance_id; //Id
@@ -615,16 +670,16 @@ class CoreForm extends CI_Model {
                 //Echo Data
                 if ($selectedID == $id) {
                     echo "<option class='$id' value='$id' selected>";
-                        echo $sub_mark.ucwords($title);
+                    echo $sub_mark . ucwords($title);
                     echo "</option>";
-                }else{
+                } else {
                     echo "<option class='$id' value='$id'>";
-                        echo $sub_mark.ucwords($title);
+                    echo $sub_mark . ucwords($title);
                     echo "</option>";
                 }
 
                 //Check More Child
-                return $this->childTreee($id,$sub_mark='---',$selectedID);
+                return $this->childTreee($id, $sub_mark = '---', $selectedID);
             }
         }
     }
@@ -636,15 +691,15 @@ class CoreForm extends CI_Model {
     * Pass elementID and it will return it's Parent ID
     * 
     */
-    public function getParentInheritance($inheritanceID,$parentID=0)
+    public function getParentInheritance($inheritanceID, $parentID = 0)
     {
         //Select Parent
-        $parent = $this->CoreCrud->selectSingleValue('inheritances','parent',array('id'=>$inheritanceID));
+        $parent = $this->CoreCrud->selectSingleValue('inheritances', 'parent', array('id' => $inheritanceID));
 
         //Check If is Parent
         if ($parent == $parentID) {
             return $inheritanceID; //Parent Value
-        }else{
+        } else {
             return $this->getParentInheritance($parent); //Find Parent
         }
     }
@@ -658,34 +713,34 @@ class CoreForm extends CI_Model {
     public function email_config()
     {
         //Get Send Data
-        $settings['mail_protocol'] = $this->CoreCrud->selectSingleValue('settings','value',array('title'=>'mail_protocol'));
-        $settings['smtp_host'] = $this->CoreCrud->selectSingleValue('settings','value',array('title'=>'smtp_host'));
-        $settings['smtp_user'] = $this->CoreCrud->selectSingleValue('settings','value',array('title'=>'smtp_user'));
-        $settings['smtp_pass'] = $this->CoreCrud->selectSingleValue('settings','value',array('title'=>'smtp_pass'));
-        $settings['smtp_port'] = $this->CoreCrud->selectSingleValue('settings','value',array('title'=>'smtp_port'));
-        $settings['smtp_timeout'] = $this->CoreCrud->selectSingleValue('settings','value',array('title'=>'smtp_timeout'));
-        $settings['smtp_crypto'] = $this->CoreCrud->selectSingleValue('settings','value',array('title'=>'smtp_crypto'));
-        $settings['wordwrap'] = $this->CoreCrud->selectSingleValue('settings','value',array('title'=>'wordwrap'));
-        $settings['wrapchars'] = $this->CoreCrud->selectSingleValue('settings','value',array('title'=>'wrapchars'));
-        $settings['mailtype'] = $this->CoreCrud->selectSingleValue('settings','value',array('title'=>'mailtype'));
-        $settings['charset'] = $this->CoreCrud->selectSingleValue('settings','value',array('title'=>'charset'));
+        $settings['mail_protocol'] = $this->CoreCrud->selectSingleValue('settings', 'value', array('title' => 'mail_protocol'));
+        $settings['smtp_host'] = $this->CoreCrud->selectSingleValue('settings', 'value', array('title' => 'smtp_host'));
+        $settings['smtp_user'] = $this->CoreCrud->selectSingleValue('settings', 'value', array('title' => 'smtp_user'));
+        $settings['smtp_pass'] = $this->CoreCrud->selectSingleValue('settings', 'value', array('title' => 'smtp_pass'));
+        $settings['smtp_port'] = $this->CoreCrud->selectSingleValue('settings', 'value', array('title' => 'smtp_port'));
+        $settings['smtp_timeout'] = $this->CoreCrud->selectSingleValue('settings', 'value', array('title' => 'smtp_timeout'));
+        $settings['smtp_crypto'] = $this->CoreCrud->selectSingleValue('settings', 'value', array('title' => 'smtp_crypto'));
+        $settings['wordwrap'] = $this->CoreCrud->selectSingleValue('settings', 'value', array('title' => 'wordwrap'));
+        $settings['wrapchars'] = $this->CoreCrud->selectSingleValue('settings', 'value', array('title' => 'wrapchars'));
+        $settings['mailtype'] = $this->CoreCrud->selectSingleValue('settings', 'value', array('title' => 'mailtype'));
+        $settings['charset'] = $this->CoreCrud->selectSingleValue('settings', 'value', array('title' => 'charset'));
 
         //load ModelField
-        $this->load->model('CoreField');  
-        $emailConfig = ((method_exists('CoreField', 'emailConfig')))? $this->CoreField->emailConfig(): false;
+        $this->load->model('CoreField');
+        $emailConfig = ((method_exists('CoreField', 'emailConfig'))) ? $this->CoreField->emailConfig() : false;
 
         //Configs
         if ($emailConfig) {
             foreach ($emailConfig as $key => $value) {
-              $settings[$key] = $value; //Settings
+                $settings[$key] = $value; //Settings
             }
         }
 
         //Check For Null Values
         foreach ($settings as $key => $value) {
             if (is_null($value) || empty($value)) {
-                $this->CoreCrud->unsetData($settings,array($key));
-            }else{
+                $this->CoreCrud->unsetData($settings, array($key));
+            } else {
                 $config[$key] = $value; //Clean Values
             }
         }
@@ -698,16 +753,16 @@ class CoreForm extends CI_Model {
     * This function help user to access / get account profile picture
     * Account Profile
     */
-    public function accountProfile($useraccount=null,$profile_name='user_profile')
+    public function accountProfile($useraccount = null, $profile_name = 'user_profile')
     {
         //Check Account
-        $account = (is_null($useraccount)) ? array('id'=>$this->CoreLoad->session('id')) : $useraccount;
+        $account = (is_null($useraccount)) ? array('id' => $this->CoreLoad->session('id')) : $useraccount;
         //User Details
-        $userDetails = json_decode($this->CoreCrud->selectSingleValue('user','details',$account), True); 
-        $profile = (array_key_exists($profile_name, $userDetails))? json_decode($userDetails[$profile_name]) : array(null);
+        $userDetails = json_decode($this->CoreCrud->selectSingleValue('user', 'details', $account), True);
+        $profile = (array_key_exists($profile_name, $userDetails)) ? json_decode($userDetails[$profile_name]) : array(null);
 
         //Check Found
-        $profile = (!is_null($profile[0]) && !empty($profile[0]))? $profile[0] : null;
+        $profile = (!is_null($profile[0]) && !empty($profile[0])) ? $profile[0] : null;
         $userProfile[$profile_name] = $profile; //Profile
 
         //Return Data
@@ -725,17 +780,17 @@ class CoreForm extends CI_Model {
     *
     * Get File Name From Attached Link
     */
-    public function getfileName($assetLink,$ext=true,$separator='/')
+    public function getfileName($assetLink, $ext = true, $separator = '/')
     {
         //Change link to array
-        $file_link = (!is_array($assetLink))? explode($separator,$assetLink) : $assetLink;
+        $file_link = (!is_array($assetLink)) ? explode($separator, $assetLink) : $assetLink;
 
         //Get end of array
         $file_full = end($file_link);
         if (!$ext) {
             $get = explode('.', $file_full);
             $file_name = $get[0];
-        }else{
+        } else {
             $file_name = $file_full;
         }
 
@@ -753,10 +808,10 @@ class CoreForm extends CI_Model {
     *
     * Get File Extension Only
     */
-    public function getfileExt($assetLink,$file=false,$separator='/')
+    public function getfileExt($assetLink, $file = false, $separator = '/')
     {
         //Get File Name
-        $file_name = (!$file) ? $this->getfileName($assetLink,true,$separator) : $assetLink;
+        $file_name = (!$file) ? $this->getfileName($assetLink, true, $separator) : $assetLink;
 
         //Get Extension
         $get = explode('.', $file_name);
@@ -776,44 +831,44 @@ class CoreForm extends CI_Model {
     *
     * Get Filter Tables
     */
-    public function getFilterColumns($titleID,$pusharray=null,$escaped_columns=array('id','details','stamp','default','flg'))
+    public function getFilterColumns($titleID, $pusharray = null, $escaped_columns = array('id', 'details', 'stamp', 'default', 'flg'))
     {
 
         // Get Custom Field Title
         if (is_numeric($titleID)) {
-            $titleID = $this->CoreCrud->selectSingleValue('customfields','title',array('id'=>$titleID)); // Main Site URL
+            $titleID = $this->CoreCrud->selectSingleValue('customfields', 'title', array('id' => $titleID)); // Main Site URL
         }
         $tableName = $this->plural->pluralize($titleID);
 
-        $table_desc = $this->CoreForm->get_column_data($tableName);
-        $columns = $this->CoreForm->get_column_name_type($table_desc);
+        $table_desc = $this->get_column_data($tableName);
+        $columns = $this->get_column_name_type($table_desc);
 
         // Escape Columns
         if (!is_null($escaped_columns)) {
-            for ($i=0; $i < count($escaped_columns); $i++) {
+            for ($i = 0; $i < count($escaped_columns); $i++) {
                 $escape = $escaped_columns[$i];
 
                 // Columns Name
-                $column_escape = strtolower($this->CoreForm->get_column_name($tableName,$escape));
-                if (in_array($column_escape,$columns)) {
-                    $key = array_search ($column_escape, $columns);
-                    $columns = $this->CoreCrud->unsetData($columns,$key); //Unset Data
+                $column_escape = strtolower($this->get_column_name($tableName, $escape));
+                if (in_array($column_escape, $columns)) {
+                    $key = array_search($column_escape, $columns);
+                    $columns = $this->CoreCrud->unsetData($columns, $key); //Unset Data
                 }
             }
             // Set Array
             $columns = array_values($columns);
-        }        
+        }
 
         // Get Labels
-        $filter_columns_name = $this->CoreForm->get_label_name($columns);
+        $filter_columns_name = $this->get_label_name($columns);
 
         // Push Columns
         if (!is_null($pusharray)) {
             if (!is_array($pusharray)) {
-                $pusharray = explode(',',$pusharray);
+                $pusharray = explode(',', $pusharray);
             }
-            for ($i=0; $i < count($pusharray); $i++) { 
-                array_push($filter_columns_name,$pusharray[$i]);
+            for ($i = 0; $i < count($pusharray); $i++) {
+                array_push($filter_columns_name, $pusharray[$i]);
             }
         }
 
@@ -828,7 +883,7 @@ class CoreForm extends CI_Model {
     * 2: Pass Insert Data
     *
     */
-    public function fieldFiltered($columns,$data)
+    public function fieldFiltered($columns, $data)
     {
 
         // Decode Filter Data
@@ -838,9 +893,9 @@ class CoreForm extends CI_Model {
         $insertData = null;
 
         // Columns
-        for ($i=0; $i < count($columns); $i++) { 
+        for ($i = 0; $i < count($columns); $i++) {
             $key = strtolower($columns[$i]);
-            if (array_key_exists($key,$filter_data)) {
+            if (array_key_exists($key, $filter_data)) {
                 $insertData[$key] = $filter_data[$key];
             }
         }
@@ -857,20 +912,20 @@ class CoreForm extends CI_Model {
     * 1: Pass Page URL
     * 2: Pass Type [base_url | site_url]
     */
-    public function proper_url($url,$type='base_url')
+    public function proper_url($url, $type = 'base_url')
     {
         // Load Settings
         $url = (is_array($url)) ? $url[0] : $url;
-        $urlsettings = ((method_exists('CoreField', 'urlSettings')))? $this->CoreField->urlSettings(): false;
+        $urlsettings = ((method_exists('CoreField', 'urlSettings'))) ? $this->CoreField->urlSettings() : false;
         if ($urlsettings) {
-            $site_url = $this->CoreCrud->selectSingleValue('settings','value',array('title'=>'site_url','flg'=>1));
+            $site_url = $this->CoreCrud->selectSingleValue('settings', 'value', array('title' => 'site_url', 'flg' => 1));
             $last_url = substr($site_url, -1);
             if ($last_url != '/') {
-                $site_url = $site_url.'/';
+                $site_url = $site_url . '/';
             }
             // URL
-            $url = $site_url.$url;
-        }else{
+            $url = $site_url . $url;
+        } else {
             $url = (strtolower($type) == 'base_url') ? base_url($url) : site_url($url);
         }
 
@@ -884,15 +939,15 @@ class CoreForm extends CI_Model {
     * Pass String
     * 
     */
-    public function get_variable($string,$variables=null,$skip=false)
+    public function get_variable($string, $variables = null, $skip = false)
     {
         // Load
         $data = $this->CoreLoad->load();
-        if($skip==false){
+        if ($skip == false) {
             if (is_array($variables) && !is_null($variables)) {
                 $data = array_merge($data, $variables);
             }
-        }else{
+        } else {
             $data = $variables;
         }
 
@@ -907,15 +962,15 @@ class CoreForm extends CI_Model {
                 // Get Data
                 $CoreCrud = new CoreCrud;
                 $CoreField = new CoreField;
-                $CI =& get_instance();
+                $CI = &get_instance();
 
                 // Data
                 $data =  $_SESSION["data"];
                 $variables = $_SESSION["variables"];
 
                 // Match
-                $match = $CoreCrud->selectSingleValue('settings','value',array('title'=>'string_variable','flg'=>1));
-                $show_variable = ((method_exists('CoreField', 'showGetVaribale')))? $CoreField->showGetVaribale(): true;
+                $match = $CoreCrud->selectSingleValue('settings', 'value', array('title' => 'string_variable', 'flg' => 1));
+                $show_variable = ((method_exists('CoreField', 'showGetVaribale'))) ? $CoreField->showGetVaribale() : true;
                 if ($match) {
 
                     // Find Replace
@@ -926,31 +981,31 @@ class CoreForm extends CI_Model {
                         if (is_array($data) && !is_null($data)) {
                             if (array_key_exists($key, $data)) {
                                 $replace_output = $data[$key];
-                            }else{
+                            } else {
                                 // Assign
                                 $value = $string[1];
                                 // $value = $$value;
                                 if (is_array($variables)) {
                                     if (array_key_exists($value, $variables)) {
                                         $replace_output = $variables[$value];
-                                    }else{
+                                    } else {
                                         $replace_output = ($show_variable) ? "_{[$value]}" : '';
                                     }
-                                }else{
+                                } else {
                                     $replace_output = ($show_variable) ? "_{[$value]}" : '';
                                 }
                             }
-                        }else{
+                        } else {
                             // Assign
                             $value = $string[1];
                             // $value = $$value;
                             if (is_array($variables)) {
                                 if (array_key_exists($value, $variables)) {
                                     $replace_output = $variables[$value];
-                                }else{
+                                } else {
                                     $replace_output = ($show_variable) ? "_{[$value]}" : '';
                                 }
-                            }else{
+                            } else {
                                 $replace_output = ($show_variable) ? "_{[$value]}" : '';
                             }
                         }
@@ -960,12 +1015,12 @@ class CoreForm extends CI_Model {
                     }
 
                     // Replace
-                    return preg_replace_callback($match,'replace_variable', $string);
-                }else{
+                    return preg_replace_callback($match, 'replace_variable', $string);
+                } else {
                     return $string;
                 }
             }
-        }else{
+        } else {
             return replace_variable($string);
         }
         return replace_variable($string);

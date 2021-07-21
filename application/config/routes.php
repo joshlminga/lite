@@ -1,5 +1,5 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
 /*
 | -------------------------------------------------------------------------
@@ -51,8 +51,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 */
 
 // initialize database
-require_once( BASEPATH . 'database/DB.php');
-$db =& DB();
+require_once(BASEPATH . 'database/DB.php');
+$db = &DB();
 
 $route['default_controller'] = 'Home'; //Main (Home) Page
 $route['404.html'] = 'HomeError'; //Theme Error Page For Front-end
@@ -173,11 +173,11 @@ $route['inheritances/delete'] = 'CoreInheritances/valid/delete'; //Delete
 $route['inheritances/multiple'] = 'CoreInheritances/valid/bulk'; //Bulk Action  
 
 /////////////////////////// EXTENSIONS //////////////////////
-$query = $db->select('setting_value')->where(array('setting_title'=>'extension_menu','setting_flg'=>1))->get('settings');
+$query = $db->select('setting_value')->where(array('setting_title' => 'extension_menu', 'setting_flg' => 1))->get('settings');
 $settValue = $query->result();
 // Routes
 $routeNames = null;
-for ($i=0; $i < count($settValue); $i++) { 
+for ($i = 0; $i < count($settValue); $i++) {
 	$setting_value = $settValue[$i]->setting_value; //Menu Data
 	$values = json_decode($setting_value, True);
 	if (array_key_exists('route', $values)) {
@@ -188,7 +188,7 @@ for ($i=0; $i < count($settValue); $i++) {
 // Values
 $routeNames = (is_array($routeNames)) ? array_values($routeNames) : null;
 if (is_array($routeNames)) {
-	for ($i=0; $i < count($routeNames); $i++) { 
+	for ($i = 0; $i < count($routeNames); $i++) {
 		$routeLine = $routeNames[$i];
 		foreach ($routeLine as $key => $value) {
 			$route[$key] = "$value"; // Assign Route
@@ -196,12 +196,12 @@ if (is_array($routeNames)) {
 	}
 }
 /////////////////////////// FIELDS //////////////////////////
-$query = $db->select('setting_value')->where(array('setting_title'=>'field_menu','setting_flg'=>1))->get('settings');
+$query = $db->select('setting_value')->where(array('setting_title' => 'field_menu', 'setting_flg' => 1))->get('settings');
 $settValue = $query->result();
 
 // Routes
 $routeNames = null;
-for ($i=0; $i < count($settValue); $i++) { 
+for ($i = 0; $i < count($settValue); $i++) {
 	$setting_value = $settValue[$i]->setting_value; //Menu Data
 	$values = json_decode($setting_value, True);
 	if (array_key_exists('route', $values)) {
@@ -212,7 +212,7 @@ for ($i=0; $i < count($settValue); $i++) {
 // Values
 $routeNames = (is_array($routeNames)) ? array_values($routeNames) : null;
 if (is_array($routeNames)) {
-	for ($i=0; $i < count($routeNames); $i++) { 
+	for ($i = 0; $i < count($routeNames); $i++) {
 		$routeLine = $routeNames[$i];
 		foreach ($routeLine as $key => $value) {
 			$route[$key] = "$value"; // Assign Route
@@ -221,12 +221,12 @@ if (is_array($routeNames)) {
 }
 
 /////////////////////////// CONTROLS ///////////////////////
-$query = $db->select('setting_value')->where(array('setting_title'=>'control_menu','setting_flg'=>1))->get('settings');
+$query = $db->select('setting_value')->where(array('setting_title' => 'control_menu', 'setting_flg' => 1))->get('settings');
 $settValue = $query->result();
 
 // Routes
 $routeNames = null;
-for ($i=0; $i < count($settValue); $i++) { 
+for ($i = 0; $i < count($settValue); $i++) {
 	$setting_value = $settValue[$i]->setting_value; //Menu Data
 	$values = json_decode($setting_value, True);
 	if (array_key_exists('route', $values)) {
@@ -236,7 +236,7 @@ for ($i=0; $i < count($settValue); $i++) {
 // Values
 $routeNames = (is_array($routeNames)) ? array_values($routeNames) : null;
 if (is_array($routeNames)) {
-	for ($i=0; $i < count($routeNames); $i++) { 
+	for ($i = 0; $i < count($routeNames); $i++) {
 		$routeLine = $routeNames[$i];
 		foreach ($routeLine as $key => $value) {
 			$route[$key] = "$value"; // Assign Route
@@ -245,12 +245,12 @@ if (is_array($routeNames)) {
 }
 
 /////////////////////////// MENU //////////////////////////
-$query = $db->select('setting_value')->where(array('setting_title'=>'menu_menu','setting_flg'=>1))->get('settings');
+$query = $db->select('setting_value')->where(array('setting_title' => 'menu_menu', 'setting_flg' => 1))->get('settings');
 $settValue = $query->result();
 
 // Routes
 $routeNames = null;
-for ($i=0; $i < count($settValue); $i++) { 
+for ($i = 0; $i < count($settValue); $i++) {
 	$setting_value = $settValue[$i]->setting_value; //Menu Data
 	$values = json_decode($setting_value, True);
 	if (array_key_exists('route', $values)) {
@@ -260,7 +260,7 @@ for ($i=0; $i < count($settValue); $i++) {
 // Values
 $routeNames = (is_array($routeNames)) ? array_values($routeNames) : null;
 if (is_array($routeNames)) {
-	for ($i=0; $i < count($routeNames); $i++) { 
+	for ($i = 0; $i < count($routeNames); $i++) {
 		$routeLine = $routeNames[$i];
 		foreach ($routeLine as $key => $value) {
 			$route[$key] = "$value"; // Assign Route
