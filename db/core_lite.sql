@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.0.2
+-- version 5.1.0
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Nov 16, 2020 at 09:44 AM
--- Server version: 5.7.26
--- PHP Version: 7.4.2
+-- Generation Time: Jul 22, 2021 at 11:22 AM
+-- Server version: 5.7.32
+-- PHP Version: 7.4.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -104,7 +104,7 @@ CREATE TABLE `customfields` (
 --
 
 INSERT INTO `customfields` (`customfield_id`, `customfield_title`, `customfield_required`, `customfield_optional`, `customfield_filters`, `customfield_show`, `customfield_details`, `customfield_stamp`, `customfield_default`, `customfield_flg`) VALUES
-(1, 'userdata', '[\"User Name\",\"User Email\"]', '[\"User Gender\",\"User Mobile\",\"\"]', '[\"user_name\",\"user_email\"]', 'admin', '{\"customfield_title\":\"User Data\",\"customfield_required\":\"[\\\"User Name\\\",\\\"User Email\\\"]\",\"customfield_optional\":\"[\\\"User Gender\\\",\\\"User Mobile\\\",\\\"\\\"]\",\"customfield_stamp\":\"2019-04-12 16:53:52\",\"customfield_flg\":1,\"customfield_filters\":\"[\\\"user_name\\\",\\\"user_email\\\"]\",\"customfield_default\":\"yes\"}', '2019-04-12 13:53:52', 'yes', 1);
+(1, 'member', '[\"Name\",\"Email\"]', '[\"Gender\",\"Mobile\"]', '[\"email\"]', 'admin', '{\"customfield_title\":\"Member\",\"customfield_required\":\"[\\\"Name\\\",\\\"Email\\\"]\",\"customfield_optional\":\"[\\\"Gender\\\",\\\"Mobile\\\"]\",\"customfield_stamp\":\"2021-07-22 13:17:45\",\"customfield_flg\":1,\"customfield_filters\":\"[\\\"email\\\"]\",\"customfield_default\":\"yes\"}', '2021-07-22 11:22:15', 'yes', 1);
 
 -- --------------------------------------------------------
 
@@ -149,9 +149,8 @@ CREATE TABLE `fields` (
 --
 
 INSERT INTO `fields` (`field_id`, `field_title`, `field_filters`, `field_data`, `field_show`, `field_details`, `field_stamp`, `field_default`, `field_flg`) VALUES
-(1, 'userdata', '{\"user_name\":\"Andrew\",\"user_email\":\"njenga@gmail.com\"}', '{\"user_name\":\"Andrew\",\"user_email\":\"njenga@gmail.com\",\"user_gender\":\"male\",\"user_mobile\":\"070854960\"}', 'public', '{\"field_data\":\"{\\\"user_name\\\":\\\"Andrew\\\",\\\"user_email\\\":\\\"njenga@gmail.com\\\",\\\"user_gender\\\":\\\"male\\\",\\\"user_mobile\\\":\\\"070854960\\\"}\",\"field_filters\":\"{\\\"user_name\\\":\\\"Andrew\\\",\\\"user_email\\\":\\\"njenga@gmail.com\\\"}\",\"field_title\":\"userdata\",\"field_stamp\":\"2019-02-06 18:34:25\",\"field_flg\":1}', '2019-02-06 15:34:25', 'yes', 1),
-(2, 'userdata', '{\"user_name\":\"testmember\",\"user_email\":\"test@gmail.com\"}', '{\"user_name\":\"testmember\",\"user_email\":\"test@gmail.com\",\"user_gender\":\"male\",\"user_mobile\":\"07008890\"}', 'public', '{\"field_data\":\"{\\\"user_name\\\":\\\"testmember\\\",\\\"user_email\\\":\\\"test@gmail.com\\\",\\\"user_gender\\\":\\\"male\\\",\\\"user_mobile\\\":\\\"07008890\\\"}\",\"field_filters\":\"{\\\"user_name\\\":\\\"testmember\\\",\\\"user_email\\\":\\\"test@gmail.com\\\"}\",\"field_title\":\"userdata\",\"field_stamp\":\"2019-10-16 18:43:36\",\"field_flg\":1}', '2019-10-16 15:43:36', 'yes', 1),
-(4, 'userdata', '{\"user_name\":\"testuser\",\"user_email\":\"kimnag@gmail.com\"}', '{\"user_name\":\"testuser\",\"user_email\":\"kimnag@gmail.com\",\"user_gender\":\"male\",\"user_mobile\":\"0755661123\"}', 'public', '{\"field_data\":\"{\\\"user_name\\\":\\\"testuser\\\",\\\"user_email\\\":\\\"kimnag@gmail.com\\\",\\\"user_gender\\\":\\\"male\\\",\\\"user_mobile\\\":\\\"0755661123\\\"}\",\"field_filters\":\"{\\\"user_name\\\":\\\"testuser\\\",\\\"user_email\\\":\\\"kimnag@gmail.com\\\"}\",\"field_title\":\"userdata\",\"field_stamp\":\"2019-10-16 21:44:09\",\"field_flg\":1}', '2019-10-16 18:44:09', 'yes', 1);
+(1, 'member', '{\"email\":\"johndoe@core.com\"}', '{\"name\":\"John Doe\",\"email\":\"johndoe@core.com\",\"mobile\":\"0700000000\",\"gender\":\"3\"}', 'public', '{\"field_data\":\"{\\\"name\\\":\\\"John Doe\\\",\\\"email\\\":\\\"johndoe@core.com\\\",\\\"mobile\\\":\\\"0700000000\\\",\\\"gender\\\":\\\"3\\\"}\",\"field_filters\":\"{\\\"email\\\":\\\"johndoe@core.com\\\"}\",\"field_title\":\"member\"}', '2021-07-22 10:39:16', 'yes', 1),
+(2, 'member', '{\"email\":\"janedoe@core.com\"}', '{\"name\":\"Jane Doe\",\"email\":\"janedoe@core.com\",\"mobile\":\"0700000001\",\"gender\":\"4\"}', 'public', '{\"field_data\":\"{\\\"name\\\":\\\"Jane Doe\\\",\\\"email\\\":\\\"janedoe@core.com\\\",\\\"mobile\\\":\\\"0700000001\\\",\\\"gender\\\":\\\"4\\\"}\",\"field_filters\":\"{\\\"email\\\":\\\"janedoe@core.com\\\"}\",\"field_title\":\"member\"}', '2021-07-22 10:39:45', 'yes', 1);
 
 -- --------------------------------------------------------
 
@@ -176,7 +175,9 @@ CREATE TABLE `inheritances` (
 
 INSERT INTO `inheritances` (`inheritance_id`, `inheritance_type`, `inheritance_parent`, `inheritance_title`, `inheritance_details`, `inheritance_stamp`, `inheritance_default`, `inheritance_flg`) VALUES
 (1, 'category', 0, 'Uncategorised', '{\"inheritance_type\":\"default\",\"inheritance_parent\":\"1\",\"inheritance_title\":\"Parent 2\",\"inheritance_stamp\":\"2019-01-28 13:25:59\",\"inheritance_flg\":1}', '2019-01-28 13:25:59', 'yes', 1),
-(2, 'tag', 0, 'Blog', '{\"inheritance_type\":\"default\",\"inheritance_parent\":\"0\",\"inheritance_title\":\"home\",\"inheritance_stamp\":\"2019-02-01 16:06:29\",\"inheritance_flg\":1}', '2019-02-01 16:06:29', 'yes', 1);
+(2, 'tag', 0, 'Blog', '{\"inheritance_type\":\"default\",\"inheritance_parent\":\"0\",\"inheritance_title\":\"home\",\"inheritance_stamp\":\"2019-02-01 16:06:29\",\"inheritance_flg\":1}', '2019-02-01 16:06:29', 'yes', 1),
+(3, 'gender', 0, 'Male', '{\"inheritance_type\":\"gender\",\"inheritance_parent\":\"0\",\"inheritance_title\":\"Male\",\"inheritance_stamp\":\"2021-07-22 12:47:03\",\"inheritance_flg\":1}', '2021-07-22 12:47:03', 'yes', 1),
+(4, 'gender', 0, 'Female', '{\"inheritance_type\":\"gender\",\"inheritance_parent\":\"0\",\"inheritance_title\":\"Female\",\"inheritance_stamp\":\"2021-07-22 12:47:09\",\"inheritance_flg\":1}', '2021-07-22 12:47:09', 'yes', 1);
 
 -- --------------------------------------------------------
 
@@ -199,10 +200,10 @@ CREATE TABLE `levels` (
 --
 
 INSERT INTO `levels` (`level_id`, `level_name`, `level_module`, `level_details`, `level_stamp`, `level_default`, `level_flg`) VALUES
-(1, 'admin', 'main,blog,page,autofield,control,inheritance,customfield,user,level,setting,profile,userdatas,customers', '{\"level_module\":\"main,blog,page,autofield,control,inheritance,customfield,user,level,setting,profile,userdatas,customers\",\"level_stamp\":\"2019-03-23 15:16:49\"}', '2019-03-23 12:16:49', 'yes', 1),
-(2, 'user', 'main,control,setting,profile,customers', '{\"level_module\":\"main,control,setting,profile,customers\",\"level_stamp\":\"2019-03-23 15:18:50\"}', '2019-03-23 12:18:50', 'yes', 1),
-(3, 'author', 'main,blog,page,autofield,control,inheritance,setting,profile', '{\"level_module\":\"main,blog,page,autofield,control,inheritance,setting,profile\",\"level_stamp\":\"2019-03-25 17:00:13\",\"level_default\":\"yes\"}', '2019-03-25 14:00:13', 'yes', 1),
-(4, 'customer', 'main,profile', '{\"level_module\":\"main,profile\",\"level_stamp\":\"2019-03-23 15:20:19\"}', '2019-03-23 12:20:19', 'no', 1);
+(1, 'admin', 'main,blog,page,autofield,control,inheritance,customfield,user,level,setting,profile,member,customer', '{\"level_module\":\"main,blog,page,autofield,control,inheritance,customfield,user,level,setting,profile,member,customer\",\"level_stamp\":\"2021-07-22 12:34:16\",\"level_default\":\"yes\"}', '2021-07-22 09:34:16', 'yes', 1),
+(2, 'user', 'main,control,setting,profile', '{\"level_module\":\"main,control,setting,profile\",\"level_stamp\":\"2021-07-22 12:34:01\",\"level_default\":\"yes\"}', '2021-07-22 09:34:01', 'yes', 1),
+(3, 'author', 'main,blog,page,autofield,control,inheritance,setting,profile', '{\"level_module\":\"main,blog,page,autofield,control,inheritance,setting,profile\",\"level_stamp\":\"2021-07-22 12:33:52\",\"level_default\":\"yes\"}', '2021-07-22 09:33:52', 'yes', 1),
+(4, 'customer', 'main,profile', '{\"level_module\":\"main,profile\",\"level_stamp\":\"2021-07-22 12:40:20\",\"level_default\":\"no\"}', '2021-07-22 09:40:20', 'no', 1);
 
 -- --------------------------------------------------------
 
@@ -256,7 +257,7 @@ CREATE TABLE `settings` (
 --
 
 INSERT INTO `settings` (`setting_id`, `setting_title`, `setting_value`, `setting_stamp`, `setting_default`, `setting_flg`) VALUES
-(1, 'site_title', 'Core CMS Lite', '2019-03-22 14:55:22', 'yes', 1),
+(1, 'site_title', 'Core CMS Lite', '2020-12-07 18:15:13', 'yes', 1),
 (2, 'site_slogan', 'Develop Faster, Easier and Modular ', '2018-11-23 14:19:36', 'yes', 1),
 (3, 'theme_title', 'starter', '2018-11-23 14:19:36', 'yes', 1),
 (4, 'site_status', 'online', '2018-12-17 08:52:06', 'yes', 1),
@@ -283,8 +284,8 @@ INSERT INTO `settings` (`setting_id`, `setting_title`, `setting_value`, `setting
 (25, 'seo_description', '', '2019-06-22 08:06:09', 'yes', 1),
 (26, 'seo_keywords', '', '2018-12-17 17:30:41', 'yes', 1),
 (27, 'seo_meta_data', '', '2018-12-17 16:10:23', 'yes', 1),
-(28, 'inheritance_data', 'default,category,tag', '2019-02-22 17:52:44', 'yes', 1),
-(29, 'module_list', 'main,blog,page,autofield,control,inheritance,customfield,user,level,setting,profile,userdata,customer', '2020-02-07 16:50:45', 'yes', 1),
+(28, 'inheritance_data', 'default,category,tag,gender', '2021-07-22 09:44:17', 'yes', 1),
+(29, 'module_list', 'main,blog,page,autofield,control,inheritance,customfield,user,level,setting,profile,member,customer', '2021-07-22 09:32:48', 'yes', 1),
 (30, 'assets', 'assets/admin', '2019-06-08 15:22:55', 'yes', 1),
 (31, 'ext_dir', 'extend/', '2019-06-11 07:54:39', 'yes', 1),
 (32, 'ext_assets', 'assets/extend', '2019-06-08 17:25:52', 'yes', 1),
@@ -294,10 +295,10 @@ INSERT INTO `settings` (`setting_id`, `setting_title`, `setting_value`, `setting
 (36, 'child_theme', '', '2019-06-08 18:30:26', 'yes', 1),
 (37, 'child_theme_dir', '', '2019-06-08 18:30:29', 'yes', 1),
 (38, 'child_theme_assets', '', '2019-06-08 18:30:34', 'yes', 1),
-(39, 'site_url', 'http://127.0.0.1', '2020-11-16 09:44:50', 'yes', 1),
-(40, 'session_key', '3S02TKD4vf', '2020-11-16 09:43:20', 'yes', 1),
-(41, 'field_menu', '{\"menu_path\":\"userdata/menu\",\"route\":{\"userdatas\":\"FieldUsers/index\",\"userdatas/new\":\"FieldUsers/open/add\", \"userdatas/edit\":\"FieldUsers/edit/edit\",\"userdatas/save\":\"FieldUsers/valid/save\",\"userdatas/update\":\"FieldUsers/valid/update\",\"userdatas/delete\":\"FieldUsers/valid/delete\", \"userdatas/multiple\":\"FieldUsers/valid/bulk\"}\r\n}', '2020-03-11 15:31:58', 'yes', 1),
-(43, 'extension_menu', '{\"menu_path\":\"customers/menu\",\"route\":{\"customers\":\"ExtensionCustomers/index\",\"customers/new\":\"ExtensionCustomers/open/add\", \"customers/edit\":\"ExtensionCustomers/edit/edit\",\"customers/save\":\"ExtensionCustomers/valid/save\",\"customers/update\":\"ExtensionCustomers/valid/update\",\"customers/delete\":\"ExtensionCustomers/valid/delete\", \"customers/multiple\":\"ExtensionCustomers/valid/bulk\"}\r\n}', '2020-03-11 16:31:37', 'yes', 1);
+(39, 'site_url', 'http://localhost:8888/CoreCMS/CoreLite/', '2021-07-22 09:28:40', 'yes', 1),
+(40, 'session_key', 'q6E4h3GQEA', '2021-07-22 09:01:55', 'yes', 1),
+(41, 'field_menu', '{\"menu_path\":\"member/menu\",\"route\":{\"member\":\"Field_Members/index\",\"member/new\":\"Field_Members/open/add\", \"member/edit\":\"Field_Members/edit/edit\",\"member/save\":\"Field_Members/valid/save\",\"member/update\":\"Field_Members/valid/update\",\"member/delete\":\"Field_Members/valid/delete\", \"member/multiple\":\"Field_Members/valid/bulk\"}\r\n}', '2021-07-22 09:01:28', 'yes', 1),
+(43, 'extension_menu', '{\"menu_path\":\"customer/menu\",\"route\":{\"customer\":\"Extension_Customers/index\",\"customer/new\":\"Extension_Customers/open/add\", \"customer/edit\":\"Extension_Customers/edit/edit\",\"customer/save\":\"Extension_Customers/valid/save\",\"customer/update\":\"Extension_Customers/valid/update\",\"customer/delete\":\"Extension_Customers/valid/delete\", \"customer/multiple\":\"Extension_Customers/valid/bulk\"}\r\n}', '2021-07-22 11:00:37', 'yes', 1);
 
 -- --------------------------------------------------------
 
@@ -323,7 +324,8 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`user_id`, `user_level`, `user_logname`, `user_password`, `user_name`, `user_email`, `user_details`, `user_stamp`, `user_default`, `user_flg`) VALUES
-(1, 'admin', 'admin', 'd033e22ae348aeb5660fc2140aec35850c4da997', 'Apha 407', 'fastemail47@gmail.com', '{\"user_name\":\"Apha 407\",\"user_email\":\"fastemail47@gmail.com\",\"user_level\":\"admin\",\"user_password\":\"d033e22ae348aeb5660fc2140aec35850c4da997\",\"user_stamp\":\"2019-05-15 12:03:15\",\"user_flg\":1,\"user_logname\":\"admin\"}', '2019-05-15 12:03:15', 'yes', 1);
+(1, 'admin', 'admin', 'd033e22ae348aeb5660fc2140aec35850c4da997', 'John Doe', 'johndoe@core.com', '{\"user_name\":\"John Doe\",\"user_email\":\"johndoe@core.com\",\"user_level\":\"admin\",\"user_password\":\"d033e22ae348aeb5660fc2140aec35850c4da997\",\"user_stamp\":\"2021-07-22 13:41:26\",\"user_flg\":1,\"user_logname\":\"admin\"}', '2021-07-22 13:41:26', 'yes', 1),
+(2, 'customer', 'janedoe', '06d213088a72f4c1ac947c6f3d9ddd321650ebfb', 'Jane Doe', 'janedoe@core.com', '{\"user_name\":\"Jane Doe\",\"user_email\":\"janedoe@core.com\",\"user_level\":\"customer\",\"user_logname\":\"janedoe\",\"user_password\":\"06d213088a72f4c1ac947c6f3d9ddd321650ebfb\",\"user_default\":\"no\",\"user_stamp\":\"2021-07-22 14:02:39\",\"user_flg\":1}', '2021-07-22 14:02:39', 'no', 1);
 
 --
 -- Indexes for dumped tables
@@ -426,13 +428,13 @@ ALTER TABLE `extensions`
 -- AUTO_INCREMENT for table `fields`
 --
 ALTER TABLE `fields`
-  MODIFY `field_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `field_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `inheritances`
 --
 ALTER TABLE `inheritances`
-  MODIFY `inheritance_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `inheritance_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `levels`
@@ -456,7 +458,7 @@ ALTER TABLE `settings`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `user_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

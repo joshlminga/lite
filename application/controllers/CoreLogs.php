@@ -198,17 +198,32 @@ class CoreLogs extends CI_Controller
 
 			$this->form_validation->set_rules("user_logname", "Logname", "trim|required|min_length[1]");
 			$this->form_validation->set_rules("user_password", "Password", "trim|required|min_length[1]");
+            $this->form_validation->set_rules("remember", "", "trim|max_length[5]");
+
 
 			//Form Validation
 			if ($this->form_validation->run() == TRUE) {
-				if ($this->login($formData) == 'success') {
+
+                // Login
+                $formLOG['user_logname'] = $formData['user_logname'];
+                $formLOG['user_password'] = $formData['user_password'];
+
+                // Remember
+                if (array_key_exists('remember', $formData)) {
+                    $formLOG['remember'] = $formData['remember'];
+                }
+
+                // Login User
+                $log_status = $this->login($formLOG);
+
+				if ($log_status == 'success') {
 					$this->session->set_flashdata('notification', 'notify'); //Notification Type
 					redirect("dashboard", "refresh"); //Redirect to Page
-				} elseif ($this->login($formData) == 'wrong') {
+				} elseif ($log_status == 'wrong') {
 					$this->session->set_flashdata('notification', 'error'); //Notification Type
 					$message = 'Failed!, wrong password or username'; //Notification Message				
 					$this->index($message); //Open Page
-				} elseif ($this->login($formData) == 'deactivated') {
+				} elseif ($log_status == 'deactivated') {
 					$this->session->set_flashdata('notification', 'error'); //Notification Type
 					$message = 'Failed!, your account is suspended'; //Notification Message				
 					$this->index($message); //Open Page
@@ -227,8 +242,15 @@ class CoreLogs extends CI_Controller
 			$message = 'Sorry!, reset password will be available later'; //Notification Message				
 			$this->index($message); //Open Page
 		} elseif ($type == 'logout') {
-			$this->session->sess_destroy(); //User Logout
-			$this->index(); //Open Page
+
+            $this->session->sess_destroy(); //User Logout
+
+            // Get CookieName
+            $cookie_name = $this->CoreLoad->getCookieName();
+            delete_cookie($cookie_name);
+
+            $main_site = $this->CoreCrud->selectSingleValue('settings', 'value', array('title' => 'site_url', 'flg' => 1)); // Main Site URL
+            redirect($main_site, 'refresh'); //Open Page
 		} else {
 			$this->session->set_flashdata('notification', 'notify'); //Notification Type
 			$this->index(); //Open Page
@@ -254,11 +276,11 @@ class CoreLogs extends CI_Controller
 
 		//Get Array Data
 		foreach ($formData as $key => $value) {
-			if (strtolower($key) == $column_logname) {
-				$logname = $value; //Set user logname
-			} else {
-				$password = $value; //Set user Password
-			}
+            if (strtolower($key) == $column_logname) {
+                $logname = $value; //Set user logname
+            } elseif (strtolower($key) == $column_password) {
+                $password = $value; //Set user Password
+            }
 		}
 
 		//Get Date Time
@@ -290,19 +312,22 @@ class CoreLogs extends CI_Controller
 
 					$this->session->set_userdata($newsession); //Create Session
 
-					/********** Cookie ***********/
-					$value  = $newsession[$session_id];
-					$expire = 604800;      // 1 week in seconds                                                                             
-					$secure = False;
-					$domain = base_url();
+                    if (array_key_exists('remember', $formData)) {
+                        if ($formData['remember'] == 'yes') {
 
-					// CookieName
-					$name = $this->CoreLoad->getCookieName();
+                            $value  = $newsession[$session_id];
+							$expire = 604800; // 1 week in seconds                                                    
+                            $secure = False;
+                            $domain = base_url();
 
-					// Get Cookie Value
-					$value = $this->encryption->encrypt($value);
-					set_cookie($name, $value, $expire, $secure);
+                            // CookieName
+                            $name = $this->CoreLoad->getCookieName();
 
+                            // Get Cookie Value
+                            $value = $this->encryption->encrypt($value);
+                            set_cookie($name, $value, $expire, $secure);
+                        }
+                    }
 
 					return 'success'; //Logged In
 				} else {

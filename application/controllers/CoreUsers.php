@@ -256,7 +256,6 @@ class CoreUsers extends CI_Controller {
 
 		//Pluralize Module
 		$module = $this->plural->pluralize($this->Module);
-		$coreModule = ucwords($this->Core).ucwords($module);
 		$routeURL = (is_null($this->Route)) ? $module : $this->Route;
 
 		//Set Allowed Files
@@ -610,7 +609,6 @@ class CoreUsers extends CI_Controller {
 	    }
     }
 
-
     /*
     *
     * Validate Email/Username (Logname)
@@ -619,12 +617,16 @@ class CoreUsers extends CI_Controller {
     */
    	public function logname_check($str)
    	{
+   		// Set Parent Table
+		$tableName = $this->Module;
+
+		//Validate
    		$check = (filter_var($str, FILTER_VALIDATE_EMAIL))? 'email' : 'logname'; //Look Email / Phone Number
-   		if (strtolower($str) == strtolower(trim($this->CoreCrud->selectSingleValue('user',$check,array('id'=>$this->CoreLoad->session('id')))))) {
+   		if (strtolower($str) == strtolower(trim($this->CoreCrud->selectSingleValue($tableName,$check,array('id'=>$this->CoreLoad->session('id')))))) {
             return true;
-        }elseif (count($this->CoreCrud->selectSingleValue('user','id',array($check=>$str))) <= 0) {        	
+		} elseif (is_null($this->CoreCrud->selectSingleValue($tableName, 'id', array($check => $str)))) {
             return true;
-   		}elseif ($this->CoreLoad->auth($this->Route)) {
+   		}elseif ($this->CoreLoad->session('level') == 'admin') {
    			return true;
    		}else{
 			$this->form_validation->set_message('logname_check', 'This {field} is already in use by another account');
@@ -634,12 +636,16 @@ class CoreUsers extends CI_Controller {
 
    	/*
    	*
-   	* Validate Mobile/Phone NUmber
+   	* Validate Mobile/Phone Number
    	* This function accept/take input field value / Session  mobile_check
    	*
    	*/
    	public function mobile_check($str=null)
    	{
+
+   		// Set Parent Table
+		$tableName = $this->Module;
+
    		//Get The Phone/Mobile Number
    		$number = (is_null($str))? $this->session->mobile_check : $str;
 
@@ -651,15 +657,15 @@ class CoreUsers extends CI_Controller {
 			//Check First Letter if does not start with 0
 			if (0 == substr($number, 0, 1)) {
 				//Check If it Phone number belongs to you
-		   		if (strtolower($number) == strtolower(trim($this->CoreCrud->selectSingleValue('user',$column_name,array('id'=>$this->CoreLoad->session('id')))))) {
+		   		if (strtolower($number) == strtolower(trim($this->CoreCrud->selectSingleValue($tableName,$column_name,array('id'=>$this->CoreLoad->session('id')))))) {
 		            return true;
 		        }
 		        //Check If user access is allowed
-		        elseif ($this->CoreLoad->auth('customer')) {
+		        elseif ($this->CoreLoad->auth($this->Route)) {
 		            return true;
 	        	}
 				//Must Be Unique
-	        	elseif (strlen($this->CoreCrud->selectSingleValue('user','id',array($column_name=>$number))) <= 0) {
+	        	elseif (strlen($this->CoreCrud->selectSingleValue($tableName,'id',array($column_name=>$number))) <= 0) {
 	        		//Must be integer
 	        		if (is_numeric($number) && strlen($number) == 10) {
 
@@ -705,7 +711,6 @@ class CoreUsers extends CI_Controller {
    			}
    		}
    	}
-
 }
 
 /* End of file CoreUsers.php */

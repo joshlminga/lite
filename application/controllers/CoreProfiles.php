@@ -84,9 +84,6 @@ class CoreProfiles extends CI_Controller {
 		//Module Name - For Forms Title
 		$data['ModuleName'] = $this->plural->pluralize($this->ModuleName);
 
-		//User Levels
-		$data['level'] = $this->CoreCrud->selectMultipleValue('levels','name',array('flg'=>1,'default'=>'no'));
-
 		//Form Submit URLs
 		$data['form_new'] = $this->New;
 		$data['form_save'] = $this->Save;
@@ -258,7 +255,6 @@ class CoreProfiles extends CI_Controller {
 
 		//Pluralize Module
 		$module = $this->plural->pluralize($this->Module);
-		$coreModule = ucwords($this->Core).ucwords($module);
 		$routeURL = (is_null($this->Route)) ? $module : $this->Route;
 
 		//Set Allowed Files

@@ -125,16 +125,48 @@ class CoreCrud extends CI_Model
   *  
   * 1: Pass The where clause as array('id'=>id_number,'parent'=>parent_id)
   * 2: Pass selected values separated by comma | by default it will select id,type,parent,title
+  * 3: Pass Sort By Column => Value | by default array('id'=>'ASC')
   *
   */
-  public function selectInheritanceItem($inheritance_where, $inheritance_select = 'id,type,parent,title')
+  public function selectInheritanceItem($inheritance_where, $inheritance_select = 'id,type,parent,title', $sort = array('id'=>'ASC'))
   {
+
+    $module = 'inheritances'; //Module Name
+    $module = $this->plural->singularize($module); //Make Sure Module Is Singular
 
     // Select Inheritance Data
     $columns = array($inheritance_select);
-    $data = $this->selectCRUD('inheritances', $inheritance_where, $columns);
 
-    return $data; //Return Data
+    $where = $inheritance_where; //Where
+    $select = $columns; //Columns
+
+    //Sort By
+    foreach ($sort as $key => $value) {
+      $order_by = $this->CoreForm->get_column_name($module, $key); //Set Column name
+      $order_type = trim(strtoupper($value));
+    }
+
+    //Get Table Name
+    $table = $this->plural->pluralize($module);
+
+    if (!is_null($select)) {
+        $columns = $this->CoreCrud->set_selectCRUD($module, $select);
+        $this->db->select($columns);
+    }
+    if (!is_null($where)) {
+        $where = $this->CoreCrud->set_whereCRUD($module, $where);
+        $this->db->where($where);
+    }
+
+    $this->db->from($table);
+    $this->db->order_by($order_by, $order_type);
+    $query = $this->db->get();
+
+    $checkData = $this->CoreCrud->checkResultFound($query); //Check If Value Found
+    $queryData = ($checkData == true) ? $query->result() : null;
+
+    return $queryData;
+
   }
 
   /*

@@ -154,20 +154,10 @@
 
                     <?php if ($this->CoreLoad->auth('autofield')): ?>
                     <li class=""><a href="<?= site_url('autofields') ?>">
-                        <i class="zmdi zmdi-folder-star zmdi-hc-fw blue"></i> Auto Fields</a>
+                        <i class="zmdi zmdi-folder-star zmdi-hc-fw"></i> Auto Fields</a>
                     </li>
                     <?php endif ?>
 
-                    <!-- Extensions -->
-                    <?php if ($this->CoreLoad->auth('extension')): ?>
-                    <li class="sub-menu"> <!-- active -->
-                        <a href="#" data-ma-action="submenu-toggle"><i class="zmdi zmdi-puzzle-piece green"></i> Extensions </a>
-                        <ul>
-                            <li class=""><a href="<?= site_url('extensions') ?>">Manage</a></li>
-                            <li class=""><a href="<?= site_url('extensions/new') ?>">New</a></li>
-                        </ul>
-                    </li>
-                    <?php endif ?>
                     <!-- Fields Menu -->
                     <?php $this->load->view("admin/menus/fields"); ?>
                     <!-- End Fields Menu -->
@@ -177,8 +167,6 @@
                         <a class="core-sidebar-link" href="#" data-ma-action="submenu-toggle">
                             <i class="zmdi zmdi-settings red_less"></i> Controls </a>
                         <ul>
-                            <li class="core-sub-item" style="display: none;"><a href="#">Store</a></li>
-                            <li class="core-sub-item" style="display: none;"><a href="#">Import</a></li>
                             <?php if ($this->CoreLoad->auth('inheritance')): ?>
                             <li class="core-sub-item"><a href="<?= site_url('inheritances') ?>">Inheritance</a></li>
                             <?php endif ?>
@@ -230,14 +218,6 @@
                         </ul>
                     </li>
                     <?php endif ?>
-                    <li class="sub-menu" style="display: none;"> <!-- active -->
-                        <a href="#" data-ma-action="submenu-toggle"><i class="zmdi zmdi-swap-vertical-circle blue"></i> About </a>
-                        <ul>
-                            <li class=""><a href="#">Core</a></li>
-                            <li class=""><a href="#">News</a></li>
-                            <li class=""><a href="#">Updates</a></li>
-                        </ul>
-                    </li>
 
                     <li class=""><a href="<?= site_url('admin/logout') ?>">
                         <i class="zmdi zmdi-square-right zmdi-hc-fw"></i> Logout</a>

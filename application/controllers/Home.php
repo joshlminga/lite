@@ -189,7 +189,6 @@ class Home extends CI_Controller {
 
 		//Pluralize Module
 		$module = $this->plural->pluralize($this->Module);
-		$coreModule = ucwords($this->Core).ucwords($module);
 		$routeURL = (is_null($this->Route)) ? $module : $this->Route;
 		$baseLoadPath = $this->plural->pluralize($this->Folder).$this->SubFolder.'/';
 

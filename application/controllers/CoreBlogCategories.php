@@ -258,7 +258,6 @@ class CoreBlogCategories extends CI_Controller {
 
 		//Pluralize Module
 		$module = $this->plural->pluralize($this->Module);
-		$coreModule = ucwords($this->Core).ucwords($module);
 		$routeURL = (is_null($this->Route)) ? $module : $this->Route;
 
 		//Set Allowed Files
