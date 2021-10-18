@@ -123,12 +123,21 @@ class CoreForm extends CI_Model
     *
     * Function to remove column Name and Return Label Name
     * Pass columns name(s) array/string
+    * Pass Table/Module/Filter/Route Name (Optional)
     * 
     */
-    public function get_label_name($column)
+    public function get_label_name($column, $module = null)
     {
+        // Table
+        $module = (is_null($module)) ? null : $this->plural->singularize($module);
+
         //Check If Value Passed is Not Array
         if (!is_array($column) && strpos($column, ",") == False) {
+            // Module
+            if (!is_null($module)) {
+                $table_column = explode($module, $column);
+                $column = (array_key_exists(1, $table_column)) ? $table_column[1] : $column;
+            }
             $label =  substr($column, strpos($column, "_") + 1); //Get Current Label Name
         } else {
             if (!is_array($column) && strpos($column, ",") == True) {
@@ -137,6 +146,11 @@ class CoreForm extends CI_Model
             //Remove Module Name
             for ($i = 0; $i < count($column); $i++) {
                 $column_name = $column[$i]; //Set Current Column Name
+                // Module
+                if (!is_null($module)) {
+                    $table_column = explode($module, $column_name);
+                    $column_name = (array_key_exists(1, $table_column)) ? $table_column[1] : $column_name;
+                }
                 $label[$i] =  substr($column_name, strpos($column_name, "_") + 1); //Get Current Label Name
             }
         }
@@ -860,7 +874,7 @@ class CoreForm extends CI_Model
         }
 
         // Get Labels
-        $filter_columns_name = $this->get_label_name($columns);
+        $filter_columns_name = $this->get_label_name($columns, $tableName);
 
         // Push Columns
         if (!is_null($pusharray)) {

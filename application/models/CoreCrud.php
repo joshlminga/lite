@@ -128,7 +128,7 @@ class CoreCrud extends CI_Model
   * 3: Pass Sort By Column => Value | by default array('id'=>'ASC')
   *
   */
-  public function selectInheritanceItem($inheritance_where, $inheritance_select = 'id,type,parent,title', $sort = array('id'=>'ASC'))
+  public function selectInheritanceItem($inheritance_where, $inheritance_select = 'id,type,parent,title', $sort = array('id' => 'ASC'))
   {
 
     $module = 'inheritances'; //Module Name
@@ -150,12 +150,12 @@ class CoreCrud extends CI_Model
     $table = $this->plural->pluralize($module);
 
     if (!is_null($select)) {
-        $columns = $this->CoreCrud->set_selectCRUD($module, $select);
-        $this->db->select($columns);
+      $columns = $this->CoreCrud->set_selectCRUD($module, $select);
+      $this->db->select($columns);
     }
     if (!is_null($where)) {
-        $where = $this->CoreCrud->set_whereCRUD($module, $where);
-        $this->db->where($where);
+      $where = $this->CoreCrud->set_whereCRUD($module, $where);
+      $this->db->where($where);
     }
 
     $this->db->from($table);
@@ -166,7 +166,6 @@ class CoreCrud extends CI_Model
     $queryData = ($checkData == true) ? $query->result() : null;
 
     return $queryData;
-
   }
 
   /*
@@ -510,7 +509,7 @@ class CoreCrud extends CI_Model
             $key = $keys_values[$i];
             $value = $updateData[$key];
 
-            $column_label = $this->CoreForm->get_label_name($key);
+            $column_label = $this->CoreForm->get_label_name($key, $tableName);
             $column_set = strtolower($this->CoreForm->get_column_name($field_title, $column_label)); //Column ID
             $filterUpdate[$column_set] = $value;
           }
@@ -603,7 +602,7 @@ class CoreCrud extends CI_Model
           $column_data = $this->get_column_data($table);
           $column_type = $this->CoreForm->get_column_name_type($column_data);
 
-          $columns = $this->CoreForm->get_label_name($column_type);
+          $columns = $this->CoreForm->get_label_name($column_type, $table);
           $columns = array_values($this->unsetData($columns, array(0)));
 
           //Check Field Data
