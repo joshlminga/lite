@@ -179,7 +179,7 @@ for ($i = 0; $i < count($settValue); $i++) {
 }
 
 // Reset
-$routeNames = array_values($routeNames);
+$routeNames = (is_array($routeNames)) ? array_values($routeNames) : $routeNames;
 
 // Values
 $routeNames = (is_array($routeNames)) ? array_values($routeNames) : null;
@@ -187,10 +187,13 @@ if (is_array($routeNames)) {
 	for ($i = 0; $i < count($routeNames); $i++) {
 		$routeLine = $routeNames[$i];
 		foreach ($routeLine as $key => $value) {
-			$route[$key] = "$value"; // Assign Route
+			$ky = trim($key);
+			$val = trim($value);
+			$route[$ky] = "$val"; // Assign Route
 		}
 	}
 }
+
 /////////////////////////// FIELDS //////////////////////////
 $query = $db->select('setting_value')->where(array('setting_title' => 'field_menu', 'setting_flg' => 1))->get('settings');
 $settValue = $query->result();
@@ -206,7 +209,7 @@ for ($i = 0; $i < count($settValue); $i++) {
 }
 
 // Reset
-$routeNames = array_values($routeNames);
+$routeNames = (is_array($routeNames)) ? array_values($routeNames) : $routeNames;
 
 // Values
 $routeNames = (is_array($routeNames)) ? array_values($routeNames) : null;
@@ -214,7 +217,9 @@ if (is_array($routeNames)) {
 	for ($i = 0; $i < count($routeNames); $i++) {
 		$routeLine = $routeNames[$i];
 		foreach ($routeLine as $key => $value) {
-			$route[$key] = "$value"; // Assign Route
+			$ky = trim($key);
+			$val = trim($value);
+			$route[$ky] = "$val"; // Assign Route
 		}
 	}
 }
@@ -234,7 +239,7 @@ for ($i = 0; $i < count($settValue); $i++) {
 }
 
 // Reset
-$routeNames = array_values($routeNames);
+$routeNames = (is_array($routeNames)) ? array_values($routeNames) : $routeNames;
 
 // Values
 $routeNames = (is_array($routeNames)) ? array_values($routeNames) : null;
@@ -242,7 +247,9 @@ if (is_array($routeNames)) {
 	for ($i = 0; $i < count($routeNames); $i++) {
 		$routeLine = $routeNames[$i];
 		foreach ($routeLine as $key => $value) {
-			$route[$key] = "$value"; // Assign Route
+			$ky = trim($key);
+			$val = trim($value);
+			$route[$ky] = "$val"; // Assign Route
 		}
 	}
 }
@@ -262,7 +269,7 @@ for ($i = 0; $i < count($settValue); $i++) {
 }
 
 // Reset
-$routeNames = array_values($routeNames);
+$routeNames = (is_array($routeNames)) ? array_values($routeNames) : $routeNames;
 
 // Values
 $routeNames = (is_array($routeNames)) ? array_values($routeNames) : null;
@@ -270,7 +277,9 @@ if (is_array($routeNames)) {
 	for ($i = 0; $i < count($routeNames); $i++) {
 		$routeLine = $routeNames[$i];
 		foreach ($routeLine as $key => $value) {
-			$route[$key] = "$value"; // Assign Route
+			$ky = trim($key);
+			$val = trim($value);
+			$route[$ky] = "$val"; // Assign Route
 		}
 	}
 }
