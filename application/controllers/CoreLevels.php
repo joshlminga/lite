@@ -289,7 +289,7 @@ class CoreLevels extends CI_Controller {
 					$this->index($message);//Open Page
 				}else{
 					$this->session->set_flashdata('notification','error'); //Notification Type
-					$this->index($message);//Open Page
+					$this->index();//Open Page
 				}
 			}else{
 				$this->session->set_flashdata('notification','error'); //Notification Type

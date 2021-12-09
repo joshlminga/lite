@@ -141,9 +141,14 @@ class CoreCrud extends CI_Model
     $select = $columns; //Columns
 
     //Sort By
-    foreach ($sort as $key => $value) {
-      $order_by = $this->CoreForm->get_column_name($module, $key); //Set Column name
-      $order_type = trim(strtoupper($value));
+    if (is_array($sort)) {
+      foreach ($sort as $key => $value) {
+        $order_by = $this->CoreForm->get_column_name($module, $key); //Set Column name
+        $order_type = trim(strtoupper($value));
+      }
+    } else {
+      $order_by = $this->CoreForm->get_column_name($module, 'id'); //Set Column name
+      $order_type = trim(strtoupper($sort));
     }
 
     //Get Table Name
