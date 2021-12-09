@@ -4,12 +4,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
 class CoreLoad extends CI_Model
 {
 
-	/*
-	*
-	* To load libraries/Model/Helpers/Add custom code which will be used in this Model
-	* This can ease the loading work 
-	* 
-	*/
+	/**
+	 *
+	 * To load libraries/Model/Helpers/Add custom code which will be used in this Model
+	 * This can ease the loading work 
+	 * 
+	 */
 	public function __construct()
 	{
 
@@ -27,18 +27,18 @@ class CoreLoad extends CI_Model
 
 	}
 
-	/*
-    *
-    * This function is used to load all data requred to be present for the system/website to operate well
-    * E.g Site Menu, Meta Data e.t.c
-    * All values are return as one array (data)
-    * 
-    */
+	/**
+	 *
+	 * This function is used to load all data requred to be present for the system/website to operate well
+	 * E.g Site Menu, Meta Data e.t.c
+	 * All values are return as one array (data)
+	 * 
+	 */
 	public function load()
 	{
 
 		//Loading Core CMS Version
-		$data['version'] = '4.83';
+		$data['version'] = '4.84';
 		$data['copyright_footer_1'] = "v" . $data['version'];
 		$data['copyright_footer_2'] = "Published 09-DEC-2021";
 
@@ -68,13 +68,13 @@ class CoreLoad extends CI_Model
 		return $data;
 	}
 
-	/*
-    *
-    * This function help the system to load the values needed for a particular page to oparate
-    * Thing like page articles, page templates etc are loaded here
-    * It accept value page ID/ page Template (if you do not wish to load other page assest)
-    * Pass passed data to be merged
-    */
+	/**
+	 *
+	 * This function help the system to load the values needed for a particular page to oparate
+	 * Thing like page articles, page templates etc are loaded here
+	 * It accept value page ID/ page Template (if you do not wish to load other page assest)
+	 * Pass passed data to be merged
+	 */
 	public function open($pageSET = null, $passed = array())
 	{
 
@@ -93,13 +93,13 @@ class CoreLoad extends CI_Model
 		return $data;
 	}
 
-	/*
-   	*
-   	* This Function is for checking if the system is set to be online.
-   	* When this function is called it will check if site_status on settings table is set to be online
-   	* if is online it will return TRUE else it will return FALSE
-   	* 
-   	*/
+	/**
+	 *
+	 * This Function is for checking if the system is set to be online.
+	 * When this function is called it will check if site_status on settings table is set to be online
+	 * if is online it will return TRUE else it will return FALSE
+	 * 
+	 */
 	public function site_status()
 	{
 		//Site Status
@@ -113,15 +113,15 @@ class CoreLoad extends CI_Model
 		}
 	}
 
-	/*
-    * This function allow user to generate random string or integer to be used as unique ID
-    * The function accept variable lenght as integer 
-    *  -- This variable set the lenght of your random string or variable, by default is set to 4
-    *
-    * The second parameter is values to be used to generate the random string au integer
-    * E.g If you pass '12345' the random integer will be generated from randomized number 1 2 3 4 5  
-    *     If you do not pass anything here we advise you only do this when generating password
-    */
+	/**
+	 * This function allow user to generate random string or integer to be used as unique ID
+	 * The function accept variable lenght as integer 
+	 *  -- This variable set the lenght of your random string or variable, by default is set to 4
+	 *
+	 * The second parameter is values to be used to generate the random string au integer
+	 * E.g If you pass '12345' the random integer will be generated from randomized number 1 2 3 4 5  
+	 *     If you do not pass anything here we advise you only do this when generating password
+	 */
 	public function random($length = 4, $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ{[}}-+*#')
 	{
 
@@ -135,21 +135,21 @@ class CoreLoad extends CI_Model
 		return $randomString; // Return Random String
 	}
 
-	/*
-    *
-    *  This function clean and return the inputs from your POST or Get request
-    *  The function accept two parameters
-    *  1: The value is the post data array you wish to get
-    *     E.g <input name='firstName' value="">
-    *         This form in Post or Get request it array Key name is firstName
-    *         That is the $value to be passed |i.e $value = 'firstName';
-    *
-    *    If this is left as null or passed as null, the function will return all data inside your post/get request. 
-    *    This is best if you want to store all data in one array or as JSON data later
-    *
-    *  2: the rule parameter is to determine if you want data from POST/GET value
-    *  
-    */
+	/**
+	 *
+	 *  This function clean and return the inputs from your POST or Get request
+	 *  The function accept two parameters
+	 *  1: The value is the post data array you wish to get
+	 *     E.g <input name='firstName' value="">
+	 *         This form in Post or Get request it array Key name is firstName
+	 *         That is the $value to be passed |i.e $value = 'firstName';
+	 *
+	 *    If this is left as null or passed as null, the function will return all data inside your post/get request. 
+	 *    This is best if you want to store all data in one array or as JSON data later
+	 *
+	 *  2: the rule parameter is to determine if you want data from POST/GET value
+	 *  
+	 */
 	public function input($value = null, $rule = 'post')
 	{
 		//Set the rule to lower string
@@ -167,12 +167,12 @@ class CoreLoad extends CI_Model
 	}
 
 
-	/*
-    *
-    *  This is function to help get corret URL
-    *  N:B site_url and base_url can do simillar thing
-    * 
-    */
+	/**
+	 *
+	 *  This is function to help get corret URL
+	 *  N:B site_url and base_url can do simillar thing
+	 * 
+	 */
 	public function siteURL($url = null)
 	{
 
@@ -183,27 +183,27 @@ class CoreLoad extends CI_Model
 		return $protocol . $domainName . $url;
 	}
 
-	/*
-	* This is Authentication Level Process
-	* N:B we do not use this to authenticate user password or username if they are valid. For that is done by Authentication Model
-	* 
-	* -> This function accept module(array) : You can pass module allowed 
-	* -> Second it accept level 
-	*    N:B if the user has logged in you do not need to send the level (pass the level variable) in the function
-	*        if user has not logged in you have to pass the level else the authentication will fail.
-	*    The second value has to be a string e.g admin, client, report etc
-	*
-	*  How It Works
-	*   -> Module : they are more like access level allowed to access the particluar modules
-	*   -> level : the currect level of the user as in users(Table) - user_level(column)
-	*              by default the level is accessed by the system via user logged session data $this->CoreLoad->session('level') so it's not must you pass the user level
-	*
-	*   -> If user hasn't logged in it will return FALSE
-	*   -> If user access level doesn't allow him/her to access the Module it will break the process and oped Access Not Allowed Page
-	*
-	*   -> If all permission are true/valid it will return TRUE
-	* 
-	*/
+	/**
+	 * This is Authentication Level Process
+	 * N:B we do not use this to authenticate user password or username if they are valid. For that is done by Authentication Model
+	 * 
+	 * -> This function accept module(array) : You can pass module allowed 
+	 * -> Second it accept level 
+	 *    N:B if the user has logged in you do not need to send the level (pass the level variable) in the function
+	 *        if user has not logged in you have to pass the level else the authentication will fail.
+	 *    The second value has to be a string e.g admin, client, report etc
+	 *
+	 *  How It Works
+	 *   -> Module : they are more like access level allowed to access the particluar modules
+	 *   -> level : the currect level of the user as in users(Table) - user_level(column)
+	 *              by default the level is accessed by the system via user logged session data $this->CoreLoad->session('level') so it's not must you pass the user level
+	 *
+	 *   -> If user hasn't logged in it will return FALSE
+	 *   -> If user access level doesn't allow him/her to access the Module it will break the process and oped Access Not Allowed Page
+	 *
+	 *   -> If all permission are true/valid it will return TRUE
+	 * 
+	 */
 	public function auth($module, $level = null)
 	{
 		//Check If Loged In
@@ -235,14 +235,14 @@ class CoreLoad extends CI_Model
 		}
 	}
 
-	/*
-	*
-	* This function help to log user back by checking if cookie is available
-	* 	By default cookie name is 'logged'
-	*
-	*	If you wish to change just use custom filed
-	*	add function setCookie and setup array like
-	*
+	/**
+	 *
+	 * This function help to log user back by checking if cookie is available
+	 * 	By default cookie name is 'logged'
+	 *
+	 *	If you wish to change just use custom filed
+	 *	add function setCookie and setup array like
+	 *
         // CookieSetup
         $cookie = array(
             'status' => true,
@@ -251,9 +251,9 @@ class CoreLoad extends CI_Model
 
         // Check
         return (array_key_exists($name,$cookie)) ? $cookie[$name] : false;
-	* 
-	* 
-	*/
+	 * 
+	 * 
+	 */
 	public function authCookie()
 	{
 
@@ -304,15 +304,15 @@ class CoreLoad extends CI_Model
 		return false;
 	}
 
-	/*
-	*
-	* This function is a substute to AUTH
-	* The function checks if user has logged in Only
-	* The function should only be used to the pages that does not require access level
-	*
-	* Remember you can do this direct by just checking with if statement $this->CoreLoad->session('logged')
-	* This function does not accept paramenters
-	*/
+	/**
+	 *
+	 * This function is a substute to AUTH
+	 * The function checks if user has logged in Only
+	 * The function should only be used to the pages that does not require access level
+	 *
+	 * Remember you can do this direct by just checking with if statement $this->CoreLoad->session('logged')
+	 * This function does not accept paramenters
+	 */
 	public function logged()
 	{
 		//Check If Logged In
@@ -323,15 +323,15 @@ class CoreLoad extends CI_Model
 		}
 	}
 
-	/*
-	*
-	* This function is a substute to AUTH
-	* The function checks if user access level Only
-	* The function should only be used to the pages that require access level
-	*
-	* Remember you can do this direct by just checking with if statement $this->CoreLoad->session('level')
-	* This function does not accept paramenters
-	*/
+	/**
+	 *
+	 * This function is a substute to AUTH
+	 * The function checks if user access level Only
+	 * The function should only be used to the pages that require access level
+	 *
+	 * Remember you can do this direct by just checking with if statement $this->CoreLoad->session('level')
+	 * This function does not accept paramenters
+	 */
 	public function level()
 	{
 		//Check If Logged In
@@ -342,13 +342,13 @@ class CoreLoad extends CI_Model
 		}
 	}
 
-	/*
-    *
-    * Set session name
-    * -> This function used to generate session names
-    * 1: Pass name of the session you wish to generate
-    * 2: Pass Optional custom prefix
-    */
+	/**
+	 *
+	 * Set session name
+	 * -> This function used to generate session names
+	 * 1: Pass name of the session you wish to generate
+	 * 2: Pass Optional custom prefix
+	 */
 	public function sessionName($name, $prefix = null)
 	{
 
@@ -362,13 +362,13 @@ class CoreLoad extends CI_Model
 		return $session;
 	}
 
-	/*
-    *
-    *
-    * This Function help you to get Session Value
-    * 1:Pass session name
-    * Return Session Value
-    */
+	/**
+	 *
+	 *
+	 * This Function help you to get Session Value
+	 * 1:Pass session name
+	 * Return Session Value
+	 */
 	public function session($session)
 	{
 		//Get Session Full Name
@@ -376,13 +376,13 @@ class CoreLoad extends CI_Model
 		return $this->session->$name;
 	}
 
-	/*
-    *
-    * Set cookie name
-    * -> This function used to generate cookie names
-    * 1: Pass name of the cookie you wish to generate
-    * 2: Pass Optional custom prefix
-    */
+	/**
+	 *
+	 * Set cookie name
+	 * -> This function used to generate cookie names
+	 * 1: Pass name of the cookie you wish to generate
+	 * 2: Pass Optional custom prefix
+	 */
 	public function getCookieName($name = 'logged', $prefix = null)
 	{
 		// Security Helper
@@ -406,13 +406,13 @@ class CoreLoad extends CI_Model
 		return $cookie;
 	}
 
-	/*
-    *
-    *
-    * This Function help you to get cookie Value
-    * 1:Pass cookie name
-    * Return cookie Value
-    */
+	/**
+	 *
+	 *
+	 * This Function help you to get cookie Value
+	 * 1:Pass cookie name
+	 * Return cookie Value
+	 */
 	public function cookie($cookie = 'logged')
 	{
 		// Encryption Library
@@ -430,12 +430,12 @@ class CoreLoad extends CI_Model
 		return $cookie_value;
 	}
 
-	/*
-	*
-	* Get Domain Name
-	* Fore Cookie USE
-	* 
-	*/
+	/**
+	 *
+	 * Get Domain Name
+	 * Fore Cookie USE
+	 * 
+	 */
 	public function getDomainName($url = null, $return = 'host')
 	{
 		//URL
@@ -452,11 +452,11 @@ class CoreLoad extends CI_Model
 		return ($return == 'all') ? $host_path : $host_path[$return]; //Return Data
 	}
 
-	/*
-	* 
-	* This are messages displayed when system/website is offline 
-	* 
-	*/
+	/**
+	 * 
+	 * This are messages displayed when system/website is offline 
+	 * 
+	 */
 	public function siteOffline()
 	{
 		//Offline Message
@@ -469,11 +469,11 @@ class CoreLoad extends CI_Model
 		echo $htmlDetails;
 	}
 
-	/*
-	*
-	* User access level is invalid E.g Client tries to access Administartor Page
-	* 
-	*/
+	/**
+	 *
+	 * User access level is invalid E.g Client tries to access Administartor Page
+	 * 
+	 */
 	public function notAllowed($error = null)
 	{
 
@@ -481,16 +481,16 @@ class CoreLoad extends CI_Model
 		redirect("CoreErrors/open");
 	}
 
-	/*
-	*
-	* This Function is used to load Administrator Menus
-	* Pass menu type Eg. Extension,Control,Field or Menu
-	* It will look mached menu Category in Setting Table
-	* Kindly note set title as extension_menu and in value add JSON ARRAY {"menu_path":"pathfolder/pathfile"}
-	*
-	* If it wont find any menu it will retun null
-	* 
-	*/
+	/**
+	 *
+	 * This Function is used to load Administrator Menus
+	 * Pass menu type Eg. Extension,Control,Field or Menu
+	 * It will look mached menu Category in Setting Table
+	 * Kindly note set title as extension_menu and in value add JSON ARRAY {"menu_path":"pathfolder/pathfile"}
+	 *
+	 * If it wont find any menu it will retun null
+	 * 
+	 */
 	public function menuLoad($loadMenu = null)
 	{
 		if (!is_null($loadMenu)) {
@@ -518,11 +518,11 @@ class CoreLoad extends CI_Model
 		return $menuLoaded; //Return Menu Loaded
 	}
 
-	/*
-	* Quick get path to your  Extends Assests
-	* By Default path start by including Extend Folder and /customfields-or-extensions/filed-or-extension folername
-	* 
-	*/
+	/**
+	 * Quick get path to your  Extends Assests
+	 * By Default path start by including Extend Folder and /customfields-or-extensions/filed-or-extension folername
+	 * 
+	 */
 	public function ext_asset($type = '', $load = 'ext_assets')
 	{
 		// Extension Path
@@ -532,12 +532,12 @@ class CoreLoad extends CI_Model
 		return $path; //Return Path
 	}
 
-	/*
-    *
-    * Access ext_Assets and Return proper url path and URL
-    * Return URL
-    *
-    */
+	/**
+	 *
+	 * Access ext_Assets and Return proper url path and URL
+	 * Return URL
+	 *
+	 */
 	public function loadAssets($ext, $type = 'extensions')
 	{
 
@@ -546,34 +546,34 @@ class CoreLoad extends CI_Model
 		return $asset; //Return Aseets
 	}
 
-	/*
-    *
-    * Load Auto Complete, By default from autofields set
-    * 
-    * 1: Pass where condintion as an array('column'=>value)
-    * 2: What to return (from the json data), set null for all
-    * 3: Pass table name by default autofields
-    * 4: Which column to select by default is 'data'
-    *
-    * Return value as array
-    */
+	/**
+	 *
+	 * Load Auto Complete, By default from autofields set
+	 * 
+	 * 1: Pass where condintion as an array('column'=>value)
+	 * 2: What to return (from the json data), set null for all
+	 * 3: Pass table name by default autofields
+	 * 4: Which column to select by default is 'data'
+	 *
+	 * Return value as array
+	 */
 	public function autoData($where, $return = null, $table = 'autofields', $select = 'data')
 	{
 		//load Ext
 		return $this->extData($where, $return, $table, $select);
 	}
 
-	/*
-    *
-    * Load EXT Data, By default from settings set
-    * 
-    * 1: Pass where condintion as an array('column'=>value)
-    * 2: What to return (from the json data), set null for all
-    * 3: Pass table name by default settings
-    * 4: Which column to select by default is 'value'
-    *
-    * Return value as array
-    */
+	/**
+	 *
+	 * Load EXT Data, By default from settings set
+	 * 
+	 * 1: Pass where condintion as an array('column'=>value)
+	 * 2: What to return (from the json data), set null for all
+	 * 3: Pass table name by default settings
+	 * 4: Which column to select by default is 'value'
+	 *
+	 * Return value as array
+	 */
 	public function extData($where, $return = null, $table = 'settings', $select = 'value')
 	{
 
@@ -601,16 +601,16 @@ class CoreLoad extends CI_Model
 		return (!is_null($data) && is_array($data)) ? $data : null;
 	}
 
-	/*
-    * loadAutoData | QuickLoadData in Json-format
-    *
-    * Pass
-    * 1: Where condition, for sql search in autofields | array('title'=>'auto_field','flg'=>1)
-    * 2: Pass (optional. By default all key will be returned) what to be returned by it's key(label name) | add_item_1
-    * 3: Pass table name (optional) | by default 'autofields'
-    * 4: Pass column name to select from (optional) | By default 'data' column will be selected
-    * 
-    */
+	/**
+	 * loadAutoData | QuickLoadData in Json-format
+	 *
+	 * Pass
+	 * 1: Where condition, for sql search in autofields | array('title'=>'auto_field','flg'=>1)
+	 * 2: Pass (optional. By default all key will be returned) what to be returned by it's key(label name) | add_item_1
+	 * 3: Pass table name (optional) | by default 'autofields'
+	 * 4: Pass column name to select from (optional) | By default 'data' column will be selected
+	 * 
+	 */
 	public function loadAutoData($where, $return = null, $table = 'autofields', $select = 'data')
 	{
 		//Return Data Found
@@ -618,5 +618,5 @@ class CoreLoad extends CI_Model
 	}
 }
 
-/* End of file CoreLoad.php */
-/* Location: ./application/models/CoreLoad.php */
+/** End of file CoreLoad.php */
+/** Location: ./application/models/CoreLoad.php */

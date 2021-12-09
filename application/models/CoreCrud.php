@@ -4,12 +4,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
 class CoreCrud extends CI_Model
 {
 
-  /*
-  *
-  * To load libraries/Model/Helpers/Add custom code which will be used in this Model
-  * This can ease the loading work 
-  * 
-  */
+  /**
+   *
+   * To load libraries/Model/Helpers/Add custom code which will be used in this Model
+   * This can ease the loading work 
+   * 
+   */
   public function __construct()
   {
 
@@ -25,12 +25,12 @@ class CoreCrud extends CI_Model
     // Your own constructor code
   }
 
-  /*
-  *
-  * Set Where clause
-  * 1: Pass Module Name 
-  * 2: Where clause values as Array
-  */
+  /**
+   *
+   * Set Where clause
+   * 1: Pass Module Name 
+   * 2: Where clause values as Array
+   */
   public function set_whereCRUD($module, $where)
   {
 
@@ -47,12 +47,12 @@ class CoreCrud extends CI_Model
     return $select_where;
   }
 
-  /*
-  *
-  * Set value To Select
-  * 1: Pass module name
-  * 2: Pass Column names as sting
-  */
+  /**
+   *
+   * Set value To Select
+   * 1: Pass module name
+   * 2: Pass Column names as sting
+   */
   public function set_selectCRUD($module, $column)
   {
 
@@ -82,13 +82,13 @@ class CoreCrud extends CI_Model
     return implode(',', $columns);
   }
 
-  /*
-  * Use this function to select datble values from the database
-  * Select function accept 
-  * 1: Module name pluralized to match Table Name
-  * 2: Clause (You can Pass Null to get all)
-  * 3: what to select (You can Pass Null to get any)
-  */
+  /**
+   * Use this function to select datble values from the database
+   * Select function accept 
+   * 1: Module name pluralized to match Table Name
+   * 2: Clause (You can Pass Null to get all)
+   * 3: what to select (You can Pass Null to get any)
+   */
   public function selectCRUD($module, $where = null, $select = null, $clause = 'where')
   {
 
@@ -117,17 +117,17 @@ class CoreCrud extends CI_Model
     return $queryData;
   }
 
-  /*
-  *
-  * This function is to help user select Inheritance Data
-  *
-  * By default the function will select inheritance_id,inheritance_type,inheritance_parent.inheritance_title unless specified other wise
-  *  
-  * 1: Pass The where clause as array('id'=>id_number,'parent'=>parent_id)
-  * 2: Pass selected values separated by comma | by default it will select id,type,parent,title
-  * 3: Pass Sort By Column => Value | by default array('id'=>'ASC')
-  *
-  */
+  /**
+   *
+   * This function is to help user select Inheritance Data
+   *
+   * By default the function will select inheritance_id,inheritance_type,inheritance_parent.inheritance_title unless specified other wise
+   *  
+   * 1: Pass The where clause as array('id'=>id_number,'parent'=>parent_id)
+   * 2: Pass selected values separated by comma | by default it will select id,type,parent,title
+   * 3: Pass Sort By Column => Value | by default array('id'=>'ASC')
+   *
+   */
   public function selectInheritanceItem($inheritance_where, $inheritance_select = 'id,type,parent,title', $sort = array('id' => 'ASC'))
   {
 
@@ -173,25 +173,25 @@ class CoreCrud extends CI_Model
     return $queryData;
   }
 
-  /*
-  * This function help you to select specific fields value from Field Table
-  * Kindly not this function wont check if your Field value is Active (field_flg = 1) by default
-  * -- It will also not compaire against filter value (If you use filter)
-  * 
-  * 
-  * 1: First parameter to pass is $field_where = To the idetifier value E.g id=>17,title=>User etc. | It has to be an array
-  * 2: Pass field value you want to select | also you can pass to return value as e.g registration_date as date, full_name as name
-  * N.B must match the field names
-  * If you want to select all values from field data, just do not pass second parameter
-  * 
-  * 3: Optional search type| by default it will search using where you can add like etc
-  *
-  * Kindly remember these values are selected on field_data column and field_id will be selected by default
-  * The function will loop through field_data value to match against your field_select value keys
-  *
-  * ----> To view the data Decode the Json json_decode($returned_data[array_position],True) 
-  * 
-  */
+  /**
+   * This function help you to select specific fields value from Field Table
+   * Kindly not this function wont check if your Field value is Active (field_flg = 1) by default
+   * -- It will also not compaire against filter value (If you use filter)
+   * 
+   * 
+   * 1: First parameter to pass is $field_where = To the idetifier value E.g id=>17,title=>User etc. | It has to be an array
+   * 2: Pass field value you want to select | also you can pass to return value as e.g registration_date as date, full_name as name
+   * N.B must match the field names
+   * If you want to select all values from field data, just do not pass second parameter
+   * 
+   * 3: Optional search type| by default it will search using where you can add like etc
+   *
+   * Kindly remember these values are selected on field_data column and field_id will be selected by default
+   * The function will loop through field_data value to match against your field_select value keys
+   *
+   * ----> To view the data Decode the Json json_decode($returned_data[array_position],True) 
+   * 
+   */
   public function selectFieldItem($field_where, $fiel_select = 'all', $clause = 'where')
   {
 
@@ -252,26 +252,26 @@ class CoreCrud extends CI_Model
     }
   }
 
-  /*
-  *
-  * This function help you to select and retun specific column value
-  * You can only select single column value
-  *
-  * In this function you pass
-  *
-  * 1: Module name / Table name
-  *  -> This will be singularize and used to generate column Name
-  *  -> Also pluralize for Table Name
-  *
-  * 2: Pass the selected column name
-  * 3: Pass the comparison values
-  *  array('column'=>'value')
-  *
-  * 4: Pass clause if you want to use Like etc.
-  *
-  * NB: Full Column Name -- will be added by the function 
-  * 
-  */
+  /**
+   *
+   * This function help you to select and retun specific column value
+   * You can only select single column value
+   *
+   * In this function you pass
+   *
+   * 1: Module name / Table name
+   *  -> This will be singularize and used to generate column Name
+   *  -> Also pluralize for Table Name
+   *
+   * 2: Pass the selected column name
+   * 3: Pass the comparison values
+   *  array('column'=>'value')
+   *
+   * 4: Pass clause if you want to use Like etc.
+   *
+   * NB: Full Column Name -- will be added by the function 
+   * 
+   */
   public function selectSingleValue($module, $select, $where, $clause = null)
   {
 
@@ -304,26 +304,26 @@ class CoreCrud extends CI_Model
     return $value;
   }
 
-  /*
-  *
-  * This function help you to select and retun multiple value
-  * You can only select passed column value(s)
-  *
-  * In this function you pass
-  *
-  * 1: Module name / Table name
-  *  -> This will be singularize and used to generate column Name
-  *  -> Also pluralize for Table Name
-  *
-  * 2: Pass the selected column name(s)
-  * 3: Pass the comparison values
-  *  array('column'=>'value')
-  *
-  * 4: Pass clause if you want to use Like etc.
-  *
-  * NB: Full Column Name -- will be added by the function 
-  * 
-  */
+  /**
+   *
+   * This function help you to select and retun multiple value
+   * You can only select passed column value(s)
+   *
+   * In this function you pass
+   *
+   * 1: Module name / Table name
+   *  -> This will be singularize and used to generate column Name
+   *  -> Also pluralize for Table Name
+   *
+   * 2: Pass the selected column name(s)
+   * 3: Pass the comparison values
+   *  array('column'=>'value')
+   *
+   * 4: Pass clause if you want to use Like etc.
+   *
+   * NB: Full Column Name -- will be added by the function 
+   * 
+   */
   public function selectMultipleValue($module, $select, $where, $clause = null)
   {
 
@@ -370,23 +370,23 @@ class CoreCrud extends CI_Model
 
 
 
-  /*
-  *
-  * Custom Field Handler
-  * This function will save custom field Data
-  * Note that once data is saved the function will return the input (insert ID) as array('id'=>inputIDNO)
-  * 
-  * If you opt for field_data data to be returned set data option as TRUE
-  *   array('field_data'=>data)
-  *
-  ** By Default is True
-  *
-  * 
-  * This function accept 
-  * 1: Data to Insert
-  * 2: return Data Option
-  * 
-  */
+  /**
+   *
+   * Custom Field Handler
+   * This function will save custom field Data
+   * Note that once data is saved the function will return the input (insert ID) as array('id'=>inputIDNO)
+   * 
+   * If you opt for field_data data to be returned set data option as TRUE
+   *   array('field_data'=>data)
+   *
+   ** By Default is True
+   *
+   * 
+   * This function accept 
+   * 1: Data to Insert
+   * 2: return Data Option
+   * 
+   */
   public function saveField($insertData, $returnData = true, $pushData = null, $esacapeData = array('id', 'details', 'stamp', 'default', 'flg'))
   {
 
@@ -433,24 +433,24 @@ class CoreCrud extends CI_Model
     }
   }
 
-  /*
-  *
-  * Custom Field Handler
-  * This function will update custom field Data
-  * Note that once data is updated the function will return the input (insert ID) as array('id'=>inputIDNO)
-  * 
-  * If you opt for field_data data to be returned set data option as TRUE
-  *   array('field_data'=>data)
-  *
-  ** By Default is True
-  * 
-  *
-  * This function accept 
-  * 1: Data to Updated
-  * 2: field ID (Where to afftect)
-  * 3: return Data Option
-  *
-  */
+  /**
+   *
+   * Custom Field Handler
+   * This function will update custom field Data
+   * Note that once data is updated the function will return the input (insert ID) as array('id'=>inputIDNO)
+   * 
+   * If you opt for field_data data to be returned set data option as TRUE
+   *   array('field_data'=>data)
+   *
+   ** By Default is True
+   * 
+   *
+   * This function accept 
+   * 1: Data to Updated
+   * 2: field ID (Where to afftect)
+   * 3: return Data Option
+   *
+   */
   public function updateField($updateData, $fieldID, $returnData = true, $pushData = null, $esacapeData = array('id', 'details', 'stamp', 'default', 'flg'))
   {
 
@@ -534,18 +534,18 @@ class CoreCrud extends CI_Model
     }
   }
 
-  /*
-  *
-  * Custom Field Handler
-  * This function will delete custom field Data
-  * Note that once data is delete the function will return the input (insert ID) as array('id'=>inputIDNO)
-  *  
-  *
-  * This function accept 
-  * 1: fieldID (Where to afftect)
-  * 2: Module affeted => By Defult is 'field'
-  *
-  */
+  /**
+   *
+   * Custom Field Handler
+   * This function will delete custom field Data
+   * Note that once data is delete the function will return the input (insert ID) as array('id'=>inputIDNO)
+   *  
+   *
+   * This function accept 
+   * 1: fieldID (Where to afftect)
+   * 2: Module affeted => By Defult is 'field'
+   *
+   */
   public function deleteField($fieldID)
   {
 
@@ -574,18 +574,18 @@ class CoreCrud extends CI_Model
     }
   }
 
-  /*
-  * This Function Manage CustomFields Data
-  * By default CoreLite will save data and return response
-  *
-  *
-  * This function accept 
-  * 1: Status (save|update|delete)
-  * 2: Route (NB: this must match your customfield -> title)
-  * 3: FormData (field_data) Values
-  * 4: fieldID (fieldID)
-  *
-  */
+  /**
+   * This Function Manage CustomFields Data
+   * By default CoreLite will save data and return response
+   *
+   *
+   * This function accept 
+   * 1: Status (save|update|delete)
+   * 2: Route (NB: this must match your customfield -> title)
+   * 3: FormData (field_data) Values
+   * 4: fieldID (fieldID)
+   *
+   */
   public function customFieldAuto($status, $route = null, $formValues, $fieldID = null)
   {
 
@@ -698,22 +698,22 @@ class CoreCrud extends CI_Model
     }
   }
 
-  /*
-  *
-  * Custom Field Auto Manager Helper
-  *
-  * This helper will help the operation of SAVE & UPDATE
-  * NB: This helper will also affect customfields *extended* tables
-  *
-  *
-  * This function accept 
-  * 1: Status (save|update|delete)
-  * 2: FormData (field_data) Values
-  * 3: fieldID (fieldID)
-  * 4: Route (NB: this must match your customfield -> title)
-  * 5: return Data Option
-  *
-  */
+  /**
+   *
+   * Custom Field Auto Manager Helper
+   *
+   * This helper will help the operation of SAVE & UPDATE
+   * NB: This helper will also affect customfields *extended* tables
+   *
+   *
+   * This function accept 
+   * 1: Status (save|update|delete)
+   * 2: FormData (field_data) Values
+   * 3: fieldID (fieldID)
+   * 4: Route (NB: this must match your customfield -> title)
+   * 5: return Data Option
+   *
+   */
   public function customFieldHelper($status, $formData, $fieldID = null, $route = null, $returnData = true)
   {
 
@@ -744,12 +744,12 @@ class CoreCrud extends CI_Model
     return ($formData['id']) ? true : false;
   }
 
-  /*
-  * 
-  * This function Check field Helpers Status
-  *
-  * 1: Passed Returned Data
-  */
+  /**
+   * 
+   * This function Check field Helpers Status
+   *
+   * 1: Passed Returned Data
+   */
   public function fieldStatus($returnedData)
   {
     //Check If is array
@@ -762,20 +762,20 @@ class CoreCrud extends CI_Model
     return $status; //Return Status
   }
 
-  /*
-  *
-  * Count Table Rows
-  * This function will return number of rows in a table selected
-  * By Default the function will do selection query only by ID (this is to speedup the selection process) 
-  * Then it will count the number of retuned results
-  * and return the number
-  *
-  * This function accept 
-  * 1: Table Name | passed as string
-  * 2: Clase, a where clause if you want to check specific column value
-  *  NB: pass as an array | array('column_name' => 'match_value');
-  * 
-  */
+  /**
+   *
+   * Count Table Rows
+   * This function will return number of rows in a table selected
+   * By Default the function will do selection query only by ID (this is to speedup the selection process) 
+   * Then it will count the number of retuned results
+   * and return the number
+   *
+   * This function accept 
+   * 1: Table Name | passed as string
+   * 2: Clase, a where clause if you want to check specific column value
+   *  NB: pass as an array | array('column_name' => 'match_value');
+   * 
+   */
   public function countTableRows($table, $where = null)
   {
 
@@ -806,13 +806,13 @@ class CoreCrud extends CI_Model
   }
 
 
-  /*
-  *
-  * Upload File Data
-  * -> Pass Input Name
-  * -> Pass Input Location (Upload location)
-  * 
-  */
+  /**
+   *
+   * Upload File Data
+   * -> Pass Input Name
+   * -> Pass Input Location (Upload location)
+   * 
+   */
   public function upload($inputName, $location = '../assets/media', $rule = 'jpg|jpeg|png|doc|docx|pdf|xls|txt', $link = true, $configs = null)
   {
 
@@ -826,15 +826,15 @@ class CoreCrud extends CI_Model
     return $file_link;
   }
 
-  /*
-  *
-  * Upload File Class
-  * The function accept the input data, 
-  * validation string and 
-  * Upload Location
-  * Return Link or Name | By Default it return Name
-  * 
-  */
+  /**
+   *
+   * Upload File Class
+   * The function accept the input data, 
+   * validation string and 
+   * Upload Location
+   * Return Link or Name | By Default it return Name
+   * 
+   */
   public function uploadFile($input = null, $valid = 'jpg|jpeg|png|doc|docx|pdf|xls|txt', $file = '../assets/media', $link = false, $configs = null)
   {
 
@@ -905,19 +905,19 @@ class CoreCrud extends CI_Model
     }
   }
 
-  /*
-  *
-  * File Path/Directory
-  * -> Pass where you wish file to be uploaded.
-  *
-  * This function will check if in the director Folder arranged by
-  * == Year - Month - Date
-  *
-  * If not it will create the folders and return appropiate URL to upload
-  *
-  * NB: To overide this function | pass FALSE after URL
-  * 
-  */
+  /**
+   *
+   * File Path/Directory
+   * -> Pass where you wish file to be uploaded.
+   *
+   * This function will check if in the director Folder arranged by
+   * == Year - Month - Date
+   *
+   * If not it will create the folders and return appropiate URL to upload
+   *
+   * NB: To overide this function | pass FALSE after URL
+   * 
+   */
   public function uploadDirecory($path = '../assets/media', $default = true)
   {
 
@@ -957,12 +957,12 @@ class CoreCrud extends CI_Model
     return $path_url; // Return PATH
   }
 
-  /*
-  *
-  * Delete Image/File Class
-  * The function accept the file stored path, 
-  *
-  */
+  /**
+   *
+   * Delete Image/File Class
+   * The function accept the file stored path, 
+   *
+   */
   public function deleteFile($path)
   {
 
@@ -985,14 +985,14 @@ class CoreCrud extends CI_Model
     }
   }
 
-  /*
-  *
-  * Generate Image Size
-  * This method will return image size as array('width' => , 'height' => )
-  *
-  * 1: Pass Custom Size
-  * 2: Pass Default Size | should never be null array('width' => , 'height' => )
-  */
+  /**
+   *
+   * Generate Image Size
+   * This method will return image size as array('width' => , 'height' => )
+   *
+   * 1: Pass Custom Size
+   * 2: Pass Default Size | should never be null array('width' => , 'height' => )
+   */
   public function imageSize($config, $default)
   {
 
@@ -1022,13 +1022,13 @@ class CoreCrud extends CI_Model
   }
 
 
-  /*
-  * Add Thumbnail
-  * -> This method will add a thumbnail for your image
-  *
-  * 1: Pass image path (where the image is found) as per what is returned by ->uploadFile() *Required*
-  * 2: Pass cofiguration, optional you can use the default or declaire custom in CoreField->thumbConfig()
-  **/
+  /**
+   * Add Thumbnail
+   * -> This method will add a thumbnail for your image
+   *
+   * 1: Pass image path (where the image is found) as per what is returned by ->uploadFile() *Required*
+   * 2: Pass cofiguration, optional you can use the default or declaire custom in CoreField->thumbConfig()
+   **/
   public function addThumbnail($file_name, $custom_config = array())
   {
     //File Path
@@ -1071,15 +1071,15 @@ class CoreCrud extends CI_Model
     $this->image_lib->clear();
   }
 
-  /*
-  * Add Watermark
-  * -> This method will add a watermark for your image
-  *
-  * 1: Pass image path (where the image is found) as per what is returned by ->uploadFile() *Required*
-  * 2: Pass cofiguration, optional you can use the default or declaire custom in CoreField->watermarkConfig()
-  *
-  * NB: Add watermark then resize
-  **/
+  /**
+   * Add Watermark
+   * -> This method will add a watermark for your image
+   *
+   * 1: Pass image path (where the image is found) as per what is returned by ->uploadFile() *Required*
+   * 2: Pass cofiguration, optional you can use the default or declaire custom in CoreField->watermarkConfig()
+   *
+   * NB: Add watermark then resize
+   **/
   public function addWatermark($file_name, $custom_config = array())
   {
     //File Path
@@ -1119,15 +1119,15 @@ class CoreCrud extends CI_Model
     $this->image_lib->clear();
   }
 
-  /*
-  *  Resize Image
-  * -> This method will resize your image
-  *
-  * 1: Pass image path (where the image is found) as per what is returned by ->uploadFile() *Required*
-  * 2: Pass the dimession (Size) & Background Color, optional you can use the default or declaire custom in CoreField->resizeImageConfig()
-  *
-  * NB: Only For JPG(JPEG), PNG and GIF
-  **/
+  /**
+   *  Resize Image
+   * -> This method will resize your image
+   *
+   * 1: Pass image path (where the image is found) as per what is returned by ->uploadFile() *Required*
+   * 2: Pass the dimession (Size) & Background Color, optional you can use the default or declaire custom in CoreField->resizeImageConfig()
+   *
+   * NB: Only For JPG(JPEG), PNG and GIF
+   **/
   public function resizeImage($file_name, $custom_config = array())
   {
     //File Path
@@ -1205,16 +1205,16 @@ class CoreCrud extends CI_Model
     return true;
   }
 
-  /*
-  * 
-  * Compress Image 
-  * -> This method will compress your image
-  *
-  * 1: Pass image path (where the image is found) as per what is returned by ->uploadFile() *Required*
-  * 2: Pass cofiguration, optional you can use the default or declaire custom in CoreField->compressImageConfig()
-  *
-  * NB: Add watermark then resize
-  **/
+  /**
+   * 
+   * Compress Image 
+   * -> This method will compress your image
+   *
+   * 1: Pass image path (where the image is found) as per what is returned by ->uploadFile() *Required*
+   * 2: Pass cofiguration, optional you can use the default or declaire custom in CoreField->compressImageConfig()
+   *
+   * NB: Add watermark then resize
+   **/
   public function compressImage($file_name, $custom_config = null)
   {
     //File Path
@@ -1255,11 +1255,11 @@ class CoreCrud extends CI_Model
     $this->image_lib->clear();
   }
 
-  /*
-  *
-  * Generate Url From Title
-  * 
-  */
+  /**
+   *
+   * Generate Url From Title
+   * 
+   */
   public function postURL($postID, $currURL = null, $module = 'page')
   {
 
@@ -1321,10 +1321,10 @@ class CoreCrud extends CI_Model
     return $post_url;
   }
 
-  /*
-  *
-  * Check If Same URL Exist 
-  */
+  /**
+   *
+   * Check If Same URL Exist 
+   */
   public function checkURL($currURL, $currPOST, $module = 'page')
   {
 
@@ -1348,15 +1348,15 @@ class CoreCrud extends CI_Model
     }
   }
 
-  /*
-  *
-  * This function allow user to remove array key and it's value from the data
-  * The two parameters passed are
-  * 1: $passedData - the array containing full data
-  * 2: $unsetData - the value you wish to be removed from the array
-  *
-  *  -> The function will return the remaining of the data
-  */
+  /**
+   *
+   * This function allow user to remove array key and it's value from the data
+   * The two parameters passed are
+   * 1: $passedData - the array containing full data
+   * 2: $unsetData - the value you wish to be removed from the array
+   *
+   *  -> The function will return the remaining of the data
+   */
   public function unsetData($passedData, $unsetData = null)
   {
     if (!is_null($unsetData)) {
@@ -1377,14 +1377,14 @@ class CoreCrud extends CI_Model
     }
   }
 
-  /*
-  *
-  * This function allow query to be counted before selection
-  * Means when you want to select a value use this query to make sure the value exist
-  * It will avoid error
-  * NB: This is mostly used by the system  
-  * 
-  */
+  /**
+   *
+   * This function allow query to be counted before selection
+   * Means when you want to select a value use this query to make sure the value exist
+   * It will avoid error
+   * NB: This is mostly used by the system  
+   * 
+   */
   public function checkResultFound($query)
   {
     if ($query->num_rows() > 0) {
@@ -1394,13 +1394,13 @@ class CoreCrud extends CI_Model
     }
   }
 
-  /*
-  *
-  * Destroy Data Session
-  *  This function will destroy all page session values
-  *  For specific session pass session ID/name as array
-  *  
-  */
+  /**
+   *
+   * Destroy Data Session
+   *  This function will destroy all page session values
+   *  For specific session pass session ID/name as array
+   *  
+   */
   public function destroySession($sessionData = null)
   {
 
@@ -1422,12 +1422,12 @@ class CoreCrud extends CI_Model
     }
   }
 
-  /*
-  *
-  * Get Table Column Name and Column Type
-  * Function accept Module name then it pluralize it to get table name
-  * 
-  */
+  /**
+   *
+   * Get Table Column Name and Column Type
+   * Function accept Module name then it pluralize it to get table name
+   * 
+   */
   public function get_column_data($module, $database = null)
   {
     //Get Table Name
@@ -1442,20 +1442,20 @@ class CoreCrud extends CI_Model
     return $query->result();
   }
 
-  /*
-    *
-    * Load Json Formated Data (THE DATA HAS TO BE IN JSON FORMAT)
-    * -> Works best for Settings and AutoFields. 
-    * -> NB: For Fields use CoreCrud->selectField
-    *
-    * Pass
-    * 1: Where condition, for sql search in autofields | array('title'=>'extension_menu','flg'=>1)
-    * 2: Pass (optional. By default all key will be returned) what to be returned by it's key name | menu_path
-    * 3: Pass table name (optional) | by default 'settings'
-    * 4: Pass column name to select from (optional) | By default 'value' column will be selected
-    * 
-    * -> Returned data will be array(key => value)
-    */
+  /**
+   *
+   * Load Json Formated Data (THE DATA HAS TO BE IN JSON FORMAT)
+   * -> Works best for Settings and AutoFields. 
+   * -> NB: For Fields use CoreCrud->selectField
+   *
+   * Pass
+   * 1: Where condition, for sql search in autofields | array('title'=>'extension_menu','flg'=>1)
+   * 2: Pass (optional. By default all key will be returned) what to be returned by it's key name | menu_path
+   * 3: Pass table name (optional) | by default 'settings'
+   * 4: Pass column name to select from (optional) | By default 'value' column will be selected
+   * 
+   * -> Returned data will be array(key => value)
+   */
   public function loadJsonData($where, $return = null, $table = 'settings', $select = 'value')
   {
 
@@ -1484,5 +1484,5 @@ class CoreCrud extends CI_Model
   }
 }
 
-/* End of file CoreCrud.php */
-/* Location: ./application/models/CoreCrud.php */
+/** End of file CoreCrud.php */
+/** Location: ./application/models/CoreCrud.php */

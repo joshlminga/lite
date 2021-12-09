@@ -6,12 +6,12 @@ class CoreField extends CI_Model
 
     private $DB = "";
 
-    /*
-	*
-	* To load libraries/Model/Helpers/Add custom code which will be used in this Model
-	* This can ease the loading work 
-	* 
-	*/
+    /**
+     *
+     * To load libraries/Model/Helpers/Add custom code which will be used in this Model
+     * This can ease the loading work 
+     * 
+     */
     public function __construct()
     {
 
@@ -26,12 +26,12 @@ class CoreField extends CI_Model
         // Your own constructor code
     }
 
-    /*
-    *
-    * This function is used to load all your custom data requred to be present for the system/website to oparate well
-    * All values are return as one array (data)
-    * 
-    */
+    /**
+     *
+     * This function is used to load all your custom data requred to be present for the system/website to oparate well
+     * All values are return as one array (data)
+     * 
+     */
     public function load()
     {
         //Values Assets
@@ -44,5 +44,5 @@ class CoreField extends CI_Model
     }
 }
 
-/* End of file CoreField.php */
-/* Location: ./application/models/CoreField.php */
+/** End of file CoreField.php */
+/** Location: ./application/models/CoreField.php */

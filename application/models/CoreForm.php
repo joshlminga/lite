@@ -5,12 +5,12 @@ class CoreForm extends CI_Model
 {
 
 
-    /*
-    *
-    * To load libraries/Model/Helpers/Add custom code which will be used in this Model
-    * This can ease the loading work 
-    * 
-    */
+    /**
+     *
+     * To load libraries/Model/Helpers/Add custom code which will be used in this Model
+     * This can ease the loading work 
+     * 
+     */
     public function __construct()
     {
 
@@ -27,12 +27,12 @@ class CoreForm extends CI_Model
     }
 
 
-    /*
-    *
-    * Get Table Column Name and Column Type
-    * Function accept Module name then it pluralize it to get table name
-    * 
-    */
+    /**
+     *
+     * Get Table Column Name and Column Type
+     * Function accept Module name then it pluralize it to get table name
+     * 
+     */
     public function get_column_data($module)
     {
         //Get Table Name
@@ -44,13 +44,13 @@ class CoreForm extends CI_Model
         return $query->result();
     }
 
-    /*
-    *
-    * This function help you to check if Table exist
-    *
-    * 1: Pass Tablename
-    *
-    */
+    /**
+     *
+     * This function help you to check if Table exist
+     *
+     * 1: Pass Tablename
+     *
+     */
     public function checkTable($tableName)
     {
         // Get Custom Field Title
@@ -65,12 +65,12 @@ class CoreForm extends CI_Model
         }
     }
 
-    /*
-    *
-    * Function to generate columns name or Type Array
-    * Pass columns Name & Type array
-    * 
-    */
+    /**
+     *
+     * Function to generate columns name or Type Array
+     * Pass columns Name & Type array
+     * 
+     */
     public function get_column_name_type($column_name_type, $get = 'name')
     {
         //Array to store Data
@@ -92,14 +92,14 @@ class CoreForm extends CI_Model
         return $name_type;
     }
 
-    /*
-    *
-    * The function generate proper multiple/single column names
-    * The function accepts
-    * 1: Module Name
-    * 2: Column simple name(s)
-    * 
-    */
+    /**
+     *
+     * The function generate proper multiple/single column names
+     * The function accepts
+     * 1: Module Name
+     * 2: Column simple name(s)
+     * 
+     */
     public function get_column_name($module, $column)
     {
         //Singularize Module
@@ -109,7 +109,8 @@ class CoreForm extends CI_Model
             $column_name = $module . '_' . $column; //Column Name
         } else {
             if (!is_array($column) && strpos($column, ",") == True) {
-                $column = explode(",", $column); /* Get Column Name */
+                $column = explode(",", $column);
+                /** Get Column Name */
             }
             for ($i = 0; $i < count($column); $i++) {
                 $column_name[$i] = $this->get_column_name($module, $column[$i]); //Column Name
@@ -119,13 +120,13 @@ class CoreForm extends CI_Model
         return $column_name; //Column Name
     }
 
-    /*
-    *
-    * Function to remove column Name and Return Label Name
-    * Pass columns name(s) array/string
-    * Pass Table/Module/Filter/Route Name (Optional)
-    * 
-    */
+    /**
+     *
+     * Function to remove column Name and Return Label Name
+     * Pass columns name(s) array/string
+     * Pass Table/Module/Filter/Route Name (Optional)
+     * 
+     */
     public function get_label_name($column, $module = null)
     {
         // Table
@@ -141,7 +142,8 @@ class CoreForm extends CI_Model
             $label =  substr($column, strpos($column, "_") + 1); //Get Current Label Name
         } else {
             if (!is_array($column) && strpos($column, ",") == True) {
-                $column = explode(",", $column); /* Get Column Name */
+                $column = explode(",", $column);
+                /** Get Column Name */
             }
             //Remove Module Name
             for ($i = 0; $i < count($column); $i++) {
@@ -158,16 +160,16 @@ class CoreForm extends CI_Model
         return $label; //Return Label List
     }
 
-    /*
-    *
-    * Set Validation Session Data
-    *
-    * This function allow you to change validation Session Data with Ease during validation Process
-    * This function accept
-    *
-    * Session Data as Array=>Key
-    * 
-    */
+    /**
+     *
+     * Set Validation Session Data
+     *
+     * This function allow you to change validation Session Data with Ease during validation Process
+     * This function accept
+     *
+     * Session Data as Array=>Key
+     * 
+     */
     public function validation_session($validation)
     {
         //Set Session Data
@@ -179,15 +181,15 @@ class CoreForm extends CI_Model
         $this->session->set_userdata($file_upload_session);
     }
 
-    /*
-    *
-    * Get User Profile
-    * This function is used to get user profile is isset
-    *
-    * Pass user ID (If null -> session ID will be take)
-    * Pass user Profile Keyname (By default is user-profile)
-    * Pass Default Optional Profile [Pass either yes/no] (By default it will use level from user_level)
-    */
+    /**
+     *
+     * Get User Profile
+     * This function is used to get user profile is isset
+     *
+     * Pass user ID (If null -> session ID will be take)
+     * Pass user Profile Keyname (By default is user-profile)
+     * Pass Default Optional Profile [Pass either yes/no] (By default it will use level from user_level)
+     */
     public function userProfile($userId = null, $profileKey = 'user_profile', $userDefault = null)
     {
         //User ID
@@ -224,22 +226,22 @@ class CoreForm extends CI_Model
         return $profile;
     }
 
-    /*
-    *
-    * Form Save Field
-    * This function will prepaire data to be saved
-    *
-    * Function will return form Data Ready To Save
-    *
-    * This function accept 
-    * 1: Form Data To Save
-    * 2: Input ID To Get CustomFields
-    * 3: Pass unsetData By Default is null
-    * 4: Pass Unset Before/After NB: By Default it will unset Before, To Unset After Pass | after
-    * 5: Additional Optional Filters
-    * 6: Module affeted => By Defult is 'field'
-    * 
-    */
+    /**
+     *
+     * Form Save Field
+     * This function will prepaire data to be saved
+     *
+     * Function will return form Data Ready To Save
+     *
+     * This function accept 
+     * 1: Form Data To Save
+     * 2: Input ID To Get CustomFields
+     * 3: Pass unsetData By Default is null
+     * 4: Pass Unset Before/After NB: By Default it will unset Before, To Unset After Pass | after
+     * 5: Additional Optional Filters
+     * 6: Module affeted => By Defult is 'field'
+     * 
+     */
     public function saveFormField($formData, $inputID, $unsetData = null, $unsetKey = 'before', $addFilters = null, $Module = 'field')
     {
 
@@ -278,7 +280,8 @@ class CoreForm extends CI_Model
 
         //Check Additional Filters
         $dataFilters = (!is_null($addFilters)) ? array_merge($newFilterDataValue, $addFilters) : $newFilterDataValue;
-        $tempo_filter = json_encode($dataFilters); /* Set Filters */
+        $tempo_filter = json_encode($dataFilters);
+        /** Set Filters */
 
         //Set Field Data
         $column_data = strtolower($this->get_column_name($Module, 'data'));
@@ -294,7 +297,8 @@ class CoreForm extends CI_Model
 
         //Set Filters
         $column_filters = strtolower($this->get_column_name($Module, 'filters'));
-        $formData[$column_filters] = $tempo_filter; /* Set Filters */
+        $formData[$column_filters] = $tempo_filter;
+        /** Set Filters */
 
         //Set Title/Name
         $column_title = strtolower($this->get_column_name($Module, 'title'));
@@ -320,22 +324,22 @@ class CoreForm extends CI_Model
         return $formData;
     }
 
-    /*
-    *
-    * Form Update Field
-    * This function will prepaire data to be updated
-    *
-    * Function will return form Data Ready To Update
-    *
-    * This function accept 
-    * 1: Form Data To Update
-    * 2: Input ID To Get CustomFields
-    * 3: Pass unsetData By Default is null
-    * 4: Pass Unset Before/After NB: By Default it will unset Before, To Unset After Pass | after
-    * 5: Additional Optional Filters
-    * 6: Module affeted => By Defult is 'field'
-    * 
-    */
+    /**
+     *
+     * Form Update Field
+     * This function will prepaire data to be updated
+     *
+     * Function will return form Data Ready To Update
+     *
+     * This function accept 
+     * 1: Form Data To Update
+     * 2: Input ID To Get CustomFields
+     * 3: Pass unsetData By Default is null
+     * 4: Pass Unset Before/After NB: By Default it will unset Before, To Unset After Pass | after
+     * 5: Additional Optional Filters
+     * 6: Module affeted => By Defult is 'field'
+     * 
+     */
     public function updateFormField($updateData, $inputID, $unsetData = null, $unsetKey = 'before', $addFilters = null, $Module = 'field')
     {
 
@@ -390,7 +394,8 @@ class CoreForm extends CI_Model
 
         //Check Additional Filters
         $dataFilters = (!is_null($addFilters)) ? array_merge($newFilterDataValue, $addFilters) : $newFilterDataValue;
-        $tempo_filter = json_encode($dataFilters); /* Set Filters */
+        $tempo_filter = json_encode($dataFilters);
+        /** Set Filters */
 
         //Set Field Data
         $column_data = strtolower($this->get_column_name($Module, 'data'));
@@ -405,7 +410,8 @@ class CoreForm extends CI_Model
         }
 
         //Set Filters
-        $updateData[$column_filters] = $tempo_filter; /* Set Filters */
+        $updateData[$column_filters] = $tempo_filter;
+        /** Set Filters */
 
         //Details Column Update
         $details = strtolower($this->get_column_name('field', 'details'));
@@ -418,12 +424,14 @@ class CoreForm extends CI_Model
         if (strtolower($unsetKey) == 'before') {
             $updateData = $this->CoreCrud->unsetData($updateData, $unsetData); //Unset Data
             foreach ($updateData as $key => $value) {
-                $current_details["$key"] = $value; /* Update -> Details */
+                $current_details["$key"] = $value;
+                /** Update -> Details */
             }
             $updateData["$details"] = json_encode($current_details);
         } else {
             foreach ($updateData as $key => $value) {
-                $current_details["$key"] = $value; /* Update -> Details */
+                $current_details["$key"] = $value;
+                /** Update -> Details */
             }
             $updateData["$details"] = json_encode($current_details);
             $updateData = $this->CoreCrud->unsetData($updateData, $unsetData); //Unset Data
@@ -433,16 +441,16 @@ class CoreForm extends CI_Model
         return $updateData;
     }
 
-    /*
-    * 
-    * This function will apply stamp | default | flg
-    *
-    * This function accept 
-    * 1: Current Form Data
-    * 2: Reserved Form Data
-    * 3: Module affeted => By Defult is 'field'
-    *
-    */
+    /**
+     * 
+     * This function will apply stamp | default | flg
+     *
+     * This function accept 
+     * 1: Current Form Data
+     * 2: Reserved Form Data
+     * 3: Module affeted => By Defult is 'field'
+     *
+     */
     public function applyCheckFieldTable($formData, $formCheck, $Module = 'field')
     {
 
@@ -475,17 +483,17 @@ class CoreForm extends CI_Model
         return $formData;
     }
 
-    /*
-    * 
-    * This function will apply stamp | default | flg
-    * -> This is only used for Filter Table
-    *
-    * This function accept 
-    * 1: Current Form Data
-    * 2: Reserved Form Data
-    * 3: Module affeted
-    *
-    */
+    /**
+     * 
+     * This function will apply stamp | default | flg
+     * -> This is only used for Filter Table
+     *
+     * This function accept 
+     * 1: Current Form Data
+     * 2: Reserved Form Data
+     * 3: Module affeted
+     *
+     */
     public function applyCheckFilterTable($formData, $formCheck, $Module)
     {
         //Columns
@@ -514,17 +522,17 @@ class CoreForm extends CI_Model
         return $formData;
     }
 
-    /*
-    *
-    * Get Form and Set Data into Field Format
-    *
-    * 1: Pass FormData 
-    * 2: Pass 'customfields' ID/Title to macth the Field Form
-    * 3: Pass unsetData By Default is null
-    * 4: Pass Unset Before/After NB: By Default it will unset Before, To Unset After Pass | after
-    *
-    * retuned DATA is ready for Inserting
-    */
+    /**
+     *
+     * Get Form and Set Data into Field Format
+     *
+     * 1: Pass FormData 
+     * 2: Pass 'customfields' ID/Title to macth the Field Form
+     * 3: Pass unsetData By Default is null
+     * 4: Pass Unset Before/After NB: By Default it will unset Before, To Unset After Pass | after
+     *
+     * retuned DATA is ready for Inserting
+     */
     public function getFieldFormatData($formData, $fieldSet, $unsetData = null, $unsetKey = 'before')
     {
 
@@ -533,18 +541,18 @@ class CoreForm extends CI_Model
         return $formData; //Return Data
     }
 
-    /*
-    *
-    * Get Form and Set Data into Field Format
-    *
-    * 
-    * 1: Pass FormData 
-    * 2: Pass 'customfields' ID/Title to macth the Field Form
-    * 3: Pass unsetData By Default is null
-    * 4: Pass Unset Before/After NB: By Default it will unset Before, To Unset After Pass | after
-    *
-    * retuned DATA is ready for Updating
-    */
+    /**
+     *
+     * Get Form and Set Data into Field Format
+     *
+     * 
+     * 1: Pass FormData 
+     * 2: Pass 'customfields' ID/Title to macth the Field Form
+     * 3: Pass unsetData By Default is null
+     * 4: Pass Unset Before/After NB: By Default it will unset Before, To Unset After Pass | after
+     *
+     * retuned DATA is ready for Updating
+     */
     public function getFieldUpdateData($updateData, $fieldSet, $unsetData = null, $unsetKey = 'before')
     {
 
@@ -553,17 +561,17 @@ class CoreForm extends CI_Model
         return $updateData; //Return Data
     }
 
-    /*
-    *
-    * This function is to check if array key Exist
-    * 1: Pass key Required (can be single value, array, ore string separated by comma)
-    * 2: Optional ArrayData to check if it has a particular key | else set this using session 'arrayData'
-    * 
-    * NB:
-    * If you pass single key value, the result will be True/False
-    * Else is an array will be returned
-    * 
-    */
+    /**
+     *
+     * This function is to check if array key Exist
+     * 1: Pass key Required (can be single value, array, ore string separated by comma)
+     * 2: Optional ArrayData to check if it has a particular key | else set this using session 'arrayData'
+     * 
+     * NB:
+     * If you pass single key value, the result will be True/False
+     * Else is an array will be returned
+     * 
+     */
     public function checkKeyExist($key, $array = null)
     {
 
@@ -601,21 +609,21 @@ class CoreForm extends CI_Model
         return $found; //Found-NotFound (True,False)   
     }
 
-    /*
-    *
-    * This function checks if directory/file exists
-    * 1: Pass dir/file full path/ path & name | as required by Core Lite
-    * 2: Create dir/file (By default dir/file will be created)
-    * 3: Permission By default is 0755
-    *
-    * NB:
-    * You can override this by creating function dirCreate() in CoreField
-    * -> This will return false if director do not exist
-    * -> Also you can overide permission form 0755
-    *
-    * --> By default dir will be created hence returned TRUE
-    * 
-    */
+    /**
+     *
+     * This function checks if directory/file exists
+     * 1: Pass dir/file full path/ path & name | as required by Core Lite
+     * 2: Create dir/file (By default dir/file will be created)
+     * 3: Permission By default is 0755
+     *
+     * NB:
+     * You can override this by creating function dirCreate() in CoreField
+     * -> This will return false if director do not exist
+     * -> Also you can overide permission form 0755
+     *
+     * --> By default dir will be created hence returned TRUE
+     * 
+     */
     public function checkDir($path, $create = true, $defaultpath = '../assets/media', $permission = 0755, $recursive = true)
     {
         //load ModelField
@@ -649,12 +657,12 @@ class CoreForm extends CI_Model
         return $status; //Return Status
     }
 
-    /*
-    *
-    * Get Parent Children
-    * Pass Parent Element ID
-    * 
-    */
+    /**
+     *
+     * Get Parent Children
+     * Pass Parent Element ID
+     * 
+     */
     public function childTreee($parent_id = 0, $sub_mark = '', $selectedID = null, $type = null)
     {
         $setChildTree = false;
@@ -698,13 +706,13 @@ class CoreForm extends CI_Model
         }
     }
 
-    /*
-    *
-    * Get Element Parent ID
-    *
-    * Pass elementID and it will return it's Parent ID
-    * 
-    */
+    /**
+     *
+     * Get Element Parent ID
+     *
+     * Pass elementID and it will return it's Parent ID
+     * 
+     */
     public function getParentInheritance($inheritanceID, $parentID = 0)
     {
         //Select Parent
@@ -718,12 +726,12 @@ class CoreForm extends CI_Model
         }
     }
 
-    /*
-    *
-    * Email
-    * Get email data & configuration
-    * 
-    */
+    /**
+     *
+     * Email
+     * Get email data & configuration
+     * 
+     */
     public function email_config()
     {
         //Get Send Data
@@ -762,11 +770,11 @@ class CoreForm extends CI_Model
         return $config; //Return Configs
     }
 
-    /*
-    *
-    * This function help user to access / get account profile picture
-    * Account Profile
-    */
+    /**
+     *
+     * This function help user to access / get account profile picture
+     * Account Profile
+     */
     public function accountProfile($useraccount = null, $profile_name = 'user_profile')
     {
         //Check Account
@@ -783,17 +791,17 @@ class CoreForm extends CI_Model
         return $userProfile;
     }
 
-    /*
-    *
-    *
-    * This function help you to get file name
-    *
-    * 1: Pass file line
-    * 2: State if you want extension returned of not | Default 'True'
-    * 3: Pass file separator value | Default '/'
-    *
-    * Get File Name From Attached Link
-    */
+    /**
+     *
+     *
+     * This function help you to get file name
+     *
+     * 1: Pass file line
+     * 2: State if you want extension returned of not | Default 'True'
+     * 3: Pass file separator value | Default '/'
+     *
+     * Get File Name From Attached Link
+     */
     public function getfileName($assetLink, $ext = true, $separator = '/')
     {
         //Change link to array
@@ -812,16 +820,16 @@ class CoreForm extends CI_Model
         return $file_name;
     }
 
-    /*
-    *
-    * This function is a subfunction of getting file name, this function will only retur extension of the file
-    *
-    * 1: Pass file line
-    * 2: State if you want extension returned of not | Default 'True'
-    * 3: Pass file separator value | Default '/'
-    *
-    * Get File Extension Only
-    */
+    /**
+     *
+     * This function is a subfunction of getting file name, this function will only retur extension of the file
+     *
+     * 1: Pass file line
+     * 2: State if you want extension returned of not | Default 'True'
+     * 3: Pass file separator value | Default '/'
+     *
+     * Get File Extension Only
+     */
     public function getfileExt($assetLink, $file = false, $separator = '/')
     {
         //Get File Name
@@ -835,16 +843,16 @@ class CoreForm extends CI_Model
         return $extension;
     }
 
-    /*
-    *
-    * This function help you to get filter table columns ready to match filter custom field values
-    *
-    * 1: Pass customfield title/id
-    * 2: Pass Addirional Columns (as array or as comma separated string)
-    * 3: Pass escaped values (Values you wish system to handle ot it's own) | id,details,stamp,default,flg
-    *
-    * Get Filter Tables
-    */
+    /**
+     *
+     * This function help you to get filter table columns ready to match filter custom field values
+     *
+     * 1: Pass customfield title/id
+     * 2: Pass Addirional Columns (as array or as comma separated string)
+     * 3: Pass escaped values (Values you wish system to handle ot it's own) | id,details,stamp,default,flg
+     *
+     * Get Filter Tables
+     */
     public function getFilterColumns($titleID, $pusharray = null, $escaped_columns = array('id', 'details', 'stamp', 'default', 'flg'))
     {
 
@@ -890,13 +898,13 @@ class CoreForm extends CI_Model
         return $filter_columns_name;
     }
 
-    /*
-    * This functions takes your custom filter data and assign them to insert array 
-    *
-    * 1: Pass Filter Columns
-    * 2: Pass Insert Data
-    *
-    */
+    /**
+     * This functions takes your custom filter data and assign them to insert array 
+     *
+     * 1: Pass Filter Columns
+     * 2: Pass Insert Data
+     *
+     */
     public function fieldFiltered($columns, $data)
     {
 
@@ -918,14 +926,14 @@ class CoreForm extends CI_Model
         return $insertData;
     }
 
-    /*
-    *
-    * Base URL
-    *
-    * This function help you to get proper base/site URL
-    * 1: Pass Page URL
-    * 2: Pass Type [base_url | site_url]
-    */
+    /**
+     *
+     * Base URL
+     *
+     * This function help you to get proper base/site URL
+     * 1: Pass Page URL
+     * 2: Pass Type [base_url | site_url]
+     */
     public function proper_url($url, $type = 'base_url')
     {
         // Load Settings
@@ -947,12 +955,12 @@ class CoreForm extends CI_Model
         return $url;
     }
 
-    /*
-    * --- Variable Format : #{[variable_name]} ---
-    * Preg Match Varible Settings
-    * Pass String
-    * 
-    */
+    /**
+     * --- Variable Format : #{[variable_name]} ---
+     * Preg Match Varible Settings
+     * Pass String
+     * 
+     */
     public function get_variable($string, $variables = null, $skip = false)
     {
         // Load
@@ -1041,5 +1049,5 @@ class CoreForm extends CI_Model
     }
 }
 
-/* End of file CoreForm.php */
-/* Location: ./application/models/CoreForm.php */
+/** End of file CoreForm.php */
+/** Location: ./application/models/CoreForm.php */

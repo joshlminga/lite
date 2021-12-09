@@ -1,9 +1,9 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
 // original source: http://kuwamoto.org/2007/12/17/improved-pluralizing-in-php-actionscript-and-ror/
-  
-/*
+
+/**
 	The MIT License (MIT)
 
 	Copyright (c) 2015
@@ -25,11 +25,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 	THE SOFTWARE.
-*/
+ */
 
 class Plural
 {
-  
+
 	// ORIGINAL NOTES
 	//
 	// Thanks to http://www.eval.ca/articles/php-pluralize (MIT license)
@@ -58,7 +58,7 @@ class Plural
 	//   Removed rule for virus -> viri
 	//   Added rule for potato -> potatoes
 	//   Added rule for *us -> *uses
-  
+
 	static $plural = array(
 
 		'/(quiz)$/i'               => "$1zes",
@@ -72,7 +72,7 @@ class Plural
 		'/(shea|lea|loa|thie)f$/i' => "$1ves",
 		'/sis$/i'                  => "ses",
 		'/([ti])um$/i'             => "$1a",
-		'/(tomat|potat|ech|her|vet)o$/i'=> "$1oes",
+		'/(tomat|potat|ech|her|vet)o$/i' => "$1oes",
 		'/(bu)s$/i'                => "$1ses",
 		'/(alias)$/i'              => "$1es",
 		'/(octop)us$/i'            => "$1i",
@@ -103,9 +103,9 @@ class Plural
 		'/(tive)s$/i'               => "$1",
 		'/(hive)s$/i'               => "$1",
 		'/(li|wi|kni)ves$/i'        => "$1fe",
-		'/(shea|loa|lea|thie)ves$/i'=> "$1f",
+		'/(shea|loa|lea|thie)ves$/i' => "$1f",
 		'/(^analy)ses$/i'           => "$1sis",
-		'/((a)naly|(b)a|(d)iagno|(p)arenthe|(p)rogno|(s)ynop|(t)he)ses$/i'  => "$1$2sis",        
+		'/((a)naly|(b)a|(d)iagno|(p)arenthe|(p)rogno|(s)ynop|(t)he)ses$/i'  => "$1$2sis",
 		'/([ti])a$/i'               => "$1um",
 		'/(n)ews$/i'                => "$1ews",
 		'/(h|bl)ouses$/i'           => "$1ouse",
@@ -127,9 +127,9 @@ class Plural
 		'valve'  => 'valves'
 	);
 
-	static $uncountable = array( 
+	static $uncountable = array(
 
-		'sheep', 
+		'sheep',
 		'fish',
 		'deer',
 		'series',
@@ -140,29 +140,27 @@ class Plural
 		'equipment'
 	);
 
-	public static function pluralize( $string ) 
+	public static function pluralize($string)
 	{
 		if (!is_null($string) && !empty($string)) {
 			// save some time in the case that singular and plural are the same
-			if ( in_array( strtolower( $string ), self::$uncountable ) )
+			if (in_array(strtolower($string), self::$uncountable))
 				return $string;
-			  
+
 			// check for irregular singular forms
-			foreach ( self::$irregular as $pattern => $result )
-			{
-			  $pattern = '/' . $pattern . '$/i';
-			  
-				if ( preg_match( $pattern, $string ) )
-					return preg_replace( $pattern, $result, $string);
+			foreach (self::$irregular as $pattern => $result) {
+				$pattern = '/' . $pattern . '$/i';
+
+				if (preg_match($pattern, $string))
+					return preg_replace($pattern, $result, $string);
 			}
 
 			// check for matches using regular expressions
-			foreach ( self::$plural as $pattern => $result )
-			{
-				if ( preg_match( $pattern, $string ) )
-					return preg_replace( $pattern, $result, $string );
+			foreach (self::$plural as $pattern => $result) {
+				if (preg_match($pattern, $string))
+					return preg_replace($pattern, $result, $string);
 			}
-		}else{
+		} else {
 
 			$string = null; //Empty
 		}
@@ -170,30 +168,28 @@ class Plural
 		return $string;
 	}
 
-	public static function singularize( $string )
+	public static function singularize($string)
 	{
 		if (!is_null($string) && !empty($string)) {
-			
+
 			// save some time in the case that singular and plural are the same
-			if ( in_array( strtolower( $string ), self::$uncountable ) )
+			if (in_array(strtolower($string), self::$uncountable))
 				return $string;
 
 			// check for irregular plural forms
-			foreach ( self::$irregular as $result => $pattern )
-			{
-			  	$pattern = '/' . $pattern . '$/i';
-			  
-				if ( preg_match( $pattern, $string ) )
-					return preg_replace( $pattern, $result, $string);
+			foreach (self::$irregular as $result => $pattern) {
+				$pattern = '/' . $pattern . '$/i';
+
+				if (preg_match($pattern, $string))
+					return preg_replace($pattern, $result, $string);
 			}
 
 			// check for matches using regular expressions
-			foreach ( self::$singular as $pattern => $result )
-			{
-				if ( preg_match( $pattern, $string ) )
-					return preg_replace( $pattern, $result, $string );
+			foreach (self::$singular as $pattern => $result) {
+				if (preg_match($pattern, $string))
+					return preg_replace($pattern, $result, $string);
 			}
-		}else{
+		} else {
 
 			$string = null; //Empty
 		}
@@ -208,8 +204,7 @@ class Plural
 		else
 			return $count . " " . self::pluralize($string);
 	}
- 
 }
 
-/* End of file Plural.php */
-/* Location: ./application/libraries/Plural.php */
+/** End of file Plural.php */
+/** Location: ./application/libraries/Plural.php */

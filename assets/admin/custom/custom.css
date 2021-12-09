@@ -356,9 +356,8 @@ div.core-overview-two span > i {
 .error {
 
   color: #c70000 !important;
-  font-size: 10px !important;
-  font-family: cursive;
-  font-weight: 800;
+  font-size: 11px !important;
+  font-weight: 500;
 }
 
 /* Form Label */
