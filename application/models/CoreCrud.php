@@ -813,11 +813,15 @@ class CoreCrud extends CI_Model
    * -> Pass Input Location (Upload location)
    * 
    */
-  public function upload($inputName, $location = '../assets/media', $rule = 'jpg|jpeg|png|doc|docx|pdf|xls|txt', $link = true, $configs = null)
+  public function upload($inputName, $location = null, $rule = null, $link = true, $configs = null)
   {
+    // Upload Location
+    $upload_location = (!is_null($location)) ? $location : '../assets/media';
+    // Upload Rule
+    $upload_rule = (!is_null($rule)) ? $rule : 'jpg|jpeg|png|doc|docx|pdf|xls|txt';
 
     //Upload Data
-    $uploaded = $this->uploadFile($_FILES[$inputName], $rule, $location, $link, $configs);
+    $uploaded = $this->uploadFile($_FILES[$inputName], $upload_rule, $upload_location, $link, $configs);
     if (!is_null($uploaded)) {
       $file_link = json_encode($uploaded, true);
     } else {
