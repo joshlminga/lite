@@ -178,6 +178,9 @@ for ($i = 0; $i < count($settValue); $i++) {
 	}
 }
 
+// Reset
+$routeNames = array_values($routeNames);
+
 // Values
 $routeNames = (is_array($routeNames)) ? array_values($routeNames) : null;
 if (is_array($routeNames)) {
@@ -201,6 +204,9 @@ for ($i = 0; $i < count($settValue); $i++) {
 		$routeNames[$i] = $values['route']; // Menu Path
 	}
 }
+
+// Reset
+$routeNames = array_values($routeNames);
 
 // Values
 $routeNames = (is_array($routeNames)) ? array_values($routeNames) : null;
@@ -226,6 +232,10 @@ for ($i = 0; $i < count($settValue); $i++) {
 		$routeNames[$i] = $values['route']; // Menu Path
 	}
 }
+
+// Reset
+$routeNames = array_values($routeNames);
+
 // Values
 $routeNames = (is_array($routeNames)) ? array_values($routeNames) : null;
 if (is_array($routeNames)) {
@@ -250,6 +260,10 @@ for ($i = 0; $i < count($settValue); $i++) {
 		$routeNames[$i] = $values['route']; // Menu Path
 	}
 }
+
+// Reset
+$routeNames = array_values($routeNames);
+
 // Values
 $routeNames = (is_array($routeNames)) ? array_values($routeNames) : null;
 if (is_array($routeNames)) {
