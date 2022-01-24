@@ -586,7 +586,7 @@ class CoreCrud extends CI_Model
    * 4: fieldID (fieldID)
    *
    */
-  public function customFieldAuto($status, $route = null, $formValues, $fieldID = null)
+  public function customFieldAuto($status, $route = null, $formValues = null, $fieldID = null)
   {
 
     //Check Route
