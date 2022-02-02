@@ -1219,7 +1219,7 @@ class CoreCrud extends CI_Model
    *
    * NB: Add watermark then resize
    **/
-  public function compressImage($file_name, $custom_config = null)
+  public function compressImage($file_name, $custom_config = array())
   {
     //File Path
     $file_path = trim(str_replace("../", " ", trim($file_name)));
