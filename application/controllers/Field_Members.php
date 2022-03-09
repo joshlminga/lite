@@ -337,9 +337,13 @@ class Field_Members extends CI_Controller
                     for ($i = 0; $i < count($selectedData); $i++) { //Loop through all submitted elements
                         $value_id = $selectedData[$i]; //Select Value To Update with
                         if (strtolower($action) == 'activate') { //Item/Data Activation
-                            $this->update(array($column_flg => 1), $value_id); //Call Update Function
+                            $updatedData = $this->CoreForm->updateFormField(array('flg' => 1), $value_id);
+                            $updatedData[$column_flg] = 1;
+                            $this->update($updatedData, $value_id); //Call Update Function
                         } elseif (strtolower($action) == 'deactivate') { //Item/Data Deactivation
-                            $this->update(array($column_flg => 0), $value_id); //Call Update Function
+                            $updatedData = $this->CoreForm->updateFormField(array('flg' => 0), $value_id);
+                            $updatedData[$column_flg] = 1;
+                            $this->update($updatedData, $value_id); //Call Update Function
                         } elseif (strtolower($action) == 'delete') { //Item/Data Deletion
                             $this->delete($value_id); //Call Delete Function
                         } else {
