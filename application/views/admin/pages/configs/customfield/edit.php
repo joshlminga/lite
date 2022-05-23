@@ -25,7 +25,8 @@
 					<?php $filters = json_decode($resultList[0]->filters, True); ?>
 					<?php $all_fields = array_unique(array_merge($required, $optional)); ?>
 
-					<?php $shows = (!is_null($resultList[0]->show)) ? json_decode($resultList[0]->show, True) : array(); ?>
+					<?php $shows = json_decode($resultList[0]->show, True); ?>
+					<?php $shows = (!is_array($shows)) ? array() : $shows; ?>
 
 					<div class="col-md-4 col-sm-12">
 						<div class="form-group">
