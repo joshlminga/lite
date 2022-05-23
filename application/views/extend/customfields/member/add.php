@@ -44,17 +44,17 @@
 					</div>
 
 					<div class="row">
-					    <div class="col-md-4 col-sm-12">
-					        <div class="fg-line">
-					            <label>Gender </label>
-	                            <select name="gender" class="selectpicker" data-placeholder="Choose Gender...">
-                                    <?php for ($i = 0; $i < count($gender); $i++): ?>
-                                    	<option value="<?= strtolower($gender[$i]->inheritance_id) ?>"><?= ucwords($gender[$i]->inheritance_title)?></option>
-                                    <?php endfor ?>
-	                            </select>
-                        	</div>
-					        <span class="error"><?= form_error('gender') ?></span>
-                        </div>
+						<div class="col-md-4 col-sm-12">
+							<div class="fg-line">
+								<label>Gender </label>
+								<select name="gender" class="selectpicker" data-placeholder="Choose Gender...">
+									<?php for ($i = 0; $i < count($gender); $i++) : ?>
+										<option value="<?= strtolower($gender[$i]->inheritance_id) ?>"><?= ucwords($gender[$i]->inheritance_title) ?></option>
+									<?php endfor ?>
+								</select>
+							</div>
+							<span class="error"><?= form_error('gender') ?></span>
+						</div>
 					</div>
 
 					<div class="row">
