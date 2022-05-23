@@ -224,7 +224,7 @@ class CoreCustomFields extends CI_Controller
 		if (!is_null($inputTYPE) || !is_null($inputID)) {
 			//Table Select & Clause
 			$where = array($inputTYPE => $inputID);
-			$columns = array('id as id,title as title,required as required,optional as optional,filters as filters,default as default,flg as status');
+			$columns = array('id as id,title as title,required as required,optional as optional,filters as filters,show as show,default as default,flg as status');
 			$data['resultList'] = $this->CoreCrud->selectCRUD($module, $where, $columns);
 
 			//Notification
@@ -283,6 +283,9 @@ class CoreCustomFields extends CI_Controller
 
 				$column_filters = strtolower($this->CoreForm->get_column_name($this->Module, 'filters'));
 				$formData[$column_filters] = strtolower(json_encode($this->CoreLoad->input($column_required))); //Set Filters
+
+				$column_show = strtolower($this->CoreForm->get_column_name($this->Module, 'show'));
+				$formData[$column_show] = strtolower(json_encode(array())); //Set Filters
 
 				$column_default = strtolower($this->CoreForm->get_column_name($this->Module, 'default'));
 				$formData[$column_default] = 'yes'; //Set Default					
@@ -358,9 +361,13 @@ class CoreCustomFields extends CI_Controller
 				$updateData[$column_optional] = json_encode($this->CoreLoad->input($column_optional)); //Set Optional
 
 				$column_filters = strtolower($this->CoreForm->get_column_name($this->Module, 'filters'));
-				$column_default = strtolower($this->CoreForm->get_column_name($this->Module, 'default'));
-
 				$updateData[$column_filters] = strtolower(json_encode($this->CoreLoad->input($column_filters))); //Set Filters
+
+				$column_show = strtolower($this->CoreForm->get_column_name($this->Module, 'show'));
+				$input_show = $this->CoreLoad->input($column_show);
+				$updateData[$column_show] = (is_array($input_show)) ? strtolower(json_encode($input_show)) : null; //Set Show
+
+				$column_default = strtolower($this->CoreForm->get_column_name($this->Module, 'default'));
 				$updateData[$column_default] = 'yes'; //Set Default					
 
 				//Update Table

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Jul 22, 2021 at 11:22 AM
+-- Generation Time: May 23, 2022 at 06:18 PM
 -- Server version: 5.7.32
 -- PHP Version: 7.4.12
 
@@ -92,7 +92,7 @@ CREATE TABLE `customfields` (
   `customfield_required` varchar(2000) DEFAULT NULL,
   `customfield_optional` longtext,
   `customfield_filters` longtext,
-  `customfield_show` varchar(20) DEFAULT 'admin',
+  `customfield_show` longtext,
   `customfield_details` longtext,
   `customfield_stamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `customfield_default` varchar(5) DEFAULT 'no',
@@ -104,27 +104,7 @@ CREATE TABLE `customfields` (
 --
 
 INSERT INTO `customfields` (`customfield_id`, `customfield_title`, `customfield_required`, `customfield_optional`, `customfield_filters`, `customfield_show`, `customfield_details`, `customfield_stamp`, `customfield_default`, `customfield_flg`) VALUES
-(1, 'member', '[\"Name\",\"Email\"]', '[\"Gender\",\"Mobile\"]', '[\"email\"]', 'admin', '{\"customfield_title\":\"Member\",\"customfield_required\":\"[\\\"Name\\\",\\\"Email\\\"]\",\"customfield_optional\":\"[\\\"Gender\\\",\\\"Mobile\\\"]\",\"customfield_stamp\":\"2021-07-22 13:17:45\",\"customfield_flg\":1,\"customfield_filters\":\"[\\\"email\\\"]\",\"customfield_default\":\"yes\"}', '2021-07-22 11:22:15', 'yes', 1);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `extensions`
---
-
-CREATE TABLE `extensions` (
-  `extension_id` bigint(20) NOT NULL,
-  `extension_key` varchar(200) NOT NULL,
-  `extension_name` varchar(1000) NOT NULL,
-  `extension_menu` varchar(2000) DEFAULT NULL,
-  `extension_table` mediumtext,
-  `extension_style` mediumtext,
-  `extension_data` mediumtext,
-  `extension_details` longtext,
-  `extension_stamp` datetime NOT NULL,
-  `extension_default` varchar(5) DEFAULT 'yes',
-  `extension_flg` int(1) NOT NULL DEFAULT '1'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+(1, 'member', '[\"Name\",\"Email\"]', '[\"Gender\",\"Mobile\"]', '[\"email\"]', NULL, '{\"customfield_title\":\"Member\",\"customfield_required\":\"[\\\"Name\\\",\\\"Email\\\"]\",\"customfield_optional\":\"[\\\"Gender\\\",\\\"Mobile\\\"]\",\"customfield_stamp\":\"2022-05-23 21:15:52\",\"customfield_flg\":1,\"customfield_filters\":\"[\\\"email\\\"]\",\"customfield_default\":\"yes\",\"customfield_show\":null}', '2022-05-23 18:15:52', 'yes', 1);
 
 -- --------------------------------------------------------
 
@@ -137,7 +117,7 @@ CREATE TABLE `fields` (
   `field_title` varchar(500) NOT NULL,
   `field_filters` varchar(2000) DEFAULT NULL,
   `field_data` longtext,
-  `field_show` varchar(500) DEFAULT 'public',
+  `field_show` longtext,
   `field_details` longtext,
   `field_stamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `field_default` varchar(5) DEFAULT 'yes',
@@ -149,8 +129,7 @@ CREATE TABLE `fields` (
 --
 
 INSERT INTO `fields` (`field_id`, `field_title`, `field_filters`, `field_data`, `field_show`, `field_details`, `field_stamp`, `field_default`, `field_flg`) VALUES
-(1, 'member', '{\"email\":\"johndoe@core.com\"}', '{\"name\":\"John Doe\",\"email\":\"johndoe@core.com\",\"mobile\":\"0700000000\",\"gender\":\"3\"}', 'public', '{\"field_data\":\"{\\\"name\\\":\\\"John Doe\\\",\\\"email\\\":\\\"johndoe@core.com\\\",\\\"mobile\\\":\\\"0700000000\\\",\\\"gender\\\":\\\"3\\\"}\",\"field_filters\":\"{\\\"email\\\":\\\"johndoe@core.com\\\"}\",\"field_title\":\"member\"}', '2021-07-22 10:39:16', 'yes', 1),
-(2, 'member', '{\"email\":\"janedoe@core.com\"}', '{\"name\":\"Jane Doe\",\"email\":\"janedoe@core.com\",\"mobile\":\"0700000001\",\"gender\":\"4\"}', 'public', '{\"field_data\":\"{\\\"name\\\":\\\"Jane Doe\\\",\\\"email\\\":\\\"janedoe@core.com\\\",\\\"mobile\\\":\\\"0700000001\\\",\\\"gender\\\":\\\"4\\\"}\",\"field_filters\":\"{\\\"email\\\":\\\"janedoe@core.com\\\"}\",\"field_title\":\"member\"}', '2021-07-22 10:39:45', 'yes', 1);
+(1, 'member', '{\"email\":\"johndoe@core.com\"}', '{\"name\":\"John Doe\",\"email\":\"johndoe@core.com\",\"mobile\":\"0700000000\",\"gender\":\"3\"}', 'public', '{\"field_data\":\"{\\\"name\\\":\\\"John Doe\\\",\\\"email\\\":\\\"johndoe@core.com\\\",\\\"mobile\\\":\\\"0700000000\\\",\\\"gender\\\":\\\"3\\\"}\",\"field_filters\":\"{\\\"email\\\":\\\"johndoe@core.com\\\"}\",\"field_title\":\"member\"}', '2021-07-22 10:39:16', 'yes', 1);
 
 -- --------------------------------------------------------
 
@@ -200,10 +179,10 @@ CREATE TABLE `levels` (
 --
 
 INSERT INTO `levels` (`level_id`, `level_name`, `level_module`, `level_details`, `level_stamp`, `level_default`, `level_flg`) VALUES
-(1, 'admin', 'main,blog,page,autofield,control,inheritance,customfield,user,level,setting,profile,member,customer', '{\"level_module\":\"main,blog,page,autofield,control,inheritance,customfield,user,level,setting,profile,member,customer\",\"level_stamp\":\"2021-07-22 12:34:16\",\"level_default\":\"yes\"}', '2021-07-22 09:34:16', 'yes', 1),
-(2, 'user', 'main,control,setting,profile', '{\"level_module\":\"main,control,setting,profile\",\"level_stamp\":\"2021-07-22 12:34:01\",\"level_default\":\"yes\"}', '2021-07-22 09:34:01', 'yes', 1),
-(3, 'author', 'main,blog,page,autofield,control,inheritance,setting,profile', '{\"level_module\":\"main,blog,page,autofield,control,inheritance,setting,profile\",\"level_stamp\":\"2021-07-22 12:33:52\",\"level_default\":\"yes\"}', '2021-07-22 09:33:52', 'yes', 1),
-(4, 'customer', 'main,profile', '{\"level_module\":\"main,profile\",\"level_stamp\":\"2021-07-22 12:40:20\",\"level_default\":\"no\"}', '2021-07-22 09:40:20', 'no', 1);
+(1, 'admin', 'main,blog,page,autofield,control,inheritance,customfield,user,level,setting,profile,member,customer', '{\"level_module\":\"main,blog,page,autofield,control,inheritance,customfield,user,level,setting,profile,member,customer\",\"level_stamp\":\"2022-01-07 14:49:21\",\"level_default\":\"yes\",\"level_flg\":1}', '2022-01-07 11:49:21', 'yes', 1),
+(2, 'user', 'main,control,setting,profile', '{\"level_module\":\"main,control,setting,profile\",\"level_stamp\":\"2022-01-07 14:49:21\",\"level_default\":\"yes\",\"level_flg\":1}', '2022-01-07 11:49:21', 'yes', 1),
+(3, 'author', 'main,blog,page,autofield,control,inheritance,setting,profile', '{\"level_module\":\"main,blog,page,autofield,control,inheritance,setting,profile\",\"level_stamp\":\"2022-01-07 14:49:21\",\"level_default\":\"yes\",\"level_flg\":1}', '2022-01-07 11:49:21', 'yes', 1),
+(4, 'customer', 'main,profile', '{\"level_module\":\"main,profile\",\"level_stamp\":\"2022-01-07 14:49:21\",\"level_default\":\"no\",\"level_flg\":1}', '2022-01-07 11:49:21', 'no', 1);
 
 -- --------------------------------------------------------
 
@@ -325,7 +304,7 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`user_id`, `user_level`, `user_logname`, `user_password`, `user_name`, `user_email`, `user_details`, `user_stamp`, `user_default`, `user_flg`) VALUES
 (1, 'admin', 'admin', 'd033e22ae348aeb5660fc2140aec35850c4da997', 'John Doe', 'johndoe@core.com', '{\"user_name\":\"John Doe\",\"user_email\":\"johndoe@core.com\",\"user_level\":\"admin\",\"user_password\":\"d033e22ae348aeb5660fc2140aec35850c4da997\",\"user_stamp\":\"2021-07-22 13:41:26\",\"user_flg\":1,\"user_logname\":\"admin\"}', '2021-07-22 13:41:26', 'yes', 1),
-(2, 'customer', 'janedoe', '06d213088a72f4c1ac947c6f3d9ddd321650ebfb', 'Jane Doe', 'janedoe@core.com', '{\"user_name\":\"Jane Doe\",\"user_email\":\"janedoe@core.com\",\"user_level\":\"customer\",\"user_logname\":\"janedoe\",\"user_password\":\"06d213088a72f4c1ac947c6f3d9ddd321650ebfb\",\"user_default\":\"no\",\"user_stamp\":\"2021-07-22 14:02:39\",\"user_flg\":1}', '2021-07-22 14:02:39', 'no', 1);
+(2, 'customer', 'janedoe', '06d213088a72f4c1ac947c6f3d9ddd321650ebfb', 'Jane Doe', 'janedoe@core.com', '{\"user_name\":\"Jane Doe\",\"user_email\":\"janedoe@core.com\",\"user_level\":\"customer\",\"user_logname\":\"janedoe\",\"user_password\":\"06d213088a72f4c1ac947c6f3d9ddd321650ebfb\",\"user_default\":\"no\",\"user_stamp\":\"2022-01-07 14:25:11\",\"user_flg\":1}', '2022-01-07 14:25:11', 'no', 1);
 
 --
 -- Indexes for dumped tables
@@ -349,13 +328,6 @@ ALTER TABLE `blogs`
 ALTER TABLE `customfields`
   ADD PRIMARY KEY (`customfield_id`),
   ADD UNIQUE KEY `customfield_title` (`customfield_title`);
-
---
--- Indexes for table `extensions`
---
-ALTER TABLE `extensions`
-  ADD PRIMARY KEY (`extension_id`),
-  ADD UNIQUE KEY `extension_key` (`extension_key`);
 
 --
 -- Indexes for table `fields`
@@ -419,16 +391,10 @@ ALTER TABLE `customfields`
   MODIFY `customfield_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
--- AUTO_INCREMENT for table `extensions`
---
-ALTER TABLE `extensions`
-  MODIFY `extension_id` bigint(20) NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT for table `fields`
 --
 ALTER TABLE `fields`
-  MODIFY `field_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `field_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `inheritances`
