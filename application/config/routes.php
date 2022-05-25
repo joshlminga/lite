@@ -58,6 +58,29 @@ $route['default_controller'] = 'Home'; //Main (Home) Page
 $route['404.html'] = 'HomeError'; //Theme Error Page For Front-end
 $route['404_override'] = 'CoreErrors/index'; //Default Error Page
 
+/******** API *********/
+
+// Inheritance
+$route['coreapi/token'] = 'Api/CoreApi/getToken';
+$route['coreapi/find/inheritance'] = 'Api/CoreApi/getInheritance';
+$route['coreapi/find/inheritance/(:any)'] = 'Api/CoreApi/getInheritance/$1';
+// CustomFields & Fields
+$route['coreapi/find/field'] = 'Api/CoreApi/getField';
+$route['coreapi/find/field/(:any)'] = 'Api/CoreApi/getField/$1';
+// Select Single
+$route['coreapi/find/single'] = 'Api/CoreApi/getSingle';
+// Select Multiple
+$route['coreapi/find/multiple'] = 'Api/CoreApi/getMultiple';
+// Select loadAutoData
+$route['coreapi/find/autodata'] = 'Api/CoreApi/getAutoData';
+// Get CoreField->load
+$route['coreapi/find/load'] = 'Api/CoreApi/getLoad';
+// Capture Erors - Any Wrong API Call
+$route['coreapi/(:any)'] = 'Api/CoreApi/failed';
+$route['coreapi/(.+)'] = 'Api/CoreApi/failed';
+
+/******** END API *********/
+
 //Administrator
 $route['dashboard'] = 'CoreMains/index'; //Dashboard
 
@@ -163,7 +186,19 @@ $route['inheritances/edit'] = 'CoreInheritances/edit/edit'; //Edit
 $route['inheritances/save'] = 'CoreInheritances/valid/save'; //Validate and Save
 $route['inheritances/update'] = 'CoreInheritances/valid/update'; //Validate and Update
 $route['inheritances/delete'] = 'CoreInheritances/valid/delete'; //Delete 
-$route['inheritances/multiple'] = 'CoreInheritances/valid/bulk'; //Bulk Action  
+$route['inheritances/multiple'] = 'CoreInheritances/valid/bulk'; //Bulk Action 
+
+/** API - Customer Extension -> Users */
+$route['api-customer/add'] = 'Api/Extension_Customers/valid/save';
+$route['api-customer/update'] = 'Api/Extension_Customers/valid/update';
+$route['api-customer/delete'] = 'Api/Extension_Customers/valid/delete';
+$route['api-customer/get'] = 'Api/Extension_Customers/valid/get';
+
+/** API - [Members] Field_Members */
+$route['api-members/add'] = 'Api/Field_Members/valid/save';
+$route['api-members/update'] = 'Api/Field_Members/valid/update';
+$route['api-members/delete'] = 'Api/Field_Members/valid/delete';
+$route['api-members/get'] = 'Api/Field_Members/valid/get';
 
 /////////////////////////// EXTENSIONS //////////////////////
 $query = $db->select('setting_value')->where(array('setting_title' => 'extension_menu', 'setting_flg' => 1))->get('settings');

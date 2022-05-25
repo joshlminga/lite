@@ -528,6 +528,104 @@ class Extension_Customers extends CI_Controller
 		}
 	}
 
+		/**
+	 *
+	 * Validate Email/Username (Logname)
+	 * This function is used to validate if user email/logname already is used by another account
+	 * Call this function to validate if nedited logname or email does not belong to another user
+	 */
+	public function lognamecheck($str)
+	{
+		// Set Parent Table
+		$tableName = 'user';
+
+		//Validate
+		$check = (filter_var($str, FILTER_VALIDATE_EMAIL)) ? 'email' : 'logname'; //Look Email / Phone Number
+		if (strtolower($str) == strtolower(trim($this->CoreCrud->selectSingleValue($tableName, $check, array('id' => $this->CoreLoad->session('id')))))) {
+			return true;
+		} elseif (is_null($this->CoreCrud->selectSingleValue($tableName, 'id', array($check => $str)))) {
+			return true;
+		} elseif ($this->CoreLoad->session('level') == 'admin') {
+			return true;
+		} else {
+			$this->form_validation->set_message('lognamecheck', 'This {field} is already in use by another account');
+			return false;
+		}
+	}
+
+	/**
+	 *
+	 * Validate Mobile/Phone Number
+	 * This function accept/take input field value / Session  mobilecheck
+	 *
+	 * * The Method can be accessed via set_rules(callback_mobilecheck['+1']) // +1 is the country code
+	 */
+	public function mobilecheck($str = null, $dial_code = null)
+	{
+
+		// Set Parent Table
+		$tableName = 'user';
+
+		//Get The Phone/Mobile Number
+		$number = $str;
+
+		//Check Rule
+		$rules_validate = (method_exists('CoreField', 'mobileCheck')) ? $this->CoreField->mobileCheck($number) : false;
+		$column_name = (filter_var($number, FILTER_VALIDATE_EMAIL)) ? 'email' : 'logname'; //Look Email / Phone Number
+		//Validation
+		if (!$rules_validate) {
+			//Check First Letter if does not start with 0
+			if (0 == substr($number, 0, 1)) {
+				//Check If it Phone number belongs to you
+				if (strtolower($number) == strtolower(trim($this->CoreCrud->selectSingleValue($tableName, $column_name, array('id' => $this->CoreLoad->session('id')))))) {
+					return true;
+				}
+				//Must Be Unique
+				elseif (strlen($this->CoreCrud->selectSingleValue($tableName, 'id', array($column_name => $number))) <= 0) {
+					//Must be integer
+					if (is_numeric($number) && strlen($number) == 10) {
+
+						// Check Default Dial Code
+						$country_code = $this->CoreCrud->selectSingleValue('settings', 'value', array('title' => 'country_code'));
+						$default_dial_code = (method_exists('CoreField','defaultDialCode')) ? $this->CoreField->defaultDialCode() : $country_code;
+
+						//Dial Code
+						$dial_code = (!is_null($dial_code)) ? $dial_code : $default_dial_code; //Set Country Dial Code Here eg +1, by default it is empty
+						$max_count = strlen($dial_code) - 1;
+						//First Two Character
+						$firstTwoNumbers = "+" . substr($number, 0, $max_count);
+						//Check If number starts with country code
+						if ($firstTwoNumbers != $dial_code) {
+							return true;
+						} else {
+							$this->form_validation->set_message('mobilecheck', 'This {field} make sure your number start with "0"');
+							return false;
+						}
+					} else {
+						$this->form_validation->set_message('mobilecheck', '{field} must be 10 numbers and should not include the country code. Example: 07xxxxxxxx');
+						return false;
+					}
+				} else {
+					$this->form_validation->set_message('mobilecheck', 'This {field} is already in use by another account');
+					return false;
+				}
+			} else {
+				$this->form_validation->set_message('mobilecheck', 'This {field} make sure your number start with "0"');
+				return false;
+			}
+		} else {
+			//Check Status
+			$status = $rules_validate['status'];
+			$message = $rules_validate['message'];
+			if ($status) {
+				return true;
+			} else {
+				$this->form_validation->set_message('mobilecheck', "{field} $message");
+				return false;
+			}
+		}
+	}
+
 	/**
 	 *
 	 * This Fuction is used to validate File Input Data
@@ -666,106 +764,6 @@ class Extension_Customers extends CI_Controller
 		}
 	}
 
-	/**
-	 *
-	 * Validate Email/Username (Logname)
-	 * This function is used to validate if user email/logname already is used by another account
-	 * Call this function to validate if nedited logname or email does not belong to another user
-	 */
-	public function lognamecheck($str)
-	{
-		// Set Parent Table
-		$tableName = $this->Module;
-
-		//Validate
-		$check = (filter_var($str, FILTER_VALIDATE_EMAIL)) ? 'email' : 'logname'; //Look Email / Phone Number
-		if (strtolower($str) == strtolower(trim($this->CoreCrud->selectSingleValue($tableName, $check, array('id' => $this->CoreLoad->session('id')))))) {
-			return true;
-		} elseif (is_null($this->CoreCrud->selectSingleValue($tableName, 'id', array($check => $str)))) {
-			return true;
-		} elseif ($this->CoreLoad->session('level') == 'admin') {
-			return true;
-		} else {
-			$this->form_validation->set_message('lognamecheck', 'This {field} is already in use by another account');
-			return false;
-		}
-	}
-
-	/**
-	 *
-	 * Validate Mobile/Phone Number
-	 * This function accept/take input field value / Session  mobilecheck
-	 * 
-	 * * The Method can be accessed via set_rules(callback_mobilecheck['+1']) // +1 is the country code
-	 */
-	public function mobilecheck($str = null, $dial_code = null)
-	{
-
-		// Set Parent Table
-		$tableName = $this->Module;
-
-		//Get The Phone/Mobile Number
-		$number = $str;
-
-		//Check Rule
-		$rules_validate = (method_exists('CoreField', 'mobileCheck')) ? $this->CoreField->mobileCheck($number) : false;
-		$column_name = (filter_var($number, FILTER_VALIDATE_EMAIL)) ? 'email' : 'logname'; //Look Email / Phone Number
-		//Validation
-		if (!$rules_validate) {
-			//Check First Letter if does not start with 0
-			if (0 == substr($number, 0, 1)) {
-				//Check If it Phone number belongs to you
-				if (strtolower($number) == strtolower(trim($this->CoreCrud->selectSingleValue($tableName, $column_name, array('id' => $this->CoreLoad->session('id')))))) {
-					return true;
-				}
-				//Check If user access is allowed
-				elseif ($this->CoreLoad->auth($this->Route)) {
-					return true;
-				}
-				//Must Be Unique
-				elseif (strlen($this->CoreCrud->selectSingleValue($tableName, 'id', array($column_name => $number))) <= 0) {
-					//Must be integer
-					if (is_numeric($number) && strlen($number) == 10) {
-
-						// Check Default Dial Code
-						$default_dial_code = (method_exists('CoreField', 'defaultDialCode')) ? $this->CoreField->defaultDialCode() : '+1';
-
-						//Dial Code
-						$dial_code = (!is_null($dial_code)) ? $dial_code : $default_dial_code; //Set Country Dial Code Here eg +1, by default it is empty
-						$max_count = strlen($dial_code) - 1;
-						//First Two Character
-						$firstTwoNumbers = "+" . substr($number, 0, $max_count);
-						//Check If number starts with country code
-						if ($firstTwoNumbers != $dial_code) {
-							return true;
-						} else {
-							$this->form_validation->set_message('mobilecheck', 'This {field} make sure your number start with "0"');
-							return false;
-						}
-					} else {
-						$this->form_validation->set_message('mobilecheck', '{field} must be 10 numbers and should not include the country code. Example: 07xxxxxxxx');
-						return false;
-					}
-				} else {
-					$this->form_validation->set_message('mobilecheck', 'This {field} is already in use by another account');
-					return false;
-				}
-			} else {
-				$this->form_validation->set_message('mobilecheck', 'This {field} make sure your number start with "0"');
-				return false;
-			}
-		} else {
-			//Check Status
-			$status = $rules_validate['status'];
-			$message = $rules_validate['message'];
-			if ($status) {
-				return true;
-			} else {
-				$this->form_validation->set_message('mobilecheck', "{field} $message");
-				return false;
-			}
-		}
-	}
 }
 
 /** End of file Extension_Customers.php */

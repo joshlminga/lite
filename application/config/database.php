@@ -94,3 +94,6 @@ $db['default'] = array(
 	'failover' => array(),
 	'save_queries' => TRUE
 );
+
+// API
+$db['api'] = array_merge($db['default'], ['db_debug' => FALSE]);
