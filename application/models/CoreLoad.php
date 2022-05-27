@@ -312,12 +312,13 @@ class CoreLoad extends CI_Model
 	 *
 	 * Remember you can do this direct by just checking with if statement $this->CoreLoad->session('logged')
 	 * This function does not accept paramenters
+	 * 
 	 */
 	public function logged()
 	{
 		//Check If Logged In
 		if ($this->CoreLoad->session('logged')) {
-			return true; //Logged IN
+			return $this->CoreLoad->session('id'); //Session ID
 		} else {
 			return false; //Not logged In
 		}
@@ -331,12 +332,23 @@ class CoreLoad extends CI_Model
 	 *
 	 * Remember you can do this direct by just checking with if statement $this->CoreLoad->session('level')
 	 * This function does not accept paramenters
+	 * 
+	 * 1: Pass Level/Access Name (Optional)
 	 */
-	public function level()
+	public function level($access = null)
 	{
 		//Check If Logged In
 		if ($this->CoreLoad->session('level')) {
-			return true; //Logged IN
+			// Check Access
+			if (is_null($access)) {
+				return $this->CoreLoad->session('level'); //Session Level
+			} else {
+				if ($this->CoreLoad->session('level') == strtolower(trim($access))) {
+					return true; //Access Allowed
+				} else {
+					return false; //Access Not Allowed
+				}
+			}
 		} else {
 			return false; //Not logged In
 		}
