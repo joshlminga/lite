@@ -1,3 +1,4 @@
+
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
@@ -922,7 +923,7 @@ class CoreForm extends CI_Model
 
 		// Get Custom Field Title
 		if (is_numeric($titleID)) {
-			$titleID = $this->CoreCrud->selectSingleValue('customfields', 'title', array('id' => $titleID)); // Main Site URL
+			$titleID = $this->CoreCrud->selectSingleValue('customfields', 'title', array('id' => $titleID)); // Title ID
 		}
 		$tableName = $this->plural->pluralize($titleID);
 
@@ -1110,6 +1111,202 @@ class CoreForm extends CI_Model
 			return replace_variable($string);
 		}
 		return replace_variable($string);
+	}
+
+	/**
+	 * meta URL
+	 * 
+	 * This method is used to convert string to URL
+	 * 
+	 * 1: Pass String
+	 * 2: Pass String length limit (optional) | default is 500
+	 * 
+	 * @return formated URL
+	 */
+	public function metaUrl($title, $limit = 500)
+	{
+		//Clean Title
+		$title = str_replace("&", "and", strtolower(trim($title)));
+		$title = str_replace("@", "at", strtolower(trim($title)));
+
+		//Check If Current URL
+		$meta_url = substr(preg_replace("/[^ \w-]/", "", stripcslashes($title)), 0, $limit);
+		$meta_url = str_replace(" ", "-", strtolower(trim($meta_url))); //Clean URL
+
+		// Return
+		return $meta_url;
+	}
+
+	/**
+	 * metaGenerateUrl
+	 * 
+	 * This method is used to generate URL and check if it already exist
+	 * - If you have a premade url and you want to use it, just pass it to this method
+	 * - If you don't have a premade url, just pass the title to this method
+	 * - If you have a url and you would like to check if it exist, just pass the url to this method as second argument
+	 * [In most of cases simply use metaGetUrl() method instead of this method]
+	 * 
+	 * 1: Pass Title (optional)
+	 * 2: Pass Current URL (optional)
+	 * 3: Pass URL Length Limit (optional) | default is 500
+	 * 4: Pass limiter for random string (optional) | default is 10
+	 * 
+	 * @return formated URL
+	 */
+	public function metaGenerateUrl($title = null, $currenturl = null, $limit = 500, $rand = 10)
+	{
+		//Check Title
+		$title = (!is_null($title) && !empty($title)) ? $title : $this->CoreLoad->random($rand, 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ') . time();
+
+		//Check If Current URL
+		if (!is_null($currenturl)) {
+			$meta_url = substr(preg_replace("/[^ \w-]/", "", stripcslashes($currenturl)), 0, $limit);
+			$meta_url = str_replace(" ", "-", strtolower(trim($meta_url))); //Clean URL
+		} else {
+			$meta_url = $this->metaUrl($title, $limit);
+		}
+
+		//Check If Exist
+		if ($this->metaCheckUrl($meta_url)) {
+			$unique = $this->CoreLoad->random($rand, 'abcdefghijklmnopqrstuvwxyz');
+			return $meta_url . '-' . $unique;
+		} else {
+			return $meta_url;
+		}
+	}
+
+	/**
+	 * metaCheckUrl
+	 * 
+	 * This method is used to check if URL already exist and can generate new one (if current exist)
+	 * - This method work perfect is you already have $typeid (metaterm_typeid)
+	 * 
+	 * 1: Pass URL
+	 * 2: Pass Type ID (optional) metaterm_typeid
+	 * 3: Pass generate [optional] | default is false (if url exist it won't generate new one)
+	 * 4: Pass limiter for random string (optional) | default is 10
+	 * 
+	 * @return formated URL or True| False
+	 */
+	public function metaCheckUrl($url, $typeid = null, $generate = false, $rand = 10)
+	{
+
+		// Table
+		$table = $this->plural->pluralize('metaterms');
+		$column_module = $this->CoreForm->get_column_name($table, 'module');
+		$column_type = $this->CoreForm->get_column_name($table, 'type');
+		$column_typeid = $this->CoreForm->get_column_name($table, 'typeid');
+		$column_url = $this->CoreForm->get_column_name($table, 'url');
+
+		$meta_url = strtolower(trim($url)); // URL
+
+		//Check If Exist
+		$query = $this->db->query("SELECT $column_url as `url`,$column_typeid as `metaid`,$column_module as `module`,$column_type as `filter` FROM $table WHERE $column_url LIKE '$meta_url' LIMIT 1");
+		$meta_query = $query->result();
+		if (!empty($meta_query)) {
+			// Check If Updating
+			if (!is_null($typeid)) {
+				$generated_url = ($meta_query[0]->metaid == $typeid) ? $meta_query[0]->url : $meta_query[0]->url . '-' . $typeid;
+			} else {
+				$generated_url = $meta_query[0]->url . '-' . $this->CoreLoad->random($rand, 'abcdefghijklmnpqrstuvwxyz123456789');
+				return $this->metaCheckUrl($generated_url, null, true);
+			}
+			return ($generate) ? $generated_url : true; //URL exist
+		}
+		// Return
+		return ($generate) ? $meta_url : false; //URL does not exist (Or is used by current updated entry)
+	}
+
+	/**
+	 * metaExistingUrl
+	 * 
+	 * Unline metaCheckUrl() method, this method is used to return URL for the metaterm requested
+	 * 
+	 * 1: Pass $module  (Table Name) | pages,blogs
+	 * 2: Pass $ud ID () page_id | blog_id
+	 * 3: Pass $generate True|False - if true it will return the URL incase the module in request has no url
+	 * 
+	 * @return formated URL | or null incase $generate = false nad url does not exist
+	 */
+	public function metaExistingUrl($module, $id, $generate = false)
+	{
+
+		// Check Module
+		$table_name = $this->plural->pluralize(strtolower(trim($module)));
+		$metaterm_type = $this->plural->singularize(strtolower(trim($module)));
+		if ($table_name == 'fields' || $table_name == 'autofields') {
+			$metaterm_type = $this->plural->singularize($this->CoreCrud->selectSingleValue($table_name, 'title', ['id' => $id]));
+		}
+
+		// Check Existing URL
+		$exist_url = $this->CoreCrud->selectSingleValue('metaterms', 'url', ['module' => $table_name, 'type' => $metaterm_type, 'typeid' => $id]);
+		if (!is_null($exist_url)) {
+			return $exist_url;
+		} else {
+			return ($generate) ? $this->metaGetUrl($module, $id) : null;
+		}
+	}
+
+	/**
+	 * metaGetUrl
+	 * 
+	 * This method is used to generate URL for the metaterm requested
+	 * - This method comes in handy when you don't have a premade url or title
+	 * - Also incase you want to utilise _urlhelper to generate url
+	 * 
+	 * 1: Pass $module  (Table Name) | pages,blogs
+	 * 2: Pass $ud ID () page_id | blog_id
+	 * 3: Pass Title (optional) {incase you have generate a title to be converted}
+	 * 
+	 * - This method will also check if the URL already exist and can make url unique
+	 * 
+	 * @return formated URL
+	 */
+	public function metaGetUrl($module, $id, $title = null)
+	{
+
+		// Check Module
+		$table_name = $this->plural->pluralize(strtolower(trim($module)));
+		if ($table_name == 'fields' || $table_name == 'autofields') {
+			$filter = $this->plural->singularize($this->CoreCrud->selectSingleValue($table_name, 'title', ['id' => $id]));
+			$column_title = $this->CoreCrud->selectSingleValue($table_name, 'title', ['id' => $id]);
+			// Check Title
+			if (is_null($title) || empty($title)) {
+				//load ModelField
+				$customHelper = $filter . '_urlhelper';
+				$this->load->model('CoreField');
+				$title = ((method_exists('CoreField', $customHelper))) ? $this->CoreField->$customHelper($id) : $title;
+				// Check Title | URL
+				$title = (!is_null($title) && !empty($title)) ? $title : $column_title;
+			}
+		} else {
+			if ($table_name == 'users') {
+				$column_title = $this->CoreCrud->selectSingleValue($table_name, 'logname', ['id' => $id]);
+			} elseif ($this->CoreForm->checkTable($table_name)) {
+				$column_title = $this->CoreCrud->selectSingleValue($table_name, 'title', ['id' => $id]);
+			}
+
+			//load ModelField
+			$customeHelper = $this->plural->singularize($table_name) . '_UrlHelper';
+			$this->load->model('CoreField');
+			$title = ((method_exists('CoreField', $customeHelper))) ? $this->CoreField->$customeHelper($id) : $title;
+
+			// Check Existing URL
+			$metaterm_type = $this->plural->singularize(strtolower(trim($module)));
+			$exist_url = $this->CoreCrud->selectSingleValue('metaterms', 'url', ['module' => $table_name, 'type' => $metaterm_type, 'typeid' => $id]);
+			if (!is_null($exist_url)) {
+				$title = $exist_url;
+			}
+
+			// Check Title | URL
+			$title = (!is_null($title) && !empty($title)) ? $title : $column_title;
+		}
+
+		// Title to URL
+		$meta_url = $this->metaUrl($title);
+
+		// Check If Exist
+		return $this->metaCheckUrl($meta_url, $id, true);
 	}
 }
 

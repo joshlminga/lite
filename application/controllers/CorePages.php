@@ -293,6 +293,7 @@ class CorePages extends CI_Controller
 				//More Data
 				$formData['page_post'] = $this->input->post('page_post');
 				$formData['page_control'] = json_encode($page_control);
+				$formData['meta_url'] = $this->CoreForm->metaUrl($formData['page_title']); // Meta URL
 
 				if ($this->create($formData, array('thumbnail'))) {
 					$this->session->set_flashdata('notification', 'success'); //Notification Type
@@ -375,7 +376,7 @@ class CorePages extends CI_Controller
 				//Data Updated
 				$updateData['page_control'] = json_encode($page_control);
 				$updateData['page_post'] = $this->input->post('page_post');
-				$updateData['page_url'] = $this->CoreCrud->checkURL($updateData['page_url'], $this->CoreLoad->input('id'));
+				$updateData['page_url'] = $this->CoreForm->metaCheckUrl($updateData['page_url'], $this->CoreLoad->input('id'), true); // Meta URL
 
 				//Update Table
 				if ($this->update($updateData, array($column_id => $value_id), $unsetData)) {
@@ -452,15 +453,14 @@ class CorePages extends CI_Controller
 			$insertData["$details"] = json_encode($insertData);
 
 			//Insert Data Into Table
-			$this->db->insert($tableName, $insertData);
-			$input_id = $this->db->insert_id(); //Post ID
-			if ($this->db->affected_rows() > 0) {
+			$input_id = $this->CoreCrud->insertData($tableName, $insertData);
+			if ($input_id > 0) {
 
 				//Columns
 				$column_url = strtolower($this->CoreForm->get_column_name($this->Module, 'url'));
 				$column_id = strtolower($this->CoreForm->get_column_name($this->Module, 'id'));
 
-				$page_url = $this->CoreCrud->postURL($input_id); //Post URL
+				$page_url = $this->CoreForm->metaExistingUrl($tableName, $input_id); //Post URL
 				$this->db->update($tableName, array($column_url => $page_url), array($column_id => $input_id)); //Update URL
 
 				return true; //Data Inserted
@@ -529,9 +529,7 @@ class CorePages extends CI_Controller
 			$updateData["$details"] = json_encode($current_details);
 
 			//Update Data In The Table
-			$this->db->update($tableName, $updateData, $valueWhere);
-			if ($this->db->affected_rows() > 0) {
-
+			if ($this->CoreCrud->updateData($tableName, $updateData, $valueWhere)) {
 				return true; //Data Updated
 			} else {
 
@@ -554,9 +552,7 @@ class CorePages extends CI_Controller
 			$tableName = $this->plural->pluralize($this->Module);
 
 			//Deleted Data In The Table
-			$this->db->delete($tableName, $valueWhere);
-			if ($this->db->affected_rows() > 0) {
-
+			if ($this->CoreCrud->deleteData($tableName, $valueWhere)) {
 				return true; //Data Deleted
 			} else {
 
