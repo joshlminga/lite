@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Jun 16, 2022 at 03:48 PM
+-- Generation Time: Jun 16, 2022 at 03:54 PM
 -- Server version: 5.7.32
 -- PHP Version: 7.4.12
 
@@ -142,7 +142,6 @@ CREATE TABLE `inheritances` (
   `inheritance_type` varchar(100) NOT NULL,
   `inheritance_parent` bigint(20) DEFAULT '0',
   `inheritance_title` varchar(500) NOT NULL,
-  `inheritance_url` varchar(120) DEFAULT NULL,
   `inheritance_details` longtext,
   `inheritance_stamp` datetime NOT NULL,
   `inheritance_default` varchar(5) DEFAULT 'yes',
@@ -153,11 +152,11 @@ CREATE TABLE `inheritances` (
 -- Dumping data for table `inheritances`
 --
 
-INSERT INTO `inheritances` (`inheritance_id`, `inheritance_type`, `inheritance_parent`, `inheritance_title`, `inheritance_url`, `inheritance_details`, `inheritance_stamp`, `inheritance_default`, `inheritance_flg`) VALUES
-(1, 'category', 0, 'Uncategorised', NULL, '{\"inheritance_type\":\"default\",\"inheritance_parent\":\"1\",\"inheritance_title\":\"Parent 2\",\"inheritance_stamp\":\"2019-01-28 13:25:59\",\"inheritance_flg\":1}', '2019-01-28 13:25:59', 'yes', 1),
-(2, 'tag', 0, 'Blog', NULL, '{\"inheritance_type\":\"default\",\"inheritance_parent\":\"0\",\"inheritance_title\":\"home\",\"inheritance_stamp\":\"2019-02-01 16:06:29\",\"inheritance_flg\":1}', '2019-02-01 16:06:29', 'yes', 1),
-(3, 'gender', 0, 'Male', NULL, '{\"inheritance_type\":\"gender\",\"inheritance_parent\":\"0\",\"inheritance_title\":\"Male\",\"inheritance_stamp\":\"2021-07-22 12:47:03\",\"inheritance_flg\":1}', '2021-07-22 12:47:03', 'yes', 1),
-(4, 'gender', 0, 'Female', NULL, '{\"inheritance_type\":\"gender\",\"inheritance_parent\":\"0\",\"inheritance_title\":\"Female\",\"inheritance_stamp\":\"2021-07-22 12:47:09\",\"inheritance_flg\":1}', '2021-07-22 12:47:09', 'yes', 1);
+INSERT INTO `inheritances` (`inheritance_id`, `inheritance_type`, `inheritance_parent`, `inheritance_title`, `inheritance_details`, `inheritance_stamp`, `inheritance_default`, `inheritance_flg`) VALUES
+(1, 'category', 0, 'Uncategorised', '{\"inheritance_type\":\"default\",\"inheritance_parent\":\"1\",\"inheritance_title\":\"Parent 2\",\"inheritance_stamp\":\"2019-01-28 13:25:59\",\"inheritance_flg\":1}', '2019-01-28 13:25:59', 'yes', 1),
+(2, 'tag', 0, 'Blog', '{\"inheritance_type\":\"default\",\"inheritance_parent\":\"0\",\"inheritance_title\":\"home\",\"inheritance_stamp\":\"2019-02-01 16:06:29\",\"inheritance_flg\":1}', '2019-02-01 16:06:29', 'yes', 1),
+(3, 'gender', 0, 'Male', '{\"inheritance_type\":\"gender\",\"inheritance_parent\":\"0\",\"inheritance_title\":\"Male\",\"inheritance_stamp\":\"2021-07-22 12:47:03\",\"inheritance_flg\":1}', '2021-07-22 12:47:03', 'yes', 1),
+(4, 'gender', 0, 'Female', '{\"inheritance_type\":\"gender\",\"inheritance_parent\":\"0\",\"inheritance_title\":\"Female\",\"inheritance_stamp\":\"2021-07-22 12:47:09\",\"inheritance_flg\":1}', '2021-07-22 12:47:09', 'yes', 1);
 
 -- --------------------------------------------------------
 
@@ -348,25 +347,6 @@ CREATE TABLE `tokens` (
   `token_flg` int(1) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_swedish_ci;
 
---
--- Dumping data for table `tokens`
---
-
-INSERT INTO `tokens` (`token_id`, `token_type`, `token_key`, `token_value`, `token_owner`, `token_access`, `token_limit`, `token_created`, `token_expiry`, `token_stamp`, `token_count`, `token_flg`) VALUES
-(1, 'api', 'MDBMuRrW', '5113d39b5abf2602b0852c8dad2d7d99a076b930d40f976c3757d391ba74f604690541e1767e02e459e265eed82ddadc68398aab578df643320475b33c736394HxApLhFxIuFn3bj8k80iZxbygANo54ljzgecybFe4P0=', NULL, NULL, 0, '2022-05-24 17:50:33', NULL, '2022-05-24 14:50:33', 0, 1),
-(2, 'api', 'gUGYH8PtVNSqZjACb9sfcWq33', '2f2cca6ab7acdb93b55fb4f2746ca921b5aac4df996af88bfb32c2cbb01079dd804ae2ae05c3934e573fa36a91cc7b3a8f202002fc9003ddee9e3de1cb299c48cj6ucjjIKKjiRc6pZFkfernOwBXM5klt+spdXjCDwep7rYnOECaizAYhe5Z+MJsp', NULL, NULL, 0, '2022-05-24 17:52:22', NULL, '2022-05-24 14:52:22', 0, 1),
-(3, 'api', 'VfbWyOuqcP4gQ6QWpdKgXu8DUBkYhpugkAT2dwV85mnlQ8haP1', '0d667207df6b3c98939579ff7e8f59626ae8764bad4b0c6abc17c42cfc21a6ee3225640dd723a57c726e9d385e7053861524ca7cd4f1eb2940160d271f042c28hE3F2TT37EXiZCsOKte0x1HFuyGwNNh7RAERtBoZb4L4Qj0im5q7xnamaXWkPvlEAgixSNVJGdp1E4OXDsCZ2riDDOrStzlVb1PWj2VIsE8=', NULL, NULL, 0, '2022-05-24 17:52:55', NULL, '2022-05-24 14:52:55', 0, 1),
-(4, 'access', 't9FCwq8dff', '925f3f8a781ea2fa9a2179d13306752a571ad5ccfb3886580e93756ba058c839a3eda2af0a1dd98a0ac63f0dd96cd2a059752de49102e83bbe37bdc2adebba1d6oKiFHZ7QN78gXylmddrE+tllfILJUDra0H873yOrtQ=', NULL, NULL, 1, '2022-05-24 17:54:08', '2022-05-24 17:55:08', '2022-05-24 14:55:05', 0, 1),
-(5, 'access', '6uOJuVSov83n8K1', '22ad34e0f2290ba7b76d2df84da7f85bfbe3802028f015d33f2f3bcb221149c64f89b55edd7b99ef881d95bcda709b83301d58ec31129869bd776db462610e22vfjs7OAVTL2R3wQ8ykGzd1OEPuXNVXHwH198ENhmjE8=', NULL, NULL, 1, '2022-05-24 17:54:25', '2022-05-24 17:55:25', '2022-05-24 14:54:58', 0, 1),
-(6, 'access', 'mIDIkcji8LfaYPRDaB76DLAnD', 'ade2ce41fad8564ea8f8cc48b449dfccf48b844345652e3cd366f1e119bdf1d5702a031c6d4112a2063f199747854d4f1f32f9902169a5644497c1a80409ef1c7unaWLF8S6CkRWXiZqey03/EJ4y389xQE2KT9ua94vhTl5TPcP554fOHmDnEJ6sJ', NULL, NULL, 1, '2022-05-24 17:54:34', '2022-05-24 17:55:34', '2022-05-24 14:55:00', 0, 1),
-(7, 'access', 'D17HBjOrUk3ObkYACLrkGz7n7', '95179b2e0387b23b0ee879a123c8e447ed7c4b1619348676cea6c590f9eaa23e3bbe0049a8454c4155acd60108b7417192887ffb80d5fa5aa499065817e5551722DSnrUNXIqufiNgAQCrLoPMAft4hyfCYcawi2KsseAQmrCn24NSJGoSloWL+aEP', NULL, NULL, 1, '2022-05-24 17:57:58', '2022-05-24 17:58:58', '2022-05-24 14:59:11', 0, 1),
-(8, 'access', 'et3aWhPJD3ghDvdOKtQ75RdJm', '60214ce2ce124d17d9757ef359851c2a724f6ab39f1b9e171a24b65ce6e7e47bb136d849dd0c46b08ee7d2e6446212f6a320c789d5ca08fd949977591dffc349t+bJGqnfquRRYcTwT1Ei78WZwkzDqfcbdgOJhxiX5MRljkq0EuC+ysfULZ3KXwf4', NULL, NULL, 1, '2022-05-24 17:59:01', '2022-05-24 18:00:01', '2022-05-24 14:59:01', 0, 1),
-(9, 'session', 'OnTUCUyqq8avXS95yH68H7JiQ', 'caa7e19db4c404292b56b1e833d90bb6c2821d5b25218963a4b6f9602365996b7d192addc32f092d01d2bdca1a0158c5f87af459b1da7d7cd316d37fbe6aaba34up1soL2Q7FJn12Rl/9nb44ZlZgm2Yv1Nn/IzbKRHCJh1tRFIFXpQsrCNhIF17oh', NULL, NULL, 1, '2022-05-24 17:59:47', '2022-05-24 18:00:47', '2022-05-24 14:59:47', 0, 1),
-(10, 'session', 'MDBMuRrW', 'ca2a441e0db830608e59631b5f03427aa1a501b0e44669642a7b74cf7247421c5ec5ec712622ead19e31dc1ca73904d1701024d3f480e4eb0da2a88de1ad12121S8sRpFC7rwq2FL40fXxQ5CCgKjkJozMtaX9DlKzU+I=', NULL, NULL, 1, '2022-05-26 15:07:00', '2022-05-26 15:08:00', '2022-05-26 12:07:00', 0, 1),
-(11, 'session', 'kimanga', '70dbe11e98d80204b3171f2eaeea2aef483c35ea668cd2cec96b2929d30fe07d22c1724f92a14cb26b43f92b5cab398f212666b141c01a6a84528e4df1d749b4desktDUZxPVFng7Co0DABnt7u1vLJOsi53RpYSEcNu8=', NULL, NULL, 1, '2022-05-26 15:22:10', '2022-05-26 15:23:10', '2022-05-26 12:22:10', 0, 1),
-(12, 'session', 'kimanga', '7e8a300e063f78c38ad89fcf29b5951d4192d53f1963345ba24a21a1687cd9044eefdf998adde2be7714eb5dfd59660a873336dfa6d67c5971f50045c0895fe1wznqhpWLztvA5nA0K98RTJZjMoLMqPSI0IcY0Wzl4cA=', NULL, NULL, 1, '2022-05-26 15:22:14', '2022-05-26 15:23:14', '2022-05-26 12:22:14', 0, 1),
-(13, 'session', 'kimanga', 'a387d98840edecfb4357aa9adaf8db3ed48081042028076fd223dd9b30e40c768943f42cea97ce03c407ea96671b2ca0459ee7be52852ff2e3149b02ed0d8933NJ4/5t1GHDzgbQC4t/Z9OTGDX237MlDQfW75i4pBVp4=', NULL, NULL, 1, '2022-05-26 15:22:16', '2022-05-26 15:23:16', '2022-05-26 12:22:16', 0, 1);
-
 -- --------------------------------------------------------
 
 --
@@ -530,7 +510,7 @@ ALTER TABLE `settings`
 -- AUTO_INCREMENT for table `tokens`
 --
 ALTER TABLE `tokens`
-  MODIFY `token_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `token_id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `users`
