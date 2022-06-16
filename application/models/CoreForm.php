@@ -1,4 +1,3 @@
-
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
@@ -1126,8 +1125,10 @@ class CoreForm extends CI_Model
 	public function metaUrl($title, $limit = 500)
 	{
 		//Clean Title
+		$title = str_replace("&&", "and", strtolower(trim($title)));
 		$title = str_replace("&", "and", strtolower(trim($title)));
 		$title = str_replace("@", "at", strtolower(trim($title)));
+		$title = str_replace("_", "-", strtolower(trim($title)));
 
 		//Check If Current URL
 		$meta_url = substr(preg_replace("/[^ \w-]/", "", stripcslashes($title)), 0, $limit);
@@ -1168,7 +1169,7 @@ class CoreForm extends CI_Model
 
 		//Check If Exist
 		if ($this->metaCheckUrl($meta_url)) {
-			$unique = $this->CoreLoad->random($rand, 'abcdefghijklmnopqrstuvwxyz');
+			$unique = $this->CoreLoad->random($rand, 'abcdefghijklmnpqrstuvwxyz123456789');
 			return $meta_url . '-' . $unique;
 		} else {
 			return $meta_url;
@@ -1206,9 +1207,9 @@ class CoreForm extends CI_Model
 		if (!empty($meta_query)) {
 			// Check If Updating
 			if (!is_null($typeid)) {
-				$generated_url = ($meta_query[0]->metaid == $typeid) ? $meta_query[0]->url : $meta_query[0]->url . '-' . $typeid;
+				$generated_url = ($meta_query[0]->metaid == $typeid) ? $meta_query[0]->url : $meta_query[0]->url . '-' . $this->CoreLoad->random($rand, 'abcdefghijklmnpqrstuvwxyz123456789');
 			} else {
-				$generated_url = $meta_query[0]->url . '-' . $this->CoreLoad->random($rand, 'abcdefghijklmnpqrstuvwxyz123456789');
+				$generated_url = $this->metaUrl($meta_query[0]->url . '-' . $this->CoreLoad->random($rand, 'abcdefghijklmnpqrstuvwxyz123456789'));
 				return $this->metaCheckUrl($generated_url, null, true);
 			}
 			return ($generate) ? $generated_url : true; //URL exist
@@ -1236,10 +1237,12 @@ class CoreForm extends CI_Model
 		$metaterm_type = $this->plural->singularize(strtolower(trim($module)));
 		if ($table_name == 'fields' || $table_name == 'autofields') {
 			$metaterm_type = $this->plural->singularize($this->CoreCrud->selectSingleValue($table_name, 'title', ['id' => $id]));
+		} elseif ($table_name == 'inheritances') {
+			$metaterm_type = $this->plural->singularize($this->CoreCrud->selectSingleValue($table_name, 'type', ['id' => $id]));
 		}
 
 		// Check Existing URL
-		$exist_url = $this->CoreCrud->selectSingleValue('metaterms', 'url', ['module' => $table_name, 'type' => $metaterm_type, 'typeid' => $id]);
+		$exist_url = $this->CoreCrud->selectSingleValue('metaterms', 'url', ['module' => $table_name, 'typeid' => $id]);
 		if (!is_null($exist_url)) {
 			return $exist_url;
 		} else {
@@ -1252,7 +1255,7 @@ class CoreForm extends CI_Model
 	 * 
 	 * This method is used to generate URL for the metaterm requested
 	 * - This method comes in handy when you don't have a premade url or title
-	 * - Also incase you want to utilise _urlhelper to generate url
+	 * - Also incase you want to utilise _urlhelper to generate url | Note inheritance will start with in{Typename ucfirst} _urlhelper
 	 * 
 	 * 1: Pass $module  (Table Name) | pages,blogs
 	 * 2: Pass $ud ID () page_id | blog_id
@@ -1267,7 +1270,7 @@ class CoreForm extends CI_Model
 
 		// Check Module
 		$table_name = $this->plural->pluralize(strtolower(trim($module)));
-		if ($table_name == 'fields' || $table_name == 'autofields') {
+		if ($table_name == 'fields') {
 			$filter = $this->plural->singularize($this->CoreCrud->selectSingleValue($table_name, 'title', ['id' => $id]));
 			$column_title = $this->CoreCrud->selectSingleValue($table_name, 'title', ['id' => $id]);
 			// Check Title
@@ -1276,32 +1279,63 @@ class CoreForm extends CI_Model
 				$customHelper = $filter . '_urlhelper';
 				$this->load->model('CoreField');
 				$title = ((method_exists('CoreField', $customHelper))) ? $this->CoreField->$customHelper($id) : $title;
-				// Check Title | URL
-				$title = (!is_null($title) && !empty($title)) ? $title : $column_title;
 			}
+			// MetaTerm Type
+			$metaterm_type = $this->plural->singularize(strtolower(trim($filter)));
+		} elseif ($table_name == 'autofields') {
+			$filter = $this->plural->singularize($this->CoreCrud->selectSingleValue($table_name, 'title', ['id' => $id]));
+			$auto_select = $this->CoreCrud->selectSingleValue($table_name, 'select', ['id' => $id]);
+			$auto_title = $this->CoreCrud->selectSingleValue($table_name, 'title', ['id' => $id]);
+			$column_title = (!is_null($auto_select) && !empty($auto_select)) ? $auto_select : $auto_title;
+
+			// Check Title
+			if (is_null($title) || empty($title)) {
+				//load ModelField
+				$customHelper = $filter . '_urlhelper';
+				$this->load->model('CoreField');
+				$title = ((method_exists('CoreField', $customHelper))) ? $this->CoreField->$customHelper($id) : $title;
+			}
+			// MetaTerm Type
+			$metaterm_type = $this->plural->singularize(strtolower(trim($filter)));
+		} elseif ($table_name == 'inheritances') {
+			$filter = $this->plural->singularize($this->CoreCrud->selectSingleValue($table_name, 'type', ['id' => $id]));
+			$column_title = $this->CoreCrud->selectSingleValue($table_name, 'title', ['id' => $id]);
+			// Check Title
+			if (is_null($title) || empty($title)) {
+				//load ModelField
+				$helper = 'in' . ucfirst($filter);
+				$customeHelper = $helper . '_UrlHelper';
+				$this->load->model('CoreField');
+				$title = ((method_exists('CoreField', $customeHelper))) ? $this->CoreField->$customeHelper($id) : $title;
+			}
+			// MetaTerm Type
+			$metaterm_type = $this->plural->singularize(strtolower(trim($filter)));
 		} else {
 			if ($table_name == 'users') {
 				$column_title = $this->CoreCrud->selectSingleValue($table_name, 'logname', ['id' => $id]);
+			} elseif ($table_name == 'levels') {
+				$column_title = $this->CoreCrud->selectSingleValue($table_name, 'name', ['id' => $id]);
 			} elseif ($this->CoreForm->checkTable($table_name)) {
 				$column_title = $this->CoreCrud->selectSingleValue($table_name, 'title', ['id' => $id]);
 			}
-
-			//load ModelField
-			$customeHelper = $this->plural->singularize($table_name) . '_UrlHelper';
-			$this->load->model('CoreField');
-			$title = ((method_exists('CoreField', $customeHelper))) ? $this->CoreField->$customeHelper($id) : $title;
-
-			// Check Existing URL
-			$metaterm_type = $this->plural->singularize(strtolower(trim($module)));
-			$exist_url = $this->CoreCrud->selectSingleValue('metaterms', 'url', ['module' => $table_name, 'type' => $metaterm_type, 'typeid' => $id]);
-			if (!is_null($exist_url)) {
-				$title = $exist_url;
+			// Check Title
+			if (is_null($title) || empty($title)) {
+				//load ModelField
+				$customeHelper = $this->plural->singularize($table_name) . '_UrlHelper';
+				$this->load->model('CoreField');
+				$title = ((method_exists('CoreField', $customeHelper))) ? $this->CoreField->$customeHelper($id) : $title;
 			}
-
-			// Check Title | URL
-			$title = (!is_null($title) && !empty($title)) ? $title : $column_title;
+			// MetaTerm Type
+			$metaterm_type = $this->plural->singularize(strtolower(trim($module)));
+		}
+		// Check Existing URL
+		$exist_url = $this->CoreCrud->selectSingleValue('metaterms', 'url', ['module' => $table_name, 'typeid' => $id]);
+		if (!is_null($exist_url)) {
+			$title = $exist_url;
 		}
 
+		// Check Title | URL
+		$title = (!is_null($title) && !empty($title)) ? $title : $column_title;
 		// Title to URL
 		$meta_url = $this->metaUrl($title);
 

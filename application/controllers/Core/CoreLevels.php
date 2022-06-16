@@ -417,8 +417,7 @@ class CoreLevels extends CI_Controller
 			$insertData["$details"] = json_encode($insertData);
 
 			//Insert Data Into Table
-			$this->db->insert($tableName, $insertData);
-			if ($this->db->affected_rows() > 0) {
+			if ($this->CoreCrud->insertData($tableName, $insertData)) {
 
 				return true; //Data Inserted
 			} else {
@@ -468,8 +467,7 @@ class CoreLevels extends CI_Controller
 			$updateData["$details"] = json_encode($current_details);
 
 			//Update Data In The Table
-			$this->db->update($tableName, $updateData, $valueWhere);
-			if ($this->db->affected_rows() > 0) {
+			if ($this->CoreCrud->updateData($tableName, $updateData, $valueWhere)) {
 
 				return true; //Data Updated
 			} else {
@@ -493,8 +491,7 @@ class CoreLevels extends CI_Controller
 			$tableName = $this->plural->pluralize($this->Module);
 
 			//Deleted Data In The Table
-			$this->db->delete($tableName, $valueWhere);
-			if ($this->db->affected_rows() > 0) {
+			if ($this->CoreCrud->deleteData($tableName, $valueWhere)) {
 
 				return true; //Data Deleted
 			} else {

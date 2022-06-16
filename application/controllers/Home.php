@@ -237,8 +237,7 @@ class Home extends CI_Controller
 			$insertData["$details"] = json_encode($insertData);
 
 			//Insert Data Into Table
-			$this->db->insert($tableName, $insertData);
-			if ($this->db->affected_rows() > 0) {
+			if ($this->CoreCrud->insertData($tableName, $insertData)) {
 
 				return true; //Data Inserted
 			} else {

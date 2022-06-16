@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class CoreBlogTags extends CI_Controller
+class CoreUsers extends CI_Controller
 {
 
 	/**
@@ -10,19 +10,19 @@ class CoreBlogTags extends CI_Controller
 	 * -> The controller require user to login as Administrator
 	 */
 
-	private $Module = 'inheritances'; //Module
-	private $Folder = 'blogs'; //Module
-	private $SubFolder = '/tags'; //Set Default Sub Folder For html files and Front End Use Start with /
+	private $Module = 'user'; //Module
+	private $Folder = 'user'; //Set Default Folder For html files
+	private $SubFolder = ''; //Set Default Sub Folder For html files and Front End Use Start with /
 
 	private $AllowedFile = null; //Set Default allowed file extension, remember you can pass this upon upload to override default allowed file type. Allowed File Extensions Separated by | also leave null to validate using jpg|jpeg|png|doc|docx|pdf|xls|txt change this on validation function at the bottom
 
-	private $Route = 'blogtag'; //If you have different route Name to Module name State it here |This wont be pluralized | set it null to use default
+	private $Route = null; //If you have different route Name to Module name State it here |This wont be pluralized | set it null to use default
 
-	private $New = 'blogtag/new'; //New customers
-	private $Save = 'blogtag/save'; //Add New customers
-	private $Edit = 'blogtag/update'; //Update customers
+	private $New = 'users/new'; //New User
+	private $Save = 'users/save'; //Add New User
+	private $Edit = 'users/update'; //Update User
 
-	private $ModuleName = 'Tags';
+	private $ModuleName = 'user'; //Module Nmae
 
 	/** Functions
 	 * -> __construct () = Load the most required operations E.g Class Module
@@ -78,17 +78,14 @@ class CoreBlogTags extends CI_Controller
 		//Time Zone
 		date_default_timezone_set('Africa/Nairobi');
 		$data['str_to_time'] = strtotime(date('Y-m-d, H:i:s'));
-		$data['Module'] = $this->plural->pluralize($this->Module); //Module Show
+		$data['Module'] = $this->plural->pluralize($this->Folder); //Module Show
 		$data['routeURL'] = (is_null($this->Route)) ? $this->plural->pluralize($this->Folder) : $this->Route;
-
-		//Extension Route
-		$data['extRoute'] = "admin/pages/" . $this->plural->pluralize($this->Folder) . $this->SubFolder . "/";
-
-		//Select Inheritance
-		$data['inheritance_parent'] = $this->CoreCrud->selectInheritanceItem(array('flg' => 1, 'type' => 'tag'), 'id,type,parent,title');
 
 		//Module Name - For Forms Title
 		$data['ModuleName'] = $this->plural->pluralize($this->ModuleName);
+
+		//User Levels
+		$data['level'] = $this->CoreCrud->selectMultipleValue('levels', 'name', array('flg' => 1, 'default' => 'yes'));
 
 		//Form Submit URLs
 		$data['form_new'] = $this->New;
@@ -141,8 +138,8 @@ class CoreBlogTags extends CI_Controller
 		$data = $this->load($this->plural->pluralize($this->Folder) . $this->SubFolder . "/list");
 
 		//Table Select & Clause
-		$columns = array('id,title as title,flg as status');
-		$where = array('type' => 'tag');
+		$where = array('level !=' => 'customer', 'default' => 'yes');
+		$columns = array('id,level as level,logname as username,name as full_name,email as email,flg as status');
 		$data['dataList'] = $this->CoreCrud->selectCRUD($module, $where, $columns);
 
 		//Notification
@@ -175,7 +172,6 @@ class CoreBlogTags extends CI_Controller
 		//Model Query
 		$pageID = (is_numeric($pageID)) ? $pageID : $this->plural->pluralize($this->Folder) . $this->SubFolder . "/" . $pageID;
 		$data = $this->load($pageID);
-
 
 		//Notification
 		$notify = $this->CoreNotify->notify();
@@ -220,12 +216,14 @@ class CoreBlogTags extends CI_Controller
 		$data = $this->load($pageID);
 
 		$inputTYPE = (is_null($inputTYPE)) ? $this->CoreLoad->input('inputTYPE', 'GET') : $inputTYPE; //Access Value
+
 		$inputID = (is_null($inputID)) ? $this->CoreLoad->input('inputID', 'GET') : $inputID; //Access Value
+
 
 		if (!is_null($inputTYPE) || !is_null($inputID)) {
 			//Table Select & Clause
 			$where = array($inputTYPE => $inputID);
-			$columns = array('id as id,type as type,title as title,parent as parent,title as title');
+			$columns = array('id as id,name as name,email as email,level as level,logname as logname');
 			$data['resultList'] = $this->CoreCrud->selectCRUD($module, $where, $columns);
 
 			//Notification
@@ -271,18 +269,17 @@ class CoreBlogTags extends CI_Controller
 			$formData = $this->CoreLoad->input(); //Input Data
 
 			//Form Validation Values
-			$this->form_validation->set_rules("inheritance_type", "Tag Type", "required|trim|min_length[1]|max_length[200]");
-			$this->form_validation->set_rules("inheritance_parent", "Tag Parent", "trim|min_length[1]|max_length[100]");
-			$this->form_validation->set_rules("inheritance_title", "Tag Title", "trim|min_length[1]|max_length[500]");
+			$this->form_validation->set_rules("user_name", "User Name", "required|trim|min_length[1]|max_length[200]");
+			$this->form_validation->set_rules("user_email", "User Email", "required|trim|min_length[1]|max_length[200]|valid_email|is_unique[users.user_email]");
+			$this->form_validation->set_rules("user_level", "User Level", "required|trim|min_length[1]|max_length[200]");
+			$this->form_validation->set_rules("user_logname", "User Logname", "required|trim|min_length[1]|max_length[20]|is_unique[users.user_logname]");
+			$this->form_validation->set_rules("user_password", "New Password", "trim|max_length[20]");
 
 			//Form Validation
 			if ($this->form_validation->run() == TRUE) {
-
-				//More Data
-				if ($this->create($formData, array('thumbnail'))) {
+				if ($this->create($formData)) {
 					$this->session->set_flashdata('notification', 'success'); //Notification Type
-					$message = 'Data was saved successful'; //Notification Message				
-					$this->index($message); //Open Page
+					redirect($this->New, 'refresh'); //Redirect to Page
 				} else {
 					$this->session->set_flashdata('notification', 'error'); //Notification Type
 					$this->open('add'); //Open Page
@@ -330,22 +327,37 @@ class CoreBlogTags extends CI_Controller
 			}
 		} elseif ($type == 'update') {
 
-			$updateData = $this->CoreLoad->input(); //Input Data
-
-			//Form Validation Values
-			$this->form_validation->set_rules("inheritance_type", "Tag Type", "required|trim|min_length[1]|max_length[200]");
-			$this->form_validation->set_rules("inheritance_parent", "Tag Parent", "trim|min_length[1]|max_length[100]");
-			$this->form_validation->set_rules("inheritance_title", "Tag Title", "trim|min_length[1]|max_length[500]");
-
+			$updateData = $this->CoreLoad->input(); //Input Data		
+			$column_password = strtolower($this->CoreForm->get_column_name($this->Module, 'password')); //Column Password
 			$column_id = strtolower($this->CoreForm->get_column_name($this->Module, 'id')); //Column ID
 			$value_id = $this->CoreLoad->input('id'); //Input Value
 
-			//Select Value To Unset 
-			$unsetData = array('id');
-			/**valude To Unset*/
+			//Form Validation Values
+			$this->form_validation->set_rules("user_name", "User Name", "required|trim|min_length[1]|max_length[200]");
+			$this->form_validation->set_rules("user_logname", "Logname", "required|trim|min_length[1]|max_length[20]|callback_lognamecheck");
+			$this->form_validation->set_rules("user_email", "User Email", "required|trim|min_length[1]|max_length[200]|valid_email|callback_lognamecheck");
+			$this->form_validation->set_rules("user_password", "New Password", "trim|max_length[20]");
+			$this->form_validation->set_rules("user_level", "User Level", "required|trim|min_length[1]|max_length[200]");
+
+			//Select Value To Unset && Check If Password Requested
+			if (array_key_exists("$column_password", $updateData)) {
+				if (!empty($this->input->post($column_password))) {
+					$unsetData = array('id');
+					/**valude To Unset */
+				} else {
+					$unsetData = array('id', $column_password);
+					/**Unset Value*/
+				}
+			} else {
+				$unsetData = array('id');
+				/**value To Unset*/
+			}
 
 			//Form Validation
 			if ($this->form_validation->run() == TRUE) {
+
+				//Check Password
+				$updateData['user_password'] = (is_null($updateData['user_password']) || empty($updateData['user_password'])) ? array_push($unsetData, 'user_password') : $updateData['user_password'];
 
 				//Update Table
 				if ($this->update($updateData, array($column_id => $value_id), $unsetData)) {
@@ -390,6 +402,7 @@ class CoreBlogTags extends CI_Controller
 	 */
 	public function create($insertData, $unsetData = null)
 	{
+
 		//Chech allowed Access
 		if ($this->CoreLoad->auth($this->Module)) { //Authentication
 
@@ -403,15 +416,21 @@ class CoreBlogTags extends CI_Controller
 			$flg = strtolower($this->CoreForm->get_column_name($this->Module, 'flg'));
 			$insertData["$flg"] = 1;
 
-			//Insert
+			//Column Password
+			$column_password = strtolower($this->CoreForm->get_column_name($this->Module, 'password'));
+
 			$insertData = $this->CoreCrud->unsetData($insertData, $unsetData); //Unset Data
+
+			//Check IF there is Password
+			if (array_key_exists($column_password, $insertData)) {
+				$insertData[$column_password] = sha1($this->config->item($insertData["$stamp"]) . $insertData[$column_password]);
+			}
 
 			$details = strtolower($this->CoreForm->get_column_name($this->Module, 'details'));
 			$insertData["$details"] = json_encode($insertData);
 
 			//Insert Data Into Table
-			$this->db->insert($tableName, $insertData);
-			if ($this->db->affected_rows() > 0) {
+			if ($this->CoreCrud->insertData($tableName, $insertData)) {
 
 				return true; //Data Inserted
 			} else {
@@ -433,6 +452,7 @@ class CoreBlogTags extends CI_Controller
 	 */
 	public function update($updateData, $valueWhere, $unsetData = null)
 	{
+
 		//Chech allowed Access
 		if ($this->CoreLoad->auth($this->Module)) { //Authentication
 
@@ -443,8 +463,15 @@ class CoreBlogTags extends CI_Controller
 			$stamp = $this->CoreForm->get_column_name($this->Module, 'stamp');
 			$updateData["$stamp"] = date('Y-m-d H:i:s', time());
 
-			//Update
+			//Column Password
+			$column_password = strtolower($this->CoreForm->get_column_name($this->Module, 'password'));
+
 			$updateData = $this->CoreCrud->unsetData($updateData, $unsetData); //Unset Data
+
+			//Check IF there is Password
+			if (array_key_exists($column_password, $updateData)) {
+				$updateData[$column_password] = sha1($this->config->item($updateData["$stamp"]) . $updateData[$column_password]);
+			}
 
 			//Details Column Update
 			$details = strtolower($this->CoreForm->get_column_name($this->Module, 'details'));
@@ -461,8 +488,7 @@ class CoreBlogTags extends CI_Controller
 			$updateData["$details"] = json_encode($current_details);
 
 			//Update Data In The Table
-			$this->db->update($tableName, $updateData, $valueWhere);
-			if ($this->db->affected_rows() > 0) {
+			if ($this->CoreCrud->updateData($tableName, $updateData, $valueWhere)) {
 
 				return true; //Data Updated
 			} else {
@@ -480,14 +506,14 @@ class CoreBlogTags extends CI_Controller
 	public function delete($valueWhere)
 	{
 
+		//Chech allowed Access
 		if ($this->CoreLoad->auth($this->Module)) { //Authentication
 
 			//Pluralize Module
 			$tableName = $this->plural->pluralize($this->Module);
 
 			//Deleted Data In The Table
-			$this->db->delete($tableName, $valueWhere);
-			if ($this->db->affected_rows() > 0) {
+			if ($this->CoreCrud->deleteData($tableName, $valueWhere)) {
 
 				return true; //Data Deleted
 			} else {
@@ -634,7 +660,108 @@ class CoreBlogTags extends CI_Controller
 			return false;
 		}
 	}
+
+	/**
+	 *
+	 * Validate Email/Username (Logname)
+	 * This function is used to validate if user email/logname already is used by another account
+	 * Call this function to validate if nedited logname or email does not belong to another user
+	 */
+	public function lognamecheck($str)
+	{
+		// Set Parent Table
+		$tableName = $this->Module;
+
+		//Validate
+		$check = (filter_var($str, FILTER_VALIDATE_EMAIL)) ? 'email' : 'logname'; //Look Email / Phone Number
+		if (strtolower($str) == strtolower(trim($this->CoreCrud->selectSingleValue($tableName, $check, array('id' => $this->CoreLoad->session('id')))))) {
+			return true;
+		} elseif (is_null($this->CoreCrud->selectSingleValue($tableName, 'id', array($check => $str)))) {
+			return true;
+		} elseif ($this->CoreLoad->session('level') == 'admin') {
+			return true;
+		} else {
+			$this->form_validation->set_message('lognamecheck', 'This {field} is already in use by another account');
+			return false;
+		}
+	}
+
+	/**
+	 *
+	 * Validate Mobile/Phone Number
+	 * This function accept/take input field value / Session  mobilecheck
+	 *
+	 * * The Method can be accessed via set_rules(callback_mobilecheck['+1']) // +1 is the country code
+	 */
+	public function mobilecheck($str = null, $dial_code = null)
+	{
+
+		// Set Parent Table
+		$tableName = $this->Module;
+
+		//Get The Phone/Mobile Number
+		$number = $str;
+
+		//Check Rule
+		$rules_validate = (method_exists('CoreField', 'mobileCheck')) ? $this->CoreField->mobileCheck($number) : false;
+		$column_name = (filter_var($number, FILTER_VALIDATE_EMAIL)) ? 'email' : 'logname'; //Look Email / Phone Number
+		//Validation
+		if (!$rules_validate) {
+			//Check First Letter if does not start with 0
+			if (0 == substr($number, 0, 1)) {
+				//Check If it Phone number belongs to you
+				if (strtolower($number) == strtolower(trim($this->CoreCrud->selectSingleValue($tableName, $column_name, array('id' => $this->CoreLoad->session('id')))))) {
+					return true;
+				}
+				//Check If user access is allowed
+				elseif ($this->CoreLoad->auth($this->Route)) {
+					return true;
+				}
+				//Must Be Unique
+				elseif (strlen($this->CoreCrud->selectSingleValue($tableName, 'id', array($column_name => $number))) <= 0) {
+					//Must be integer
+					if (is_numeric($number) && strlen($number) == 10) {
+
+						// Check Default Dial Code
+						$default_dial_code = (method_exists('CoreField', 'defaultDialCode')) ? $this->CoreField->defaultDialCode() : '+1';
+
+						//Dial Code
+						$dial_code = (!is_null($dial_code)) ? $dial_code : $default_dial_code; //Set Country Dial Code Here eg +1, by default it is empty
+						$max_count = strlen($dial_code) - 1;
+						//First Two Character
+						$firstTwoNumbers = "+" . substr($number, 0, $max_count);
+						//Check If number starts with country code
+						if ($firstTwoNumbers != $dial_code) {
+							return true;
+						} else {
+							$this->form_validation->set_message('mobilecheck', 'This {field} make sure your number start with "0"');
+							return false;
+						}
+					} else {
+						$this->form_validation->set_message('mobilecheck', '{field} must be 10 numbers and should not include the country code. Example: 07xxxxxxxx');
+						return false;
+					}
+				} else {
+					$this->form_validation->set_message('mobilecheck', 'This {field} is already in use by another account');
+					return false;
+				}
+			} else {
+				$this->form_validation->set_message('mobilecheck', 'This {field} make sure your number start with "0"');
+				return false;
+			}
+		} else {
+			//Check Status
+			$status = $rules_validate['status'];
+			$message = $rules_validate['message'];
+			if ($status) {
+				return true;
+			} else {
+				$this->form_validation->set_message('mobilecheck', "{field} $message");
+				return false;
+			}
+		}
+	}
 }
 
-/** End of file CoreBlogTags.php */
-/** Location: ./application/controllers/CoreBlogTags.php */
+/** End of file CoreUsers.php */
+/** Location: ./application/controllers/CoreUsers.php */

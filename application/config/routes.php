@@ -49,167 +49,172 @@ defined('BASEPATH') or exit('No direct script access allowed');
 | Examples:	my-controller/index	-> my_controller/index
 |		my-controller/my-method	-> my_controller/my_method
 */
+// Directory
+$Api_Folder = "Api";
+$Core_Folder = "Core";
+$Field_Folder = "Field";
+$Extension_Folder = "Extension";
 
-// initialize database
-require_once(BASEPATH . 'database/DB.php');
+// Initialize Database
+require_once(BASEPATH . "database/DB.php");
 $db = &DB();
 
-$route['default_controller'] = 'Home'; //Main (Home) Page
-$route['404.html'] = 'HomeError'; //Theme Error Page For Front-end
-$route['404_override'] = 'CoreErrors/index'; //Default Error Page
+$route["default_controller"] = "Home"; //Main (Home) Page
+$route["404.html"] = "HomeError"; //Theme Error Page For Front-end
+$route["404_override"] = "$Core_Folder/CoreErrors/index"; //Default Error Page
 
 /******** API *********/
 
 // Inheritance
-$route['coreapi/token'] = 'Api/CoreApi/getToken';
-$route['coreapi/find/inheritance'] = 'Api/CoreApi/getInheritance';
-$route['coreapi/find/inheritance/(:any)'] = 'Api/CoreApi/getInheritance/$1';
+$route["coreapi/token"] = "$Api_Folder/CoreApi/getToken";
+$route["coreapi/find/inheritance"] = "$Api_Folder/CoreApi/getInheritance";
+$route["coreapi/find/inheritance/(:any)"] = "$Api_Folder/CoreApi/getInheritance/$1";
 // CustomFields & Fields
-$route['coreapi/find/field'] = 'Api/CoreApi/getField';
-$route['coreapi/find/field/(:any)'] = 'Api/CoreApi/getField/$1';
+$route["coreapi/find/field"] = "$Api_Folder/CoreApi/getField";
+$route["coreapi/find/field/(:any)"] = "$Api_Folder/CoreApi/getField/$1";
 // Select Single
-$route['coreapi/find/single'] = 'Api/CoreApi/getSingle';
+$route["coreapi/find/single"] = "$Api_Folder/CoreApi/getSingle";
 // Select Multiple
-$route['coreapi/find/multiple'] = 'Api/CoreApi/getMultiple';
+$route["coreapi/find/multiple"] = "$Api_Folder/CoreApi/getMultiple";
 // Select loadAutoData
-$route['coreapi/find/autodata'] = 'Api/CoreApi/getAutoData';
+$route["coreapi/find/autodata"] = "$Api_Folder/CoreApi/getAutoData";
 // Get CoreField->load
-$route['coreapi/find/load'] = 'Api/CoreApi/getLoad';
+$route["coreapi/find/load"] = "$Api_Folder/CoreApi/getLoad";
 // Capture Erors - Any Wrong API Call
-$route['coreapi/(:any)'] = 'Api/CoreApi/failed';
-$route['coreapi/(.+)'] = 'Api/CoreApi/failed';
+$route["coreapi/(:any)"] = "$Api_Folder/CoreApi/failed";
+$route["coreapi/(.+)"] = "$Api_Folder/CoreApi/failed";
 
 /******** END API *********/
 
 //Administrator
-$route['dashboard'] = 'CoreMains/index'; //Dashboard
+$route["dashboard"] = "$Core_Folder/CoreMains/index"; //Dashboard
 
 //Users
-$route['users'] = 'CoreUsers/index'; //Manage
-$route['users/new'] = 'CoreUsers/open/add'; //Create New
-$route['users/edit'] = 'CoreUsers/edit/edit'; //Edit
-$route['users/save'] = 'CoreUsers/valid/save'; //Validate and Save
-$route['users/update'] = 'CoreUsers/valid/update'; //Validate and Update
-$route['users/delete'] = 'CoreUsers/valid/delete'; //Delete 
-$route['users/multiple'] = 'CoreUsers/valid/bulk'; //Bulk Action 
+$route["users"] = "$Core_Folder/CoreUsers/index"; //Manage
+$route["users/new"] = "$Core_Folder/CoreUsers/open/add"; //Create New
+$route["users/edit"] = "$Core_Folder/CoreUsers/edit/edit"; //Edit
+$route["users/save"] = "$Core_Folder/CoreUsers/valid/save"; //Validate and Save
+$route["users/update"] = "$Core_Folder/CoreUsers/valid/update"; //Validate and Update
+$route["users/delete"] = "$Core_Folder/CoreUsers/valid/delete"; //Delete 
+$route["users/multiple"] = "$Core_Folder/CoreUsers/valid/bulk"; //Bulk Action 
 
 //Blogs
-$route['blogs'] = 'CoreBlogs/index'; //List
-$route['blogs/new'] = 'CoreBlogs/open/add'; //Open Create New Form
-$route['blogs/edit'] = 'CoreBlogs/edit/edit'; // Open Edit  Page
-$route['blogs/save'] = 'CoreBlogs/valid/save'; // Validate and Save
-$route['blogs/update'] = 'CoreBlogs/valid/update'; // Validate and Update
-$route['blogs/delete'] = 'CoreBlogs/valid/delete'; // Delete 
-$route['blogs/multiple'] = 'CoreBlogs/valid/bulk'; // Bulk Action 
+$route["blogs"] = "$Core_Folder/CoreBlogs/index"; //List
+$route["blogs/new"] = "$Core_Folder/CoreBlogs/open/add"; //Open Create New Form
+$route["blogs/edit"] = "$Core_Folder/CoreBlogs/edit/edit"; // Open Edit  Page
+$route["blogs/save"] = "$Core_Folder/CoreBlogs/valid/save"; // Validate and Save
+$route["blogs/update"] = "$Core_Folder/CoreBlogs/valid/update"; // Validate and Update
+$route["blogs/delete"] = "$Core_Folder/CoreBlogs/valid/delete"; // Delete 
+$route["blogs/multiple"] = "$Core_Folder/CoreBlogs/valid/bulk"; // Bulk Action 
 
 //Blog Tags
-$route['blogtag'] = 'CoreBlogTags/index'; //Manage
-$route['blogtag/edit'] = 'CoreBlogTags/edit/edit'; //Edit 
-$route['blogtag/save'] = 'CoreBlogTags/valid/save'; //Validate and Save
-$route['blogtag/update'] = 'CoreBlogTags/valid/update'; //Validate and Update
-$route['blogtag/delete'] = 'CoreBlogTags/valid/delete'; //Delete 
-$route['blogtag/multiple'] = 'CoreBlogTags/valid/bulk'; //Bulk Action  
+$route["blogtag"] = "$Core_Folder/CoreBlogTags/index"; //Manage
+$route["blogtag/edit"] = "$Core_Folder/CoreBlogTags/edit/edit"; //Edit 
+$route["blogtag/save"] = "$Core_Folder/CoreBlogTags/valid/save"; //Validate and Save
+$route["blogtag/update"] = "$Core_Folder/CoreBlogTags/valid/update"; //Validate and Update
+$route["blogtag/delete"] = "$Core_Folder/CoreBlogTags/valid/delete"; //Delete 
+$route["blogtag/multiple"] = "$Core_Folder/CoreBlogTags/valid/bulk"; //Bulk Action  
 
 //Blog Categories
-$route['blogcategory'] = 'CoreBlogCategories/index'; //Manage
-$route['blogcategory/edit'] = 'CoreBlogCategories/edit/edit'; //Edit 
-$route['blogcategory/save'] = 'CoreBlogCategories/valid/save'; //Validate and Save
-$route['blogcategory/update'] = 'CoreBlogCategories/valid/update'; //Validate and Update
-$route['blogcategory/delete'] = 'CoreBlogCategories/valid/delete'; //Delete 
-$route['blogcategory/multiple'] = 'CoreBlogCategories/valid/bulk'; //Bulk Action  
+$route["blogcategory"] = "$Core_Folder/CoreBlogCategories/index"; //Manage
+$route["blogcategory/edit"] = "$Core_Folder/CoreBlogCategories/edit/edit"; //Edit 
+$route["blogcategory/save"] = "$Core_Folder/CoreBlogCategories/valid/save"; //Validate and Save
+$route["blogcategory/update"] = "$Core_Folder/CoreBlogCategories/valid/update"; //Validate and Update
+$route["blogcategory/delete"] = "$Core_Folder/CoreBlogCategories/valid/delete"; //Delete 
+$route["blogcategory/multiple"] = "$Core_Folder/CoreBlogCategories/valid/bulk"; //Bulk Action  
 
 //Pages
-$route['pages'] = 'CorePages/index'; //List
-$route['pages/new'] = 'CorePages/open/add'; //Open Create New Form
-$route['pages/edit'] = 'CorePages/edit/edit'; // Open Edit  Page
-$route['pages/save'] = 'CorePages/valid/save'; // Validate and Save
-$route['pages/update'] = 'CorePages/valid/update'; // Validate and Update
-$route['pages/delete'] = 'CorePages/valid/delete'; // Delete 
-$route['pages/multiple'] = 'CorePages/valid/bulk'; // Bulk Action 
+$route["pages"] = "$Core_Folder/CorePages/index"; //List
+$route["pages/new"] = "$Core_Folder/CorePages/open/add"; //Open Create New Form
+$route["pages/edit"] = "$Core_Folder/CorePages/edit/edit"; // Open Edit  Page
+$route["pages/save"] = "$Core_Folder/CorePages/valid/save"; // Validate and Save
+$route["pages/update"] = "$Core_Folder/CorePages/valid/update"; // Validate and Update
+$route["pages/delete"] = "$Core_Folder/CorePages/valid/delete"; // Delete 
+$route["pages/multiple"] = "$Core_Folder/CorePages/valid/bulk"; // Bulk Action 
 
 //Settings
-$route['general'] = 'CoreSettings/open/general'; //General Settings
-$route['general/update'] = 'CoreSettings/valid/general'; //General Settings Update
-$route['link'] = 'CoreSettings/open/link'; //URL Settings
-$route['link/update'] = 'CoreSettings/valid/link'; //URL Settings Update
-$route['mail'] = 'CoreSettings/open/mail'; //Mail Settings
-$route['mail/update'] = 'CoreSettings/valid/mail'; //Mail Settings Update
-$route['blog'] = 'CoreSettings/open/blog'; //Blog Settings
-$route['blog/update'] = 'CoreSettings/valid/blog'; //Blog Settings Update
-$route['seo'] = 'CoreSettings/open/seo'; //Seo Settings
-$route['seo/update'] = 'CoreSettings/valid/seo'; //Seo Settings Update
-$route['inheritance'] = 'CoreSettings/open/inheritance'; //Inheritance Type Settings
-$route['inheritance/update'] = 'CoreSettings/valid/inheritance'; //Inheritance Type Settings Update
-$route['module'] = 'CoreSettings/open/module'; //ModuleSettings
-$route['module/update'] = 'CoreSettings/valid/module'; //Module Settings Update
+$route["general"] = "$Core_Folder/CoreSettings/open/general"; //General Settings
+$route["general/update"] = "$Core_Folder/CoreSettings/valid/general"; //General Settings Update
+$route["link"] = "$Core_Folder/CoreSettings/open/link"; //URL Settings
+$route["link/update"] = "$Core_Folder/CoreSettings/valid/link"; //URL Settings Update
+$route["mail"] = "$Core_Folder/CoreSettings/open/mail"; //Mail Settings
+$route["mail/update"] = "$Core_Folder/CoreSettings/valid/mail"; //Mail Settings Update
+$route["blog"] = "$Core_Folder/CoreSettings/open/blog"; //Blog Settings
+$route["blog/update"] = "$Core_Folder/CoreSettings/valid/blog"; //Blog Settings Update
+$route["seo"] = "$Core_Folder/CoreSettings/open/seo"; //Seo Settings
+$route["seo/update"] = "$Core_Folder/CoreSettings/valid/seo"; //Seo Settings Update
+$route["inheritance"] = "$Core_Folder/CoreSettings/open/inheritance"; //Inheritance Type Settings
+$route["inheritance/update"] = "$Core_Folder/CoreSettings/valid/inheritance"; //Inheritance Type Settings Update
+$route["module"] = "$Core_Folder/CoreSettings/open/module"; //ModuleSettings
+$route["module/update"] = "$Core_Folder/CoreSettings/valid/module"; //Module Settings Update
 
 //Blog Categories
-$route['level'] = 'CoreLevels/index'; //Manage
-$route['level/edit'] = 'CoreLevels/edit/edit'; //Edit 
-$route['level/save'] = 'CoreLevels/valid/save'; //Validate and Save
-$route['level/update'] = 'CoreLevels/valid/update'; //Validate and Update
-$route['level/delete'] = 'CoreLevels/valid/delete'; //Delete 
-$route['level/multiple'] = 'CoreLevels/valid/bulk'; //Bulk Action  
+$route["level"] = "$Core_Folder/CoreLevels/index"; //Manage
+$route["level/edit"] = "$Core_Folder/CoreLevels/edit/edit"; //Edit 
+$route["level/save"] = "$Core_Folder/CoreLevels/valid/save"; //Validate and Save
+$route["level/update"] = "$Core_Folder/CoreLevels/valid/update"; //Validate and Update
+$route["level/delete"] = "$Core_Folder/CoreLevels/valid/delete"; //Delete 
+$route["level/multiple"] = "$Core_Folder/CoreLevels/valid/bulk"; //Bulk Action  
 
 //Login
-$route['admin'] = 'CoreLogs/index'; //Login Page
-$route['admin/login'] = 'CoreLogs/valid/login'; //Login Verification
-$route['admin/reset'] = 'CoreLogs/valid/reset'; //Reset Password
-$route['admin/logout'] = 'CoreLogs/valid/logout'; //Logout
+$route["admin"] = "$Core_Folder/CoreLogs/index"; //Login Page
+$route["admin/login"] = "$Core_Folder/CoreLogs/valid/login"; //Login Verification
+$route["admin/reset"] = "$Core_Folder/CoreLogs/valid/reset"; //Reset Password
+$route["admin/logout"] = "$Core_Folder/CoreLogs/valid/logout"; //Logout
 
 //Sub Profile
-$route['profile'] = 'CoreProfiles/edit/profile'; //My Profile
-$route['profile/update'] = 'CoreProfiles/valid/update'; //Validate and Update
+$route["profile"] = "$Core_Folder/CoreProfiles/edit/profile"; //My Profile
+$route["profile/update"] = "$Core_Folder/CoreProfiles/valid/update"; //Validate and Update
 
 //AutoFields
-$route['autofields'] = 'CoreAutoFields/index'; //List
-$route['autofields/new'] = 'CoreAutoFields/open/add'; //Create New
-$route['autofields/edit'] = 'CoreAutoFields/edit/edit'; // Edit 
-$route['autofields/save'] = 'CoreAutoFields/valid/save'; // Validate and Save
-$route['autofields/update'] = 'CoreAutoFields/valid/update'; // Validate and Update
-$route['autofields/delete'] = 'CoreAutoFields/valid/delete'; // Delete 
-$route['autofields/multiple'] = 'CoreAutoFields/valid/bulk'; // Bulk Action 
+$route["autofields"] = "$Core_Folder/CoreAutoFields/index"; //List
+$route["autofields/new"] = "$Core_Folder/CoreAutoFields/open/add"; //Create New
+$route["autofields/edit"] = "$Core_Folder/CoreAutoFields/edit/edit"; // Edit 
+$route["autofields/save"] = "$Core_Folder/CoreAutoFields/valid/save"; // Validate and Save
+$route["autofields/update"] = "$Core_Folder/CoreAutoFields/valid/update"; // Validate and Update
+$route["autofields/delete"] = "$Core_Folder/CoreAutoFields/valid/delete"; // Delete 
+$route["autofields/multiple"] = "$Core_Folder/CoreAutoFields/valid/bulk"; // Bulk Action 
 
 //Custom Fields
-$route['customfields'] = 'CoreCustomFields/index'; //Manage
-$route['customfields/new'] = 'CoreCustomFields/open/add'; //Create New 
-$route['customfields/edit'] = 'CoreCustomFields/edit/edit'; //Edit 
-$route['customfields/save'] = 'CoreCustomFields/valid/save'; //Validate and Save
-$route['customfields/update'] = 'CoreCustomFields/valid/update'; //Validate and Update
-$route['customfields/delete'] = 'CoreCustomFields/valid/delete'; //Delete 
-$route['customfields/multiple'] = 'CoreCustomFields/valid/bulk'; //Bulk Action  
+$route["customfields"] = "$Core_Folder/CoreCustomFields/index"; //Manage
+$route["customfields/new"] = "$Core_Folder/CoreCustomFields/open/add"; //Create New 
+$route["customfields/edit"] = "$Core_Folder/CoreCustomFields/edit/edit"; //Edit 
+$route["customfields/save"] = "$Core_Folder/CoreCustomFields/valid/save"; //Validate and Save
+$route["customfields/update"] = "$Core_Folder/CoreCustomFields/valid/update"; //Validate and Update
+$route["customfields/delete"] = "$Core_Folder/CoreCustomFields/valid/delete"; //Delete 
+$route["customfields/multiple"] = "$Core_Folder/CoreCustomFields/valid/bulk"; //Bulk Action  
 
 //Inheritance
-$route['inheritances'] = 'CoreInheritances/index'; //Manage
-$route['inheritances/new'] = 'CoreInheritances/open/add'; //Create New 
-$route['inheritances/edit'] = 'CoreInheritances/edit/edit'; //Edit 
-$route['inheritances/save'] = 'CoreInheritances/valid/save'; //Validate and Save
-$route['inheritances/update'] = 'CoreInheritances/valid/update'; //Validate and Update
-$route['inheritances/delete'] = 'CoreInheritances/valid/delete'; //Delete 
-$route['inheritances/multiple'] = 'CoreInheritances/valid/bulk'; //Bulk Action 
+$route["inheritances"] = "$Core_Folder/CoreInheritances/index"; //Manage
+$route["inheritances/new"] = "$Core_Folder/CoreInheritances/open/add"; //Create New 
+$route["inheritances/edit"] = "$Core_Folder/CoreInheritances/edit/edit"; //Edit 
+$route["inheritances/save"] = "$Core_Folder/CoreInheritances/valid/save"; //Validate and Save
+$route["inheritances/update"] = "$Core_Folder/CoreInheritances/valid/update"; //Validate and Update
+$route["inheritances/delete"] = "$Core_Folder/CoreInheritances/valid/delete"; //Delete 
+$route["inheritances/multiple"] = "$Core_Folder/CoreInheritances/valid/bulk"; //Bulk Action 
 
 /** API - Customer Extension -> Users */
-$route['api-customer/add'] = 'Api/Extension_Customers/valid/save';
-$route['api-customer/update'] = 'Api/Extension_Customers/valid/update';
-$route['api-customer/delete'] = 'Api/Extension_Customers/valid/delete';
-$route['api-customer/get'] = 'Api/Extension_Customers/valid/get';
+$route["api-customer/add"] = "$Api_Folder/Extension_Customers/valid/save";
+$route["api-customer/update"] = "$Api_Folder/Extension_Customers/valid/update";
+$route["api-customer/delete"] = "$Api_Folder/Extension_Customers/valid/delete";
+$route["api-customer/get"] = "$Api_Folder/Extension_Customers/valid/get";
 
 /** API - [Members] Field_Members */
-$route['api-members/add'] = 'Api/Field_Members/valid/save';
-$route['api-members/update'] = 'Api/Field_Members/valid/update';
-$route['api-members/delete'] = 'Api/Field_Members/valid/delete';
-$route['api-members/get'] = 'Api/Field_Members/valid/get';
+$route["api-members/add"] = "$Api_Folder/Field_Members/valid/save";
+$route["api-members/update"] = "$Api_Folder/Field_Members/valid/update";
+$route["api-members/delete"] = "$Api_Folder/Field_Members/valid/delete";
+$route["api-members/get"] = "$Api_Folder/Field_Members/valid/get";
 
 /////////////////////////// EXTENSIONS //////////////////////
-$query = $db->select('setting_value')->where(array('setting_title' => 'extension_menu', 'setting_flg' => 1))->get('settings');
+$query = $db->select("setting_value")->where(array("setting_title" => "extension_menu", "setting_flg" => 1))->get("settings");
 $settValue = $query->result();
 // Routes
 $routeNames = null;
 for ($i = 0; $i < count($settValue); $i++) {
 	$setting_value = $settValue[$i]->setting_value; //Menu Data
 	$values = json_decode($setting_value, True);
-	if (array_key_exists('route', $values)) {
-		$routeNames[$i] = $values['route']; // Menu Path
+	if (array_key_exists("route", $values)) {
+		$routeNames[$i] = $values["route"]; // Menu Path
 	}
 }
 
@@ -230,7 +235,7 @@ if (is_array($routeNames)) {
 }
 
 /////////////////////////// FIELDS //////////////////////////
-$query = $db->select('setting_value')->where(array('setting_title' => 'field_menu', 'setting_flg' => 1))->get('settings');
+$query = $db->select("setting_value")->where(array("setting_title" => "field_menu", "setting_flg" => 1))->get("settings");
 $settValue = $query->result();
 
 // Routes
@@ -238,8 +243,8 @@ $routeNames = null;
 for ($i = 0; $i < count($settValue); $i++) {
 	$setting_value = $settValue[$i]->setting_value; //Menu Data
 	$values = json_decode($setting_value, True);
-	if (array_key_exists('route', $values)) {
-		$routeNames[$i] = $values['route']; // Menu Path
+	if (array_key_exists("route", $values)) {
+		$routeNames[$i] = $values["route"]; // Menu Path
 	}
 }
 
@@ -260,7 +265,7 @@ if (is_array($routeNames)) {
 }
 
 /////////////////////////// CONTROLS ///////////////////////
-$query = $db->select('setting_value')->where(array('setting_title' => 'control_menu', 'setting_flg' => 1))->get('settings');
+$query = $db->select("setting_value")->where(array("setting_title" => "control_menu", "setting_flg" => 1))->get("settings");
 $settValue = $query->result();
 
 // Routes
@@ -268,8 +273,8 @@ $routeNames = null;
 for ($i = 0; $i < count($settValue); $i++) {
 	$setting_value = $settValue[$i]->setting_value; //Menu Data
 	$values = json_decode($setting_value, True);
-	if (array_key_exists('route', $values)) {
-		$routeNames[$i] = $values['route']; // Menu Path
+	if (array_key_exists("route", $values)) {
+		$routeNames[$i] = $values["route"]; // Menu Path
 	}
 }
 
@@ -290,7 +295,7 @@ if (is_array($routeNames)) {
 }
 
 /////////////////////////// MENU //////////////////////////
-$query = $db->select('setting_value')->where(array('setting_title' => 'menu_menu', 'setting_flg' => 1))->get('settings');
+$query = $db->select("setting_value")->where(array("setting_title" => "menu_menu", "setting_flg" => 1))->get("settings");
 $settValue = $query->result();
 
 // Routes
@@ -298,8 +303,8 @@ $routeNames = null;
 for ($i = 0; $i < count($settValue); $i++) {
 	$setting_value = $settValue[$i]->setting_value; //Menu Data
 	$values = json_decode($setting_value, True);
-	if (array_key_exists('route', $values)) {
-		$routeNames[$i] = $values['route']; // Menu Path
+	if (array_key_exists("route", $values)) {
+		$routeNames[$i] = $values["route"]; // Menu Path
 	}
 }
 

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Jun 15, 2022 at 06:33 PM
+-- Generation Time: Jun 16, 2022 at 03:37 PM
 -- Server version: 5.7.32
 -- PHP Version: 7.4.12
 
@@ -201,6 +201,25 @@ CREATE TABLE `metaterms` (
   `metaterm_flg` int(1) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Dumping data for table `metaterms`
+--
+
+INSERT INTO `metaterms` (`metaterm_id`, `metaterm_module`, `metaterm_type`, `metaterm_typeid`, `metaterm_url`, `metaterm_stamp`, `metaterm_flg`) VALUES
+(1, 'autofields', 'auto_field', 2, 'auto-field', '2022-06-16 11:41:01', 1),
+(2, 'blogs', 'blog', 1, 'welcome-to-core', '2022-06-16 08:47:04', 1),
+(3, 'inheritances', 'category', 1, 'uncategorised', '2022-06-16 09:36:53', 1),
+(4, 'inheritances', 'tag', 2, 'blog', '2022-06-16 09:37:51', 1),
+(5, 'inheritances', 'gender', 3, 'male', '2022-06-16 10:35:56', 1),
+(6, 'inheritances', 'gender', 4, 'female', '2022-06-16 10:36:03', 1),
+(7, 'pages', 'page', 1, 'home-page', '2019-03-21 13:55:27', 1),
+(8, 'levels', 'level', 1, 'admin', '2022-06-16 10:55:20', 1),
+(9, 'levels', 'level', 2, 'user', '2022-06-16 10:55:48', 1),
+(10, 'levels', 'level', 3, 'author', '2022-06-16 10:55:48', 1),
+(11, 'levels', 'level', 4, 'customer', '2022-06-16 10:56:39', 1),
+(12, 'users', 'user', 1, 'admin', '2022-06-16 11:32:22', 1),
+(13, 'users', 'user', 2, 'janedoe', '2022-06-16 11:32:22', 1);
+
 -- --------------------------------------------------------
 
 --
@@ -295,7 +314,7 @@ INSERT INTO `settings` (`setting_id`, `setting_title`, `setting_value`, `setting
 (40, 'site_url', 'http://localhost:8888/CoreCMS/CoreLite/', '2021-07-22 06:28:40', 'yes', 1),
 (41, 'api_url', 'http://localhost:8888/CoreCMS/CoreLite/', '2021-04-09 14:19:07', 'yes', 1),
 (42, 'string_variable', '#\\#{\\[(.*?)\\]\\}#', '2020-02-05 05:55:11', 'keys', 1),
-(43, 'session_key', 'q6E4h3GQEA', '2021-07-22 06:01:55', 'keys', 1),
+(43, 'session_key', '4OaXTFypxh', '2022-06-16 15:36:31', 'keys', 1),
 (44, 'token_name', 'Token', '2021-07-22 06:01:55', 'keys', 1),
 (45, 'token_length', '25', '2021-07-22 06:01:55', 'keys', 1),
 (46, 'token_use', '3', '2021-07-22 06:01:55', 'keys', 1),
@@ -305,8 +324,8 @@ INSERT INTO `settings` (`setting_id`, `setting_title`, `setting_value`, `setting
 (50, 'city', 'Nairobi', '2021-07-22 06:01:55', 'locale', 1),
 (51, 'country_code', '+254', '2021-07-22 06:01:55', 'locale', 1),
 (52, 'country_timezone', 'Africa/Nairobi', '2021-07-22 06:01:55', 'locale', 1),
-(53, 'field_menu', '{\"menu_path\":\"member/menu\",\"route\":{\"member\":\"Field_Members/index\",\"member/new\":\"Field_Members/open/add\", \"member/edit\":\"Field_Members/edit/edit\",\"member/save\":\"Field_Members/valid/save\",\"member/update\":\"Field_Members/valid/update\",\"member/delete\":\"Field_Members/valid/delete\", \"member/multiple\":\"Field_Members/valid/bulk\"}\r\n}', '2021-07-22 06:01:28', 'route', 1),
-(54, 'extension_menu', '{\"menu_path\":\"customer/menu\",\"route\":{\"customer\":\"Extension_Customers/index\",\"customer/new\":\"Extension_Customers/open/add\", \"customer/edit\":\"Extension_Customers/edit/edit\",\"customer/save\":\"Extension_Customers/valid/save\",\"customer/update\":\"Extension_Customers/valid/update\",\"customer/delete\":\"Extension_Customers/valid/delete\", \"customer/multiple\":\"Extension_Customers/valid/bulk\"}\r\n}', '2021-07-22 08:00:37', 'route', 1);
+(53, 'field_menu', '{\"menu_path\":\"member/menu\",\"route\":{\"member\":\"Field/Field_Members/index\",\"member/new\":\"Field/Field_Members/open/add\", \"member/edit\":\"Field/Field_Members/edit/edit\",\"member/save\":\"Field/Field_Members/valid/save\",\"member/update\":\"Field/Field_Members/valid/update\",\"member/delete\":\"Field/Field_Members/valid/delete\", \"member/multiple\":\"Field/Field_Members/valid/bulk\"}\r\n}', '2022-06-16 15:09:38', 'route', 1),
+(54, 'extension_menu', '{\"menu_path\":\"customer/menu\",\"route\":{\"customer\":\"Extension/Extension_Customers/index\",\"customer/new\":\"Extension/Extension_Customers/open/add\", \"customer/edit\":\"Extension/Extension_Customers/edit/edit\",\"customer/save\":\"Extension/Extension_Customers/valid/save\",\"customer/update\":\"Extension/Extension_Customers/valid/update\",\"customer/delete\":\"Extension/Extension_Customers/valid/delete\", \"customer/multiple\":\"Extension/Extension_Customers/valid/bulk\"}\r\n}', '2022-06-16 15:10:15', 'route', 1);
 
 -- --------------------------------------------------------
 
@@ -493,7 +512,7 @@ ALTER TABLE `levels`
 -- AUTO_INCREMENT for table `metaterms`
 --
 ALTER TABLE `metaterms`
-  MODIFY `metaterm_id` bigint(20) NOT NULL AUTO_INCREMENT;
+  MODIFY `metaterm_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `pages`

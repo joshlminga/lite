@@ -205,8 +205,7 @@ class CoreMains extends CI_Controller
 		$insertData = $this->CoreCrud->unsetData($insertData, $unsetData); //Unset Data
 
 		//Insert Data Into Table
-		$this->db->insert($tableName, $insertData);
-		if ($this->db->affected_rows() > 0) {
+		if ($this->CoreCrud->insertData($tableName, $insertData)) {
 
 			return true; //Data Inserted
 		} else {
@@ -232,8 +231,7 @@ class CoreMains extends CI_Controller
 		$updateData = $this->CoreCrud->unsetData($updateData, $unsetData); //Unset Data
 
 		//Update Data In The Table
-		$this->db->update($tableName, $updateData, $valueWhere);
-		if ($this->db->affected_rows() > 0) {
+		if ($this->CoreCrud->updateData($tableName, $updateData, $valueWhere)) {
 
 			return true; //Data Updated
 		} else {
@@ -252,8 +250,7 @@ class CoreMains extends CI_Controller
 	{
 
 		//Deleted Data In The Table
-		$this->db->delete($tableName, $valueWhere);
-		if ($this->db->affected_rows() > 0) {
+		if ($this->CoreCrud->deleteData($tableName, $valueWhere)) {
 
 			return true; //Data Deleted
 		} else {

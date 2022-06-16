@@ -1,30 +1,30 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class CoreBlogCategories extends CI_Controller
+class CoreAutoFields extends CI_Controller
 {
 
-	/***
+	/**
 	 *
 	 * The main controller for Administrator Backend
-	 * -> The controller require user to login as Administrator
+	 * -> The controller require to login as Administrator
 	 */
 
-	private $Module = 'inheritances'; //Module
-	private $Folder = 'blogs'; //Module
-	private $SubFolder = '/categories'; //Set Default Sub Folder For html files and Front End Use Start with /
+	private $Module = 'autofield'; //Module
+	private $Folder = 'autofields'; //Set Default Folder For html files and Front End Use
+	private $SubFolder = ''; //Set Default Sub Folder For html files and Front End Use Start with /
 
 	private $AllowedFile = null; //Set Default allowed file extension, remember you can pass this upon upload to override default allowed file type. Allowed File Extensions Separated by | also leave null to validate using jpg|jpeg|png|doc|docx|pdf|xls|txt change this on validation function at the bottom
 
-	private $Route = 'blogcategory'; //If you have different route Name to Module name State it here |This wont be pluralized | set it null to use default
+	private $Route = 'autofields'; //If you have different route Name to Module name State it here |This wont be pluralized
 
-	private $New = 'blogcategory/new'; //New customers
-	private $Save = 'blogcategory/save'; //Add New customers
-	private $Edit = 'blogcategory/update'; //Update customers
+	private $New = 'autofields/new'; //New 
+	private $Save = 'autofields/save'; //Add New 
+	private $Edit = 'autofields/update'; //Update 
 
-	private $ModuleName = 'Category';
+	private $ModuleName = 'auto field'; //Module Name
 
-	/*** Functions
+	/** Functions
 	 * -> __construct () = Load the most required operations E.g Class Module
 	 * 
 	 */
@@ -46,7 +46,7 @@ class CoreBlogCategories extends CI_Controller
 
 	}
 
-	/***
+	/**
 	 *
 	 * Access Requred pre-loaded data
 	 * The additional Model based data are applied here from passed function and join with load function
@@ -65,7 +65,7 @@ class CoreBlogCategories extends CI_Controller
 		return $data;
 	}
 
-	/***
+	/**
 	 *
 	 * Load the model/controller based data here
 	 * The data loaded here does not affect the other models/controller/views
@@ -81,12 +81,6 @@ class CoreBlogCategories extends CI_Controller
 		$data['Module'] = $this->plural->pluralize($this->Module); //Module Show
 		$data['routeURL'] = (is_null($this->Route)) ? $this->plural->pluralize($this->Folder) : $this->Route;
 
-		//Extension Route
-		$data['extRoute'] = "admin/pages/" . $this->plural->pluralize($this->Folder) . $this->SubFolder . "/";
-
-		//Select Inheritance
-		$data['inheritance_parent'] = $this->CoreCrud->selectInheritanceItem(array('flg' => 1, 'type' => 'category'), 'id,type,parent,title');
-
 		//Module Name - For Forms Title
 		$data['ModuleName'] = $this->plural->pluralize($this->ModuleName);
 
@@ -98,31 +92,36 @@ class CoreBlogCategories extends CI_Controller
 		return $data;
 	}
 
-	/***
+	/**
 	 *
 	 * This is one of the most important functions in your project
 	 * All pages used by this controller should be opened using pages function
 	 * 1: The first passed data is an array containing all pre-loaded data N.B it can't be empty becuase page name is passed through it
 	 * 2: Layout -> this can be set to default so it can open a particular layout always | also you can pass other layout N.B can't be empty
 	 *
-	 * ** To some page functions which are not public, use the auth method from CoreLoad model to check is user is allowed to access the pages
+	 * ** To some page functions which are not public, use the auth method from CoreLoad model to check  is allowed to access the pages
 	 * ** If your page is public ignore the use of auth method
 	 * 
 	 */
 	public function pages($data, $layout = 'main')
 	{
-		//Chech allowed Access
-		if ($this->CoreLoad->auth($this->Module)) { //Authentication
-			//Layout
-			$this->load->view("admin/layouts/$layout", $data);
+		//Check if site is online
+		if ($this->CoreLoad->site_status() == TRUE) {
+			//Chech allowed Access
+			if ($this->CoreLoad->auth($this->Module)) { //Authentication
+				//Layout
+				$this->load->view("admin/layouts/$layout", $data);
+			} else {
+				$this->CoreLoad->notAllowed(); //Not Allowed To Access
+			}
 		} else {
-			$this->CoreLoad->notAllowed(); //Not Allowed To Access
+			$this->CoreLoad->siteOffline(); //Site is offline
 		}
 	}
 
 	/**
 	 *
-	 * This is the first function to be accessed when a user open this controller
+	 * This is the first function to be accessed when  open this controller
 	 * In here we can call the load function and pass data to passed as an array inorder to manupulate it inside passed function
 	 * 	* Set your Page name/ID here N:B Page ID can be a number if you wish to access other values linked to the page opened E.g Meta Data
 	 * 	* You can also set Page ID as actual pageName found in your view N:B do not put .php E.g home.php it should just be 'home'
@@ -141,9 +140,8 @@ class CoreBlogCategories extends CI_Controller
 		$data = $this->load($this->plural->pluralize($this->Folder) . $this->SubFolder . "/list");
 
 		//Table Select & Clause
-		$columns = array('id,title as title,flg as status');
-		$where = array('type' => 'category');
-		$data['dataList'] = $this->CoreCrud->selectCRUD($module, $where, $columns);
+		$columns = array('id as id,title as title,flg as status');
+		$data['dataList'] = $this->CoreCrud->selectCRUD($module, null, $columns);
 
 		//Notification
 		$notify = $this->CoreNotify->notify();
@@ -155,7 +153,7 @@ class CoreBlogCategories extends CI_Controller
 
 	/**
 	 *
-	 * This is the function to be accessed when a user want to open specific page which deals with same controller E.g Edit data after saving
+	 * This is the function to be accessed when  want to open specific page which deals with same controller E.g Edit data after saving
 	 * In here we can call the load function and pass data to passed as an array inorder to manupulate it inside passed function
 	 * 	* Set your Page name/ID here N:B Page ID can be a number if you wish to access other values linked to the page opened E.g Meta Data
 	 * 	* You can also set Page ID as actual pageName found in your view N:B do not put .php E.g home.php it should just be 'home'
@@ -175,7 +173,6 @@ class CoreBlogCategories extends CI_Controller
 		//Model Query
 		$pageID = (is_numeric($pageID)) ? $pageID : $this->plural->pluralize($this->Folder) . $this->SubFolder . "/" . $pageID;
 		$data = $this->load($pageID);
-
 
 		//Notification
 		$notify = $this->CoreNotify->notify();
@@ -220,12 +217,14 @@ class CoreBlogCategories extends CI_Controller
 		$data = $this->load($pageID);
 
 		$inputTYPE = (is_null($inputTYPE)) ? $this->CoreLoad->input('inputTYPE', 'GET') : $inputTYPE; //Access Value
+
 		$inputID = (is_null($inputID)) ? $this->CoreLoad->input('inputID', 'GET') : $inputID; //Access Value
+
 
 		if (!is_null($inputTYPE) || !is_null($inputID)) {
 			//Table Select & Clause
 			$where = array($inputTYPE => $inputID);
-			$columns = array('id as id,type as type,title as title,parent as parent,title as title');
+			$columns = array('id as id,title as title,select as select,data as data,default as default,flg as status');
 			$data['resultList'] = $this->CoreCrud->selectCRUD($module, $where, $columns);
 
 			//Notification
@@ -270,27 +269,38 @@ class CoreBlogCategories extends CI_Controller
 
 			$formData = $this->CoreLoad->input(); //Input Data
 
-			//Form Validation Values
-			$this->form_validation->set_rules("inheritance_type", "Category Type", "required|trim|min_length[1]|max_length[200]");
-			$this->form_validation->set_rules("inheritance_parent", "Category Parent", "trim|min_length[1]|max_length[100]");
-			$this->form_validation->set_rules("inheritance_title", "Category Title", "trim|min_length[1]|max_length[500]");
+			$this->form_validation->set_rules("autofield_title", "Autofield Title", "trim|min_length[1]|max_length[200]");
+			$this->form_validation->set_rules("autofield_select", "Autofield Select", "trim|max_length[5000]");
+
+			//Set Up Data
+			for ($i = 0; $i < count($formData['autofield_label']); $i++) {
+				$currentLabel = preg_replace('/\s+/', '_', strtolower($formData['autofield_label'][$i]));
+				$currentValue = $formData['autofield_value'][$i];
+				$itemData[$currentLabel] = $currentValue;
+			}
+
+			//Form Auto Field Data
+			$formData['autofield_data'] = json_encode($itemData); //Set Data To Json
+			$formData['autofield_title'] = strtolower(preg_replace('/\s+/', '_', $formData['autofield_title']));
+
+			//Select Value To Unset 
+			$unsetData = array('autofield_label', 'autofield_value');/*valude To Unset*/
 
 			//Form Validation
 			if ($this->form_validation->run() == TRUE) {
 
-				//More Data
-				if ($this->create($formData, array('thumbnail'))) {
+				if ($this->create($formData, $unsetData)) {
 					$this->session->set_flashdata('notification', 'success'); //Notification Type
 					$message = 'Data was saved successful'; //Notification Message				
-					$this->index($message); //Open Page
+					redirect($this->New, 'refresh'); //Redirect to Page
 				} else {
 					$this->session->set_flashdata('notification', 'error'); //Notification Type
-					$this->index(); //Open Page
+					$this->open('add'); //Open Page
 				}
 			} else {
 				$this->session->set_flashdata('notification', 'error'); //Notification Type
 				$message = 'Please check the fields, and try again'; //Notification Message				
-				$this->index($message); //Open Page
+				$this->open('add', $message); //Open Page
 			}
 		} elseif ($type == 'bulk') {
 
@@ -330,22 +340,29 @@ class CoreBlogCategories extends CI_Controller
 			}
 		} elseif ($type == 'update') {
 
-			$updateData = $this->CoreLoad->input(); //Input Data
+			$updateData = $this->CoreLoad->input(); //Input Data	
 
-			//Form Validation Values
-			$this->form_validation->set_rules("inheritance_type", "Category Type", "required|trim|min_length[1]|max_length[200]");
-			$this->form_validation->set_rules("inheritance_parent", "Category Parent", "trim|min_length[1]|max_length[100]");
-			$this->form_validation->set_rules("inheritance_title", "Category Title", "trim|min_length[1]|max_length[500]");
+			$this->form_validation->set_rules("autofield_title", "Autofield Title", "trim|min_length[1]|max_length[200]");
+			$this->form_validation->set_rules("autofield_select", "Autofield Select", "trim|max_length[5000]");
 
 			$column_id = strtolower($this->CoreForm->get_column_name($this->Module, 'id')); //Column ID
 			$value_id = $this->CoreLoad->input('id'); //Input Value
 
 			//Select Value To Unset 
-			$unsetData = array('id');
-			/**valude To Unset*/
+			$unsetData = array('id', 'autofield_label', 'autofield_value');/*valude To Unset*/
 
 			//Form Validation
 			if ($this->form_validation->run() == TRUE) {
+
+				//Set Up Data
+				for ($i = 0; $i < count($updateData['autofield_label']); $i++) {
+					$currentLabel = preg_replace('/\s+/', '_', strtolower($updateData['autofield_label'][$i]));
+					$currentValue = $updateData['autofield_value'][$i];
+					$itemData[$currentLabel] = $currentValue;
+				}
+
+				//Form Auto Field Data
+				$updateData['autofield_data'] = json_encode($itemData); //Set Data To Json
 
 				//Update Table
 				if ($this->update($updateData, array($column_id => $value_id), $unsetData)) {
@@ -390,7 +407,7 @@ class CoreBlogCategories extends CI_Controller
 	 */
 	public function create($insertData, $unsetData = null)
 	{
-		//Chech allowed Access
+
 		if ($this->CoreLoad->auth($this->Module)) { //Authentication
 
 			//Pluralize Module
@@ -403,15 +420,21 @@ class CoreBlogCategories extends CI_Controller
 			$flg = strtolower($this->CoreForm->get_column_name($this->Module, 'flg'));
 			$insertData["$flg"] = 1;
 
-			//Insert
+			//Column Password
+			$column_password = strtolower($this->CoreForm->get_column_name($this->Module, 'password'));
+
 			$insertData = $this->CoreCrud->unsetData($insertData, $unsetData); //Unset Data
+
+			//Check IF there is Password
+			if (array_key_exists($column_password, $insertData)) {
+				$insertData[$column_password] = sha1($this->config->item($insertData["$stamp"]) . $insertData[$column_password]);
+			}
 
 			$details = strtolower($this->CoreForm->get_column_name($this->Module, 'details'));
 			$insertData["$details"] = json_encode($insertData);
 
 			//Insert Data Into Table
-			$this->db->insert($tableName, $insertData);
-			if ($this->db->affected_rows() > 0) {
+			if ($this->CoreCrud->insertData($tableName, $insertData)) {
 
 				return true; //Data Inserted
 			} else {
@@ -433,7 +456,7 @@ class CoreBlogCategories extends CI_Controller
 	 */
 	public function update($updateData, $valueWhere, $unsetData = null)
 	{
-		//Chech allowed Access
+
 		if ($this->CoreLoad->auth($this->Module)) { //Authentication
 
 			//Pluralize Module
@@ -443,26 +466,30 @@ class CoreBlogCategories extends CI_Controller
 			$stamp = $this->CoreForm->get_column_name($this->Module, 'stamp');
 			$updateData["$stamp"] = date('Y-m-d H:i:s', time());
 
-			//Update
+			//Column Password
+			$column_password = strtolower($this->CoreForm->get_column_name($this->Module, 'password'));
+
 			$updateData = $this->CoreCrud->unsetData($updateData, $unsetData); //Unset Data
+
+			//Check IF there is Password
+			if (array_key_exists($column_password, $updateData)) {
+				$updateData[$column_password] = sha1($this->config->item($updateData["$stamp"]) . $updateData[$column_password]);
+			}
 
 			//Details Column Update
 			$details = strtolower($this->CoreForm->get_column_name($this->Module, 'details'));
 			foreach ($valueWhere as $key => $value) {
-				$whereData = array($key => $value);
-				/** Where Clause */
+				$whereData = array($key => $value); /* Where Clause */
 			}
 
 			$current_details = json_decode($this->db->select($details)->where($whereData)->get($tableName)->row()->$details, true);
 			foreach ($updateData as $key => $value) {
-				$current_details["$key"] = $value;
-				/** Update -> Details */
+				$current_details["$key"] = $value; /* Update -> Details */
 			}
 			$updateData["$details"] = json_encode($current_details);
 
 			//Update Data In The Table
-			$this->db->update($tableName, $updateData, $valueWhere);
-			if ($this->db->affected_rows() > 0) {
+			if ($this->CoreCrud->updateData($tableName, $updateData, $valueWhere)) {
 
 				return true; //Data Updated
 			} else {
@@ -486,8 +513,7 @@ class CoreBlogCategories extends CI_Controller
 			$tableName = $this->plural->pluralize($this->Module);
 
 			//Deleted Data In The Table
-			$this->db->delete($tableName, $valueWhere);
-			if ($this->db->affected_rows() > 0) {
+			if ($this->CoreCrud->deleteData($tableName, $valueWhere)) {
 
 				return true; //Data Deleted
 			} else {
@@ -636,5 +662,5 @@ class CoreBlogCategories extends CI_Controller
 	}
 }
 
-/** End of file CoreBlogCategories.php */
-/** Location: ./application/controllers/CoreBlogCategories.php */
+/* End of file CoreAutoFields.php */
+/* Location: ./application/controllers/CoreAutoFields.php */

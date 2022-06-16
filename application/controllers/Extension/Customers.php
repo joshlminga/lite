@@ -1,28 +1,28 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class CoreAutoFields extends CI_Controller
+class Extension_Customers extends CI_Controller
 {
 
 	/**
 	 *
 	 * The main controller for Administrator Backend
-	 * -> The controller require to login as Administrator
+	 * -> The controller require user to login as Administrator
 	 */
 
-	private $Module = 'autofield'; //Module
-	private $Folder = 'autofields'; //Set Default Folder For html files and Front End Use
-	private $SubFolder = ''; //Set Default Sub Folder For html files and Front End Use Start with /
+	private $Module = 'user'; //Module
+	private $Folder = 'extensions'; //Module
+	private $SubFolder = '/customer'; //Set Default Sub Folder For html files and Front End Use Start with /
 
 	private $AllowedFile = null; //Set Default allowed file extension, remember you can pass this upon upload to override default allowed file type. Allowed File Extensions Separated by | also leave null to validate using jpg|jpeg|png|doc|docx|pdf|xls|txt change this on validation function at the bottom
 
-	private $Route = 'autofields'; //If you have different route Name to Module name State it here |This wont be pluralized
+	private $Route = 'customer'; //If you have different route Name to Module name State it here |This wont be pluralized | set it null to use default
 
-	private $New = 'autofields/new'; //New 
-	private $Save = 'autofields/save'; //Add New 
-	private $Edit = 'autofields/update'; //Update 
+	private $New = 'customer/new'; //New customers
+	private $Save = 'customer/save'; //Add New customers
+	private $Edit = 'customer/update'; //Update customers
 
-	private $ModuleName = 'auto field'; //Module Name
+	private $ModuleName = 'customers'; //Module Nmae
 
 	/** Functions
 	 * -> __construct () = Load the most required operations E.g Class Module
@@ -78,11 +78,14 @@ class CoreAutoFields extends CI_Controller
 		//Time Zone
 		date_default_timezone_set('Africa/Nairobi');
 		$data['str_to_time'] = strtotime(date('Y-m-d, H:i:s'));
-		$data['Module'] = $this->plural->pluralize($this->Module); //Module Show
+		$data['Module'] = $this->plural->pluralize($this->Route); //Module Show
 		$data['routeURL'] = (is_null($this->Route)) ? $this->plural->pluralize($this->Folder) : $this->Route;
 
 		//Module Name - For Forms Title
 		$data['ModuleName'] = $this->plural->pluralize($this->ModuleName);
+
+		//User Levels
+		$data['level'] = $this->CoreCrud->selectMultipleValue('levels', 'name', array('flg' => 1, 'default' => 'no'));
 
 		//Form Submit URLs
 		$data['form_new'] = $this->New;
@@ -99,29 +102,24 @@ class CoreAutoFields extends CI_Controller
 	 * 1: The first passed data is an array containing all pre-loaded data N.B it can't be empty becuase page name is passed through it
 	 * 2: Layout -> this can be set to default so it can open a particular layout always | also you can pass other layout N.B can't be empty
 	 *
-	 * ** To some page functions which are not public, use the auth method from CoreLoad model to check  is allowed to access the pages
+	 * ** To some page functions which are not public, use the auth method from CoreLoad model to check is user is allowed to access the pages
 	 * ** If your page is public ignore the use of auth method
 	 * 
 	 */
-	public function pages($data, $layout = 'main')
+	public function pages($data, $layout = 'extend')
 	{
-		//Check if site is online
-		if ($this->CoreLoad->site_status() == TRUE) {
-			//Chech allowed Access
-			if ($this->CoreLoad->auth($this->Module)) { //Authentication
-				//Layout
-				$this->load->view("admin/layouts/$layout", $data);
-			} else {
-				$this->CoreLoad->notAllowed(); //Not Allowed To Access
-			}
+		//Chech allowed Access
+		if ($this->CoreLoad->auth($this->Route)) { //Authentication
+			//Layout
+			$this->load->view("admin/layouts/$layout", $data);
 		} else {
-			$this->CoreLoad->siteOffline(); //Site is offline
+			$this->CoreLoad->notAllowed(); //Not Allowed To Access
 		}
 	}
 
 	/**
 	 *
-	 * This is the first function to be accessed when  open this controller
+	 * This is the first function to be accessed when a user open this controller
 	 * In here we can call the load function and pass data to passed as an array inorder to manupulate it inside passed function
 	 * 	* Set your Page name/ID here N:B Page ID can be a number if you wish to access other values linked to the page opened E.g Meta Data
 	 * 	* You can also set Page ID as actual pageName found in your view N:B do not put .php E.g home.php it should just be 'home'
@@ -140,8 +138,9 @@ class CoreAutoFields extends CI_Controller
 		$data = $this->load($this->plural->pluralize($this->Folder) . $this->SubFolder . "/list");
 
 		//Table Select & Clause
-		$columns = array('id as id,title as title,flg as status');
-		$data['dataList'] = $this->CoreCrud->selectCRUD($module, null, $columns);
+		$columns = array('id,level as level,logname as username,name as full_name,email as email,flg as status');
+		$where = array('level' => 'customer');
+		$data['dataList'] = $this->CoreCrud->selectCRUD($module, $where, $columns);
 
 		//Notification
 		$notify = $this->CoreNotify->notify();
@@ -153,7 +152,7 @@ class CoreAutoFields extends CI_Controller
 
 	/**
 	 *
-	 * This is the function to be accessed when  want to open specific page which deals with same controller E.g Edit data after saving
+	 * This is the function to be accessed when a user want to open specific page which deals with same controller E.g Edit data after saving
 	 * In here we can call the load function and pass data to passed as an array inorder to manupulate it inside passed function
 	 * 	* Set your Page name/ID here N:B Page ID can be a number if you wish to access other values linked to the page opened E.g Meta Data
 	 * 	* You can also set Page ID as actual pageName found in your view N:B do not put .php E.g home.php it should just be 'home'
@@ -164,7 +163,7 @@ class CoreAutoFields extends CI_Controller
 	 * 	Page layout can be passed via $layout
 	 * 
 	 */
-	public function open($pageID, $message = null, $layout = 'main')
+	public function open($pageID, $message = null, $layout = 'extend')
 	{
 
 		//Pluralize Module
@@ -207,7 +206,7 @@ class CoreAutoFields extends CI_Controller
 	 *  If either inputTYPE or inputID is not passed error message will be generated
 	 * 
 	 */
-	public function edit($pageID, $inputTYPE = 'id', $inputID = null, $message = null, $layout = 'main')
+	public function edit($pageID, $inputTYPE = 'id', $inputID = null, $message = null, $layout = 'extend')
 	{
 		//Pluralize Module
 		$module = $this->plural->pluralize($this->Module);
@@ -224,7 +223,7 @@ class CoreAutoFields extends CI_Controller
 		if (!is_null($inputTYPE) || !is_null($inputID)) {
 			//Table Select & Clause
 			$where = array($inputTYPE => $inputID);
-			$columns = array('id as id,title as title,select as select,data as data,default as default,flg as status');
+			$columns = array('id as id,name as name,email as email,level as level,logname as logname');
 			$data['resultList'] = $this->CoreCrud->selectCRUD($module, $where, $columns);
 
 			//Notification
@@ -269,27 +268,18 @@ class CoreAutoFields extends CI_Controller
 
 			$formData = $this->CoreLoad->input(); //Input Data
 
-			$this->form_validation->set_rules("autofield_title", "Autofield Title", "trim|min_length[1]|max_length[200]");
-			$this->form_validation->set_rules("autofield_select", "Autofield Select", "trim|max_length[5000]");
+			//Form Validation Values
+			$this->form_validation->set_rules("user_name", "User Name", "required|trim|min_length[1]|max_length[200]");
+			$this->form_validation->set_rules("user_email", "User Email", "required|trim|min_length[1]|max_length[200]|valid_email|is_unique[users.user_email]");
+			$this->form_validation->set_rules("user_level", "User Level", "required|trim|min_length[1]|max_length[200]");
+			$this->form_validation->set_rules("user_logname", "User Logname", "required|trim|min_length[1]|max_length[20]|is_unique[users.user_logname]");
+			$this->form_validation->set_rules("user_password", "New Password", "trim|max_length[20]");
 
-			//Set Up Data
-			for ($i = 0; $i < count($formData['autofield_label']); $i++) {
-				$currentLabel = preg_replace('/\s+/', '_', strtolower($formData['autofield_label'][$i]));
-				$currentValue = $formData['autofield_value'][$i];
-				$itemData[$currentLabel] = $currentValue;
-			}
-
-			//Form Auto Field Data
-			$formData['autofield_data'] = json_encode($itemData); //Set Data To Json
-			$formData['autofield_title'] = strtolower(preg_replace('/\s+/', '_', $formData['autofield_title']));
-
-			//Select Value To Unset 
-			$unsetData = array('autofield_label', 'autofield_value');/*valude To Unset*/
+			$formData['user_default'] = 'no';
 
 			//Form Validation
 			if ($this->form_validation->run() == TRUE) {
-
-				if ($this->create($formData, $unsetData)) {
+				if ($this->create($formData)) {
 					$this->session->set_flashdata('notification', 'success'); //Notification Type
 					$message = 'Data was saved successful'; //Notification Message				
 					redirect($this->New, 'refresh'); //Redirect to Page
@@ -340,29 +330,39 @@ class CoreAutoFields extends CI_Controller
 			}
 		} elseif ($type == 'update') {
 
-			$updateData = $this->CoreLoad->input(); //Input Data	
-
-			$this->form_validation->set_rules("autofield_title", "Autofield Title", "trim|min_length[1]|max_length[200]");
-			$this->form_validation->set_rules("autofield_select", "Autofield Select", "trim|max_length[5000]");
-
+			$updateData = $this->CoreLoad->input(); //Input Data		
+			$column_password = strtolower($this->CoreForm->get_column_name($this->Module, 'password')); //Column Password
 			$column_id = strtolower($this->CoreForm->get_column_name($this->Module, 'id')); //Column ID
 			$value_id = $this->CoreLoad->input('id'); //Input Value
 
-			//Select Value To Unset 
-			$unsetData = array('id', 'autofield_label', 'autofield_value');/*valude To Unset*/
+			//Form Validation Values
+			$this->form_validation->set_rules("user_name", "User Name", "required|trim|min_length[1]|max_length[200]");
+			$this->form_validation->set_rules("user_logname", "Logname", "required|trim|min_length[1]|max_length[20]|callback_lognamecheck");
+			$this->form_validation->set_rules("user_email", "User Email", "required|trim|min_length[1]|max_length[200]|valid_email|callback_lognamecheck");
+			$this->form_validation->set_rules("user_password", "New Password", "trim|max_length[20]");
+			$this->form_validation->set_rules("user_level", "User Level", "required|trim|min_length[1]|max_length[200]");
+
+			//Select Value To Unset && Check If Password Requested
+			if (array_key_exists("$column_password", $updateData)) {
+				if (!empty($this->input->post($column_password))) {
+					$unsetData = array('id');
+					/**valude To Unset */
+				} else {
+					$unsetData = array('id', $column_password);
+					/**Unset Value*/
+				}
+			} else {
+				$unsetData = array('id');
+				/**value To Unset*/
+			}
+
+			$updateData['user_default'] = 'no';
 
 			//Form Validation
 			if ($this->form_validation->run() == TRUE) {
 
-				//Set Up Data
-				for ($i = 0; $i < count($updateData['autofield_label']); $i++) {
-					$currentLabel = preg_replace('/\s+/', '_', strtolower($updateData['autofield_label'][$i]));
-					$currentValue = $updateData['autofield_value'][$i];
-					$itemData[$currentLabel] = $currentValue;
-				}
-
-				//Form Auto Field Data
-				$updateData['autofield_data'] = json_encode($itemData); //Set Data To Json
+				//Check Password
+				$updateData['user_password'] = (is_null($updateData['user_password']) || empty($updateData['user_password'])) ? array_push($unsetData, 'user_password') : $updateData['user_password'];
 
 				//Update Table
 				if ($this->update($updateData, array($column_id => $value_id), $unsetData)) {
@@ -408,7 +408,7 @@ class CoreAutoFields extends CI_Controller
 	public function create($insertData, $unsetData = null)
 	{
 
-		if ($this->CoreLoad->auth($this->Module)) { //Authentication
+		if ($this->CoreLoad->auth($this->Route)) { //Authentication
 
 			//Pluralize Module
 			$tableName = $this->plural->pluralize($this->Module);
@@ -434,8 +434,7 @@ class CoreAutoFields extends CI_Controller
 			$insertData["$details"] = json_encode($insertData);
 
 			//Insert Data Into Table
-			$this->db->insert($tableName, $insertData);
-			if ($this->db->affected_rows() > 0) {
+			if ($this->CoreCrud->insertData($tableName, $insertData)) {
 
 				return true; //Data Inserted
 			} else {
@@ -458,7 +457,7 @@ class CoreAutoFields extends CI_Controller
 	public function update($updateData, $valueWhere, $unsetData = null)
 	{
 
-		if ($this->CoreLoad->auth($this->Module)) { //Authentication
+		if ($this->CoreLoad->auth($this->Route)) { //Authentication
 
 			//Pluralize Module
 			$tableName = $this->plural->pluralize($this->Module);
@@ -480,18 +479,19 @@ class CoreAutoFields extends CI_Controller
 			//Details Column Update
 			$details = strtolower($this->CoreForm->get_column_name($this->Module, 'details'));
 			foreach ($valueWhere as $key => $value) {
-				$whereData = array($key => $value); /* Where Clause */
+				$whereData = array($key => $value);
+				/** Where Clause */
 			}
 
 			$current_details = json_decode($this->db->select($details)->where($whereData)->get($tableName)->row()->$details, true);
 			foreach ($updateData as $key => $value) {
-				$current_details["$key"] = $value; /* Update -> Details */
+				$current_details["$key"] = $value;
+				/** Update -> Details */
 			}
 			$updateData["$details"] = json_encode($current_details);
 
 			//Update Data In The Table
-			$this->db->update($tableName, $updateData, $valueWhere);
-			if ($this->db->affected_rows() > 0) {
+			if ($this->CoreCrud->updateData($tableName, $updateData, $valueWhere)) {
 
 				return true; //Data Updated
 			} else {
@@ -509,19 +509,116 @@ class CoreAutoFields extends CI_Controller
 	public function delete($valueWhere)
 	{
 
-		if ($this->CoreLoad->auth($this->Module)) { //Authentication
+		if ($this->CoreLoad->auth($this->Route)) { //Authentication
 
 			//Pluralize Module
 			$tableName = $this->plural->pluralize($this->Module);
 
 			//Deleted Data In The Table
-			$this->db->delete($tableName, $valueWhere);
-			if ($this->db->affected_rows() > 0) {
+			if ($this->CoreCrud->deleteData($tableName, $valueWhere)) {
 
 				return true; //Data Deleted
 			} else {
 
 				return false; //Data Deletion Failed
+			}
+		}
+	}
+
+	/**
+	 *
+	 * Validate Email/Username (Logname)
+	 * This function is used to validate if user email/logname already is used by another account
+	 * Call this function to validate if nedited logname or email does not belong to another user
+	 */
+	public function lognamecheck($str)
+	{
+		// Set Parent Table
+		$tableName = 'user';
+
+		//Validate
+		$check = (filter_var($str, FILTER_VALIDATE_EMAIL)) ? 'email' : 'logname'; //Look Email / Phone Number
+		if (strtolower($str) == strtolower(trim($this->CoreCrud->selectSingleValue($tableName, $check, array('id' => $this->CoreLoad->session('id')))))) {
+			return true;
+		} elseif (is_null($this->CoreCrud->selectSingleValue($tableName, 'id', array($check => $str)))) {
+			return true;
+		} elseif ($this->CoreLoad->session('level') == 'admin') {
+			return true;
+		} else {
+			$this->form_validation->set_message('lognamecheck', 'This {field} is already in use by another account');
+			return false;
+		}
+	}
+
+	/**
+	 *
+	 * Validate Mobile/Phone Number
+	 * This function accept/take input field value / Session  mobilecheck
+	 *
+	 * * The Method can be accessed via set_rules(callback_mobilecheck['+1']) // +1 is the country code
+	 */
+	public function mobilecheck($str = null, $dial_code = null)
+	{
+
+		// Set Parent Table
+		$tableName = 'user';
+
+		//Get The Phone/Mobile Number
+		$number = $str;
+
+		//Check Rule
+		$rules_validate = (method_exists('CoreField', 'mobileCheck')) ? $this->CoreField->mobileCheck($number) : false;
+		$column_name = (filter_var($number, FILTER_VALIDATE_EMAIL)) ? 'email' : 'logname'; //Look Email / Phone Number
+		//Validation
+		if (!$rules_validate) {
+			//Check First Letter if does not start with 0
+			if (0 == substr($number, 0, 1)) {
+				//Check If it Phone number belongs to you
+				if (strtolower($number) == strtolower(trim($this->CoreCrud->selectSingleValue($tableName, $column_name, array('id' => $this->CoreLoad->session('id')))))) {
+					return true;
+				}
+				//Must Be Unique
+				elseif (strlen($this->CoreCrud->selectSingleValue($tableName, 'id', array($column_name => $number))) <= 0) {
+					//Must be integer
+					if (is_numeric($number) && strlen($number) == 10) {
+
+						// Check Default Dial Code
+						$country_code = $this->CoreCrud->selectSingleValue('settings', 'value', array('title' => 'country_code'));
+						$default_dial_code = (method_exists('CoreField', 'defaultDialCode')) ? $this->CoreField->defaultDialCode() : $country_code;
+
+						//Dial Code
+						$dial_code = (!is_null($dial_code)) ? $dial_code : $default_dial_code; //Set Country Dial Code Here eg +1, by default it is empty
+						$max_count = strlen($dial_code) - 1;
+						//First Two Character
+						$firstTwoNumbers = "+" . substr($number, 0, $max_count);
+						//Check If number starts with country code
+						if ($firstTwoNumbers != $dial_code) {
+							return true;
+						} else {
+							$this->form_validation->set_message('mobilecheck', 'This {field} make sure your number start with "0"');
+							return false;
+						}
+					} else {
+						$this->form_validation->set_message('mobilecheck', '{field} must be 10 numbers and should not include the country code. Example: 07xxxxxxxx');
+						return false;
+					}
+				} else {
+					$this->form_validation->set_message('mobilecheck', 'This {field} is already in use by another account');
+					return false;
+				}
+			} else {
+				$this->form_validation->set_message('mobilecheck', 'This {field} make sure your number start with "0"');
+				return false;
+			}
+		} else {
+			//Check Status
+			$status = $rules_validate['status'];
+			$message = $rules_validate['message'];
+			if ($status) {
+				return true;
+			} else {
+				$this->form_validation->set_message('mobilecheck', "{field} $message");
+				return false;
 			}
 		}
 	}
@@ -665,5 +762,5 @@ class CoreAutoFields extends CI_Controller
 	}
 }
 
-/* End of file CoreAutoFields.php */
-/* Location: ./application/controllers/CoreAutoFields.php */
+/** End of file Extension_Customers.php */
+/** Location: ./application/models/Extension_Customers.php */

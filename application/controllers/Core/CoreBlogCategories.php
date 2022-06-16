@@ -1,30 +1,30 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class CoreInheritances extends CI_Controller
+class CoreBlogCategories extends CI_Controller
 {
 
-	/**
+	/***
 	 *
 	 * The main controller for Administrator Backend
 	 * -> The controller require user to login as Administrator
 	 */
 
 	private $Module = 'inheritances'; //Module
-	private $Folder = 'configs'; //Module
-	private $SubFolder = '/inheritance'; //Set Default Sub Folder For html files and Front End Use Start with /
+	private $Folder = 'blogs'; //Module
+	private $SubFolder = '/categories'; //Set Default Sub Folder For html files and Front End Use Start with /
 
 	private $AllowedFile = null; //Set Default allowed file extension, remember you can pass this upon upload to override default allowed file type. Allowed File Extensions Separated by | also leave null to validate using jpg|jpeg|png|doc|docx|pdf|xls|txt change this on validation function at the bottom
 
-	private $Route = 'inheritances'; //If you have different route Name to Module name State it here |This wont be pluralized | set it null to use default
+	private $Route = 'blogcategory'; //If you have different route Name to Module name State it here |This wont be pluralized | set it null to use default
 
-	private $New = 'inheritances/new'; //New customers
-	private $Save = 'inheritances/save'; //Add New customers
-	private $Edit = 'inheritances/update'; //Update customers
+	private $New = 'blogcategory/new'; //New customers
+	private $Save = 'blogcategory/save'; //Add New customers
+	private $Edit = 'blogcategory/update'; //Update customers
 
-	private $ModuleName = 'inheritances'; //Module Nmae
+	private $ModuleName = 'Category';
 
-	/** Functions
+	/*** Functions
 	 * -> __construct () = Load the most required operations E.g Class Module
 	 * 
 	 */
@@ -46,7 +46,7 @@ class CoreInheritances extends CI_Controller
 
 	}
 
-	/**
+	/***
 	 *
 	 * Access Requred pre-loaded data
 	 * The additional Model based data are applied here from passed function and join with load function
@@ -65,7 +65,7 @@ class CoreInheritances extends CI_Controller
 		return $data;
 	}
 
-	/**
+	/***
 	 *
 	 * Load the model/controller based data here
 	 * The data loaded here does not affect the other models/controller/views
@@ -85,10 +85,7 @@ class CoreInheritances extends CI_Controller
 		$data['extRoute'] = "admin/pages/" . $this->plural->pluralize($this->Folder) . $this->SubFolder . "/";
 
 		//Select Inheritance
-		$inheritance_type = $this->CoreCrud->selectSingleValue('settings', 'value', array('title' => 'inheritance_data', 'flg' => 1));
-
-		$data['inheritance_type'] = explode(',', $inheritance_type);
-		$data['inheritance_parent'] = $this->CoreCrud->selectInheritanceItem(array('flg' => 1), 'id,type,parent,title');
+		$data['inheritance_parent'] = $this->CoreCrud->selectInheritanceItem(array('flg' => 1, 'type' => 'category'), 'id,type,parent,title');
 
 		//Module Name - For Forms Title
 		$data['ModuleName'] = $this->plural->pluralize($this->ModuleName);
@@ -101,7 +98,7 @@ class CoreInheritances extends CI_Controller
 		return $data;
 	}
 
-	/**
+	/***
 	 *
 	 * This is one of the most important functions in your project
 	 * All pages used by this controller should be opened using pages function
@@ -144,8 +141,8 @@ class CoreInheritances extends CI_Controller
 		$data = $this->load($this->plural->pluralize($this->Folder) . $this->SubFolder . "/list");
 
 		//Table Select & Clause
-		$columns = array('id,title as title,type as type,flg as status');
-		$where = null;
+		$columns = array('id,title as title,flg as status');
+		$where = array('type' => 'category');
 		$data['dataList'] = $this->CoreCrud->selectCRUD($module, $where, $columns);
 
 		//Notification
@@ -273,9 +270,10 @@ class CoreInheritances extends CI_Controller
 
 			$formData = $this->CoreLoad->input(); //Input Data
 
-			$this->form_validation->set_rules("inheritance_type", "Inheritance Type", "required|trim|min_length[1]|max_length[200]");
-			$this->form_validation->set_rules("inheritance_parent", "Inheritance Parent", "trim|min_length[1]|max_length[100]");
-			$this->form_validation->set_rules("inheritance_title", "Inheritance Title", "trim|min_length[1]|max_length[500]");
+			//Form Validation Values
+			$this->form_validation->set_rules("inheritance_type", "Category Type", "required|trim|min_length[1]|max_length[200]");
+			$this->form_validation->set_rules("inheritance_parent", "Category Parent", "trim|min_length[1]|max_length[100]");
+			$this->form_validation->set_rules("inheritance_title", "Category Title", "trim|min_length[1]|max_length[500]");
 
 			//Form Validation
 			if ($this->form_validation->run() == TRUE) {
@@ -284,15 +282,15 @@ class CoreInheritances extends CI_Controller
 				if ($this->create($formData, array('thumbnail'))) {
 					$this->session->set_flashdata('notification', 'success'); //Notification Type
 					$message = 'Data was saved successful'; //Notification Message				
-					redirect($this->New, 'refresh'); //Redirect to Page
+					$this->index($message); //Open Page
 				} else {
 					$this->session->set_flashdata('notification', 'error'); //Notification Type
-					$this->open('add'); //Open Page
+					$this->index(); //Open Page
 				}
 			} else {
 				$this->session->set_flashdata('notification', 'error'); //Notification Type
 				$message = 'Please check the fields, and try again'; //Notification Message				
-				$this->open('add', $message); //Open Page
+				$this->index($message); //Open Page
 			}
 		} elseif ($type == 'bulk') {
 
@@ -334,9 +332,10 @@ class CoreInheritances extends CI_Controller
 
 			$updateData = $this->CoreLoad->input(); //Input Data
 
-			$this->form_validation->set_rules("inheritance_type", "Inheritance Type", "required|trim|min_length[1]|max_length[200]");
-			$this->form_validation->set_rules("inheritance_parent", "Inheritance Parent", "trim|min_length[1]|max_length[100]");
-			$this->form_validation->set_rules("inheritance_title", "Inheritance Title", "trim|min_length[1]|max_length[500]");
+			//Form Validation Values
+			$this->form_validation->set_rules("inheritance_type", "Category Type", "required|trim|min_length[1]|max_length[200]");
+			$this->form_validation->set_rules("inheritance_parent", "Category Parent", "trim|min_length[1]|max_length[100]");
+			$this->form_validation->set_rules("inheritance_title", "Category Title", "trim|min_length[1]|max_length[500]");
 
 			$column_id = strtolower($this->CoreForm->get_column_name($this->Module, 'id')); //Column ID
 			$value_id = $this->CoreLoad->input('id'); //Input Value
@@ -411,8 +410,7 @@ class CoreInheritances extends CI_Controller
 			$insertData["$details"] = json_encode($insertData);
 
 			//Insert Data Into Table
-			$this->db->insert($tableName, $insertData);
-			if ($this->db->affected_rows() > 0) {
+			if ($this->CoreCrud->insertData($tableName, $insertData)) {
 
 				return true; //Data Inserted
 			} else {
@@ -462,8 +460,7 @@ class CoreInheritances extends CI_Controller
 			$updateData["$details"] = json_encode($current_details);
 
 			//Update Data In The Table
-			$this->db->update($tableName, $updateData, $valueWhere);
-			if ($this->db->affected_rows() > 0) {
+			if ($this->CoreCrud->updateData($tableName, $updateData, $valueWhere)) {
 
 				return true; //Data Updated
 			} else {
@@ -487,8 +484,7 @@ class CoreInheritances extends CI_Controller
 			$tableName = $this->plural->pluralize($this->Module);
 
 			//Deleted Data In The Table
-			$this->db->delete($tableName, $valueWhere);
-			if ($this->db->affected_rows() > 0) {
+			if ($this->CoreCrud->deleteData($tableName, $valueWhere)) {
 
 				return true; //Data Deleted
 			} else {
@@ -637,5 +633,5 @@ class CoreInheritances extends CI_Controller
 	}
 }
 
-/** End of file CoreInheritances.php */
-/** Location: ./application/controllers/CoreInheritances.php */
+/** End of file CoreBlogCategories.php */
+/** Location: ./application/controllers/CoreBlogCategories.php */

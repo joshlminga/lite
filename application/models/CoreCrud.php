@@ -401,6 +401,8 @@ class CoreCrud extends CI_Model
 				$meta_type = $this->plural->singularize($table);
 				if ($table == 'fields' || $table == 'autofields') {
 					$meta_type = $this->plural->singularize($this->CoreCrud->selectSingleValue($table, 'title', ['id' => $entry_id]));
+				} elseif ($table == 'inheritances') {
+					$meta_type = $this->plural->singularize($this->CoreCrud->selectSingleValue($table, 'type', ['id' => $entry_id]));
 				}
 				// Meta Data
 				$metaData = [
@@ -475,14 +477,17 @@ class CoreCrud extends CI_Model
 				$meta_type = $this->plural->singularize($table);
 				if ($table == 'fields' || $table == 'autofields' && !is_null($entry_id)) {
 					$meta_type = $this->plural->singularize($this->CoreCrud->selectSingleValue($table, 'title', ['id' => $entry_id]));
+				} elseif ($table == 'inheritances') {
+					$meta_type = $this->plural->singularize($this->CoreCrud->selectSingleValue($table, 'type', ['id' => $entry_id]));
 				}
+				$metaData['metaterm_type'] = $meta_type;
 
 				// Load Model
 				$this->load->model('CoreField');
 				$useUrlHelper = ((method_exists('CoreField', 'urlMetaHelper'))) ? $this->CoreField->urlMetaHelper(['module' => $table, 'type' => $meta_type]) : true;
 				if ($useUrlHelper) {
 					// Update Data
-					$this->db->update('metaterms', $metaData, ['metaterm_module' => $table, 'metaterm_type' => $meta_type, 'metaterm_typeid' => $entry_id]);
+					$this->db->update('metaterms', $metaData, ['metaterm_module' => $table, 'metaterm_typeid' => $entry_id]);
 				}
 			}
 
@@ -565,7 +570,7 @@ class CoreCrud extends CI_Model
 		$tableName = $this->plural->pluralize('field');
 
 		//Insert Data Into Table
-		$this->db->insert($tableName, $insertData);
+		$this->insertData($tableName, $insertData);
 		if ($this->db->affected_rows() > 0) {
 
 			$fieldID = $this->db->insert_id(); //Insert ID
@@ -634,7 +639,7 @@ class CoreCrud extends CI_Model
 		$where = array($column_id => $fieldID);
 
 		//Update Data In The Table
-		$this->db->update($tableName, $updateData, $where);
+		$this->updateData($tableName, $updateData, $where);
 		if ($this->db->affected_rows() > 0) {
 
 			// Filter Table Name
@@ -732,7 +737,7 @@ class CoreCrud extends CI_Model
 		$field_title = $this->plural->pluralize($this->selectSingleValue('field', 'title', array($whereTYPE => $fieldID)));
 
 		//Deleted Data In The Table
-		if ($this->db->delete($tableName, $where)) {
+		if ($this->deleteData($tableName, $where)) {
 			// Filter Table
 			if ($this->CoreForm->checkTable($field_title)) {
 				$column_set = strtolower($this->CoreForm->get_column_name($field_title, 'field')); //Column ID
