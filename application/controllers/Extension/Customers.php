@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class Extension_Customers extends CI_Controller
+class Customers extends CI_Controller
 {
 
 	/**
@@ -762,5 +762,5 @@ class Extension_Customers extends CI_Controller
 	}
 }
 
-/** End of file Extension_Customers.php */
-/** Location: ./application/models/Extension_Customers.php */
+/** End of file Customers.php */
+/** Location: ./application/models/Customers.php */

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Jun 16, 2022 at 03:37 PM
+-- Generation Time: Jun 16, 2022 at 03:48 PM
 -- Server version: 5.7.32
 -- PHP Version: 7.4.12
 
@@ -324,8 +324,8 @@ INSERT INTO `settings` (`setting_id`, `setting_title`, `setting_value`, `setting
 (50, 'city', 'Nairobi', '2021-07-22 06:01:55', 'locale', 1),
 (51, 'country_code', '+254', '2021-07-22 06:01:55', 'locale', 1),
 (52, 'country_timezone', 'Africa/Nairobi', '2021-07-22 06:01:55', 'locale', 1),
-(53, 'field_menu', '{\"menu_path\":\"member/menu\",\"route\":{\"member\":\"Field/Field_Members/index\",\"member/new\":\"Field/Field_Members/open/add\", \"member/edit\":\"Field/Field_Members/edit/edit\",\"member/save\":\"Field/Field_Members/valid/save\",\"member/update\":\"Field/Field_Members/valid/update\",\"member/delete\":\"Field/Field_Members/valid/delete\", \"member/multiple\":\"Field/Field_Members/valid/bulk\"}\r\n}', '2022-06-16 15:09:38', 'route', 1),
-(54, 'extension_menu', '{\"menu_path\":\"customer/menu\",\"route\":{\"customer\":\"Extension/Extension_Customers/index\",\"customer/new\":\"Extension/Extension_Customers/open/add\", \"customer/edit\":\"Extension/Extension_Customers/edit/edit\",\"customer/save\":\"Extension/Extension_Customers/valid/save\",\"customer/update\":\"Extension/Extension_Customers/valid/update\",\"customer/delete\":\"Extension/Extension_Customers/valid/delete\", \"customer/multiple\":\"Extension/Extension_Customers/valid/bulk\"}\r\n}', '2022-06-16 15:10:15', 'route', 1);
+(53, 'field_menu', '{\"menu_path\":\"member/menu\",\"route\":{\"member\":\"Field/Members/index\",\"member/new\":\"Field/Members/open/add\", \"member/edit\":\"Field/Members/edit/edit\",\"member/save\":\"Field/Members/valid/save\",\"member/update\":\"Field/Members/valid/update\",\"member/delete\":\"Field/Members/valid/delete\", \"member/multiple\":\"Field/Members/valid/bulk\"}\r\n}', '2022-06-16 15:42:34', 'route', 1),
+(54, 'extension_menu', '{\"menu_path\":\"customer/menu\",\"route\":{\"customer\":\"Extension/Customers/index\",\"customer/new\":\"Extension/Customers/open/add\", \"customer/edit\":\"Extension/Customers/edit/edit\",\"customer/save\":\"Extension/Customers/valid/save\",\"customer/update\":\"Extension/Customers/valid/update\",\"customer/delete\":\"Extension/Customers/valid/delete\", \"customer/multiple\":\"Extension/Customers/valid/bulk\"}\r\n}', '2022-06-16 15:43:27', 'route', 1);
 
 -- --------------------------------------------------------
 

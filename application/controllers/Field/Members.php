@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class Field_Members extends CI_Controller
+class Members extends CI_Controller
 {
 
 	/**
@@ -544,7 +544,7 @@ class Field_Members extends CI_Controller
 
 						// Check Default Dial Code
 						$country_code = $this->CoreCrud->selectSingleValue('settings', 'value', array('title' => 'country_code'));
-						$default_dial_code = (method_exists('CoreField','defaultDialCode')) ? $this->CoreField->defaultDialCode() : $country_code;
+						$default_dial_code = (method_exists('CoreField', 'defaultDialCode')) ? $this->CoreField->defaultDialCode() : $country_code;
 
 						//Dial Code
 						$dial_code = (!is_null($dial_code)) ? $dial_code : $default_dial_code; //Set Country Dial Code Here eg +1, by default it is empty
@@ -722,5 +722,5 @@ class Field_Members extends CI_Controller
 	}
 }
 
-/** End of file Field_Members.php */
-/** Location: ./application/controllers/Field_Members.php */
+/** End of file Members.php */
+/** Location: ./application/controllers/Members.php */

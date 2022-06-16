@@ -61,7 +61,7 @@ $db = &DB();
 
 $route["default_controller"] = "Home"; //Main (Home) Page
 $route["404.html"] = "HomeError"; //Theme Error Page For Front-end
-$route["404_override"] = "$Core_Folder/CoreErrors/index"; //Default Error Page
+$route["404_override"] = "CoreErrors/index"; //Default Error Page
 
 /******** API *********/
 
