@@ -570,10 +570,10 @@ class CoreCrud extends CI_Model
 		$tableName = $this->plural->pluralize('field');
 
 		//Insert Data Into Table
-		$this->insertData($tableName, $insertData);
-		if ($this->db->affected_rows() > 0) {
+		$entryID = $this->insertData($tableName, $insertData);
+		if ($entryID) {
 
-			$fieldID = $this->db->insert_id(); //Insert ID
+			$fieldID = $entryID; //Insert ID
 
 			// Check Filter Table
 			$field_title = $this->plural->pluralize($insertData['field_title']);
@@ -639,8 +639,8 @@ class CoreCrud extends CI_Model
 		$where = array($column_id => $fieldID);
 
 		//Update Data In The Table
-		$this->updateData($tableName, $updateData, $where);
-		if ($this->db->affected_rows() > 0) {
+		$updateEntry = $this->updateData($tableName, $updateData, $where);
+		if ($updateEntry) {
 
 			// Filter Table Name
 			$field_title = $this->plural->pluralize($this->selectSingleValue('field', 'title', array($whereTYPE => $fieldID)));
