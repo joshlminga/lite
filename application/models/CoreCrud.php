@@ -174,6 +174,73 @@ class CoreCrud extends CI_Model
 	}
 
 	/**
+	 *
+	 * This function is to help user select Inheritance Data and Combine URL From Meta Table
+	 *
+	 * By default the function will select inheritance_id,inheritance_type,inheritance_parent.inheritance_title unless specified other wise
+	 *  
+	 * 1: Pass The where clause as array('id'=>id_number,'parent'=>parent_id)
+	 * 2: Pass selected values separated by comma | by default it will select id,type,parent,title
+	 * 3: Pass Sort By Column => Value | by default array('id'=>'ASC')
+	 *
+	 */
+	public function selectInheritanceMeta($inheritance_where, $inheritance_select = 'id,type,parent,title', $sort = array('id' => 'ASC'))
+	{
+
+		$module = 'inheritances'; //Module Name
+		$module = $this->plural->singularize($module); //Make Sure Module Is Singular
+
+		// Select Inheritance Data
+		$columns = array($inheritance_select);
+
+		$where = $inheritance_where; //Where
+		$select = $columns; //Columns
+
+		//Sort By
+		if (is_array($sort)) {
+			foreach ($sort as $key => $value) {
+				$order_by = $this->CoreForm->get_column_name($module, $key); //Set Column name
+				$order_type = trim(strtoupper($value));
+			}
+		} else {
+			$order_by = $this->CoreForm->get_column_name($module, 'id'); //Set Column name
+			$order_type = trim(strtoupper($sort));
+		}
+
+		//Get Table Name
+		$table = $this->plural->pluralize($module);
+
+		// Select
+		if (!is_null($select)) {
+			$columns = $this->CoreCrud->set_selectCRUD($module, $select);
+			$columns .= ",metaterms.metaterm_url as metaurl";
+			$this->db->select($columns);
+		}
+
+		// Table 
+		$this->db->from($table);
+
+		// Join
+		$inheritance_id = $this->CoreForm->get_column_name($module, 'id'); //Set Column name
+		$this->db->join("metaterms", 'inheritances.inheritance_id = metaterms.metaterm_typeid', 'metaterms.metaterm_module = inheritances', "left");
+
+		// Where
+		if (!is_null($where)) {
+			$where = $this->CoreCrud->set_whereCRUD($module, $where);
+			$this->db->where($where);
+		}
+
+		// Order By
+		$this->db->order_by($order_by, $order_type);
+		$query = $this->db->get();
+
+		$checkData = $this->CoreCrud->checkResultFound($query); //Check If Value Found
+		$queryData = ($checkData == true) ? $query->result() : null;
+
+		return $queryData;
+	}
+
+	/**
 	 * This function help you to select specific fields value from Field Table
 	 * Kindly not this function wont check if your Field value is Active (field_flg = 1) by default
 	 * -- It will also not compaire against filter value (If you use filter)
