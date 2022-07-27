@@ -12,10 +12,6 @@
 				<?= form_open($form_edit, ' autocomplete="off" '); ?>
 
 				<input type="hidden" name="id" value="<?= $resultList[0]->id; ?>">
-				<?php $required = json_decode($fieldList[0]->required, True);
-				$totalRequired = count($required); ?>
-				<?php $optional = json_decode($fieldList[0]->optional, True);
-				$totalOptional = count($optional); ?>
 				<?php $data = json_decode($resultList[0]->data, True); ?>
 
 				<div class="row">

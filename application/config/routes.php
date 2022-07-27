@@ -60,9 +60,12 @@ require_once(BASEPATH . "database/DB.php");
 $db = &DB();
 
 $route["default_controller"] = "Home"; //Main (Home) Page
-$route["404.html"] = "HomeError"; //Theme Error Page For Front-end
+$route["404"] = "HomeError"; //Theme Error Page For Front-end
 $route["404_override"] = "CoreErrors/index"; //Default Error Page
 
+//404
+$route["not-found"] = "CoreErrors/index"; //Default Error Page
+$route["not-allowed"] = "CoreErrors/open"; //Default Not Allowed Page
 /******** API *********/
 
 // Inheritance
@@ -326,10 +329,6 @@ if (is_array($routeNames)) {
 
 $route['translate_uri_dashes'] = FALSE;
 
-/**
- * Todo: 404
- */
-$route["not-found"] = "CoreErrors/index"; //Default Error Page
 
 /////////////////////////END IN-BUILT ROUTES ///////////////////
 

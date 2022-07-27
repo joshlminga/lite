@@ -270,17 +270,17 @@ class CoreForm extends CI_Model
 		$field_key = json_decode($fieldList[0]->keys, True); //All Inputs
 		$field_default = $fieldList[0]->default; //Default
 
-		// Values For Show
-		$newShowDataValue = array();
+		// Values For Plain
+		$newPlainDataValue = array();
 		if (is_array($field_key)) {
 			// Loop $field_show
 			foreach ($field_key as $key => $value) {
 				$value = trim($value);
 				$key_value = "plain_" . $value;
-				if (array_key_exists($key_value, $formData) && !array_key_exists($value, $newShowDataValue)) {
-					$newShowDataValue[$value] = strip_tags($formData[$key_value]);
+				if (array_key_exists($key_value, $formData) && !array_key_exists($value, $newPlainDataValue)) {
+					$newPlainDataValue[$value] = strip_tags(strtolower($formData[$key_value]));
 				} else {
-					$newShowDataValue[$value] = strip_tags(stripcslashes($formData[$value]));
+					$newPlainDataValue[$value] = strip_tags(stripcslashes(strtolower($formData[$value])));
 				}
 			}
 		}
@@ -295,17 +295,6 @@ class CoreForm extends CI_Model
 			}
 		}
 
-		//Set Values For Filter
-		for ($i = 0; $i < count($field_filter); $i++) {
-			$valueFilter = trim($field_filter[$i]); //Current Value
-			$newFilterDataValue[$valueFilter] = $formData[$valueFilter];
-		}
-
-		//Check Additional Filters
-		$dataFilters = (!is_null($addFilters)) ? array_merge($newFilterDataValue, $addFilters) : $newFilterDataValue;
-		$tempo_filter = json_encode($dataFilters);
-		/** Set Filters */
-
 		//Set Field Data
 		$column_data = strtolower($this->get_column_name($Module, 'data'));
 		$formData[$column_data] = json_encode($formData); //Set Data
@@ -318,17 +307,19 @@ class CoreForm extends CI_Model
 			}
 		}
 
-		//Set Filters
-		$column_filters = strtolower($this->get_column_name($Module, 'filters'));
-		$formData[$column_filters] = $tempo_filter;
-		/** Set Filters */
-
 		//Set Title/Name
 		$column_title = strtolower($this->get_column_name($Module, 'title'));
 		$formData[$column_title] = $field_title; //Set Title
 
+		//Set Plain
+		$column_plain = strtolower($this->get_column_name($Module, 'plain'));
+		$tempo_plain = (count($newPlainDataValue) > 0) ? implode(' ', $newPlainDataValue) : null;
+		$tempo_plain = iconv('UTF-8', 'ASCII//TRANSLIT', $tempo_plain);
+		$formData[$column_plain] = json_encode($tempo_plain);
+		/** Set Plain */
+
 		//Details Column Update
-		$details = strtolower($this->get_column_name('field', 'details'));
+		$details = strtolower($this->get_column_name($Module, 'details'));
 
 		//Apply Field -> Stamp | Default | Flg
 		$formData = $this->applyCheckFieldTable($formData, $formCheck, $Module);
@@ -336,19 +327,20 @@ class CoreForm extends CI_Model
 		//Check Unset Key
 		if (strtolower($unsetKey) == 'before') {
 			$formData = $this->CoreCrud->unsetData($formData, $unsetData); //Unset Data
-			$formData[$details] = json_encode($formData); //Details
+			$form_detail = [
+				'field_data' => $formData['field_data'],
+				'field_title' => $formData['field_title'],
+			];
+			$formData[$details] = json_encode($form_detail); //Details
 		} else {
-
-			$formData[$details] = json_encode($formData); //Details
+			$form_detail = [
+				'field_data' => $formData['field_data'],
+				'field_title' => $formData['field_title'],
+			];
+			$formData[$details] = json_encode($form_detail); //Details
 			$formData = $this->CoreCrud->unsetData($formData, $unsetData); //Unset Data
 		}
 
-		//Set Show
-		$column_show = strtolower($this->get_column_name($Module, 'show'));
-		$tempo_show = (count($newShowDataValue) > 0) ? implode(' ', $newShowDataValue) : null;
-		$tempo_show = iconv('UTF-8', 'ASCII//TRANSLIT', $tempo_show);
-		$formData[$column_show] = json_encode($tempo_show);;
-		/** Set Show */
 
 		//Form Data
 		return $formData;
@@ -415,16 +407,16 @@ class CoreForm extends CI_Model
 		}
 
 		// Values For Show
-		$newShowDataValue = array();
+		$newPlainDataValue = array();
 		if (is_array($field_key)) {
 			// Loop $field_show
 			foreach ($field_key as $key => $value) {
 				$value = trim($value);
 				$key_value = "plain_" . $value;
-				if (array_key_exists($key_value, $updateData) && !array_key_exists($value, $newShowDataValue)) {
-					$newShowDataValue[$value] = strip_tags($updateData[$key_value]);
+				if (array_key_exists($key_value, $updateData) && !array_key_exists($value, $newPlainDataValue)) {
+					$newPlainDataValue[$value] = strip_tags(strtolower($updateData[$key_value]));
 				} else {
-					$newShowDataValue[$value] = strip_tags(stripcslashes($updateData[$value]));
+					$newPlainDataValue[$value] = strip_tags(stripcslashes(strtolower($updateData[$value])));
 				}
 			}
 		}
@@ -439,22 +431,6 @@ class CoreForm extends CI_Model
 			}
 		}
 
-		//Set Filters
-		$column_filters = strtolower($this->get_column_name($Module, 'filters'));
-
-		//Set Values FOr Filter
-		for ($i = 0; $i < count($field_filter); $i++) {
-			$valueFilter = $field_filter[$i]; //Current Value
-			if (array_key_exists($valueFilter, $updateData)) {
-				$newFilterDataValue[$valueFilter] = $updateData[$valueFilter];
-			}
-		}
-
-		//Check Additional Filters
-		$dataFilters = (!is_null($addFilters)) ? array_merge($newFilterDataValue, $addFilters) : $newFilterDataValue;
-		$tempo_filter = json_encode($dataFilters);
-		/** Set Filters */
-
 		//Set Field Data
 		$column_data = strtolower($this->get_column_name($Module, 'data'));
 		$updateData[$column_data] = json_encode($updateData); //Set Data
@@ -467,12 +443,15 @@ class CoreForm extends CI_Model
 			}
 		}
 
-		//Set Filters
-		$updateData[$column_filters] = $tempo_filter;
-		/** Set Filters */
+		//Set Plain
+		$column_plain = strtolower($this->get_column_name($Module, 'plain'));
+		$tempo_plain = (count($newPlainDataValue) > 0) ? implode(' ', $newPlainDataValue) : null;
+		$tempo_plain = iconv('UTF-8', 'ASCII//TRANSLIT', $tempo_plain);
+		$updateData[$column_plain] = json_encode($tempo_plain);
+		/** Set Plain */
 
 		//Details Column Update
-		$details = strtolower($this->get_column_name('field', 'details'));
+		$details = strtolower($this->get_column_name($Module, 'details'));
 		$current_details = json_decode($resultList[0]->details, true);
 
 		//Apply Field -> Stamp | Default | Flg
@@ -482,25 +461,22 @@ class CoreForm extends CI_Model
 		if (strtolower($unsetKey) == 'before') {
 			$updateData = $this->CoreCrud->unsetData($updateData, $unsetData); //Unset Data
 			foreach ($updateData as $key => $value) {
-				$current_details["$key"] = $value;
-				/** Update -> Details */
+				if($key != 'field_plain'){
+					$current_details["$key"] = $value;
+					/** Update -> Details */
+				}
 			}
 			$updateData["$details"] = json_encode($current_details);
 		} else {
 			foreach ($updateData as $key => $value) {
-				$current_details["$key"] = $value;
-				/** Update -> Details */
+				if($key != 'field_plain'){
+					$current_details["$key"] = $value;
+					/** Update -> Details */
+				}
 			}
 			$updateData["$details"] = json_encode($current_details);
 			$updateData = $this->CoreCrud->unsetData($updateData, $unsetData); //Unset Data
 		}
-
-		//Set Show
-		$column_show = strtolower($this->get_column_name($Module, 'show'));
-		$tempo_show = (count($newShowDataValue) > 0) ? implode(' ', $newShowDataValue) : null;
-		$tempo_show = iconv('UTF-8', 'ASCII//TRANSLIT', $tempo_show);
-		$updateData[$column_show] = json_encode($tempo_show);;
-		/** Set Show */
 
 		//Update Data
 		return $updateData;
@@ -989,6 +965,46 @@ class CoreForm extends CI_Model
 
 		// Return
 		return $insertData;
+	}
+
+	/**
+	 * This functions takes your form data and pick filters out of it 
+	 *
+	 * 1: Pass Form Data
+	 * 2: Pass CustomField Title/ID
+	 * 
+	 */
+	public function fieldFilterData($passedData,$titleID){
+		// Title
+		$title = $this->plural->singularize($titleID);
+		// Get Custom Field Title
+		if (is_numeric($titleID)) {
+			$title = $this->CoreCrud->selectSingleValue('customfields', 'title', array('id' => $titleID)); // Title ID
+		}
+
+		// Form
+		$formFilters = [];
+
+		// Get Filters
+		$filtersJson = $this->CoreCrud->selectSingleValue('customfields', 'filters', array('title' => $title));
+		if(!is_null($filtersJson)){
+			// Decode
+			$filters = json_decode($filtersJson, True);
+			// Array
+			$fromData = (!is_array($passedData)) ? json_decode($passedData, True) : $passedData;
+			// Loop
+			for ($l = 0; $l < count($filters); $l++){
+				if(array_key_exists($filters[$l], $fromData)){
+					$key = $filters[$l]; // Key
+					$value = $fromData[$key]; // Value
+					// Set Values
+					$formFilters[$key] = $value;
+				}
+			}
+		}
+
+		// Return
+		return json_encode($formFilters);
 	}
 
 	/**

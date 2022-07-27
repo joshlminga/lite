@@ -185,7 +185,7 @@ class Members extends CI_Controller
 		$customFieldTable = $this->plural->pluralize('customfields');
 
 		//Table Select & Clause
-		$columns = array('id as id,required as required,optional as optional,filters as filters,default as default');
+		$columns = array('id as id,title as title,inputs as inputs,filters as filters,default as default');
 		$where = array('title' => $fieldName);
 		$data['fieldList'] = $this->CoreCrud->selectCRUD($customFieldTable, $where, $columns, 'like');
 
@@ -240,12 +240,12 @@ class Members extends CI_Controller
 		if (!is_null($inputTYPE) || !is_null($inputID)) {
 			//Table Select & Clause
 			$where = array($inputTYPE => $inputID);
-			$columns = array('id as id,title as title,filters as filters,data as data');
+			$columns = array('id as id,title as title,data as data');
 			$resultList = $this->CoreCrud->selectCRUD($module, $where, $columns);
 
 			$data['resultList'] = $resultList;
 			//Table Select & Clause
-			$columns = array('id as id,required as required,optional as optional,filters as filters,default as default');
+			$columns = array('id as id,inputs as inputs,filters as filters,keys as keys,default as default');
 			$where = array('title' => $resultList[0]->title);
 			$data['fieldList'] = $this->CoreCrud->selectCRUD($customFieldTable, $where, $columns, 'like');
 
@@ -301,6 +301,9 @@ class Members extends CI_Controller
 
 				//Input ID
 				$inputID = $this->CoreLoad->input('id');
+
+				// Plain Data
+				$formData['plain_gender'] = $this->CoreCrud->selectSingleValue('inheritances', 'title', ['id' => $formData['gender']]);
 
 				//Unset Data
 				$formData = $this->CoreCrud->unsetData($formData, array('id'));
@@ -373,6 +376,9 @@ class Members extends CI_Controller
 
 			//Form Validation
 			if ($this->form_validation->run() == TRUE) {
+
+				// Plain Data
+				$updateData['plain_gender'] = $this->CoreCrud->selectSingleValue('inheritances', 'title', ['id' => $updateData['gender']]);
 
 				// Upload Data
 				$updatedData = $this->CoreForm->updateFormField($updateData, $inputID);

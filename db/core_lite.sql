@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Jul 27, 2022 at 03:34 PM
+-- Generation Time: Jul 27, 2022 at 08:59 PM
 -- Server version: 5.7.32
 -- PHP Version: 7.4.12
 
@@ -103,7 +103,7 @@ CREATE TABLE `customfields` (
 --
 
 INSERT INTO `customfields` (`customfield_id`, `customfield_title`, `customfield_inputs`, `customfield_filters`, `customfield_keys`, `customfield_details`, `customfield_stamp`, `customfield_default`, `customfield_flg`) VALUES
-(1, 'member', '[\"Name\",\"Email\"]', '[\"email\"]', '[\"name\",\"email\"]', '{\"customfield_title\":\"member\",\"customfield_inputs\":\"[\\\"Name\\\",\\\"Email\\\"]\",\"customfield_keys\":\"[\\\"name\\\",\\\"email\\\"]\",\"customfield_filters\":\"[\\\"email\\\"]\",\"customfield_default\":\"yes\",\"customfield_stamp\":\"2022-07-27 01:50:37\"}', '2022-07-26 22:50:37', 'yes', 1);
+(1, 'member', '[\"Name\",\"Email\",\"Gender\",\"Mobile\"]', '[\"email\"]', '[\"name\",\"email\",\"gender\",\"mobile\"]', '{\"customfield_title\":\"member\",\"customfield_inputs\":\"[\\\"Name\\\",\\\"Email\\\",\\\"Gender\\\",\\\"Mobile\\\"]\",\"customfield_keys\":\"[\\\"name\\\",\\\"email\\\",\\\"gender\\\",\\\"mobile\\\"]\",\"customfield_filters\":\"[\\\"email\\\"]\",\"customfield_default\":\"yes\",\"customfield_stamp\":\"2022-07-27 19:26:59\"}', '2022-07-27 16:26:59', 'yes', 1);
 
 -- --------------------------------------------------------
 
@@ -114,9 +114,8 @@ INSERT INTO `customfields` (`customfield_id`, `customfield_title`, `customfield_
 CREATE TABLE `fields` (
   `field_id` bigint(20) NOT NULL,
   `field_title` varchar(500) NOT NULL,
-  `field_filters` varchar(2000) DEFAULT NULL,
   `field_data` longtext,
-  `field_show` longtext,
+  `field_plain` longtext,
   `field_details` longtext,
   `field_stamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `field_default` varchar(5) DEFAULT 'yes',
@@ -127,8 +126,8 @@ CREATE TABLE `fields` (
 -- Dumping data for table `fields`
 --
 
-INSERT INTO `fields` (`field_id`, `field_title`, `field_filters`, `field_data`, `field_show`, `field_details`, `field_stamp`, `field_default`, `field_flg`) VALUES
-(1, 'member', '{\"email\":\"johndoe@core.com\"}', '{\"name\":\"John Doe\",\"email\":\"johndoe@core.com\",\"mobile\":\"0700000000\",\"gender\":\"3\"}', 'public', '{\"field_data\":\"{\\\"name\\\":\\\"John Doe\\\",\\\"email\\\":\\\"johndoe@core.com\\\",\\\"mobile\\\":\\\"0700000000\\\",\\\"gender\\\":\\\"3\\\"}\",\"field_filters\":\"{\\\"email\\\":\\\"johndoe@core.com\\\"}\",\"field_title\":\"member\"}', '2021-07-22 10:39:16', 'yes', 1);
+INSERT INTO `fields` (`field_id`, `field_title`, `field_data`, `field_plain`, `field_details`, `field_stamp`, `field_default`, `field_flg`) VALUES
+(1, 'member', '{\"name\":\"John Doe\",\"email\":\"johndoe@core.com\",\"mobile\":\"0700000000\",\"gender\":\"3\"}', '\"john doe johndoe@core.com male 0700000000\"', '{\"field_data\":\"{\\\"name\\\":\\\"John Doe\\\",\\\"email\\\":\\\"johndoe@core.com\\\",\\\"mobile\\\":\\\"0700000000\\\",\\\"gender\\\":\\\"3\\\"}\",\"field_title\":\"member\"}', '2022-07-27 20:45:42', 'yes', 1);
 
 -- --------------------------------------------------------
 
@@ -216,7 +215,8 @@ INSERT INTO `metaterms` (`metaterm_id`, `metaterm_module`, `metaterm_type`, `met
 (10, 'levels', 'level', 3, 'author', '2022-06-16 10:55:48', 1),
 (11, 'levels', 'level', 4, 'customer', '2022-06-16 10:56:39', 1),
 (12, 'users', 'user', 1, 'admin', '2022-06-16 11:32:22', 1),
-(13, 'users', 'user', 2, 'janedoe', '2022-06-16 11:32:22', 1);
+(13, 'users', 'user', 2, 'janedoe', '2022-06-16 11:32:22', 1),
+(14, 'fields', 'member', 1, 'member', '2022-07-27 20:47:05', 1);
 
 -- --------------------------------------------------------
 
@@ -490,7 +490,7 @@ ALTER TABLE `levels`
 -- AUTO_INCREMENT for table `metaterms`
 --
 ALTER TABLE `metaterms`
-  MODIFY `metaterm_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `metaterm_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `pages`

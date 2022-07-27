@@ -38,7 +38,7 @@ class CoreLoad extends CI_Model
 	{
 
 		//Loading Core CMS Version
-		$data['version'] = '5.32';
+		$data['version'] = '5.33';
 		$data['copyright_footer_1'] = "v" . $data['version'];
 		$data['copyright_footer_2'] = "Published 27-July-2022";
 
@@ -490,7 +490,7 @@ class CoreLoad extends CI_Model
 	{
 
 		//Return
-		redirect("CoreErrors/open");
+		redirect("not-allowed");
 	}
 
 	/**

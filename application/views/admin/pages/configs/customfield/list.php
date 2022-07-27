@@ -68,6 +68,8 @@
                                                     <?php else: ?>
                                                        <td> Deactivated </td>
                                                     <?php endif ?>
+                                            <?php elseif($key == 'table'): ?>
+                                                <td><?= $this->plural->pluralize($dataList[$i]->$key); ?></td>
                                             <?php else: ?> 
                                                 <td><?= $dataList[$i]->$key; ?></td>
                                             <?php endif ?>                                                  

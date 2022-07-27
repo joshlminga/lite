@@ -648,7 +648,8 @@ class CoreCrud extends CI_Model
 				$filter_columns = $this->CoreForm->getFilterColumns($field_title, $pushData, $esacapeData);
 
 				// InsertFilter
-				$insertFilter = $this->CoreForm->fieldFiltered($filter_columns, $insertData['field_filters']);
+				$field_filters = $this->CoreForm->fieldFilterData($insertData['field_data'],$field_title);
+				$insertFilter = $this->CoreForm->fieldFiltered($filter_columns, $field_filters);
 				$insertFilter['field'] = $fieldID;
 
 				// Get Columns Name
@@ -705,6 +706,7 @@ class CoreCrud extends CI_Model
 		$column_id = strtolower($this->CoreForm->get_column_name($tableName, $whereTYPE)); //Column ID
 		$where = array($column_id => $fieldID);
 
+
 		//Update Data In The Table
 		$updateEntry = $this->updateData($tableName, $updateData, $where);
 		if ($updateEntry) {
@@ -717,7 +719,8 @@ class CoreCrud extends CI_Model
 					$filter_columns = $this->CoreForm->getFilterColumns($field_title, $pushData, $esacapeData);
 
 					// UpdateFilter
-					$updateFilter = $this->CoreForm->fieldFiltered($filter_columns, $updateData['field_filters']);
+					$field_filters = $this->CoreForm->fieldFilterData($updateData['field_data'],$field_title);
+					$updateFilter = $this->CoreForm->fieldFiltered($filter_columns, $field_filters);
 
 					// Get Columns Name
 					foreach ($updateFilter as $key => $value) {

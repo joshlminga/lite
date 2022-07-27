@@ -140,7 +140,7 @@ class CustomFields extends CI_Controller
 		$data = $this->load($this->plural->pluralize($this->Folder) . $this->SubFolder . "/list");
 
 		//Table Select & Clause
-		$columns = array('id as id,title as title,flg as status');
+		$columns = array('id as id,title as title,title as table,flg as status');
 		$data['dataList'] = $this->CoreCrud->selectCRUD($module, null, $columns);
 
 		//Notification
