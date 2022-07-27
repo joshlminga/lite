@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class CoreProfiles extends CI_Controller
+class Profile extends CI_Controller
 {
 
 
@@ -536,5 +536,5 @@ class CoreProfiles extends CI_Controller
 	}
 }
 
-/* End of file CoreProfiles.php */
-/* Location: ./application/controllers/CoreProfiles.php */
+/* End of file Profile.php */
+/* Location: ./application/controllers/Profile.php */

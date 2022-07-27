@@ -1,9 +1,8 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class CoreLevels extends CI_Controller
+class Inheritances extends CI_Controller
 {
-
 
 	/**
 	 *
@@ -11,19 +10,19 @@ class CoreLevels extends CI_Controller
 	 * -> The controller require user to login as Administrator
 	 */
 
-	private $Module = 'levels'; //Module
+	private $Module = 'inheritances'; //Module
 	private $Folder = 'configs'; //Module
-	private $SubFolder = '/level'; //Set Default Sub Folder For html files and Front End Use Start with /
+	private $SubFolder = '/inheritance'; //Set Default Sub Folder For html files and Front End Use Start with /
 
 	private $AllowedFile = null; //Set Default allowed file extension, remember you can pass this upon upload to override default allowed file type. Allowed File Extensions Separated by | also leave null to validate using jpg|jpeg|png|doc|docx|pdf|xls|txt change this on validation function at the bottom
 
-	private $Route = 'level'; //If you have different route Name to Module name State it here |This wont be pluralized | set it null to use default
+	private $Route = 'inheritances'; //If you have different route Name to Module name State it here |This wont be pluralized | set it null to use default
 
-	private $New = 'level/new'; //New customers
-	private $Save = 'level/save'; //Add New customers
-	private $Edit = 'level/update'; //Update customers
+	private $New = 'inheritances/new'; //New customers
+	private $Save = 'inheritances/save'; //Add New customers
+	private $Edit = 'inheritances/update'; //Update customers
 
-	private $ModuleName = 'Level';
+	private $ModuleName = 'inheritances'; //Module Nmae
 
 	/** Functions
 	 * -> __construct () = Load the most required operations E.g Class Module
@@ -85,10 +84,11 @@ class CoreLevels extends CI_Controller
 		//Extension Route
 		$data['extRoute'] = "admin/pages/" . $this->plural->pluralize($this->Folder) . $this->SubFolder . "/";
 
-		//Select Module Type
-		$module_list = $this->CoreCrud->selectSingleValue('settings', 'value', array('title' => 'module_list', 'flg' => 1));
+		//Select Inheritance
+		$inheritance_type = $this->CoreCrud->selectSingleValue('settings', 'value', array('title' => 'inheritance_data', 'flg' => 1));
 
-		$data['modulelist'] = explode(',', $module_list);
+		$data['inheritance_type'] = explode(',', $inheritance_type);
+		$data['inheritance_parent'] = $this->CoreCrud->selectInheritanceItem(array('flg' => 1), 'id,type,parent,title');
 
 		//Module Name - For Forms Title
 		$data['ModuleName'] = $this->plural->pluralize($this->ModuleName);
@@ -144,8 +144,8 @@ class CoreLevels extends CI_Controller
 		$data = $this->load($this->plural->pluralize($this->Folder) . $this->SubFolder . "/list");
 
 		//Table Select & Clause
-		$columns = array('id,name as access_name,flg as status');
-		$where = array('id !=' => 0);
+		$columns = array('id,title as title,type as type,flg as status');
+		$where = null;
 		$data['dataList'] = $this->CoreCrud->selectCRUD($module, $where, $columns);
 
 		//Notification
@@ -228,7 +228,7 @@ class CoreLevels extends CI_Controller
 		if (!is_null($inputTYPE) || !is_null($inputID)) {
 			//Table Select & Clause
 			$where = array($inputTYPE => $inputID);
-			$columns = array('id as id,name as name,module as module,default as default');
+			$columns = array('id as id,type as type,title as title,parent as parent,title as title');
 			$data['resultList'] = $this->CoreCrud->selectCRUD($module, $where, $columns);
 
 			//Notification
@@ -273,30 +273,26 @@ class CoreLevels extends CI_Controller
 
 			$formData = $this->CoreLoad->input(); //Input Data
 
-			//Form Validation Values
-			$this->form_validation->set_rules('level_default', 'Default Value', 'trim|required|min_length[1]|max_length[5]');
-			$this->form_validation->set_rules("level_name", "Access Name", "required|trim|min_length[1]|max_length[20]");
-			$this->form_validation->set_rules("level_module[]", "Modules", "required|trim|min_length[1]|max_length[20000]");
-
-			$formData['level_name'] = preg_replace('/\s+/', '', strtolower($formData['level_name'])); //LevelName
-			$formData['level_module'] = implode(",", $formData['level_module']); //Module List
+			$this->form_validation->set_rules("inheritance_type", "Inheritance Type", "required|trim|min_length[1]|max_length[200]");
+			$this->form_validation->set_rules("inheritance_parent", "Inheritance Parent", "trim|min_length[1]|max_length[100]");
+			$this->form_validation->set_rules("inheritance_title", "Inheritance Title", "trim|min_length[1]|max_length[500]");
 
 			//Form Validation
 			if ($this->form_validation->run() == TRUE) {
 
 				//More Data
-				if ($this->create($formData)) {
+				if ($this->create($formData, array('thumbnail'))) {
 					$this->session->set_flashdata('notification', 'success'); //Notification Type
 					$message = 'Data was saved successful'; //Notification Message				
-					$this->index($message); //Open Page
+					redirect($this->New, 'refresh'); //Redirect to Page
 				} else {
 					$this->session->set_flashdata('notification', 'error'); //Notification Type
-					$this->index(); //Open Page
+					$this->open('add'); //Open Page
 				}
 			} else {
 				$this->session->set_flashdata('notification', 'error'); //Notification Type
 				$message = 'Please check the fields, and try again'; //Notification Message				
-				$this->index($message); //Open Page
+				$this->open('add', $message); //Open Page
 			}
 		} elseif ($type == 'bulk') {
 
@@ -338,11 +334,9 @@ class CoreLevels extends CI_Controller
 
 			$updateData = $this->CoreLoad->input(); //Input Data
 
-			//Form Validation Values
-			$this->form_validation->set_rules('level_default', 'Default Value', 'trim|required|min_length[1]|max_length[5]');
-			$this->form_validation->set_rules("level_module[]", "Modules", "required|trim|min_length[1]|max_length[20000]");
-
-			$updateData['level_module'] = implode(",", $updateData['level_module']); //Module List
+			$this->form_validation->set_rules("inheritance_type", "Inheritance Type", "required|trim|min_length[1]|max_length[200]");
+			$this->form_validation->set_rules("inheritance_parent", "Inheritance Parent", "trim|min_length[1]|max_length[100]");
+			$this->form_validation->set_rules("inheritance_title", "Inheritance Title", "trim|min_length[1]|max_length[500]");
 
 			$column_id = strtolower($this->CoreForm->get_column_name($this->Module, 'id')); //Column ID
 			$value_id = $this->CoreLoad->input('id'); //Input Value
@@ -640,5 +634,5 @@ class CoreLevels extends CI_Controller
 	}
 }
 
-/** End of file CoreLevels.php */
-/** Location: ./application/controllers/CoreLevels.php */
+/** End of file Inheritances.php */
+/** Location: ./application/controllers/Inheritances.php */

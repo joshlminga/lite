@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Jun 16, 2022 at 03:54 PM
+-- Generation Time: Jul 27, 2022 at 03:34 PM
 -- Server version: 5.7.32
 -- PHP Version: 7.4.12
 
@@ -88,11 +88,10 @@ INSERT INTO `blogs` (`blog_id`, `blog_category`, `blog_title`, `blog_url`, `blog
 
 CREATE TABLE `customfields` (
   `customfield_id` bigint(20) NOT NULL,
-  `customfield_title` varchar(500) NOT NULL,
-  `customfield_required` varchar(2000) DEFAULT NULL,
-  `customfield_optional` longtext,
+  `customfield_title` varchar(200) NOT NULL,
+  `customfield_inputs` longtext,
   `customfield_filters` longtext,
-  `customfield_show` longtext,
+  `customfield_keys` longtext,
   `customfield_details` longtext,
   `customfield_stamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `customfield_default` varchar(5) DEFAULT 'no',
@@ -103,8 +102,8 @@ CREATE TABLE `customfields` (
 -- Dumping data for table `customfields`
 --
 
-INSERT INTO `customfields` (`customfield_id`, `customfield_title`, `customfield_required`, `customfield_optional`, `customfield_filters`, `customfield_show`, `customfield_details`, `customfield_stamp`, `customfield_default`, `customfield_flg`) VALUES
-(1, 'member', '[\"Name\",\"Email\"]', '[\"Gender\",\"Mobile\"]', '[\"email\"]', NULL, '{\"customfield_title\":\"Member\",\"customfield_required\":\"[\\\"Name\\\",\\\"Email\\\"]\",\"customfield_optional\":\"[\\\"Gender\\\",\\\"Mobile\\\"]\",\"customfield_stamp\":\"2022-05-23 21:15:52\",\"customfield_flg\":1,\"customfield_filters\":\"[\\\"email\\\"]\",\"customfield_default\":\"yes\",\"customfield_show\":null}', '2022-05-23 18:15:52', 'yes', 1);
+INSERT INTO `customfields` (`customfield_id`, `customfield_title`, `customfield_inputs`, `customfield_filters`, `customfield_keys`, `customfield_details`, `customfield_stamp`, `customfield_default`, `customfield_flg`) VALUES
+(1, 'member', '[\"Name\",\"Email\"]', '[\"email\"]', '[\"name\",\"email\"]', '{\"customfield_title\":\"member\",\"customfield_inputs\":\"[\\\"Name\\\",\\\"Email\\\"]\",\"customfield_keys\":\"[\\\"name\\\",\\\"email\\\"]\",\"customfield_filters\":\"[\\\"email\\\"]\",\"customfield_default\":\"yes\",\"customfield_stamp\":\"2022-07-27 01:50:37\"}', '2022-07-26 22:50:37', 'yes', 1);
 
 -- --------------------------------------------------------
 
@@ -205,7 +204,7 @@ CREATE TABLE `metaterms` (
 --
 
 INSERT INTO `metaterms` (`metaterm_id`, `metaterm_module`, `metaterm_type`, `metaterm_typeid`, `metaterm_url`, `metaterm_stamp`, `metaterm_flg`) VALUES
-(1, 'autofields', 'auto_field', 2, 'auto-field', '2022-06-16 11:41:01', 1),
+(1, 'autofields', 'test_input', 2, 'auto-field', '2022-07-27 15:32:05', 1),
 (2, 'blogs', 'blog', 1, 'welcome-to-core', '2022-06-16 08:47:04', 1),
 (3, 'inheritances', 'category', 1, 'uncategorised', '2022-06-16 09:36:53', 1),
 (4, 'inheritances', 'tag', 2, 'blog', '2022-06-16 09:37:51', 1),
@@ -394,8 +393,7 @@ ALTER TABLE `blogs`
 -- Indexes for table `customfields`
 --
 ALTER TABLE `customfields`
-  ADD PRIMARY KEY (`customfield_id`),
-  ADD UNIQUE KEY `customfield_title` (`customfield_title`);
+  ADD PRIMARY KEY (`customfield_id`);
 
 --
 -- Indexes for table `fields`

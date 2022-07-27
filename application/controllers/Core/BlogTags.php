@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class CoreSettings extends CI_Controller
+class BlogTags extends CI_Controller
 {
 
 	/**
@@ -10,23 +10,19 @@ class CoreSettings extends CI_Controller
 	 * -> The controller require user to login as Administrator
 	 */
 
-	private $Module = 'setting'; //Module
-	private $Folder = 'setting'; //Set Default Folder For html files setting
-	private $SubFolder = ''; //Set Default Sub Folder For html files and Front End Use Start with /
+	private $Module = 'inheritances'; //Module
+	private $Folder = 'blogs'; //Module
+	private $SubFolder = '/tags'; //Set Default Sub Folder For html files and Front End Use Start with /
 
 	private $AllowedFile = null; //Set Default allowed file extension, remember you can pass this upon upload to override default allowed file type. Allowed File Extensions Separated by | also leave null to validate using jpg|jpeg|png|doc|docx|pdf|xls|txt change this on validation function at the bottom
 
-	private $Route = null; //If you have different route Name to Module name State it here |This wont be pluralized | set it null to use default
+	private $Route = 'blogtag'; //If you have different route Name to Module name State it here |This wont be pluralized | set it null to use default
 
-	private $General = 'general/update'; //Settings
-	private $Link = 'link/update'; //
-	private $Mail = 'mail/update'; //
-	private $Blog = 'blog/update'; //
-	private $Seo = 'seo/update'; //
-	private $Inheritance = 'inheritance/update'; //
-	private $Modulelist = 'module/update'; //
+	private $New = 'blogtag/new'; //New customers
+	private $Save = 'blogtag/save'; //Add New customers
+	private $Edit = 'blogtag/update'; //Update customers
 
-	private $ModuleName = 'settings'; //Module Nmae
+	private $ModuleName = 'Tags';
 
 	/** Functions
 	 * -> __construct () = Load the most required operations E.g Class Module
@@ -82,23 +78,22 @@ class CoreSettings extends CI_Controller
 		//Time Zone
 		date_default_timezone_set('Africa/Nairobi');
 		$data['str_to_time'] = strtotime(date('Y-m-d, H:i:s'));
-		$data['Module'] = $this->plural->pluralize($this->Folder); //Module Show
+		$data['Module'] = $this->plural->pluralize($this->Module); //Module Show
 		$data['routeURL'] = (is_null($this->Route)) ? $this->plural->pluralize($this->Folder) : $this->Route;
+
+		//Extension Route
+		$data['extRoute'] = "admin/pages/" . $this->plural->pluralize($this->Folder) . $this->SubFolder . "/";
+
+		//Select Inheritance
+		$data['inheritance_parent'] = $this->CoreCrud->selectInheritanceItem(array('flg' => 1, 'type' => 'tag'), 'id,type,parent,title');
 
 		//Module Name - For Forms Title
 		$data['ModuleName'] = $this->plural->pluralize($this->ModuleName);
 
-		//Post
-		$data['posts'] = $this->CoreCrud->selectMultipleValue('pages', 'id,title', array('flg' => 1));
-
 		//Form Submit URLs
-		$data['form_general'] = $this->General;
-		$data['form_link'] = $this->Link;
-		$data['form_mail'] = $this->Mail;
-		$data['form_blog'] = $this->Blog;
-		$data['form_seo'] = $this->Seo;
-		$data['form_inheritance'] = $this->Inheritance;
-		$data['form_module'] = $this->Modulelist;
+		$data['form_new'] = $this->New;
+		$data['form_save'] = $this->Save;
+		$data['form_edit'] = $this->Edit;
 
 		return $data;
 	}
@@ -140,15 +135,22 @@ class CoreSettings extends CI_Controller
 	public function index($notifyMessage = null)
 	{
 		//Pluralize Module
+		$module = $this->plural->pluralize($this->Module);
 
 		//Model Query
+		$data = $this->load($this->plural->pluralize($this->Folder) . $this->SubFolder . "/list");
 
 		//Table Select & Clause
+		$columns = array('id,title as title,flg as status');
+		$where = array('type' => 'tag');
+		$data['dataList'] = $this->CoreCrud->selectCRUD($module, $where, $columns);
 
 		//Notification
+		$notify = $this->CoreNotify->notify();
+		$data['notify'] = $this->CoreNotify->$notify($notifyMessage);
 
 		//Open Page
-		$this->open('general');
+		$this->pages($data);
 	}
 
 	/**
@@ -174,8 +176,6 @@ class CoreSettings extends CI_Controller
 		$pageID = (is_numeric($pageID)) ? $pageID : $this->plural->pluralize($this->Folder) . $this->SubFolder . "/" . $pageID;
 		$data = $this->load($pageID);
 
-		//Data
-		$data['resultList'] = $this->load_settings($pageID);
 
 		//Notification
 		$notify = $this->CoreNotify->notify();
@@ -183,6 +183,65 @@ class CoreSettings extends CI_Controller
 
 		//Open Page
 		$this->pages($data, $layout);
+	}
+
+	/**
+	 *
+	 *  This function is to be called when you want to pass the Edit form
+	 * In here we can call the load function and pass data to passed as an array inorder to manupulate it inside passed function
+	 * 	* Set your Page name/ID here N:B Page ID can be a number if you wish to access other values linked to the page opened E.g Meta Data
+	 * 	* You can also set Page ID as actual pageName found in your view N:B do not put .php E.g home.php it should just be 'home'
+	 * 	* Set Page template 
+	 * 	* Set Notification here
+	 * 	Custom notification message can be set/passed via $message
+	 * 	PageName / ID can be passed via $pageID
+	 * 	Page layout can be passed via $layout
+	 *
+	 * 	For inputTYPE and inputID
+	 *
+	 * 	--> inputTYPE
+	 * 	  This is the name of the column you wish to select, most of the time is coumn name 
+	 * 	  Remember to Pass ID or Pass data via GET request using variable inputTYPE 
+	 * 	  
+	 * 	--> inputID
+	 * 	  This is the value of the column you wish to match
+	 * 	  Remember to Pass Value or Pass data via GET request using variable inputID 
+	 *
+	 *  If either inputTYPE or inputID is not passed error message will be generated
+	 * 
+	 */
+	public function edit($pageID, $inputTYPE = 'id', $inputID = null, $message = null, $layout = 'main')
+	{
+		//Pluralize Module
+		$module = $this->plural->pluralize($this->Module);
+
+		//Model Query
+		$pageID = (is_numeric($pageID)) ? $pageID : $this->plural->pluralize($this->Folder) . $this->SubFolder . "/" . $pageID;
+		$data = $this->load($pageID);
+
+		$inputTYPE = (is_null($inputTYPE)) ? $this->CoreLoad->input('inputTYPE', 'GET') : $inputTYPE; //Access Value
+		$inputID = (is_null($inputID)) ? $this->CoreLoad->input('inputID', 'GET') : $inputID; //Access Value
+
+		if (!is_null($inputTYPE) || !is_null($inputID)) {
+			//Table Select & Clause
+			$where = array($inputTYPE => $inputID);
+			$columns = array('id as id,type as type,title as title,parent as parent,title as title');
+			$data['resultList'] = $this->CoreCrud->selectCRUD($module, $where, $columns);
+
+			//Notification
+			$notify = $this->CoreNotify->notify();
+			$data['notify'] = $this->CoreNotify->$notify($message);
+
+			//Open Page
+			$this->pages($data, $layout);
+		} else {
+
+			//Notification
+			$this->session->set_flashdata('notification', 'error');
+
+			//Error Edit | Load the Manage Page
+			$this->open('list', $message = 'System could not find the detail ID');
+		}
 	}
 
 	/**
@@ -207,198 +266,157 @@ class CoreSettings extends CI_Controller
 		$upoadDirectory = "../assets/media"; //Custom Upload Location
 
 		//Check Validation
-		if ($type == 'general') {
+		if ($type == 'save') {
+
+			$formData = $this->CoreLoad->input(); //Input Data
+
+			//Form Validation Values
+			$this->form_validation->set_rules("inheritance_type", "Tag Type", "required|trim|min_length[1]|max_length[200]");
+			$this->form_validation->set_rules("inheritance_parent", "Tag Parent", "trim|min_length[1]|max_length[100]");
+			$this->form_validation->set_rules("inheritance_title", "Tag Title", "trim|min_length[1]|max_length[500]");
+
+			//Form Validation
+			if ($this->form_validation->run() == TRUE) {
+
+				//More Data
+				if ($this->create($formData, array('thumbnail'))) {
+					$this->session->set_flashdata('notification', 'success'); //Notification Type
+					$message = 'Data was saved successful'; //Notification Message				
+					$this->index($message); //Open Page
+				} else {
+					$this->session->set_flashdata('notification', 'error'); //Notification Type
+					$this->open('add'); //Open Page
+				}
+			} else {
+				$this->session->set_flashdata('notification', 'error'); //Notification Type
+				$message = 'Please check the fields, and try again'; //Notification Message				
+				$this->open('add', $message); //Open Page
+			}
+		} elseif ($type == 'bulk') {
+
+			$action = $this->input->get('action'); //Get Action
+			$selectedData = json_decode($this->input->get('inputID'), true); //Get Selected Data
+			$column_id = strtolower($this->CoreForm->get_column_name($this->Module, 'id')); //column name Reference column
+			$column_flg = strtolower($this->CoreForm->get_column_name($this->Module, 'flg')); //Column name of Updated Input
+
+			//Check If Selection has Value
+			if (!empty($selectedData)) {
+				//Check Action
+				if (strtolower($action) == 'edit') {
+					$this->session->set_flashdata('notification', 'notify'); //Notification Type
+					$this->edit('edit', 'id', $selectedData[0]); //Open Page
+				} else {
+					for ($i = 0; $i < count($selectedData); $i++) { //Loop through all submitted elements
+						$value_id = $selectedData[$i]; //Select Value To Update with
+						if (strtolower($action) == 'activate') { //Item/Data Activation
+							$this->update(array($column_flg => 1), array($column_id => $value_id)); //Call Update Function
+						} elseif (strtolower($action) == 'deactivate') { //Item/Data Deactivation
+							$this->update(array($column_flg => 0), array($column_id => $value_id)); //Call Update Function
+						} elseif (strtolower($action) == 'delete') { //Item/Data Deletion
+							$this->delete(array($column_id => $value_id)); //Call Delete Function
+						} else {
+							$this->session->set_flashdata('notification', 'error'); //Notification Type
+							$message = 'Wrong data sequence received'; //Notification Message				
+							$this->index($message); //Open Page
+						}
+					}
+					$this->session->set_flashdata('notification', 'success'); //Notification Type
+					redirect($routeURL, 'refresh'); //Redirect Index Module
+				}
+			} else {
+				$this->session->set_flashdata('notification', 'error'); //Notification Type
+				$message = 'Please make a selection first, and try again'; //Notification Message				
+				$this->index($message); //Open Page
+			}
+		} elseif ($type == 'update') {
 
 			$updateData = $this->CoreLoad->input(); //Input Data
 
 			//Form Validation Values
-			$this->form_validation->set_rules("site_title", "Site Title", "trim|required|min_length[1]|max_length[800]");
-			$this->form_validation->set_rules("site_slogan", "Site Slogan", "trim|required|min_length[1]|max_length[800]");
-			$this->form_validation->set_rules("site_status", "Site Status", "trim|required|min_length[1]|max_length[10]");
+			$this->form_validation->set_rules("inheritance_type", "Tag Type", "required|trim|min_length[1]|max_length[200]");
+			$this->form_validation->set_rules("inheritance_parent", "Tag Parent", "trim|min_length[1]|max_length[100]");
+			$this->form_validation->set_rules("inheritance_title", "Tag Title", "trim|min_length[1]|max_length[500]");
+
+			$column_id = strtolower($this->CoreForm->get_column_name($this->Module, 'id')); //Column ID
+			$value_id = $this->CoreLoad->input('id'); //Input Value
+
+			//Select Value To Unset 
+			$unsetData = array('id');
+			/**valude To Unset*/
 
 			//Form Validation
 			if ($this->form_validation->run() == TRUE) {
-				if ($this->update($updateData)) {
+
+				//Update Table
+				if ($this->update($updateData, array($column_id => $value_id), $unsetData)) {
 					$this->session->set_flashdata('notification', 'success'); //Notification Type
-					$this->open($type); //Redirect to Page
+					$message = 'Data was updated successful'; //Notification Message				
+					$this->edit('edit', 'id', $value_id); //Open Page
 				} else {
 					$this->session->set_flashdata('notification', 'error'); //Notification Type
-					$this->open($type); //Open Page
+					$this->edit('edit', 'id', $value_id); //Open Page
 				}
 			} else {
 				$this->session->set_flashdata('notification', 'error'); //Notification Type
 				$message = 'Please check the fields, and try again'; //Notification Message				
-				$this->open($type, $message); //Open Page
+				$this->edit('edit', 'id', $value_id, $message); //Open Page
 			}
-		} elseif ($type == 'link') {
+		} elseif ($type == 'delete') {
+			$value_id = $this->input->get('inputID'); //Get Selected Data
+			$column_id = strtolower($this->CoreForm->get_column_name($this->Module, 'id'));
 
-			$updateData = $this->CoreLoad->input(); //Input Data
-
-			$this->form_validation->set_rules("current_url", "Current Url", "trim|required|min_length[1]|max_length[50]");
-
-			//Form Validation
-			if ($this->form_validation->run() == TRUE) {
-				if ($this->update($updateData)) {
-
-					//Update Blog URL
-					$postTitle = $this->db->select('blog_id')->get('blogs');
-					$postData = $postTitle->result();
-
-					if (count($postData) > 0) {
-						foreach ($postData as $row) {
-							$post_id = $row->blog_id; //Post ID
-							$url = $this->CoreCrud->postURL($post_id, null, 'blog');
-
-							$sql = "UPDATE `blogs` SET `blog_url` = '$url' WHERE `blog_id` = '$post_id' ";
-							$results = $this->db->query($sql); //site_title
-						}
-					}
-
-					//Update POST URL
-					$postTitle = $this->db->select('page_id')->get('pages');
-					$postData = $postTitle->result();
-
-					if (count($postData) > 0) {
-						foreach ($postData as $row) {
-							$post_id = $row->page_id; //Post ID
-							$url = $this->CoreCrud->postURL($post_id);
-
-							$sql = "UPDATE `pages` SET `page_url` = '$url' WHERE `page_id` = '$post_id' ";
-							$results = $this->db->query($sql); //site_title
-						}
-					}
-
-					$this->session->set_flashdata('notification', 'success'); //Notification Type
-					$this->open($type); //Redirect to Page
-				} else {
-					$this->session->set_flashdata('notification', 'error'); //Notification Type
-					$this->open($type); //Open Page
-				}
+			if ($this->delete(array($column_id => $value_id)) == TRUE) { //Call Delete Function
+				$this->session->set_flashdata('notification', 'success'); //Notification Type
+				redirect($routeURL, 'refresh'); //Redirect Index Module
 			} else {
 				$this->session->set_flashdata('notification', 'error'); //Notification Type
-				$message = 'Please check the fields, and try again'; //Notification Message				
-				$this->open($type, $message); //Open Page
-			}
-		} elseif ($type == 'mail') {
-
-			$updateData = $this->CoreLoad->input(); //Input Data
-
-			$this->form_validation->set_rules("mail_protocol", "Mail Protocol", "trim|required|min_length[1]|max_length[50]");
-			$this->form_validation->set_rules("smtp_host", "Smtp Host", "trim|min_length[1]|max_length[50]");
-			$this->form_validation->set_rules("smtp_user", "Smtp User", "trim|min_length[1]|max_length[50]");
-			$this->form_validation->set_rules("smtp_pass", "Smtp Pass", "trim|min_length[1]|max_length[50]");
-			$this->form_validation->set_rules("smtp_port", "Smtp Port", "trim|integer|min_length[1]|max_length[50]");
-			$this->form_validation->set_rules("smtp_timeout", "Smtp Timeout", "trim|integer|min_length[1]|max_length[50]");
-			$this->form_validation->set_rules("smtp_crypto", "Smtp Crypto", "trim|min_length[1]|max_length[50]");
-			$this->form_validation->set_rules("wordwrap", "Wordwrap", "trim|required|min_length[1]|max_length[50]");
-			$this->form_validation->set_rules("wrapchars", "Wrapchars", "trim|required|min_length[1]|max_length[50]");
-			$this->form_validation->set_rules("mailtype", "Mailtype", "trim|required|min_length[1]|max_length[50]");
-			$this->form_validation->set_rules("charset", "Charset", "trim|required|min_length[1]|max_length[50]");
-
-			//Form Validation
-			if ($this->form_validation->run() == TRUE) {
-				if ($this->update($updateData)) {
-					$this->session->set_flashdata('notification', 'success'); //Notification Type
-					$this->open($type); //Redirect to Page
-				} else {
-					$this->session->set_flashdata('notification', 'error'); //Notification Type
-					$this->open($type); //Open Page
-				}
-			} else {
-				$this->session->set_flashdata('notification', 'error'); //Notification Type
-				$message = 'Please check the fields, and try again'; //Notification Message				
-				$this->open($type, $message); //Open Page
-			}
-		} elseif ($type == 'blog') {
-
-			$updateData = $this->CoreLoad->input(); //Input Data
-
-			$this->form_validation->set_rules("home_display", "Home Display", "trim|required|min_length[1]|max_length[50]");
-			$this->form_validation->set_rules("home_post", "Home Post", "trim|min_length[1]|max_length[50]");
-			$this->form_validation->set_rules("home_page", "Home Page", "trim|min_length[1]|max_length[50]");
-			$this->form_validation->set_rules("post_per_page", "Post Per Page", "trim|required|integer|min_length[1]|max_length[50]");
-			$this->form_validation->set_rules("post_show", "Post Show", "trim|required|min_length[1]|max_length[50]");
-
-			//Form Validation
-			if ($this->form_validation->run() == TRUE) {
-				if ($this->update($updateData)) {
-					$this->session->set_flashdata('notification', 'success'); //Notification Type
-					$this->open($type); //Redirect to Page
-				} else {
-					$this->session->set_flashdata('notification', 'error'); //Notification Type
-					$this->open($type); //Open Page
-				}
-			} else {
-				$this->session->set_flashdata('notification', 'error'); //Notification Type
-				$message = 'Please check the fields, and try again'; //Notification Message				
-				$this->open($type, $message); //Open Page
-			}
-		} elseif ($type == 'seo') {
-
-			$updateData = $this->CoreLoad->input(); //Input Data
-
-			$this->form_validation->set_rules("seo_visibility", "Seo Visibility", "trim|required|min_length[1]|max_length[50]");
-			$this->form_validation->set_rules("seo_global", "Seo Global", "trim|required|min_length[1]|max_length[50]");
-			$this->form_validation->set_rules("seo_description", "Seo Description", "trim|max_length[8000]");
-			$this->form_validation->set_rules("seo_keywords", "Seo Keywords", "trim|max_length[8000]");
-
-			//Form Validation
-			if ($this->form_validation->run() == TRUE) {
-				if ($this->update($updateData)) {
-					$this->session->set_flashdata('notification', 'success'); //Notification Type
-					$this->open($type); //Redirect to Page
-				} else {
-					$this->session->set_flashdata('notification', 'error'); //Notification Type
-					$this->open($type); //Open Page
-				}
-			} else {
-				$this->session->set_flashdata('notification', 'error'); //Notification Type
-				$message = 'Please check the fields, and try again'; //Notification Message				
-				$this->open($type, $message); //Open Page
-			}
-		} elseif ($type == 'inheritance') {
-
-			$updateData = $this->CoreLoad->input(); //Input Data
-
-			$this->form_validation->set_rules("inheritance_data", "Inheritance Type Data", "trim");
-
-			//Form Validation
-			if ($this->form_validation->run() == TRUE) {
-				if ($this->update($updateData)) {
-					$this->session->set_flashdata('notification', 'success'); //Notification Type
-					$this->open($type); //Redirect to Page
-				} else {
-					$this->session->set_flashdata('notification', 'error'); //Notification Type
-					$this->open($type); //Open Page
-				}
-			} else {
-				$this->session->set_flashdata('notification', 'error'); //Notification Type
-				$message = 'Please check the fields, and try again'; //Notification Message				
-				$this->open($type, $message); //Open Page
-			}
-		} elseif ($type == 'module') {
-
-			$updateData = $this->CoreLoad->input(); //Input Data
-
-			$this->form_validation->set_rules("module_list", "Module List", "trim");
-
-			//Form Validation
-			if ($this->form_validation->run() == TRUE) {
-				if ($this->update($updateData)) {
-					$this->session->set_flashdata('notification', 'success'); //Notification Type
-					$this->open($type); //Redirect to Page
-				} else {
-					$this->session->set_flashdata('notification', 'error'); //Notification Type
-					$this->open($type); //Open Page
-				}
-			} else {
-				$this->session->set_flashdata('notification', 'error'); //Notification Type
-				$message = 'Please check the fields, and try again'; //Notification Message				
-				$this->open($type, $message); //Open Page
+				redirect($routeURL, 'refresh'); //Redirect Index Module
 			}
 		} else {
 			$this->session->set_flashdata('notification', 'notify'); //Notification Type
-			$this->index(); //Redirect Index Module
+			redirect($routeURL, 'refresh'); //Redirect Index Module
+		}
+	}
+
+	/**
+	 * The function is used to save/insert data into table
+	 * First is the data to be inserted 
+	 *  N:B the data needed to be in an associative array form E.g $data = array('name' => 'theName');
+	 *      the array key will be used as column name and the value as inputted Data
+	 *  For colum default/details convert data to JSON on valid() method level
+	 *
+	 * Third is the data to be unset | Unset is to be used if some of the input you wish to be removed
+	 * 
+	 */
+	public function create($insertData, $unsetData = null)
+	{
+		//Chech allowed Access
+		if ($this->CoreLoad->auth($this->Module)) { //Authentication
+
+			//Pluralize Module
+			$tableName = $this->plural->pluralize($this->Module);
+
+			//Column Stamp
+			$stamp = strtolower($this->CoreForm->get_column_name($this->Module, 'stamp'));
+			$insertData["$stamp"] = date('Y-m-d H:i:s', time());
+			//Column Flg
+			$flg = strtolower($this->CoreForm->get_column_name($this->Module, 'flg'));
+			$insertData["$flg"] = 1;
+
+			//Insert
+			$insertData = $this->CoreCrud->unsetData($insertData, $unsetData); //Unset Data
+
+			$details = strtolower($this->CoreForm->get_column_name($this->Module, 'details'));
+			$insertData["$details"] = json_encode($insertData);
+
+			//Insert Data Into Table
+			if ($this->CoreCrud->insertData($tableName, $insertData)) {
+
+				return true; //Data Inserted
+			} else {
+
+				return false; //Data Insert Failed
+			}
 		}
 	}
 
@@ -407,24 +425,42 @@ class CoreSettings extends CI_Controller
 	 * First parameter is the data to be updated 
 	 *  N:B the data needed to be in an associative array form E.g $data = array('name' => 'theName');
 	 *      the array key will be used as column name and the value as inputted Data
+	 *  For colum default/details convert data to JSON on valid() method level
+	 * Third is the values to be passed in where clause N:B the data needed to be in an associative array form E.g $data = array('column' => 'value');
+	 * Fourth is the data to be unset | Unset is to be used if some of the input you wish to be removed
 	 * 
 	 */
-	public function update($updateData)
+	public function update($updateData, $valueWhere, $unsetData = null)
 	{
-
 		//Chech allowed Access
 		if ($this->CoreLoad->auth($this->Module)) { //Authentication
 
 			//Pluralize Module
 			$tableName = $this->plural->pluralize($this->Module);
 
-			//Update Data In The Table
-			foreach ($updateData as $key => $value) {
-				$sql = "UPDATE `$tableName` SET `setting_value` = '$value' WHERE  `setting_title` = '$key' ";
-				$results = $this->db->query($sql); //site_title
+			//Column Stamp
+			$stamp = $this->CoreForm->get_column_name($this->Module, 'stamp');
+			$updateData["$stamp"] = date('Y-m-d H:i:s', time());
+
+			//Update
+			$updateData = $this->CoreCrud->unsetData($updateData, $unsetData); //Unset Data
+
+			//Details Column Update
+			$details = strtolower($this->CoreForm->get_column_name($this->Module, 'details'));
+			foreach ($valueWhere as $key => $value) {
+				$whereData = array($key => $value);
+				/** Where Clause */
 			}
 
-			if ($results) {
+			$current_details = json_decode($this->db->select($details)->where($whereData)->get($tableName)->row()->$details, true);
+			foreach ($updateData as $key => $value) {
+				$current_details["$key"] = $value;
+				/** Update -> Details */
+			}
+			$updateData["$details"] = json_encode($current_details);
+
+			//Update Data In The Table
+			if ($this->CoreCrud->updateData($tableName, $updateData, $valueWhere)) {
 
 				return true; //Data Updated
 			} else {
@@ -435,43 +471,27 @@ class CoreSettings extends CI_Controller
 	}
 
 	/**
-	 *
-	 * Check Which Settings Type To Open
-	 * Pass the Page Name
+	 * The function is used to delete data in the table
+	 * First parameter is the values to be passed in where clause N:B the data needed to be in an associative array form E.g $data = array('column' => 'value');
+	 * 
 	 */
-	public function load_settings($page_name)
+	public function delete($valueWhere)
 	{
-		//Set Condition
-		$where = array('setting_flg' => 1);
-		$page = explode('/', $page_name);
 
-		if (end($page) == 'general') {
-			$where_in = array('site_title', 'site_slogan', 'site_status', 'offline_message'); //General Update
-		} elseif (end($page) == 'link') {
-			$where_in = array('current_url'); //General Update
-		} elseif (end($page) == 'mail') {
-			$where_in = array(
-				'mail_protocol', 'smtp_host', 'smtp_user', 'smtp_pass', 'smtp_port', 'smtp_timeout', 'smtp_crypto',
-				'wordwrap', 'wrapchars', 'mailtype', 'charset'
-			); //General Update
-		} elseif (end($page) == 'blog') {
-			$where_in = array('home_display', 'home_post', 'home_page', 'post_per_page', 'post_show'); //General Update
-		} elseif (end($page) == 'seo') {
-			$where_in = array('seo_visibility', 'seo_keywords', 'seo_description ', 'seo_global', 'seo_meta_data'); //General Update
-		} elseif (end($page) == 'inheritance') {
-			$where_in = array('inheritance_data'); //Inheritance Data
-		} elseif (end($page) == 'module') {
-			$where_in = array('module_list'); //Inheritance Data
-		} else {
-			$where_in = array('none'); //General Update
+		if ($this->CoreLoad->auth($this->Module)) { //Authentication
+
+			//Pluralize Module
+			$tableName = $this->plural->pluralize($this->Module);
+
+			//Deleted Data In The Table
+			if ($this->CoreCrud->deleteData($tableName, $valueWhere)) {
+
+				return true; //Data Deleted
+			} else {
+
+				return false; //Data Deletion Failed
+			}
 		}
-
-		//Search Data
-		$resultList = $this->db->select('setting_title,setting_value')->where($where)
-			->where_in('setting_title', $where_in)->get('settings');
-
-		//Data Returned
-		return $resultList->result();
 	}
 
 	/**
@@ -613,5 +633,5 @@ class CoreSettings extends CI_Controller
 	}
 }
 
-/** End of file CoreUsers.php */
-/** Location: ./application/controllers/CoreUsers.php */
+/** End of file BlogTags.php */
+/** Location: ./application/controllers/BlogTags.php */

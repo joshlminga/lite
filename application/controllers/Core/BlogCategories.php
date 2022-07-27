@@ -1,33 +1,33 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class CorePages extends CI_Controller
+class BlogCategories extends CI_Controller
 {
 
-	/*
-	*
-	* The main controller for Administrator Backend
-	* -> The controller require user to login as Administrator
-	*/
+	/***
+	 *
+	 * The main controller for Administrator Backend
+	 * -> The controller require user to login as Administrator
+	 */
 
-	private $Module = 'pages'; //Module
-	private $Folder = 'pages'; //Module
-	private $SubFolder = ''; //Set Default Sub Folder For html files and Front End Use Start with /
+	private $Module = 'inheritances'; //Module
+	private $Folder = 'blogs'; //Module
+	private $SubFolder = '/categories'; //Set Default Sub Folder For html files and Front End Use Start with /
 
 	private $AllowedFile = null; //Set Default allowed file extension, remember you can pass this upon upload to override default allowed file type. Allowed File Extensions Separated by | also leave null to validate using jpg|jpeg|png|doc|docx|pdf|xls|txt change this on validation function at the bottom
 
-	private $Route = 'pages'; //If you have different route Name to Module name State it here |This wont be pluralized | set it null to use default
+	private $Route = 'blogcategory'; //If you have different route Name to Module name State it here |This wont be pluralized | set it null to use default
 
-	private $New = 'pages/new'; //New customers
-	private $Save = 'pages/save'; //Add New customers
-	private $Edit = 'pages/update'; //Update customers
+	private $New = 'blogcategory/new'; //New customers
+	private $Save = 'blogcategory/save'; //Add New customers
+	private $Edit = 'blogcategory/update'; //Update customers
 
-	private $ModuleName = 'pages'; //Module Nmae
+	private $ModuleName = 'Category';
 
-	/* Functions
-	* -> __construct () = Load the most required operations E.g Class Module
-	* 
-	*/
+	/*** Functions
+	 * -> __construct () = Load the most required operations E.g Class Module
+	 * 
+	 */
 	public function __construct()
 	{
 		parent::__construct();
@@ -46,14 +46,14 @@ class CorePages extends CI_Controller
 
 	}
 
-	/*
-	*
-	* Access Requred pre-loaded data
-	* The additional Model based data are applied here from passed function and join with load function
-	* The pageID variable can be left as null if you do not wish to access Meta Data values
-	* Initially what is passed is a pageID or Page Template Name
-	* 
-	*/
+	/***
+	 *
+	 * Access Requred pre-loaded data
+	 * The additional Model based data are applied here from passed function and join with load function
+	 * The pageID variable can be left as null if you do not wish to access Meta Data values
+	 * Initially what is passed is a pageID or Page Template Name
+	 * 
+	 */
 	public function load($pageID = null)
 	{
 
@@ -65,13 +65,13 @@ class CorePages extends CI_Controller
 		return $data;
 	}
 
-	/*
-	*
-	* Load the model/controller based data here
-	* The data loaded here does not affect the other models/controller/views
-	* It only can reach and expand to this controller only
-	* 
-	*/
+	/***
+	 *
+	 * Load the model/controller based data here
+	 * The data loaded here does not affect the other models/controller/views
+	 * It only can reach and expand to this controller only
+	 * 
+	 */
 	public function passed($values = null)
 	{
 
@@ -84,6 +84,9 @@ class CorePages extends CI_Controller
 		//Extension Route
 		$data['extRoute'] = "admin/pages/" . $this->plural->pluralize($this->Folder) . $this->SubFolder . "/";
 
+		//Select Inheritance
+		$data['inheritance_parent'] = $this->CoreCrud->selectInheritanceItem(array('flg' => 1, 'type' => 'category'), 'id,type,parent,title');
+
 		//Module Name - For Forms Title
 		$data['ModuleName'] = $this->plural->pluralize($this->ModuleName);
 
@@ -95,17 +98,17 @@ class CorePages extends CI_Controller
 		return $data;
 	}
 
-	/*
-	*
-	* This is one of the most important functions in your project
-	* All pages used by this controller should be opened using pages function
-	* 1: The first passed data is an array containing all pre-loaded data N.B it can't be empty becuase page name is passed through it
-	* 2: Layout -> this can be set to default so it can open a particular layout always | also you can pass other layout N.B can't be empty
-	*
-	* ** To some page functions which are not public, use the auth method from CoreLoad model to check is user is allowed to access the pages
-	* ** If your page is public ignore the use of auth method
-	* 
-	*/
+	/***
+	 *
+	 * This is one of the most important functions in your project
+	 * All pages used by this controller should be opened using pages function
+	 * 1: The first passed data is an array containing all pre-loaded data N.B it can't be empty becuase page name is passed through it
+	 * 2: Layout -> this can be set to default so it can open a particular layout always | also you can pass other layout N.B can't be empty
+	 *
+	 * ** To some page functions which are not public, use the auth method from CoreLoad model to check is user is allowed to access the pages
+	 * ** If your page is public ignore the use of auth method
+	 * 
+	 */
 	public function pages($data, $layout = 'main')
 	{
 		//Chech allowed Access
@@ -117,18 +120,18 @@ class CorePages extends CI_Controller
 		}
 	}
 
-	/*
-    *
-    * This is the first function to be accessed when a user open this controller
-    * In here we can call the load function and pass data to passed as an array inorder to manupulate it inside passed function
-    * 	* Set your Page name/ID here N:B Page ID can be a number if you wish to access other values linked to the page opened E.g Meta Data
-    * 	* You can also set Page ID as actual pageName found in your view N:B do not put .php E.g home.php it should just be 'home'
-    * 	* Set Page template 
-    * 	* Set Notification here
-    * 	By Default index does not allow notification Message to be passed, it uses the default message howevr you can pass using the notifyMessage variable
-    * 	However we advise to use custom notification message while opening index utilize another function called open
-	* 
-    */
+	/**
+	 *
+	 * This is the first function to be accessed when a user open this controller
+	 * In here we can call the load function and pass data to passed as an array inorder to manupulate it inside passed function
+	 * 	* Set your Page name/ID here N:B Page ID can be a number if you wish to access other values linked to the page opened E.g Meta Data
+	 * 	* You can also set Page ID as actual pageName found in your view N:B do not put .php E.g home.php it should just be 'home'
+	 * 	* Set Page template 
+	 * 	* Set Notification here
+	 * 	By Default index does not allow notification Message to be passed, it uses the default message howevr you can pass using the notifyMessage variable
+	 * 	However we advise to use custom notification message while opening index utilize another function called open
+	 * 
+	 */
 	public function index($notifyMessage = null)
 	{
 		//Pluralize Module
@@ -139,7 +142,7 @@ class CorePages extends CI_Controller
 
 		//Table Select & Clause
 		$columns = array('id,title as title,flg as status');
-		$where = null;
+		$where = array('type' => 'category');
 		$data['dataList'] = $this->CoreCrud->selectCRUD($module, $where, $columns);
 
 		//Notification
@@ -150,19 +153,19 @@ class CorePages extends CI_Controller
 		$this->pages($data);
 	}
 
-	/*
-    *
-    * This is the function to be accessed when a user want to open specific page which deals with same controller E.g Edit data after saving
-    * In here we can call the load function and pass data to passed as an array inorder to manupulate it inside passed function
-    * 	* Set your Page name/ID here N:B Page ID can be a number if you wish to access other values linked to the page opened E.g Meta Data
-    * 	* You can also set Page ID as actual pageName found in your view N:B do not put .php E.g home.php it should just be 'home'
-    * 	* Set Page template 
-    * 	* Set Notification here
-    * 	Custom notification message can be set/passed via $message
-    * 	PageName / ID can be passed via $pageID
-    * 	Page layout can be passed via $layout
-	* 
-    */
+	/**
+	 *
+	 * This is the function to be accessed when a user want to open specific page which deals with same controller E.g Edit data after saving
+	 * In here we can call the load function and pass data to passed as an array inorder to manupulate it inside passed function
+	 * 	* Set your Page name/ID here N:B Page ID can be a number if you wish to access other values linked to the page opened E.g Meta Data
+	 * 	* You can also set Page ID as actual pageName found in your view N:B do not put .php E.g home.php it should just be 'home'
+	 * 	* Set Page template 
+	 * 	* Set Notification here
+	 * 	Custom notification message can be set/passed via $message
+	 * 	PageName / ID can be passed via $pageID
+	 * 	Page layout can be passed via $layout
+	 * 
+	 */
 	public function open($pageID, $message = null, $layout = 'main')
 	{
 
@@ -182,31 +185,31 @@ class CorePages extends CI_Controller
 		$this->pages($data, $layout);
 	}
 
-	/*
-	*
-	*  This function is to be called when you want to pass the Edit form
-    * In here we can call the load function and pass data to passed as an array inorder to manupulate it inside passed function
-    * 	* Set your Page name/ID here N:B Page ID can be a number if you wish to access other values linked to the page opened E.g Meta Data
-    * 	* You can also set Page ID as actual pageName found in your view N:B do not put .php E.g home.php it should just be 'home'
-    * 	* Set Page template 
-    * 	* Set Notification here
-    * 	Custom notification message can be set/passed via $message
-    * 	PageName / ID can be passed via $pageID
-    * 	Page layout can be passed via $layout
-    *
-    * 	For inputTYPE and inputID
-    *
-    * 	--> inputTYPE
-    * 	  This is the name of the column you wish to select, most of the time is coumn name 
-    * 	  Remember to Pass ID or Pass data via GET request using variable inputTYPE 
-    * 	  
-    * 	--> inputID
-    * 	  This is the value of the column you wish to match
-    * 	  Remember to Pass Value or Pass data via GET request using variable inputID 
-    *
-    *  If either inputTYPE or inputID is not passed error message will be generated
-	* 
-	*/
+	/**
+	 *
+	 *  This function is to be called when you want to pass the Edit form
+	 * In here we can call the load function and pass data to passed as an array inorder to manupulate it inside passed function
+	 * 	* Set your Page name/ID here N:B Page ID can be a number if you wish to access other values linked to the page opened E.g Meta Data
+	 * 	* You can also set Page ID as actual pageName found in your view N:B do not put .php E.g home.php it should just be 'home'
+	 * 	* Set Page template 
+	 * 	* Set Notification here
+	 * 	Custom notification message can be set/passed via $message
+	 * 	PageName / ID can be passed via $pageID
+	 * 	Page layout can be passed via $layout
+	 *
+	 * 	For inputTYPE and inputID
+	 *
+	 * 	--> inputTYPE
+	 * 	  This is the name of the column you wish to select, most of the time is coumn name 
+	 * 	  Remember to Pass ID or Pass data via GET request using variable inputTYPE 
+	 * 	  
+	 * 	--> inputID
+	 * 	  This is the value of the column you wish to match
+	 * 	  Remember to Pass Value or Pass data via GET request using variable inputID 
+	 *
+	 *  If either inputTYPE or inputID is not passed error message will be generated
+	 * 
+	 */
 	public function edit($pageID, $inputTYPE = 'id', $inputID = null, $message = null, $layout = 'main')
 	{
 		//Pluralize Module
@@ -222,7 +225,7 @@ class CorePages extends CI_Controller
 		if (!is_null($inputTYPE) || !is_null($inputID)) {
 			//Table Select & Clause
 			$where = array($inputTYPE => $inputID);
-			$columns = array('id as id,title as title,url as url,post as post,control as control,data as data,show as visibility');
+			$columns = array('id as id,type as type,title as title,parent as parent,title as title');
 			$data['resultList'] = $this->CoreCrud->selectCRUD($module, $where, $columns);
 
 			//Notification
@@ -241,16 +244,16 @@ class CorePages extends CI_Controller
 		}
 	}
 
-	/*
-	*
-	* Module form values are validated here
-	* The function accept variable TYPE which is used to know which form element to validate by changing the validation methods
-	* All input related to this Module or controller should be validated here and passed to Create/Update/Delete
-	*
-	* Reidrect Main : Main is the controller which is acting as the default Controller (read more on codeigniter manual : route section) | inshort it will load 
-	* 				 first and most used to display the site/system home page
-	* 
-	*/
+	/**
+	 *
+	 * Module form values are validated here
+	 * The function accept variable TYPE which is used to know which form element to validate by changing the validation methods
+	 * All input related to this Module or controller should be validated here and passed to Create/Update/Delete
+	 *
+	 * Reidrect Main : Main is the controller which is acting as the default Controller (read more on codeigniter manual : route section) | inshort it will load 
+	 * 				 first and most used to display the site/system home page
+	 * 
+	 */
 	public function valid($type)
 	{
 
@@ -258,55 +261,36 @@ class CorePages extends CI_Controller
 		$module = $this->plural->pluralize($this->Module);
 		$routeURL = (is_null($this->Route)) ? $module : $this->Route;
 
-		//Set Allowed Files
-		$allowed_files = (is_null($this->AllowedFile)) ? 'jpg|jpeg|png|doc|docx|pdf|xls|txt' : $this->AllowedFile;
-
-		//Set Upload File Values
-		$file_upload_session = array("file_name" => "thumbnail", "file_required" => false);
-		$this->session->set_userdata($file_upload_session);
-
-		$upoadDirectory = "../assets/media"; //Upload Location
+		// Image Data
+		$allowed_files = $this->AllowedFile; //Set Allowed Files
+		$upoadDirectory = "../assets/media"; //Custom Upload Location
 
 		//Check Validation
 		if ($type == 'save') {
 
 			$formData = $this->CoreLoad->input(); //Input Data
 
-			$this->form_validation->set_rules("page_title", "Page Title", "required|trim|min_length[1]|max_length[200]");
-			$this->form_validation->set_rules("page_tag", "Page Tag", "trim|max_length[2000]");
-			$this->form_validation->set_rules("page_show", "Page Show", "trim|max_length[20]");
-			$this->form_validation->set_rules("thumbnail", "Thumbnail", "trim|callback_validimage[thumbnail|jpg,jpeg,png]");
+			//Form Validation Values
+			$this->form_validation->set_rules("inheritance_type", "Category Type", "required|trim|min_length[1]|max_length[200]");
+			$this->form_validation->set_rules("inheritance_parent", "Category Parent", "trim|min_length[1]|max_length[100]");
+			$this->form_validation->set_rules("inheritance_title", "Category Title", "trim|min_length[1]|max_length[500]");
 
 			//Form Validation
 			if ($this->form_validation->run() == TRUE) {
 
-				$image = "thumbnail"; // Input 
-
-				//Check if Input Is Empty
-				if ($_FILES[$image]['size'][0] > 0) {
-					$uploaded = $this->CoreCrud->upload($image, $upoadDirectory, $allowed_files); //Uploaded File Link
-					$page_control[$image] = $uploaded; //Uploaded Data
-				} else {
-					$page_control[$image] = null; //Uploaded Data
-				}
-
 				//More Data
-				$formData['page_post'] = $this->input->post('page_post');
-				$formData['page_control'] = json_encode($page_control);
-				$formData['meta_url'] = $this->CoreForm->metaUrl($formData['page_title']); // Meta URL
-
 				if ($this->create($formData, array('thumbnail'))) {
 					$this->session->set_flashdata('notification', 'success'); //Notification Type
 					$message = 'Data was saved successful'; //Notification Message				
-					redirect($this->New, 'refresh'); //Redirect to Page
+					$this->index($message); //Open Page
 				} else {
 					$this->session->set_flashdata('notification', 'error'); //Notification Type
-					$this->open('add'); //Open Page
+					$this->index(); //Open Page
 				}
 			} else {
 				$this->session->set_flashdata('notification', 'error'); //Notification Type
 				$message = 'Please check the fields, and try again'; //Notification Message				
-				$this->open('add', $message); //Open Page
+				$this->index($message); //Open Page
 			}
 		} elseif ($type == 'bulk') {
 
@@ -348,35 +332,20 @@ class CorePages extends CI_Controller
 
 			$updateData = $this->CoreLoad->input(); //Input Data
 
-			$this->form_validation->set_rules("page_title", "Page Title", "required|trim|min_length[1]|max_length[200]");
-			$this->form_validation->set_rules("page_tag", "Page Tag", "trim|max_length[2000]");
-			$this->form_validation->set_rules("page_show", "Page Show", "trim|max_length[20]");
-			$this->form_validation->set_rules("thumbnail", "Thumbnail", "trim|callback_validimage[thumbnail|jpg,jpeg,png]");
+			//Form Validation Values
+			$this->form_validation->set_rules("inheritance_type", "Category Type", "required|trim|min_length[1]|max_length[200]");
+			$this->form_validation->set_rules("inheritance_parent", "Category Parent", "trim|min_length[1]|max_length[100]");
+			$this->form_validation->set_rules("inheritance_title", "Category Title", "trim|min_length[1]|max_length[500]");
 
 			$column_id = strtolower($this->CoreForm->get_column_name($this->Module, 'id')); //Column ID
 			$value_id = $this->CoreLoad->input('id'); //Input Value
 
 			//Select Value To Unset 
-			$unsetData = array('id', 'thumbnail');/*valude To Unset*/
+			$unsetData = array('id');
+			/**valude To Unset*/
 
 			//Form Validation
 			if ($this->form_validation->run() == TRUE) {
-
-				$page_control = array();
-
-				$image = "thumbnail"; // Input 
-
-				//Check if Input Is Empty
-				if ($_FILES[$image]['size'][0] > 0) {
-
-					$uploaded = $this->CoreCrud->upload($image, $upoadDirectory, $allowed_files); //Uploaded File Link
-					$page_control[$image] = $uploaded; //Uploaded Data
-				}
-
-				//Data Updated
-				$updateData['page_control'] = json_encode($page_control);
-				$updateData['page_post'] = $this->input->post('page_post');
-				$updateData['page_url'] = $this->CoreForm->metaCheckUrl($updateData['page_url'], $this->CoreLoad->input('id'), true); // Meta URL
 
 				//Update Table
 				if ($this->update($updateData, array($column_id => $value_id), $unsetData)) {
@@ -409,23 +378,20 @@ class CorePages extends CI_Controller
 		}
 	}
 
-	/*
-	* The function is used to save/insert data into table
-	* First is the data to be inserted 
-	*  N:B the data needed to be in an associative array form E.g $data = array('name' => 'theName');
-	*      the array key will be used as column name and the value as inputted Data
-	*  For colum default/details convert data to JSON on valid() method level
-	*
-	* Third is the data to be unset | Unset is to be used if some of the input you wish to be removed
-	* 
-	*/
+	/**
+	 * The function is used to save/insert data into table
+	 * First is the data to be inserted 
+	 *  N:B the data needed to be in an associative array form E.g $data = array('name' => 'theName');
+	 *      the array key will be used as column name and the value as inputted Data
+	 *  For colum default/details convert data to JSON on valid() method level
+	 *
+	 * Third is the data to be unset | Unset is to be used if some of the input you wish to be removed
+	 * 
+	 */
 	public function create($insertData, $unsetData = null)
 	{
-
+		//Chech allowed Access
 		if ($this->CoreLoad->auth($this->Module)) { //Authentication
-
-			//Session ID
-			$session_id = $this->CoreLoad->session('id');
 
 			//Pluralize Module
 			$tableName = $this->plural->pluralize($this->Module);
@@ -433,35 +399,18 @@ class CorePages extends CI_Controller
 			//Column Stamp
 			$stamp = strtolower($this->CoreForm->get_column_name($this->Module, 'stamp'));
 			$insertData["$stamp"] = date('Y-m-d H:i:s', time());
-
-			$createdat = strtolower($this->CoreForm->get_column_name($this->Module, 'createdat'));
-			$insertData["$createdat"] = date('Y-m-d H:i:s', time());
-
-			//Site Status
-			$author_name = $this->db->select('user_logname')->where('user_id', $session_id)->get('users')->row()->user_logname;
-			$author = strtolower($this->CoreForm->get_column_name($this->Module, 'author'));
-			$insertData["$author"] = $author_name;
-
 			//Column Flg
 			$flg = strtolower($this->CoreForm->get_column_name($this->Module, 'flg'));
 			$insertData["$flg"] = 1;
 
-			//Column Password
+			//Insert
 			$insertData = $this->CoreCrud->unsetData($insertData, $unsetData); //Unset Data
 
 			$details = strtolower($this->CoreForm->get_column_name($this->Module, 'details'));
 			$insertData["$details"] = json_encode($insertData);
 
 			//Insert Data Into Table
-			$input_id = $this->CoreCrud->insertData($tableName, $insertData);
-			if ($input_id > 0) {
-
-				//Columns
-				$column_url = strtolower($this->CoreForm->get_column_name($this->Module, 'url'));
-				$column_id = strtolower($this->CoreForm->get_column_name($this->Module, 'id'));
-
-				$page_url = $this->CoreForm->metaExistingUrl($tableName, $input_id); //Post URL
-				$this->db->update($tableName, array($column_url => $page_url), array($column_id => $input_id)); //Update URL
+			if ($this->CoreCrud->insertData($tableName, $insertData)) {
 
 				return true; //Data Inserted
 			} else {
@@ -471,23 +420,20 @@ class CorePages extends CI_Controller
 		}
 	}
 
-	/*
-	* The function is used to update data in the table
-	* First parameter is the data to be updated 
-	*  N:B the data needed to be in an associative array form E.g $data = array('name' => 'theName');
-	*      the array key will be used as column name and the value as inputted Data
-	*  For colum default/details convert data to JSON on valid() method level
-	* Third is the values to be passed in where clause N:B the data needed to be in an associative array form E.g $data = array('column' => 'value');
-	* Fourth is the data to be unset | Unset is to be used if some of the input you wish to be removed
-	* 
-	*/
+	/**
+	 * The function is used to update data in the table
+	 * First parameter is the data to be updated 
+	 *  N:B the data needed to be in an associative array form E.g $data = array('name' => 'theName');
+	 *      the array key will be used as column name and the value as inputted Data
+	 *  For colum default/details convert data to JSON on valid() method level
+	 * Third is the values to be passed in where clause N:B the data needed to be in an associative array form E.g $data = array('column' => 'value');
+	 * Fourth is the data to be unset | Unset is to be used if some of the input you wish to be removed
+	 * 
+	 */
 	public function update($updateData, $valueWhere, $unsetData = null)
 	{
-
+		//Chech allowed Access
 		if ($this->CoreLoad->auth($this->Module)) { //Authentication
-
-			//Session ID
-			$session_id = $this->CoreLoad->session('id');
 
 			//Pluralize Module
 			$tableName = $this->plural->pluralize($this->Module);
@@ -495,41 +441,27 @@ class CorePages extends CI_Controller
 			//Column Stamp
 			$stamp = $this->CoreForm->get_column_name($this->Module, 'stamp');
 			$updateData["$stamp"] = date('Y-m-d H:i:s', time());
-			$editedat = strtolower($this->CoreForm->get_column_name($this->Module, 'editedat'));
-			$insertData["$editedat"] = date('Y-m-d H:i:s', time());
 
-			//Site Status
-			$editor_name = $this->db->select('user_logname')->where('user_id', $session_id)->get('users')->row()->user_logname;
-			$editor = strtolower($this->CoreForm->get_column_name($this->Module, 'editor'));
-			$insertData["$editor"] = $editor_name;
-
+			//Update
 			$updateData = $this->CoreCrud->unsetData($updateData, $unsetData); //Unset Data
 
 			//Details Column Update
-			$control = strtolower($this->CoreForm->get_column_name($this->Module, 'control'));
 			$details = strtolower($this->CoreForm->get_column_name($this->Module, 'details'));
-			$option_control = (array_key_exists($control, $updateData)) ? json_decode($updateData[$control], true) : null;
-
 			foreach ($valueWhere as $key => $value) {
-				$whereData = array($key => $value); /* Where Clause */
+				$whereData = array($key => $value);
+				/** Where Clause */
 			}
-
-			$current_control = json_decode($this->db->select($control)->where($whereData)->get($tableName)->row()->$control, true);
-			if (is_array($option_control)) {
-				foreach ($option_control as $key => $value) {
-					$current_control["$key"] = $value; /* Update -> Details */
-				}
-			}
-			$updateData["$control"] = json_encode($current_control);
 
 			$current_details = json_decode($this->db->select($details)->where($whereData)->get($tableName)->row()->$details, true);
 			foreach ($updateData as $key => $value) {
-				$current_details["$key"] = $value; /* Update -> Details */
+				$current_details["$key"] = $value;
+				/** Update -> Details */
 			}
 			$updateData["$details"] = json_encode($current_details);
 
 			//Update Data In The Table
 			if ($this->CoreCrud->updateData($tableName, $updateData, $valueWhere)) {
+
 				return true; //Data Updated
 			} else {
 
@@ -538,11 +470,11 @@ class CorePages extends CI_Controller
 		}
 	}
 
-	/*
-	* The function is used to delete data in the table
-	* First parameter is the values to be passed in where clause N:B the data needed to be in an associative array form E.g $data = array('column' => 'value');
-	* 
-	*/
+	/**
+	 * The function is used to delete data in the table
+	 * First parameter is the values to be passed in where clause N:B the data needed to be in an associative array form E.g $data = array('column' => 'value');
+	 * 
+	 */
 	public function delete($valueWhere)
 	{
 
@@ -553,6 +485,7 @@ class CorePages extends CI_Controller
 
 			//Deleted Data In The Table
 			if ($this->CoreCrud->deleteData($tableName, $valueWhere)) {
+
 				return true; //Data Deleted
 			} else {
 
@@ -700,5 +633,5 @@ class CorePages extends CI_Controller
 	}
 }
 
-/* End of file CorePages.php */
-/* Location: ./application/controllers/CorePages.php */
+/** End of file BlogCategories.php */
+/** Location: ./application/controllers/BlogCategories.php */

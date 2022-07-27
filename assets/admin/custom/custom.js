@@ -1,48 +1,212 @@
-// Duplicate -> Custom Fields childrens 
-var i = 0; //Increment
-function duplicateData(idName) {
- 	var original = document.getElementById(idName);
-	var clone = original.cloneNode(true);
-	clone.id = idName + ++i;
-	(original.parentNode.appendChild(clone)).insertAfter($("#"+idName));
+/*** NEW CUSTOM FIELD ***/
+
+//Fields
+const fieldInput = (num) => {
+	let required = (num == 1) ? 'required' : '';
+    let fields = `
+		<div class="col-md-3 col-sm-12 field-key" num="${num}">
+			<div class="form-group">
+				<div class="fg-line">
+					<label>
+						Key Name <small>(Unique Name)</small>
+						<a onclick="removeField(this.getAttribute('action'))" action="${num}" class="btn btn-sm btn-danger field-action">
+							<i class="fa fa-trash"></i>
+						</a>
+
+						<input type="checkbox" name="filter_${num}" value="${num}"><i class="input-helper"></i>Filter
+					</label>
+					<input type="text" class="form-control" name="customfield_inputs[]" autocomplete="off" value="" required>
+				</div>
+			</div>
+		</div>
+    `;
+
+    // CustomField
+    return fields;
 }
 
-// Remove Added Custom Fields
-function removeData(className) {
-	if ($('.'+className).length > 1) {
-	   $('.'+className+':last').remove();
+// Reorder Fields
+const reorderFieldData = () => {
+    // Find all elements with div.field-key class and remove the last one
+    let field_key = document.querySelectorAll(".field-key");
+	// Loop while set attribute num to new value x, x should start at 1
+	let x = 1;
+	for (let index = 0; index < field_key.length; index++) {
+		field_key[index].setAttribute("num", x);
+		// Get a div.field-action inside field_key retrive a.btn-danger
+		let field_action = field_key[index].querySelector("label > a.field-action");
+		// Set attribute action to x
+		field_action.setAttribute("action", x);
+		// Get checkbox inside field_key
+		let field_checkbox = field_key[index].querySelector("label > input[type=checkbox]");
+		// Set value to x
+		field_checkbox.value = x;
+		// Change checkbox name to filter_x
+		field_checkbox.name = "filter_" + x;
+		x++;
 	}
 }
 
+// Add Key
+const custom_field = num => fieldInput(num);
 
-// Auto Field
-var i = 0; //Increment
-var v = 0; //Increment
-function autoaddData() {
+//  Remove Field Key
+const remove_custom_field = (num = null) => {
+    // Find all elements with div.field-key class and remove the last one
+    let field_key = document.querySelectorAll(".field-key");
+	// If num is null
+	if (num == null || num == undefined || num == "") {
+		field_key[field_key.length - 1].remove();
+	}else{
+		// Get attribute num from current field_key
+		let current_num = parseInt(field_key[num - 1].getAttribute("num"));
+		if(current_num == num){
+			// Remove field_key
+			field_key[num -1].remove();
+			// Reorder
+			reorderFieldData();
+		}
+	}
+}
 
-    var original = document.getElementById('itemLabel');
-    var clone = original.cloneNode(true); // "deep" clone
-    clone.id = "duplicetor" + ++i; // there can only be one element with an ID
-    original.parentNode.appendChild(clone);
+// create function addField
+const addField= () => {
+    // Select all elements with div.field-key class, count the count of elements and add 1
+    let field_key = document.querySelectorAll(".field-key");
+    let num = field_key.length + 1;
 
-    var original = document.getElementById('itemValue');
-    var clone = original.cloneNode(true); // "deep" clone
-    clone.id = "duplicetor" + ++v; // there can only be one element with an ID
-    original.parentNode.appendChild(clone);
+    // Add Custom Field Key
+    let customfield = custom_field(num);
+
+    //Add new autofile inside field_box_area
+    let field_box_area = document.querySelector(".field_box_area");
+    field_box_area.insertAdjacentHTML('beforeend',customfield);
+}
+
+// create function removeField
+const removeField = (num = null) => {
+    // Find the total elements with div.field-key class, if they are more than 1 remove the element
+    let field_key = document.querySelectorAll(".field-key");
+    if (field_key.length > 1) {
+		// Call function remove_custom_field
+		remove_custom_field(num);
+    }
+}
+
+/*** END NEW CUSTOM FIELD ***/
+
+
+/*** NEW AUTO FIELD ***/
+
+// AutoField
+const autoInput = (num) => {
+    let fields = `
+        <div class="col-md-4 col-sm-12 col-xs-12 auto-key">
+            <div class="form-group">
+                <div class="fg-line">
+                    <label>Label/Key Unique Name <i class="fa fa-asterisk"></i> </label>
+					<input type="text" name="autofield_label[]" class="form-control" value="" placeholder="Label/Key... " required>
+                </div>
+            </div>
+        </div>
+
+		<div class="col-md-7 col-sm-12 col-xs-12 auto-value">
+            <div class="form-group">
+                <div class="fg-line">
+                    <label>Data/Value </label>
+                    <textarea name="autofield_value[]" class="form-control auto-size" placeholder="Data/Value... "></textarea>
+                </div>
+            </div>
+        </div>
+
+		<div class="col-md-1 col-sm-12 col-xs-12 auto-action">
+            <div class="form-group">
+                <div class="fg-line">
+					<a onclick="removeAutoData(this.getAttribute('action'))" action="${num}" class="btn btn-sm btn-danger">
+						Remove<i class="fa fa-trash"></i>
+					</a>
+                </div>
+            </div>
+        </div>
+    `;
+
+    // AutoField
+    return fields;
+}
+
+// Reorder Fields
+const reorderAutoData = () => {
+    // Find all elements with div.auto_box class and remove the last one
+    let auto_box = document.querySelectorAll(".auto_box");
+	// Loop while set attribute num to new value x, x should start at 1
+	let x = 1;
+	for (let index = 0; index < auto_box.length; index++) {
+		auto_box[index].setAttribute("num", x);
+		// Get a div.auto-action inside auto_box retrive a.btn-danger
+		let auto_action = auto_box[index].querySelector(".auto-action a");
+		// Set attribute action to x
+		auto_action.setAttribute("action", x);
+		x++;
+	}
 
 }
 
-function autoremoveData() {
+// Add Label & Value
+const auto_field = (num) => {
+    let autofield = `
+        <div class="row auto_box" num="${num}">
+            ${autoInput(num)}
+        </div>
+    `;
 
-    if ($('.labelItem').length > 1) {
-       $('.labelItem:last').remove();
-    }
-
-    if ($('.valueItem').length > 1) {
-       $('.valueItem:last').remove();
-    }
-
+    // Label & Value
+    return autofield;
 }
+
+//  Remove Label & Value
+const remove_auto_field = (num = null) => {
+    // Find all elements with div.auto_box class and remove the last one
+    let auto_box = document.querySelectorAll(".auto_box");
+	// If num is null
+	if (num == null || num == undefined || num == "") {
+		auto_box[auto_box.length - 1].remove();
+	}else{
+		// Get attribute num from current auto_box
+		let current_num = parseInt(auto_box[num - 1].getAttribute("num"));
+		if(current_num == num){
+			// Remove auto_field
+			auto_box[num -1].remove();
+			// Reorder
+			reorderAutoData();
+		}
+	}
+}
+
+// create function addAutoData
+const addAutoData = () => {
+    // Select all elements with div.auto_box class, count the count of elements and add 1
+    let auto_box = document.querySelectorAll(".auto_box");
+    let num = auto_box.length + 1;
+
+    // Add Lable & Answer
+    let autofield = auto_field(num);
+
+    //Add new autofile inside auto_box_area
+    let auto_box_area = document.querySelector(".auto_box_area");
+    auto_box_area.insertAdjacentHTML('beforeend',autofield);
+}
+
+// create function removeAutoData
+const removeAutoData = (num = null) => {
+    // Find the total elements with div.auto_box class, if they are more than 1 remove the element
+    let auto_box = document.querySelectorAll(".auto_box");
+    if (auto_box.length > 0) {
+		// Call function remove_auto_field
+		remove_auto_field(num);
+    }
+}
+
+/*** END NEW AUTO FIELD ***/
 
 $(document).ready(function(){
 
@@ -216,8 +380,6 @@ $("#post-schedule").change(function () {
         $('#post-time').text('Post On Date');
     }
 });
-
-
 
 /*
 * Auto Complete Data  

@@ -480,8 +480,8 @@ class CoreCrud extends CI_Model
 				];
 
 				// Load Model
-				$this->load->model('CoreField');
-				$useUrlHelper = ((method_exists('CoreField', 'urlMetaHelper'))) ? $this->CoreField->urlMetaHelper(['module' => $table, 'type' => $meta_type]) : true;
+				$this->load->model('CoreTrigger');
+				$useUrlHelper = ((method_exists('CoreTrigger', 'urlMetaHelper'))) ? $this->CoreTrigger->urlMetaHelper(['module' => $table, 'type' => $meta_type]) : true;
 				if ($useUrlHelper) {
 					// Insert Meta Data
 					$this->db->insert('metaterms', $metaData);
@@ -550,8 +550,8 @@ class CoreCrud extends CI_Model
 				$metaData['metaterm_type'] = $meta_type;
 
 				// Load Model
-				$this->load->model('CoreField');
-				$useUrlHelper = ((method_exists('CoreField', 'urlMetaHelper'))) ? $this->CoreField->urlMetaHelper(['module' => $table, 'type' => $meta_type]) : true;
+				$this->load->model('CoreTrigger');
+				$useUrlHelper = ((method_exists('CoreTrigger', 'urlMetaHelper'))) ? $this->CoreTrigger->urlMetaHelper(['module' => $table, 'type' => $meta_type]) : true;
 				if ($useUrlHelper) {
 					// Update Data
 					$this->db->update('metaterms', $metaData, ['metaterm_module' => $table, 'metaterm_typeid' => $entry_id]);
@@ -589,8 +589,8 @@ class CoreCrud extends CI_Model
 			// Meta URL
 			if ($table !== 'metaterms') {
 				// Load Model
-				$this->load->model('CoreField');
-				$keepUrl = ((method_exists('CoreField', 'urlMetaKeep'))) ? $this->CoreField->urlMetaKeep() : false;
+				$this->load->model('CoreTrigger');
+				$keepUrl = ((method_exists('CoreTrigger', 'urlMetaKeep'))) ? $this->CoreTrigger->urlMetaKeep() : false;
 
 				// Meta Type
 				if (!$keepUrl) {
@@ -600,7 +600,7 @@ class CoreCrud extends CI_Model
 						$meta_type = $this->plural->singularize($this->CoreCrud->selectSingleValue($table, 'title', ['id' => $entry_id]));
 					}
 					// Meta Data
-					$useUrlHelper = ((method_exists('CoreField', 'urlMetaHelper'))) ? $this->CoreField->urlMetaHelper(['module' => $table, 'type' => $meta_type]) : true;
+					$useUrlHelper = ((method_exists('CoreTrigger', 'urlMetaHelper'))) ? $this->CoreTrigger->urlMetaHelper(['module' => $table, 'type' => $meta_type]) : true;
 					if ($useUrlHelper) {
 						$this->db->delete('metaterms', ['metaterm_module' => $table, 'metaterm_type' => $meta_type, 'metaterm_typeid' => $entry_id]);
 					}
@@ -841,8 +841,8 @@ class CoreCrud extends CI_Model
 			if ($this->db->table_exists($table)) {
 
 				//load ModelField
-				$this->load->model('CoreField');
-				$autosave = ((method_exists('CoreField', 'customFieldAuto'))) ? $this->CoreField->customFieldAuto($route) : true;
+				$this->load->model('CoreTrigger');
+				$autosave = ((method_exists('CoreTrigger', 'customFieldAuto'))) ? $this->CoreTrigger->customFieldAuto($route) : true;
 
 				//Check Auto Save
 				if ($autosave) {
@@ -1097,8 +1097,8 @@ class CoreCrud extends CI_Model
 		$config['encrypt_name'] = TRUE;
 
 		//load ModelField
-		$this->load->model('CoreField');
-		$customConfig = ((method_exists('CoreField', 'uploadSettings'))) ? $this->CoreField->uploadSettings() : false;
+		$this->load->model('CoreTrigger');
+		$customConfig = ((method_exists('CoreTrigger', 'uploadSettings'))) ? $this->CoreTrigger->uploadSettings() : false;
 		if ($customConfig) {
 			foreach ($customConfig as $key => $value) {
 				$config[$key] = $value; //Ovewrite Settings
@@ -1169,7 +1169,7 @@ class CoreCrud extends CI_Model
 	{
 
 		//Check Default
-		$default = ((method_exists('CoreField', 'uploadDefault'))) ? $this->CoreField->uploadDefault() : true;
+		$default = ((method_exists('CoreTrigger', 'uploadDefault'))) ? $this->CoreTrigger->uploadDefault() : true;
 
 
 		//Check IF Deafult
@@ -1182,9 +1182,9 @@ class CoreCrud extends CI_Model
 			$recursive = True; //Deafult
 
 			//Check Additonal Config
-			if (method_exists('CoreField', 'changeDirData')) {
+			if (method_exists('CoreTrigger', 'changeDirData')) {
 				//Config
-				$configDir = $this->CoreField->changeDirData($newDirectory, $permission, $recursive);
+				$configDir = $this->CoreTrigger->changeDirData($newDirectory, $permission, $recursive);
 				$newDirectory = $configDir['dir']; // New Path | New APPATH Directory
 				$permission = $configDir['permission']; //Deafault
 				$recursive = $configDir['recursive']; //Deafult
@@ -1223,7 +1223,7 @@ class CoreCrud extends CI_Model
 			//Check If File Exist
 			if (file_exists($filelocated) === True) {
 				//Check Default
-				$unlick = ((method_exists('CoreField', 'unlinkSetting'))) ? $this->CoreField->unlinkSetting() : true;
+				$unlick = ((method_exists('CoreTrigger', 'unlinkSetting'))) ? $this->CoreTrigger->unlinkSetting() : true;
 				if ($unlick) {
 					//Delete FIle
 					unlink($filelocated);
@@ -1274,7 +1274,7 @@ class CoreCrud extends CI_Model
 	 * -> This method will add a thumbnail for your image
 	 *
 	 * 1: Pass image path (where the image is found) as per what is returned by ->uploadFile() *Required*
-	 * 2: Pass cofiguration, optional you can use the default or declaire custom in CoreField->thumbConfig()
+	 * 2: Pass cofiguration, optional you can use the default or declaire custom in CoreTrigger->thumbConfig()
 	 **/
 	public function addThumbnail($file_name, $custom_config = array())
 	{
@@ -1294,9 +1294,9 @@ class CoreCrud extends CI_Model
 		$config['thumb_marker'] = '_thumb';
 
 		//Custom Thumbnail Configuration
-		$thumbConfig = ((method_exists('CoreField', 'thumbConfig'))) ? $this->CoreField->thumbConfig() : array();
+		$thumbConfig = ((method_exists('CoreTrigger', 'thumbConfig'))) ? $this->CoreTrigger->thumbConfig() : array();
 
-		//CoreField Configs
+		//CoreTrigger Configs
 		foreach ($thumbConfig as $key => $value) {
 			$config[$key] = $value;
 		}
@@ -1323,7 +1323,7 @@ class CoreCrud extends CI_Model
 	 * -> This method will add a watermark for your image
 	 *
 	 * 1: Pass image path (where the image is found) as per what is returned by ->uploadFile() *Required*
-	 * 2: Pass cofiguration, optional you can use the default or declaire custom in CoreField->watermarkConfig()
+	 * 2: Pass cofiguration, optional you can use the default or declaire custom in CoreTrigger->watermarkConfig()
 	 *
 	 * NB: Add watermark then resize
 	 **/
@@ -1345,9 +1345,9 @@ class CoreCrud extends CI_Model
 		$config['overwrite'] = True;
 
 		//Custom Watermark Configuration
-		$watermarkConfig = ((method_exists('CoreField', 'watermarkConfig'))) ? $this->CoreField->watermarkConfig() : array();
+		$watermarkConfig = ((method_exists('CoreTrigger', 'watermarkConfig'))) ? $this->CoreTrigger->watermarkConfig() : array();
 
-		//CoreField Configs
+		//CoreTrigger Configs
 		foreach ($watermarkConfig as $key => $value) {
 			$config[$key] = $value;
 		}
@@ -1371,7 +1371,7 @@ class CoreCrud extends CI_Model
 	 * -> This method will resize your image
 	 *
 	 * 1: Pass image path (where the image is found) as per what is returned by ->uploadFile() *Required*
-	 * 2: Pass the dimession (Size) & Background Color, optional you can use the default or declaire custom in CoreField->resizeImageConfig()
+	 * 2: Pass the dimession (Size) & Background Color, optional you can use the default or declaire custom in CoreTrigger->resizeImageConfig()
 	 *
 	 * NB: Only For JPG(JPEG), PNG and GIF
 	 **/
@@ -1387,7 +1387,7 @@ class CoreCrud extends CI_Model
 		$config['color'] = array(4, 20, 26);
 
 		//Config
-		$resizeImageConfig = ((method_exists('CoreField', 'resizeImageConfig'))) ? $this->CoreField->resizeImageConfig() : $custom_config;
+		$resizeImageConfig = ((method_exists('CoreTrigger', 'resizeImageConfig'))) ? $this->CoreTrigger->resizeImageConfig() : $custom_config;
 		foreach ($resizeImageConfig as $key => $value) {
 			$config[$key] = $value;
 		}
@@ -1458,7 +1458,7 @@ class CoreCrud extends CI_Model
 	 * -> This method will compress your image
 	 *
 	 * 1: Pass image path (where the image is found) as per what is returned by ->uploadFile() *Required*
-	 * 2: Pass cofiguration, optional you can use the default or declaire custom in CoreField->compressImageConfig()
+	 * 2: Pass cofiguration, optional you can use the default or declaire custom in CoreTrigger->compressImageConfig()
 	 *
 	 * NB: Add watermark then resize
 	 **/
@@ -1478,9 +1478,9 @@ class CoreCrud extends CI_Model
 		$config['quality'] = '90%';
 
 		//Custom Compress Configuration
-		$compressImageConfig = ((method_exists('CoreField', 'compressImageConfig'))) ? $this->CoreField->compressImageConfig() : array();
+		$compressImageConfig = ((method_exists('CoreTrigger', 'compressImageConfig'))) ? $this->CoreTrigger->compressImageConfig() : array();
 
-		//CoreField Configs
+		//CoreTrigger Configs
 		foreach ($compressImageConfig as $key => $value) {
 			$config[$key] = $value;
 		}

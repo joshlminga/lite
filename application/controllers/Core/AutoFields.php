@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class CoreCustomFields extends CI_Controller
+class AutoFields extends CI_Controller
 {
 
 	/**
@@ -10,19 +10,19 @@ class CoreCustomFields extends CI_Controller
 	 * -> The controller require to login as Administrator
 	 */
 
-	private $Module = 'customfield'; //Module
-	private $Folder = 'configs'; //Set Default Folder For html files and Front End Use
-	private $SubFolder = '/customfield'; //Set Default Sub Folder For html files and Front End Use Start with /
+	private $Module = 'autofield'; //Module
+	private $Folder = 'autofields'; //Set Default Folder For html files and Front End Use
+	private $SubFolder = ''; //Set Default Sub Folder For html files and Front End Use Start with /
 
 	private $AllowedFile = null; //Set Default allowed file extension, remember you can pass this upon upload to override default allowed file type. Allowed File Extensions Separated by | also leave null to validate using jpg|jpeg|png|doc|docx|pdf|xls|txt change this on validation function at the bottom
 
-	private $Route = 'customfields'; //If you have different route Name to Module name State it here |This wont be pluralized
+	private $Route = 'autofields'; //If you have different route Name to Module name State it here |This wont be pluralized
 
-	private $New = 'customfields/new'; //New 
-	private $Save = 'customfields/save'; //Add New 
-	private $Edit = 'customfields/update'; //Update 
+	private $New = 'autofields/new'; //New 
+	private $Save = 'autofields/save'; //Add New 
+	private $Edit = 'autofields/update'; //Update 
 
-	private $ModuleName = 'custom field'; //Module Nmae
+	private $ModuleName = 'auto field'; //Module Name
 
 	/** Functions
 	 * -> __construct () = Load the most required operations E.g Class Module
@@ -140,7 +140,7 @@ class CoreCustomFields extends CI_Controller
 		$data = $this->load($this->plural->pluralize($this->Folder) . $this->SubFolder . "/list");
 
 		//Table Select & Clause
-		$columns = array('id as id,title as title,flg as status');
+		$columns = array('id as id,title as title,title as key,flg as status');
 		$data['dataList'] = $this->CoreCrud->selectCRUD($module, null, $columns);
 
 		//Notification
@@ -224,8 +224,11 @@ class CoreCustomFields extends CI_Controller
 		if (!is_null($inputTYPE) || !is_null($inputID)) {
 			//Table Select & Clause
 			$where = array($inputTYPE => $inputID);
-			$columns = array('id as id,title as title,required as required,optional as optional,filters as filters,show as show,default as default,flg as status');
+			$columns = array('id as id,title as title,select as select,data as data,default as default,flg as status');
 			$data['resultList'] = $this->CoreCrud->selectCRUD($module, $where, $columns);
+
+			// MetaURL
+			$data['met_url'] = $this->CoreCrud->selectSingleValue('metaterms', 'url', ['module' => 'autofields', 'typeid' => $inputID]);
 
 			//Notification
 			$notify = $this->CoreNotify->notify();
@@ -269,28 +272,27 @@ class CoreCustomFields extends CI_Controller
 
 			$formData = $this->CoreLoad->input(); //Input Data
 
-			$this->form_validation->set_rules("customfield_title", "Custom Field Title", "trim");
+			$this->form_validation->set_rules("autofield_title", "Autofield Title", "trim|min_length[1]|max_length[200]");
+			$this->form_validation->set_rules("autofield_select", "Autofield Select", "trim|max_length[5000]");
+
+			//Set Up Data
+			for ($i = 0; $i < count($formData['autofield_label']); $i++) {
+				$currentLabel = preg_replace('/\s+/', '_', strtolower($formData['autofield_label'][$i]));
+				$currentValue = $formData['autofield_value'][$i];
+				$itemData[$currentLabel] = $currentValue;
+			}
+
+			//Form Auto Field Data
+			$formData['autofield_data'] = json_encode($itemData); //Set Data To Json
+			$formData['autofield_title'] = strtolower(preg_replace('/\s+/', '_', $formData['autofield_title']));
+
+			//Select Value To Unset 
+			$unsetData = array('autofield_label', 'autofield_value');/*valude To Unset*/
 
 			//Form Validation
 			if ($this->form_validation->run() == TRUE) {
 
-				$column_required = strtolower($this->CoreForm->get_column_name($this->Module, 'required'));
-				$formData[$column_required] = json_encode($this->CoreLoad->input($column_required)); //Set Required
-
-				$column_optional = strtolower($this->CoreForm->get_column_name($this->Module, 'optional'));
-				$formData[$column_optional] = json_encode($this->CoreLoad->input($column_optional)); //Set Optional
-				$formData['customfield_title'] = preg_replace('/\s+/', '', strtolower($formData['customfield_title']));
-
-				$column_filters = strtolower($this->CoreForm->get_column_name($this->Module, 'filters'));
-				$formData[$column_filters] = strtolower(json_encode($this->CoreLoad->input($column_required))); //Set Filters
-
-				$column_show = strtolower($this->CoreForm->get_column_name($this->Module, 'show'));
-				$formData[$column_show] = strtolower(json_encode(array())); //Set Filters
-
-				$column_default = strtolower($this->CoreForm->get_column_name($this->Module, 'default'));
-				$formData[$column_default] = 'yes'; //Set Default					
-
-				if ($this->create($formData)) {
+				if ($this->create($formData, $unsetData)) {
 					$this->session->set_flashdata('notification', 'success'); //Notification Type
 					$message = 'Data was saved successful'; //Notification Message				
 					redirect($this->New, 'refresh'); //Redirect to Page
@@ -341,34 +343,29 @@ class CoreCustomFields extends CI_Controller
 			}
 		} elseif ($type == 'update') {
 
-			$updateData = $this->CoreLoad->input(); //Input Data		
-			$column_password = strtolower($this->CoreForm->get_column_name($this->Module, 'password')); //Column Password
+			$updateData = $this->CoreLoad->input(); //Input Data	
+
+			$this->form_validation->set_rules("autofield_title", "Autofield Title", "trim|min_length[1]|max_length[200]");
+			$this->form_validation->set_rules("autofield_select", "Autofield Select", "trim|max_length[5000]");
+
 			$column_id = strtolower($this->CoreForm->get_column_name($this->Module, 'id')); //Column ID
 			$value_id = $this->CoreLoad->input('id'); //Input Value
 
-			$unsetData = array('id');
-			/**value To Unset*/
-
-			$this->form_validation->set_rules("customfield_title", "Custom Field Title", "trim");
+			//Select Value To Unset 
+			$unsetData = array('id', 'autofield_label', 'autofield_value');/*valude To Unset*/
 
 			//Form Validation
 			if ($this->form_validation->run() == TRUE) {
 
-				$column_required = strtolower($this->CoreForm->get_column_name($this->Module, 'required'));
-				$updateData[$column_required] = json_encode($this->CoreLoad->input($column_required)); //Set Required
+				//Set Up Data
+				for ($i = 0; $i < count($updateData['autofield_label']); $i++) {
+					$currentLabel = preg_replace('/\s+/', '_', strtolower($updateData['autofield_label'][$i]));
+					$currentValue = $updateData['autofield_value'][$i];
+					$itemData[$currentLabel] = $currentValue;
+				}
 
-				$column_optional = strtolower($this->CoreForm->get_column_name($this->Module, 'optional'));
-				$updateData[$column_optional] = json_encode($this->CoreLoad->input($column_optional)); //Set Optional
-
-				$column_filters = strtolower($this->CoreForm->get_column_name($this->Module, 'filters'));
-				$updateData[$column_filters] = strtolower(json_encode($this->CoreLoad->input($column_filters))); //Set Filters
-
-				$column_show = strtolower($this->CoreForm->get_column_name($this->Module, 'show'));
-				$input_show = $this->CoreLoad->input($column_show);
-				$updateData[$column_show] = (is_array($input_show)) ? strtolower(json_encode($input_show)) : null; //Set Show
-
-				$column_default = strtolower($this->CoreForm->get_column_name($this->Module, 'default'));
-				$updateData[$column_default] = 'yes'; //Set Default					
+				//Form Auto Field Data
+				$updateData['autofield_data'] = json_encode($itemData); //Set Data To Json
 
 				//Update Table
 				if ($this->update($updateData, array($column_id => $value_id), $unsetData)) {
@@ -426,14 +423,21 @@ class CoreCustomFields extends CI_Controller
 			$flg = strtolower($this->CoreForm->get_column_name($this->Module, 'flg'));
 			$insertData["$flg"] = 1;
 
+			//Column Password
+			$column_password = strtolower($this->CoreForm->get_column_name($this->Module, 'password'));
+
 			$insertData = $this->CoreCrud->unsetData($insertData, $unsetData); //Unset Data
+
+			//Check IF there is Password
+			if (array_key_exists($column_password, $insertData)) {
+				$insertData[$column_password] = sha1($this->config->item($insertData["$stamp"]) . $insertData[$column_password]);
+			}
 
 			$details = strtolower($this->CoreForm->get_column_name($this->Module, 'details'));
 			$insertData["$details"] = json_encode($insertData);
 
 			//Insert Data Into Table
-			$this->db->insert($tableName, $insertData);
-			if ($this->db->affected_rows() > 0) {
+			if ($this->CoreCrud->insertData($tableName, $insertData)) {
 
 				return true; //Data Inserted
 			} else {
@@ -465,25 +469,30 @@ class CoreCustomFields extends CI_Controller
 			$stamp = $this->CoreForm->get_column_name($this->Module, 'stamp');
 			$updateData["$stamp"] = date('Y-m-d H:i:s', time());
 
+			//Column Password
+			$column_password = strtolower($this->CoreForm->get_column_name($this->Module, 'password'));
+
 			$updateData = $this->CoreCrud->unsetData($updateData, $unsetData); //Unset Data
+
+			//Check IF there is Password
+			if (array_key_exists($column_password, $updateData)) {
+				$updateData[$column_password] = sha1($this->config->item($updateData["$stamp"]) . $updateData[$column_password]);
+			}
 
 			//Details Column Update
 			$details = strtolower($this->CoreForm->get_column_name($this->Module, 'details'));
 			foreach ($valueWhere as $key => $value) {
-				$whereData = array($key => $value);
-				/** Where Clause */
+				$whereData = array($key => $value); /* Where Clause */
 			}
 
 			$current_details = json_decode($this->db->select($details)->where($whereData)->get($tableName)->row()->$details, true);
 			foreach ($updateData as $key => $value) {
-				$current_details["$key"] = $value;
-				/** Update -> Details */
+				$current_details["$key"] = $value; /* Update -> Details */
 			}
 			$updateData["$details"] = json_encode($current_details);
 
 			//Update Data In The Table
-			$this->db->update($tableName, $updateData, $valueWhere);
-			if ($this->db->affected_rows() > 0) {
+			if ($this->CoreCrud->updateData($tableName, $updateData, $valueWhere)) {
 
 				return true; //Data Updated
 			} else {
@@ -507,8 +516,7 @@ class CoreCustomFields extends CI_Controller
 			$tableName = $this->plural->pluralize($this->Module);
 
 			//Deleted Data In The Table
-			$this->db->delete($tableName, $valueWhere);
-			if ($this->db->affected_rows() > 0) {
+			if ($this->CoreCrud->deleteData($tableName, $valueWhere)) {
 
 				return true; //Data Deleted
 			} else {
@@ -657,5 +665,5 @@ class CoreCustomFields extends CI_Controller
 	}
 }
 
-/** End of file CoreCustomFields.php */
-/** Location: ./application/controllers/CoreCustomFields.php */
+/* End of file AutoFields.php */
+/* Location: ./application/controllers/AutoFields.php */

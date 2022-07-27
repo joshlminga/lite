@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class CoreBlogs extends CI_Controller
+class Blogs extends CI_Controller
 {
 
 	/*
@@ -733,5 +733,5 @@ class CoreBlogs extends CI_Controller
 	}
 }
 
-/* End of file CoreBlogs.php */
-/* Location: ./application/controllers/CoreBlogs.php */
+/* End of file Blogs.php */
+/* Location: ./application/controllers/Blogs.php */

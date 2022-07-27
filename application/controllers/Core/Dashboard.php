@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class CoreMains extends CI_Controller
+class Dashboard extends CI_Controller
 {
 
 	/**
@@ -260,5 +260,5 @@ class CoreMains extends CI_Controller
 	}
 }
 
-/** End of file CoreMains.php */
-/** Location: ./application/controllers/CoreMains.php */
+/** End of file Dashboard.php */
+/** Location: ./application/controllers/Dashboard.php */

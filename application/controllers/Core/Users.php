@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class CoreUsers extends CI_Controller
+class Users extends CI_Controller
 {
 
 	/**
@@ -763,5 +763,5 @@ class CoreUsers extends CI_Controller
 	}
 }
 
-/** End of file CoreUsers.php */
-/** Location: ./application/controllers/CoreUsers.php */
+/** End of file Users.php */
+/** Location: ./application/controllers/Users.php */

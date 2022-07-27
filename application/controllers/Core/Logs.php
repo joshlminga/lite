@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class CoreLogs extends CI_Controller
+class Logs extends CI_Controller
 {
 
 	/**
@@ -481,5 +481,5 @@ class CoreLogs extends CI_Controller
 	}
 }
 
-/** End of file CoreLogs.php */
-/** Location: ./application/controllers/CoreLogs.php */
+/** End of file Logs.php */
+/** Location: ./application/controllers/Logs.php */

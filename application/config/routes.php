@@ -87,111 +87,111 @@ $route["coreapi/(.+)"] = "$Api_Folder/CoreApi/failed";
 /******** END API *********/
 
 //Administrator
-$route["dashboard"] = "$Core_Folder/CoreMains/index"; //Dashboard
+$route["dashboard"] = "$Core_Folder/Dashboard/index"; //Dashboard
 
 //Users
-$route["users"] = "$Core_Folder/CoreUsers/index"; //Manage
-$route["users/new"] = "$Core_Folder/CoreUsers/open/add"; //Create New
-$route["users/edit"] = "$Core_Folder/CoreUsers/edit/edit"; //Edit
-$route["users/save"] = "$Core_Folder/CoreUsers/valid/save"; //Validate and Save
-$route["users/update"] = "$Core_Folder/CoreUsers/valid/update"; //Validate and Update
-$route["users/delete"] = "$Core_Folder/CoreUsers/valid/delete"; //Delete 
-$route["users/multiple"] = "$Core_Folder/CoreUsers/valid/bulk"; //Bulk Action 
+$route["users"] = "$Core_Folder/Users/index"; //Manage
+$route["users/new"] = "$Core_Folder/Users/open/add"; //Create New
+$route["users/edit"] = "$Core_Folder/Users/edit/edit"; //Edit
+$route["users/save"] = "$Core_Folder/Users/valid/save"; //Validate and Save
+$route["users/update"] = "$Core_Folder/Users/valid/update"; //Validate and Update
+$route["users/delete"] = "$Core_Folder/Users/valid/delete"; //Delete 
+$route["users/multiple"] = "$Core_Folder/Users/valid/bulk"; //Bulk Action 
 
 //Blogs
-$route["blogs"] = "$Core_Folder/CoreBlogs/index"; //List
-$route["blogs/new"] = "$Core_Folder/CoreBlogs/open/add"; //Open Create New Form
-$route["blogs/edit"] = "$Core_Folder/CoreBlogs/edit/edit"; // Open Edit  Page
-$route["blogs/save"] = "$Core_Folder/CoreBlogs/valid/save"; // Validate and Save
-$route["blogs/update"] = "$Core_Folder/CoreBlogs/valid/update"; // Validate and Update
-$route["blogs/delete"] = "$Core_Folder/CoreBlogs/valid/delete"; // Delete 
-$route["blogs/multiple"] = "$Core_Folder/CoreBlogs/valid/bulk"; // Bulk Action 
+$route["blogs"] = "$Core_Folder/Blogs/index"; //List
+$route["blogs/new"] = "$Core_Folder/Blogs/open/add"; //Open Create New Form
+$route["blogs/edit"] = "$Core_Folder/Blogs/edit/edit"; // Open Edit  Page
+$route["blogs/save"] = "$Core_Folder/Blogs/valid/save"; // Validate and Save
+$route["blogs/update"] = "$Core_Folder/Blogs/valid/update"; // Validate and Update
+$route["blogs/delete"] = "$Core_Folder/Blogs/valid/delete"; // Delete 
+$route["blogs/multiple"] = "$Core_Folder/Blogs/valid/bulk"; // Bulk Action 
 
 //Blog Tags
-$route["blogtag"] = "$Core_Folder/CoreBlogTags/index"; //Manage
-$route["blogtag/edit"] = "$Core_Folder/CoreBlogTags/edit/edit"; //Edit 
-$route["blogtag/save"] = "$Core_Folder/CoreBlogTags/valid/save"; //Validate and Save
-$route["blogtag/update"] = "$Core_Folder/CoreBlogTags/valid/update"; //Validate and Update
-$route["blogtag/delete"] = "$Core_Folder/CoreBlogTags/valid/delete"; //Delete 
-$route["blogtag/multiple"] = "$Core_Folder/CoreBlogTags/valid/bulk"; //Bulk Action  
+$route["blogtag"] = "$Core_Folder/BlogTags/index"; //Manage
+$route["blogtag/edit"] = "$Core_Folder/BlogTags/edit/edit"; //Edit 
+$route["blogtag/save"] = "$Core_Folder/BlogTags/valid/save"; //Validate and Save
+$route["blogtag/update"] = "$Core_Folder/BlogTags/valid/update"; //Validate and Update
+$route["blogtag/delete"] = "$Core_Folder/BlogTags/valid/delete"; //Delete 
+$route["blogtag/multiple"] = "$Core_Folder/BlogTags/valid/bulk"; //Bulk Action  
 
 //Blog Categories
-$route["blogcategory"] = "$Core_Folder/CoreBlogCategories/index"; //Manage
-$route["blogcategory/edit"] = "$Core_Folder/CoreBlogCategories/edit/edit"; //Edit 
-$route["blogcategory/save"] = "$Core_Folder/CoreBlogCategories/valid/save"; //Validate and Save
-$route["blogcategory/update"] = "$Core_Folder/CoreBlogCategories/valid/update"; //Validate and Update
-$route["blogcategory/delete"] = "$Core_Folder/CoreBlogCategories/valid/delete"; //Delete 
-$route["blogcategory/multiple"] = "$Core_Folder/CoreBlogCategories/valid/bulk"; //Bulk Action  
+$route["blogcategory"] = "$Core_Folder/BlogCategories/index"; //Manage
+$route["blogcategory/edit"] = "$Core_Folder/BlogCategories/edit/edit"; //Edit 
+$route["blogcategory/save"] = "$Core_Folder/BlogCategories/valid/save"; //Validate and Save
+$route["blogcategory/update"] = "$Core_Folder/BlogCategories/valid/update"; //Validate and Update
+$route["blogcategory/delete"] = "$Core_Folder/BlogCategories/valid/delete"; //Delete 
+$route["blogcategory/multiple"] = "$Core_Folder/BlogCategories/valid/bulk"; //Bulk Action  
 
 //Pages
-$route["pages"] = "$Core_Folder/CorePages/index"; //List
-$route["pages/new"] = "$Core_Folder/CorePages/open/add"; //Open Create New Form
-$route["pages/edit"] = "$Core_Folder/CorePages/edit/edit"; // Open Edit  Page
-$route["pages/save"] = "$Core_Folder/CorePages/valid/save"; // Validate and Save
-$route["pages/update"] = "$Core_Folder/CorePages/valid/update"; // Validate and Update
-$route["pages/delete"] = "$Core_Folder/CorePages/valid/delete"; // Delete 
-$route["pages/multiple"] = "$Core_Folder/CorePages/valid/bulk"; // Bulk Action 
+$route["pages"] = "$Core_Folder/Pages/index"; //List
+$route["pages/new"] = "$Core_Folder/Pages/open/add"; //Open Create New Form
+$route["pages/edit"] = "$Core_Folder/Pages/edit/edit"; // Open Edit  Page
+$route["pages/save"] = "$Core_Folder/Pages/valid/save"; // Validate and Save
+$route["pages/update"] = "$Core_Folder/Pages/valid/update"; // Validate and Update
+$route["pages/delete"] = "$Core_Folder/Pages/valid/delete"; // Delete 
+$route["pages/multiple"] = "$Core_Folder/Pages/valid/bulk"; // Bulk Action 
 
 //Settings
-$route["general"] = "$Core_Folder/CoreSettings/open/general"; //General Settings
-$route["general/update"] = "$Core_Folder/CoreSettings/valid/general"; //General Settings Update
-$route["link"] = "$Core_Folder/CoreSettings/open/link"; //URL Settings
-$route["link/update"] = "$Core_Folder/CoreSettings/valid/link"; //URL Settings Update
-$route["mail"] = "$Core_Folder/CoreSettings/open/mail"; //Mail Settings
-$route["mail/update"] = "$Core_Folder/CoreSettings/valid/mail"; //Mail Settings Update
-$route["blog"] = "$Core_Folder/CoreSettings/open/blog"; //Blog Settings
-$route["blog/update"] = "$Core_Folder/CoreSettings/valid/blog"; //Blog Settings Update
-$route["seo"] = "$Core_Folder/CoreSettings/open/seo"; //Seo Settings
-$route["seo/update"] = "$Core_Folder/CoreSettings/valid/seo"; //Seo Settings Update
-$route["inheritance"] = "$Core_Folder/CoreSettings/open/inheritance"; //Inheritance Type Settings
-$route["inheritance/update"] = "$Core_Folder/CoreSettings/valid/inheritance"; //Inheritance Type Settings Update
-$route["module"] = "$Core_Folder/CoreSettings/open/module"; //ModuleSettings
-$route["module/update"] = "$Core_Folder/CoreSettings/valid/module"; //Module Settings Update
+$route["general"] = "$Core_Folder/Settings/open/general"; //General Settings
+$route["general/update"] = "$Core_Folder/Settings/valid/general"; //General Settings Update
+$route["link"] = "$Core_Folder/Settings/open/link"; //URL Settings
+$route["link/update"] = "$Core_Folder/Settings/valid/link"; //URL Settings Update
+$route["mail"] = "$Core_Folder/Settings/open/mail"; //Mail Settings
+$route["mail/update"] = "$Core_Folder/Settings/valid/mail"; //Mail Settings Update
+$route["blog"] = "$Core_Folder/Settings/open/blog"; //Blog Settings
+$route["blog/update"] = "$Core_Folder/Settings/valid/blog"; //Blog Settings Update
+$route["seo"] = "$Core_Folder/Settings/open/seo"; //Seo Settings
+$route["seo/update"] = "$Core_Folder/Settings/valid/seo"; //Seo Settings Update
+$route["inheritance"] = "$Core_Folder/Settings/open/inheritance"; //Inheritance Type Settings
+$route["inheritance/update"] = "$Core_Folder/Settings/valid/inheritance"; //Inheritance Type Settings Update
+$route["module"] = "$Core_Folder/Settings/open/module"; //ModuleSettings
+$route["module/update"] = "$Core_Folder/Settings/valid/module"; //Module Settings Update
 
 //Blog Categories
-$route["level"] = "$Core_Folder/CoreLevels/index"; //Manage
-$route["level/edit"] = "$Core_Folder/CoreLevels/edit/edit"; //Edit 
-$route["level/save"] = "$Core_Folder/CoreLevels/valid/save"; //Validate and Save
-$route["level/update"] = "$Core_Folder/CoreLevels/valid/update"; //Validate and Update
-$route["level/delete"] = "$Core_Folder/CoreLevels/valid/delete"; //Delete 
-$route["level/multiple"] = "$Core_Folder/CoreLevels/valid/bulk"; //Bulk Action  
+$route["level"] = "$Core_Folder/Levels/index"; //Manage
+$route["level/edit"] = "$Core_Folder/Levels/edit/edit"; //Edit 
+$route["level/save"] = "$Core_Folder/Levels/valid/save"; //Validate and Save
+$route["level/update"] = "$Core_Folder/Levels/valid/update"; //Validate and Update
+$route["level/delete"] = "$Core_Folder/Levels/valid/delete"; //Delete 
+$route["level/multiple"] = "$Core_Folder/Levels/valid/bulk"; //Bulk Action  
 
 //Login
-$route["admin"] = "$Core_Folder/CoreLogs/index"; //Login Page
-$route["admin/login"] = "$Core_Folder/CoreLogs/valid/login"; //Login Verification
-$route["admin/reset"] = "$Core_Folder/CoreLogs/valid/reset"; //Reset Password
-$route["admin/logout"] = "$Core_Folder/CoreLogs/valid/logout"; //Logout
+$route["admin"] = "$Core_Folder/Logs/index"; //Login Page
+$route["admin/login"] = "$Core_Folder/Logs/valid/login"; //Login Verification
+$route["admin/reset"] = "$Core_Folder/Logs/valid/reset"; //Reset Password
+$route["admin/logout"] = "$Core_Folder/Logs/valid/logout"; //Logout
 
 //Sub Profile
-$route["profile"] = "$Core_Folder/CoreProfiles/edit/profile"; //My Profile
-$route["profile/update"] = "$Core_Folder/CoreProfiles/valid/update"; //Validate and Update
+$route["profile"] = "$Core_Folder/Profile/edit/profile"; //My Profile
+$route["profile/update"] = "$Core_Folder/Profile/valid/update"; //Validate and Update
 
 //AutoFields
-$route["autofields"] = "$Core_Folder/CoreAutoFields/index"; //List
-$route["autofields/new"] = "$Core_Folder/CoreAutoFields/open/add"; //Create New
-$route["autofields/edit"] = "$Core_Folder/CoreAutoFields/edit/edit"; // Edit 
-$route["autofields/save"] = "$Core_Folder/CoreAutoFields/valid/save"; // Validate and Save
-$route["autofields/update"] = "$Core_Folder/CoreAutoFields/valid/update"; // Validate and Update
-$route["autofields/delete"] = "$Core_Folder/CoreAutoFields/valid/delete"; // Delete 
-$route["autofields/multiple"] = "$Core_Folder/CoreAutoFields/valid/bulk"; // Bulk Action 
+$route["autofields"] = "$Core_Folder/AutoFields/index"; //List
+$route["autofields/new"] = "$Core_Folder/AutoFields/open/add"; //Create New
+$route["autofields/edit"] = "$Core_Folder/AutoFields/edit/edit"; // Edit 
+$route["autofields/save"] = "$Core_Folder/AutoFields/valid/save"; // Validate and Save
+$route["autofields/update"] = "$Core_Folder/AutoFields/valid/update"; // Validate and Update
+$route["autofields/delete"] = "$Core_Folder/AutoFields/valid/delete"; // Delete 
+$route["autofields/multiple"] = "$Core_Folder/AutoFields/valid/bulk"; // Bulk Action 
 
 //Custom Fields
-$route["customfields"] = "$Core_Folder/CoreCustomFields/index"; //Manage
-$route["customfields/new"] = "$Core_Folder/CoreCustomFields/open/add"; //Create New 
-$route["customfields/edit"] = "$Core_Folder/CoreCustomFields/edit/edit"; //Edit 
-$route["customfields/save"] = "$Core_Folder/CoreCustomFields/valid/save"; //Validate and Save
-$route["customfields/update"] = "$Core_Folder/CoreCustomFields/valid/update"; //Validate and Update
-$route["customfields/delete"] = "$Core_Folder/CoreCustomFields/valid/delete"; //Delete 
-$route["customfields/multiple"] = "$Core_Folder/CoreCustomFields/valid/bulk"; //Bulk Action  
+$route["customfields"] = "$Core_Folder/CustomFields/index"; //Manage
+$route["customfields/new"] = "$Core_Folder/CustomFields/open/add"; //Create New 
+$route["customfields/edit"] = "$Core_Folder/CustomFields/edit/edit"; //Edit 
+$route["customfields/save"] = "$Core_Folder/CustomFields/valid/save"; //Validate and Save
+$route["customfields/update"] = "$Core_Folder/CustomFields/valid/update"; //Validate and Update
+$route["customfields/delete"] = "$Core_Folder/CustomFields/valid/delete"; //Delete 
+$route["customfields/multiple"] = "$Core_Folder/CustomFields/valid/bulk"; //Bulk Action  
 
 //Inheritance
-$route["inheritances"] = "$Core_Folder/CoreInheritances/index"; //Manage
-$route["inheritances/new"] = "$Core_Folder/CoreInheritances/open/add"; //Create New 
-$route["inheritances/edit"] = "$Core_Folder/CoreInheritances/edit/edit"; //Edit 
-$route["inheritances/save"] = "$Core_Folder/CoreInheritances/valid/save"; //Validate and Save
-$route["inheritances/update"] = "$Core_Folder/CoreInheritances/valid/update"; //Validate and Update
-$route["inheritances/delete"] = "$Core_Folder/CoreInheritances/valid/delete"; //Delete 
-$route["inheritances/multiple"] = "$Core_Folder/CoreInheritances/valid/bulk"; //Bulk Action 
+$route["inheritances"] = "$Core_Folder/Inheritances/index"; //Manage
+$route["inheritances/new"] = "$Core_Folder/Inheritances/open/add"; //Create New 
+$route["inheritances/edit"] = "$Core_Folder/Inheritances/edit/edit"; //Edit 
+$route["inheritances/save"] = "$Core_Folder/Inheritances/valid/save"; //Validate and Save
+$route["inheritances/update"] = "$Core_Folder/Inheritances/valid/update"; //Validate and Update
+$route["inheritances/delete"] = "$Core_Folder/Inheritances/valid/delete"; //Delete 
+$route["inheritances/multiple"] = "$Core_Folder/Inheritances/valid/bulk"; //Bulk Action 
 
 /** API - Customer Extension -> Users */
 $route["api-customer/add"] = "$Api_Folder/Extension_Customers/valid/save";
@@ -326,4 +326,10 @@ if (is_array($routeNames)) {
 
 $route['translate_uri_dashes'] = FALSE;
 
+/**
+ * Todo: 404
+ */
+$route["not-found"] = "CoreErrors/index"; //Default Error Page
+
 /////////////////////////END IN-BUILT ROUTES ///////////////////
+

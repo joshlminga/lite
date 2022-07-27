@@ -12,151 +12,78 @@
 				<?= form_open($form_edit, '', ' autocomplete="off" '); ?>
 				<div class="row">
 					<input type="hidden" name="id" value="<?= $resultList[0]->id; ?>">
-					<div class="col-md-4 col-sm-12">
+					<div class="col-md-5 col-sm-12">
 						<div class="form-group">
 							<div class="fg-line">
 								<label>Title <small>(Unique Name Identifier)</small> <i class="fa fa-asterisk"></i></label>
-								<input type="text" class="form-control" id="" autocomplete="off" disabled="" value="<?= stripcslashes($resultList[0]->title); ?>">
+								<input type="text" class="form-control" autocomplete="off" disabled="" value="<?= $resultList[0]->title; ?>">
 							</div>
-						</div>
-					</div>
-					<?php $required = json_decode($resultList[0]->required, True); ?>
-					<?php $optional = json_decode($resultList[0]->optional, True); ?>
-					<?php $filters = json_decode($resultList[0]->filters, True); ?>
-					<?php $all_fields = array_unique(array_merge($required, $optional)); ?>
 
-					<?php $shows = json_decode($resultList[0]->show, True); ?>
-					<?php $shows = (!is_array($shows)) ? array() : $shows; ?>
-
-					<div class="col-md-4 col-sm-12">
-						<div class="form-group">
-							<div class="fg-line">
-								<label>Set Default Filters <small>(Fields used when filtering)</small></label>
-								<?php if ($resultList[0]->default == 'yes') : ?>
-									<?php $filter_data = array_values($filters) ?>
-									<select class="selectpicker" name="customfield_filters[]" multiple>
-										<?php foreach ($required as $key => $value) : ?>
-											<?php if (in_array(strtolower(str_replace("-", "_", str_replace(" ", "_", trim($value)))), $filter_data)) : ?>
-												<?php $filter_selected = 'selected=""'; ?>
-											<?php else : ?>
-												<?php $filter_selected = ''; ?>
-											<?php endif ?>
-											<option <?= $filter_selected; ?> value="<?= strtolower(str_replace("-", "_", str_replace(" ", "_", trim($value)))); ?>"><?= $value ?>
-											</option>
-										<?php endforeach ?>
-									</select>
-								<?php else : ?>
-									<select class="selectpicker" name="customfield_filters[]" multiple>
-										<?php foreach ($required as $key => $value) : ?>
-											<option value="<?= strtolower(str_replace("-", "_", str_replace(" ", "_", trim($value)))); ?>"><?= $value ?>
-											</option>
-										<?php endforeach ?>
-									</select>
-								<?php endif ?>
-							</div>
-							<span class="error"><?= form_error('customfield_filters') ?></span>
-						</div>
-					</div>
-
-					<div class="col-md-4 col-sm-12">
-						<div class="form-group">
-							<div class="fg-line">
-								<label>Set Show <small>(Fields used for Searching)</small></label>
-								<?php if ($resultList[0]->default == 'yes') : ?>
-									<?php $shows_data = array_values($shows) ?>
-									<select class="selectpicker" name="customfield_show[]" multiple>
-										<?php foreach ($all_fields as $key => $value) : ?>
-											<?php if (in_array(strtolower(str_replace("-", "_", str_replace(" ", "_", trim($value)))), $shows_data)) : ?>
-												<?php $show_selected = 'selected=""'; ?>
-											<?php else : ?>
-												<?php $show_selected = ''; ?>
-											<?php endif ?>
-											<option <?= $show_selected; ?> value="<?= strtolower(str_replace("-", "_", str_replace(" ", "_", trim($value)))); ?>"><?= $value ?>
-											</option>
-										<?php endforeach ?>
-									</select>
-								<?php else : ?>
-									<select class="selectpicker" name="customfield_show[]" multiple>
-										<?php foreach ($all_fields as $key => $value) : ?>
-											<option value="<?= strtolower(str_replace("-", "_", str_replace(" ", "_", trim($value)))); ?>"><?= $value ?>
-											</option>
-										<?php endforeach ?>
-									</select>
-								<?php endif ?>
-							</div>
-							<span class="error"><?= form_error('customfield_show') ?></span>
+							<p><strong>Table Name</strong> : <span style="color:#0a10f0;font-size:13px"><?= $this->plural->pluralize($resultList[0]->title); ?></span></p>
 						</div>
 					</div>
 				</div>
-				<div class="row">
-					<?php foreach ($required as $key => $value) : ?>
-						<?php if (!is_null($value) && !empty($value)) : ?>
-							<div class="col-md-4 col-sm-12 required" id="required">
-								<div class="form-group">
-									<div class="fg-line">
-										<label>Required <small>(Required Fields)</small><i class="fa fa-asterisk"></i></label>
-										<input type="text" class="form-control" name="customfield_required[]" id="" autocomplete="off" value="<?= stripcslashes($value); ?>">
-									</div>
-									<span class="error"><?= form_error('customfield_required') ?></span>
-								</div>
-							</div>
-						<?php endif ?>
-					<?php endforeach ?>
 
-					<?php if (!empty($optional) || is_null($optional)) : ?>
-						<?php foreach ($optional as $key => $value) : ?>
-							<?php if (!is_null($value) && !empty($value)) : ?>
-								<div class="col-md-4 col-sm-12 optional" id="optional">
+				<?php $inputs = json_decode($resultList[0]->inputs, True); ?>
+				<?php $filters = json_decode($resultList[0]->filters, True); ?>
+				<?php $keys = json_decode($resultList[0]->keys, True); ?>
+
+				<!-- Fields -->
+				<div class="row">
+					<div class="field_box_area">
+						<?php if (is_array($inputs)) : ?>
+							<?php $counter = 1; ?>
+							<?php foreach ($inputs as $key => $value) : ?>
+								<div class="col-md-3 col-sm-12 field-key" num="<?= $counter; ?>">
 									<div class="form-group">
 										<div class="fg-line">
-											<label>Optional <small>(Optional Fields)</small></label>
-											<input type="text" class="form-control" name="customfield_optional[]" id="" autocomplete="off" value="<?= stripcslashes($value); ?>">
+											<label>
+												Key <small>(Unique Name)</small>
+
+												<a onclick="removeField(this.getAttribute('action'))" action="<?= $counter; ?>" class="btn btn-sm btn-danger field-action">
+													<i class="fa fa-trash"></i>
+												</a>
+												<?php
+												$clean = preg_replace("/[^ \w-]/", "", trim($value));
+												$clean_input = preg_replace('/-+/', '-', $clean);
+
+												// Replace - & space with _
+												$filter_value = strtolower(str_replace("-", "_", str_replace(" ", "_", trim($clean_input))));
+												?>
+												<?php $checked = (in_array($filter_value, $filters)) ? ' checked ' : ' '; ?>
+												<input <?= $checked; ?> type="checkbox" name="filter_<?= $counter; ?>" value="<?= $counter; ?>"><i class="input-helper"></i>Filter
+											</label>
+											<input type="text" class="form-control" name="customfield_inputs[]" autocomplete="off" value="<?= stripcslashes($value); ?>" required>
 										</div>
-										<span class="error"><?= form_error('customfield_optional') ?></span>
+										<p style="color:#0a10f0;font-size:11px"><?= $filter_value; ?></p>
 									</div>
 								</div>
-							<?php endif ?>
-						<?php endforeach ?>
-					<?php else : ?>
-						<div class="col-md-4 col-sm-12 optional" id="optional">
-							<div class="form-group">
-								<div class="fg-line">
-									<label>Optional <small>(Optional Fields)</small></label>
-									<input type="text" class="form-control" name="customfield_optional[]" id="" autocomplete="off" value="<?= set_value('customfield_optional'); ?>">
-								</div>
-								<span class="error"><?= form_error('customfield_optional') ?></span>
-							</div>
-						</div>
-					<?php endif ?>
+								<?php $counter++; ?>
+							<?php endforeach ?>
+						<?php endif ?>
+					</div>
 				</div>
+
 				<div class="row">
-					<div class="col-md-4 col-sm-12" style="">
+					<div class="col-md-4 col-sm-12">
 						<div class="form-group">
-							<button type="button" onclick="duplicateData('required')" class="btn btn-success btn-xs waves-effect">
-								Add Required Fields +
+							<button type="button" onclick="addField()" class="btn btn-success btn-xs waves-effect">
+								Add Field +
 							</button>
 
-							<button type="button" onclick="removeData('required')" class="btn btn-danger btn-xs waves-effect">
-								Remove Required Fields -
+							<button type="button" onclick="removeField()" class="btn btn-danger btn-xs waves-effect">
+								Remove Field -
 							</button>
 						</div>
 					</div>
-					<div class="col-md-4 col-sm-12" style="">
-						<div class="form-group">
-							<button type="button" onclick="duplicateData('optional')" class="btn btn-success btn-xs waves-effect">
-								Add Optional Fields +
-							</button>
-							<button type="button" onclick="removeData('optional')" class="btn btn-danger btn-xs waves-effect">
-								Remove Optional Fields -
-							</button>
-						</div>
-					</div>
-					<div class="col-md-4 col-sm-12">
+
+					<div class="col-md-8 col-sm-12">
 						<div class="form-group">
 							<button type="submit" class="btn btn-primary btn-lg waves-effect flt-right brd-20">Update</button>
 						</div>
 					</div>
 				</div>
+
 				<?= form_close(); ?>
 			</div>
 		</div>

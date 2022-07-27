@@ -1,6 +1,5 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
-
 class CoreLoad extends CI_Model
 {
 
@@ -22,6 +21,7 @@ class CoreLoad extends CI_Model
 		//Models
 		$this->load->model('CoreField');
 		$this->load->model('CoreCrud');
+		$this->load->model('CoreTrigger');
 
 		// Your own constructor code 
 
@@ -38,9 +38,9 @@ class CoreLoad extends CI_Model
 	{
 
 		//Loading Core CMS Version
-		$data['version'] = '5.02';
+		$data['version'] = '5.31';
 		$data['copyright_footer_1'] = "v" . $data['version'];
-		$data['copyright_footer_2'] = "Published 28-June-2022";
+		$data['copyright_footer_2'] = "Published 27-July-2022";
 
 		//Values Assets
 		$data['assets'] = $this->CoreCrud->selectSingleValue('settings', 'value', array('title' => 'assets', 'flg' => 1));
@@ -258,7 +258,7 @@ class CoreLoad extends CI_Model
 	{
 
 		// CookieName
-		$cookie_name = ((method_exists('CoreField', 'setCookie'))) ? $this->CoreField->setCookie('name') : 'logged';
+		$cookie_name = ((method_exists('CoreTrigger', 'setCookie'))) ? $this->CoreTrigger->setCookie('name') : 'logged';
 
 		// Check Cookie
 		$cookie_value = $this->cookie($cookie_name);
@@ -402,7 +402,7 @@ class CoreLoad extends CI_Model
 
 		// CookieName
 		if ($name == 'logged') {
-			$cookie_name = ((method_exists('CoreField', 'setCookie'))) ? $this->CoreField->setCookie('name') : 'logged';
+			$cookie_name = ((method_exists('CoreTrigger', 'setCookie'))) ? $this->CoreTrigger->setCookie('name') : 'logged';
 			$name = (!is_null($cookie_name) && $cookie_name != false) ? $cookie_name : $name;
 		}
 

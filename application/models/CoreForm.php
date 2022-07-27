@@ -256,7 +256,7 @@ class CoreForm extends CI_Model
 		$customFieldTable = $this->plural->pluralize('customfields');
 
 		//Columns
-		$columns = array('title as title,filters as filters,show as show,default as default');
+		$columns = array('title as title,filters as filters,inputs as inputs,keys as keys,default as default');
 
 		//Check Field Type
 		$whereTYPE = (is_numeric($inputID)) ? 'id' : 'title';
@@ -267,16 +267,16 @@ class CoreForm extends CI_Model
 
 		$field_title = $fieldList[0]->title; //Title Title
 		$field_filter = json_decode($fieldList[0]->filters, True); //FIlter List
-		$field_show = json_decode($fieldList[0]->show, True); //Show
+		$field_key = json_decode($fieldList[0]->keys, True); //All Inputs
 		$field_default = $fieldList[0]->default; //Default
 
 		// Values For Show
 		$newShowDataValue = array();
-		if (is_array($field_show)) {
+		if (is_array($field_key)) {
 			// Loop $field_show
-			foreach ($field_show as $key => $value) {
+			foreach ($field_key as $key => $value) {
 				$value = trim($value);
-				$key_value = "unescaped_" . $value;
+				$key_value = "plain_" . $value;
 				if (array_key_exists($key_value, $formData) && !array_key_exists($value, $newShowDataValue)) {
 					$newShowDataValue[$value] = $formData[$key_value];
 				} else {
@@ -289,7 +289,7 @@ class CoreForm extends CI_Model
 		$formData = $this->CoreCrud->unsetData($formData, array('id'));
 		// Remove unescaped
 		foreach ($formData as $key => $value) {
-			$key_name = "unescaped_" . $key;
+			$key_name = "plain_" . $key;
 			if (array_key_exists($key_name, $formData)) {
 				$formData = $this->CoreCrud->unsetData($formData, array($key_name)); //Unset Data
 			}
@@ -390,17 +390,18 @@ class CoreForm extends CI_Model
 		$where = array($whereTYPE => $inputID);
 
 		//Table Select & Clause
-		$columns = array('id as id,title as title,data as data,show as show,details as details');
+		$columns = array('id as id,title as title,data as data,plain as show,details as details');
+
 		$resultList = $this->CoreCrud->selectCRUD($Module, $where, $columns);
 
 		//Table Select & Clause
-		$columns = array('id as id,required as required,optional as optional,filters as filters,show as show,default as default');
+		$columns = array('id as id,filters as filters,keys as keys,default as default');
 		$where = array('title' => $resultList[0]->title);
 		$fieldList = $this->CoreCrud->selectCRUD($customFieldTable, $where, $columns, 'like');
 
 		//FIlter List
 		$field_filter = json_decode($fieldList[0]->filters, True); //FIlter List
-		$field_show = json_decode($fieldList[0]->show, True); //Show
+		$field_key = json_decode($fieldList[0]->keys, True); //Show
 		$field_default = $fieldList[0]->default; //Default
 
 		//Get Current Data
@@ -415,11 +416,11 @@ class CoreForm extends CI_Model
 
 		// Values For Show
 		$newShowDataValue = array();
-		if (is_array($field_show)) {
+		if (is_array($field_key)) {
 			// Loop $field_show
-			foreach ($field_show as $key => $value) {
+			foreach ($field_key as $key => $value) {
 				$value = trim($value);
-				$key_value = "unescaped_" . $value;
+				$key_value = "plain_" . $value;
 				if (array_key_exists($key_value, $updateData) && !array_key_exists($value, $newShowDataValue)) {
 					$newShowDataValue[$value] = $updateData[$key_value];
 				} else {
@@ -432,7 +433,7 @@ class CoreForm extends CI_Model
 		$updateData = $this->CoreCrud->unsetData($updateData, array('id'));
 		// Remove unesacped
 		foreach ($updateData as $key => $value) {
-			$key_name = "unescaped_" . $key;
+			$key_name = "plain_" . $key;
 			if (array_key_exists($key_name, $updateData)) {
 				$updateData = $this->CoreCrud->unsetData($updateData, array($key_name)); //Unset Data
 			}
@@ -681,7 +682,7 @@ class CoreForm extends CI_Model
 	 * 3: Permission By default is 0755
 	 *
 	 * NB:
-	 * You can override this by creating function dirCreate() in CoreField
+	 * You can override this by creating function dirCreate() in CoreTrigger
 	 * -> This will return false if director do not exist
 	 * -> Also you can overide permission form 0755
 	 *
@@ -691,16 +692,16 @@ class CoreForm extends CI_Model
 	public function checkDir($path, $create = true, $defaultpath = '../assets/media', $permission = 0755, $recursive = true)
 	{
 		//load ModelField
-		$this->load->model('CoreField');
+		$this->load->model('CoreTrigger');
 
 		//Folder Path
 		$pathFolder = realpath(APPPATH . $defaultpath); //Real Path
 		$newDirectory = $pathFolder . $path; // New Path | New APPATH Directory
 
 		//Check Additonal Config
-		if (method_exists('CoreField', 'changeDirData')) {
+		if (method_exists('CoreTrigger', 'changeDirData')) {
 			//Config
-			$configDir = $this->CoreField->changeDirData($newDirectory, $permission, $recursive);
+			$configDir = $this->CoreTrigger->changeDirData($newDirectory, $permission, $recursive);
 			$newDirectory = $configDir['dir']; // New Path | New APPATH Directory
 			$permission = $configDir['permission']; //Deafault
 			$recursive = $configDir['recursive']; //Deafult
@@ -733,8 +734,8 @@ class CoreForm extends CI_Model
 
 		//load ModelField
 		if (is_null($type)) {
-			$this->load->model('CoreField');
-			$setChildTree = ((method_exists('CoreField', 'setChildTree'))) ? $this->CoreField->setChildTree() : $setChildTree;
+			$this->load->model('CoreTrigger');
+			$setChildTree = ((method_exists('CoreTrigger', 'setChildTree'))) ? $this->CoreTrigger->setChildTree() : $setChildTree;
 
 			//Set Type
 			$type = (!$setChildTree) ? 'category' : $setChildTree;
@@ -812,8 +813,8 @@ class CoreForm extends CI_Model
 		$settings['charset'] = $this->CoreCrud->selectSingleValue('settings', 'value', array('title' => 'charset'));
 
 		//load ModelField
-		$this->load->model('CoreField');
-		$emailConfig = ((method_exists('CoreField', 'emailConfig'))) ? $this->CoreField->emailConfig() : false;
+		$this->load->model('CoreTrigger');
+		$emailConfig = ((method_exists('CoreTrigger', 'emailConfig'))) ? $this->CoreTrigger->emailConfig() : false;
 
 		//Configs
 		if ($emailConfig) {
@@ -1002,7 +1003,7 @@ class CoreForm extends CI_Model
 	{
 		// Load Settings
 		$url = (is_array($url)) ? $url[0] : $url;
-		$urlsettings = ((method_exists('CoreField', 'urlSettings'))) ? $this->CoreField->urlSettings() : false;
+		$urlsettings = ((method_exists('CoreTrigger', 'urlSettings'))) ? $this->CoreTrigger->urlSettings() : false;
 		if ($urlsettings) {
 			$site_url = $this->CoreCrud->selectSingleValue('settings', 'value', array('title' => 'site_url', 'flg' => 1));
 			$last_url = substr($site_url, -1);
@@ -1047,7 +1048,7 @@ class CoreForm extends CI_Model
 			{
 				// Get Data
 				$CoreCrud = new CoreCrud;
-				$CoreField = new CoreField;
+				$CoreTrigger = new CoreTrigger;
 				$CI = &get_instance();
 
 				// Data
@@ -1056,7 +1057,7 @@ class CoreForm extends CI_Model
 
 				// Match
 				$match = $CoreCrud->selectSingleValue('settings', 'value', array('title' => 'string_variable', 'flg' => 1));
-				$show_variable = ((method_exists('CoreField', 'showGetVaribale'))) ? $CoreField->showGetVaribale() : true;
+				$show_variable = ((method_exists('CoreTrigger', 'showGetVaribale'))) ? $CoreTrigger->showGetVaribale() : true;
 				if ($match) {
 
 					// Find Replace
@@ -1277,8 +1278,8 @@ class CoreForm extends CI_Model
 			if (is_null($title) || empty($title)) {
 				//load ModelField
 				$customHelper = $filter . '_urlhelper';
-				$this->load->model('CoreField');
-				$title = ((method_exists('CoreField', $customHelper))) ? $this->CoreField->$customHelper($id) : $title;
+				$this->load->model('CoreTrigger');
+				$title = ((method_exists('CoreTrigger', $customHelper))) ? $this->CoreTrigger->$customHelper($id) : $title;
 			}
 			// MetaTerm Type
 			$metaterm_type = $this->plural->singularize(strtolower(trim($filter)));
@@ -1292,8 +1293,8 @@ class CoreForm extends CI_Model
 			if (is_null($title) || empty($title)) {
 				//load ModelField
 				$customHelper = $filter . '_urlhelper';
-				$this->load->model('CoreField');
-				$title = ((method_exists('CoreField', $customHelper))) ? $this->CoreField->$customHelper($id) : $title;
+				$this->load->model('CoreTrigger');
+				$title = ((method_exists('CoreTrigger', $customHelper))) ? $this->CoreTrigger->$customHelper($id) : $title;
 			}
 			// MetaTerm Type
 			$metaterm_type = $this->plural->singularize(strtolower(trim($filter)));
@@ -1305,8 +1306,8 @@ class CoreForm extends CI_Model
 				//load ModelField
 				$helper = 'in' . ucfirst($filter);
 				$customeHelper = $helper . '_UrlHelper';
-				$this->load->model('CoreField');
-				$title = ((method_exists('CoreField', $customeHelper))) ? $this->CoreField->$customeHelper($id) : $title;
+				$this->load->model('CoreTrigger');
+				$title = ((method_exists('CoreTrigger', $customeHelper))) ? $this->CoreTrigger->$customeHelper($id) : $title;
 			}
 			// MetaTerm Type
 			$metaterm_type = $this->plural->singularize(strtolower(trim($filter)));
@@ -1322,8 +1323,8 @@ class CoreForm extends CI_Model
 			if (is_null($title) || empty($title)) {
 				//load ModelField
 				$customeHelper = $this->plural->singularize($table_name) . '_UrlHelper';
-				$this->load->model('CoreField');
-				$title = ((method_exists('CoreField', $customeHelper))) ? $this->CoreField->$customeHelper($id) : $title;
+				$this->load->model('CoreTrigger');
+				$title = ((method_exists('CoreTrigger', $customeHelper))) ? $this->CoreTrigger->$customeHelper($id) : $title;
 			}
 			// MetaTerm Type
 			$metaterm_type = $this->plural->singularize(strtolower(trim($module)));
