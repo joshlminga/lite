@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Jul 27, 2022 at 08:59 PM
+-- Generation Time: Jul 27, 2022 at 08:58 PM
 -- Server version: 5.7.32
 -- PHP Version: 7.4.12
 
@@ -38,6 +38,13 @@ CREATE TABLE `members` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
+-- Dumping data for table `members`
+--
+
+INSERT INTO `members` (`member_id`, `member_field`, `member_email`, `member_details`, `member_stamp`, `member_default`, `member_flg`) VALUES
+(1, 1, 'johndoe@core.com', '{\"member_email\":\"johndoe@core.com\",\"member_stamp\":\"2022-07-27 23:44:45\"}', '2022-07-27 20:44:45', 'yes', 1);
+
+--
 -- Indexes for dumped tables
 --
 
@@ -55,7 +62,7 @@ ALTER TABLE `members`
 -- AUTO_INCREMENT for table `members`
 --
 ALTER TABLE `members`
-  MODIFY `member_id` bigint(20) NOT NULL AUTO_INCREMENT;
+  MODIFY `member_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
