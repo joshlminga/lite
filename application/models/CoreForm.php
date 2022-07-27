@@ -278,9 +278,9 @@ class CoreForm extends CI_Model
 				$value = trim($value);
 				$key_value = "plain_" . $value;
 				if (array_key_exists($key_value, $formData) && !array_key_exists($value, $newShowDataValue)) {
-					$newShowDataValue[$value] = $formData[$key_value];
+					$newShowDataValue[$value] = strip_tags($formData[$key_value]);
 				} else {
-					$newShowDataValue[$value] = stripcslashes($formData[$value]);
+					$newShowDataValue[$value] = strip_tags(stripcslashes($formData[$value]));
 				}
 			}
 		}
@@ -422,9 +422,9 @@ class CoreForm extends CI_Model
 				$value = trim($value);
 				$key_value = "plain_" . $value;
 				if (array_key_exists($key_value, $updateData) && !array_key_exists($value, $newShowDataValue)) {
-					$newShowDataValue[$value] = $updateData[$key_value];
+					$newShowDataValue[$value] = strip_tags($updateData[$key_value]);
 				} else {
-					$newShowDataValue[$value] = stripcslashes($updateData[$value]);
+					$newShowDataValue[$value] = strip_tags(stripcslashes($updateData[$value]));
 				}
 			}
 		}
