@@ -97,3 +97,6 @@ $db['default'] = array(
 
 // API
 $db['api'] = array_merge($db['default'], ['db_debug' => FALSE]);
+// Migrate
+$db['migrate'] = array_merge($db['default'], ['database' => '']);
+

@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class Members extends CI_Controller
+class MigrateCMS extends CI_Controller
 {
 
 	/**
@@ -11,19 +11,19 @@ class Members extends CI_Controller
 	 */
 
 	private $Prefix = ''; //For Table Prefix
-	private $Module = 'field'; //Module
-	private $Folder = 'customfields'; //Set Default Folder For html files and Front End Use
-	private $SubFolder = '/member'; //Set Default Sub Folder For html files and Front End Use Start with /
+	private $Module = ''; //Module
+	private $Folder = 'extensions'; //Set Default Folder For html files and Front End Use
+	private $SubFolder = '/migrate'; //Set Default Sub Folder For html files and Front End Use Start with /
 
 	private $AllowedFile = null; //Set Default allowed file extension, remember you can pass this upon upload to override default allowed file type. Allowed File Extensions Separated by | also leave null to validate using jpg|jpeg|png|doc|docx|pdf|xls|txt change this on validation function at the bottom
 
-	private $Route = 'member'; //If you have different route Name to Module name State it here |This wont be pluralized
+	private $Route = 'migrate'; //If you have different route Name to Module name State it here |This wont be pluralized
 
-	private $New = 'member/new'; //New 
-	private $Save = 'member/save'; //Add New 
-	private $Edit = 'member/update'; //Update 
+	private $New = ''; //New 
+	private $Save = 'migrate/save'; //Add New 
+	private $Edit = ''; //Update 
 
-	private $ModuleName = 'Member Manager';
+	private $ModuleName = 'Migrate Manager';
 
 	/** Functions
 	 * -> __construct () = Load the most required operations E.g Class Module
@@ -42,6 +42,8 @@ class Members extends CI_Controller
 		//Models
 		$this->load->model('CoreCrud');
 		$this->load->model('CoreForm');
+		$this->load->model('CMSMigrate', 'migrate');
+
 
 		// Your own constructor code
 
@@ -79,14 +81,13 @@ class Members extends CI_Controller
 		//Time Zone
 		date_default_timezone_set('Africa/Nairobi');
 		$data['str_to_time'] = strtotime(date('Y-m-d, H:i:s'));
-		$data['Module'] = $this->plural->pluralize($this->Module); //Module Show
 		$data['routeURL'] = (is_null($this->Route)) ? $this->plural->pluralize($this->Folder) : $this->Route;
-
-		//Load Inheritance
-		$data['gender'] = $this->CoreCrud->selectInheritanceItem(array('flg' => 1, 'type' => 'gender'), 'id,title', array('title' => 'ASC'));
 
 		//Module Name - For Forms Title
 		$data['ModuleName'] = $this->plural->pluralize($this->ModuleName);
+		$data['action'] = '';
+		$data['moduleList'] = ['metaterms', 'settings', 'levels', 'users', 'inheritances', 'autofields', 'blogs', 'pages', 'customfields', 'fields'];
+
 
 		//Form Submit URLs
 		$data['form_new'] = $this->New;
@@ -125,7 +126,7 @@ class Members extends CI_Controller
 
 	/**
 	 *
-	 * This is the first function to be accessed when  open this controller
+	 * This is the default function to be accessed when  open this controller
 	 * In here we can call the load function and pass data to passed as an array inorder to manupulate it inside passed function
 	 * 	* Set your Page name/ID here N:B Page ID can be a number if you wish to access other values linked to the page opened E.g Meta Data
 	 * 	* You can also set Page ID as actual pageName found in your view N:B do not put .php E.g home.php it should just be 'home'
@@ -135,23 +136,24 @@ class Members extends CI_Controller
 	 * 	However we advise to use custom notification message while opening index utilize another function called open
 	 * 
 	 */
-	public function index($notifyMessage = null)
+	public function migrate($page)
 	{
 		//Pluralize Module
-		$module = $this->plural->pluralize($this->Module);
-		$fieldName = $this->plural->singularize($this->Route);
+
+		// Table
+		$table = $page;
+		$page = ($table == 'fieldgroup') ? 'field' : $this->plural->singularize($table);
 
 		//Model Query
-		$data = $this->load($this->plural->pluralize($this->Folder) . $this->SubFolder . "/list");
-
-		//Table Select & Clause
-		$columns = array('id as id,data as name,data as email,data as gender,flg as status');
-		$where = array('title' => $fieldName);
-		$data['dataList'] = $this->CoreCrud->selectCRUD($module, $where, $columns);
+		$data = $this->load($this->plural->pluralize($this->Folder) . $this->SubFolder . "/$page");
+		// Migrate
+		$data = $this->migrate->load($data, $table);
+		$data['action'] = $this->plural->singularize($table);
+		$data['ModuleName'] = ucwords($table) . ' Migration';
 
 		//Notification
 		$notify = $this->CoreNotify->notify();
-		$data['notify'] = $this->CoreNotify->$notify($notifyMessage);
+		$data['notify'] = $this->CoreNotify->$notify();
 
 		//Open Page
 		$this->pages($data);
@@ -173,21 +175,9 @@ class Members extends CI_Controller
 	public function open($pageID, $message = null, $layout = 'extend')
 	{
 
-		//Pluralize Module
-		$module = $this->plural->pluralize($this->Module);
-
 		//Model Query
 		$pageID = (is_numeric($pageID)) ? $pageID : $this->plural->pluralize($this->Folder) . $this->SubFolder . "/" . $pageID;
 		$data = $this->load($pageID);
-
-		//Column Type
-		$fieldName = $this->plural->singularize($this->Route);
-		$customFieldTable = $this->plural->pluralize('customfields');
-
-		//Table Select & Clause
-		$columns = array('id as id,title as title,inputs as inputs,filters as filters,default as default');
-		$where = array('title' => $fieldName);
-		$data['fieldList'] = $this->CoreCrud->selectCRUD($customFieldTable, $where, $columns, 'like');
 
 		//Notification
 		$notify = $this->CoreNotify->notify();
@@ -195,74 +185,6 @@ class Members extends CI_Controller
 
 		//Open Page
 		$this->pages($data, $layout);
-	}
-	/**
-	 *
-	 *  This function is to be called when you want to pass the Edit form
-	 * In here we can call the load function and pass data to passed as an array inorder to manupulate it inside passed function
-	 * 	* Set your Page name/ID here N:B Page ID can be a number if you wish to access other values linked to the page opened E.g Meta Data
-	 * 	* You can also set Page ID as actual pageName found in your view N:B do not put .php E.g home.php it should just be 'home'
-	 * 	* Set Page template 
-	 * 	* Set Notification here
-	 * 	Custom notification message can be set/passed via $message
-	 * 	PageName / ID can be passed via $pageID
-	 * 	Page layout can be passed via $layout
-	 *
-	 * 	For inputTYPE and inputID
-	 *
-	 * 	--> inputTYPE
-	 * 	  This is the name of the column you wish to select, most of the time is coumn name 
-	 * 	  Remember to Pass ID or Pass data via GET request using variable inputTYPE 
-	 * 	  
-	 * 	--> inputID
-	 * 	  This is the value of the column you wish to match
-	 * 	  Remember to Pass Value or Pass data via GET request using variable inputID 
-	 *
-	 *  If either inputTYPE or inputID is not passed error message will be generated
-	 * 
-	 */
-	public function edit($pageID, $inputTYPE = 'id', $inputID = null, $message = null, $layout = 'extend')
-	{
-		//Pluralize Module
-		$module = $this->plural->pluralize($this->Module);
-		$fieldTable = $this->plural->pluralize($this->Route);
-		$customFieldTable = $this->plural->pluralize('customfields');
-
-		//Model Query
-		$pageID = (is_numeric($pageID)) ? $pageID : $this->plural->pluralize($this->Folder) . $this->SubFolder . "/" . $pageID;
-		$data = $this->load($pageID);
-
-		$inputTYPE = (is_null($inputTYPE)) ? $this->CoreLoad->input('inputTYPE', 'GET') : $inputTYPE; //Access Value
-
-		$inputID = (is_null($inputID)) ? $this->CoreLoad->input('inputID', 'GET') : $inputID; //Access Value
-
-
-		if (!is_null($inputTYPE) || !is_null($inputID)) {
-			//Table Select & Clause
-			$where = array($inputTYPE => $inputID);
-			$columns = array('id as id,title as title,data as data');
-			$resultList = $this->CoreCrud->selectCRUD($module, $where, $columns);
-
-			$data['resultList'] = $resultList;
-			//Table Select & Clause
-			$columns = array('id as id,inputs as inputs,filters as filters,keys as keys,default as default');
-			$where = array('title' => $resultList[0]->title);
-			$data['fieldList'] = $this->CoreCrud->selectCRUD($customFieldTable, $where, $columns, 'like');
-
-			//Notification
-			$notify = $this->CoreNotify->notify();
-			$data['notify'] = $this->CoreNotify->$notify($message);
-
-			//Open Page
-			$this->pages($data, $layout);
-		} else {
-
-			//Notification
-			$this->session->set_flashdata('notification', 'error');
-
-			//Error Edit | Load the Manage Page
-			$this->open('list', $message = 'System could not find the detail ID');
-		}
 	}
 
 	/**
@@ -278,140 +200,65 @@ class Members extends CI_Controller
 	public function valid($type)
 	{
 
-		//Pluralize Module
-		$module = $this->plural->pluralize($this->Module);
-		$routeURL = (is_null($this->Route)) ? $module : $this->Route;
-
 		// Image Data
 		$allowed_files = $this->AllowedFile; //Set Allowed Files
 		$upoadDirectory = "../assets/media"; //Custom Upload Location
 
 		//Check Validation
-		if ($type == 'save') {
+		if ($type == 'bulk') {
 
-			$formData = $this->CoreLoad->input(); //Input Data
-
-			$this->form_validation->set_rules('name', 'Full Name', 'trim|required|min_length[5]|max_length[50]');
-			$this->form_validation->set_rules('email', 'Email', 'trim|required|min_length[5]|max_length[50]|valid_email');
-			$this->form_validation->set_rules("mobile", "Phone Number", "required|trim|min_length[10]|max_length[15]|callback_mobilecheck");
-			$this->form_validation->set_rules("gender", "Gender", "trim|max_length[8]");
-
-			//Form Validation
-			if ($this->form_validation->run() == TRUE) {
-
-				//Input ID
-				$inputID = $this->CoreLoad->input('id');
-
-				// Plain Data
-				$formData['plain_gender'] = $this->CoreCrud->selectSingleValue('inheritances', 'title', ['id' => $formData['gender']]);
-
-				//Unset Data
-				$formData = $this->CoreCrud->unsetData($formData, array('id'));
-				// Save Data
-				$savedData = $this->CoreForm->saveFormField($formData, $inputID);
-
-				if ($this->create($savedData)) {
-					$this->session->set_flashdata('notification', 'success'); //Notification Type
-					$message = 'Data was saved successful'; //Notification Message				
-					redirect($this->New, 'refresh'); //Redirect to Page
-				} else {
-					$this->session->set_flashdata('notification', 'error'); //Notification Type
-					$this->open('add'); //Open Page
-				}
-			} else {
-				$this->session->set_flashdata('notification', 'error'); //Notification Type
-				$message = 'Please check the fields, and try again'; //Notification Message				
-				$this->open('add', $message); //Open Page
-			}
-		} elseif ($type == 'bulk') {
-
-			$action = $this->input->get('action'); //Get Action
+			$manage = $this->input->get('action'); //Get Action
 			$selectedData = json_decode($this->input->get('inputID'), true); //Get Selected Data
-			$column_id = strtolower($this->CoreForm->get_column_name($this->Module, 'id')); //column name Reference column
-			$column_flg = strtolower($this->CoreForm->get_column_name($this->Module, 'flg')); //Column name of Updated Input
-
 			//Check If Selection has Value
 			if (!empty($selectedData)) {
 				//Check Action
-				if (strtolower($action) == 'edit') {
-					$this->session->set_flashdata('notification', 'notify'); //Notification Type
-					$this->edit('edit', 'id', $selectedData[0]); //Open Page
-				} else {
-					for ($i = 0; $i < count($selectedData); $i++) { //Loop through all submitted elements
-						$value_id = $selectedData[$i]; //Select Value To Update with
-						if (strtolower($action) == 'activate') { //Item/Data Activation
-							$updatedData = $this->CoreForm->updateFormField(array('flg' => 1), $value_id);
-							$updatedData[$column_flg] = 1;
-							$this->update($updatedData, $value_id); //Call Update Function
-						} elseif (strtolower($action) == 'deactivate') { //Item/Data Deactivation
-							$updatedData = $this->CoreForm->updateFormField(array('flg' => 0), $value_id);
-							$updatedData[$column_flg] = 1;
-							$this->update($updatedData, $value_id); //Call Update Function
-						} elseif (strtolower($action) == 'delete') { //Item/Data Deletion
-							$this->delete($value_id); //Call Delete Function
-						} else {
-							$this->session->set_flashdata('notification', 'error'); //Notification Type
-							$message = 'Wrong data sequence received'; //Notification Message				
-							$this->index($message); //Open Page
-						}
-					}
-					$this->session->set_flashdata('notification', 'success'); //Notification Type
-					redirect($routeURL, 'refresh'); //Redirect Index Module
+				for ($i = 0; $i < count($selectedData); $i++) { //Loop through all submitted elements
+					$value_id = $selectedData[$i]; //Select Value To Update with
+					// Migrate Data
+					$this->migrate->migrate($manage, $value_id);
 				}
+				$this->session->set_flashdata('notification', 'success'); //Notification Type
+				redirect("migrate/$manage", 'refresh'); //Redirect Index Module
 			} else {
 				$this->session->set_flashdata('notification', 'error'); //Notification Type
 				$message = 'Please make a selection first, and try again'; //Notification Message				
-				$this->index($message); //Open Page
+				$this->migrate($manage); //Open Page
 			}
-		} elseif ($type == 'update') {
+		} elseif ($type == 'all') {
+			$formData = $this->CoreLoad->input(); //Input Data
 
-			$updateData = $this->CoreLoad->input(); //Input Data		
-			//Input ID
-			$inputID = $this->CoreLoad->input('id');
-
-			$this->form_validation->set_rules('name', 'Full Name', 'trim|required|min_length[5]|max_length[50]');
-			$this->form_validation->set_rules('email', 'Email', 'trim|required|min_length[5]|max_length[50]|valid_email');
-			$this->form_validation->set_rules("mobile", "Phone Number", "required|trim|min_length[10]|max_length[15]|callback_mobilecheck");
-			$this->form_validation->set_rules("gender", "Gender", "trim|max_length[8]");
-
+			$this->form_validation->set_rules("migrate", "", "trim|max_length[100]");
 			//Form Validation
 			if ($this->form_validation->run() == TRUE) {
-
-				// Plain Data
-				$updateData['plain_gender'] = $this->CoreCrud->selectSingleValue('inheritances', 'title', ['id' => $updateData['gender']]);
-
-				// Upload Data
-				$updatedData = $this->CoreForm->updateFormField($updateData, $inputID);
-
-				//Update Table
-				if ($this->update($updatedData, $inputID)) {
-					$this->session->set_flashdata('notification', 'success'); //Notification Type
-					$message = 'Data was updated successful'; //Notification Message				
-					$this->edit('edit', 'id', $inputID, $message); //Open Page
-				} else {
-					$this->session->set_flashdata('notification', 'error'); //Notification Type
-					$message = "Data wasn't updated or you did not make any new updates"; //Notification Message				
-					$this->edit('edit', 'id', $inputID, $message); //Open Page
-				}
-			} else {
-				$this->session->set_flashdata('notification', 'error'); //Notification Type
-				$message = 'Please check the fields, and try again'; //Notification Message				
-				$this->edit('edit', 'id', $inputID, $message); //Open Page
-			}
-		} elseif ($type == 'delete') {
-			$value_id = $this->input->get('inputID'); //Get Selected Data
-			$column_id = strtolower($this->CoreForm->get_column_name($this->Module, 'id'));
-
-			if ($this->delete($value_id) == TRUE) { //Call Delete Function
 				$this->session->set_flashdata('notification', 'success'); //Notification Type
-				redirect($routeURL, 'refresh'); //Redirect Index Module
+				$message = 'Migration Completed Successful'; //Notification Message				
+
+				$migrate = $formData['migrate']; //Get Migrate Value
+				//Check Action
+				for ($i = 0; $i < count($migrate); $i++) { //Loop through all submitted elements
+					$manage = $migrate[$i]; //Select Value To Update with
+					// Migrate Data
+					$status = $this->migrate->migrateAll($manage);
+					if (!$status) {
+						$this->session->set_flashdata('notification', 'error'); //Notification Type
+						$message = 'Migration Failed Check Your Database'; //Notification Message				
+						break;
+					}
+				}
+
+				$this->session->set_flashdata('notification', 'success'); //Notification Type
+				$message = 'Migration Completed Successful'; //Notification Message				
+				$this->open('manage', $message); //Open Page
+
 			} else {
+
 				$this->session->set_flashdata('notification', 'error'); //Notification Type
-				redirect($routeURL, 'refresh'); //Redirect Index Module
+				$message = 'Please select atleast one module, and try again'; //Notification Message				
+				$this->open('manage', $message); //Open Page
 			}
 		} else {
 			$this->session->set_flashdata('notification', 'notify'); //Notification Type
-			redirect($routeURL, 'refresh'); //Redirect Index Module
+			redirect($this->Route, 'refresh'); //Redirect Index Module
 		}
 	}
 
@@ -434,7 +281,7 @@ class Members extends CI_Controller
 			$savedData = $this->CoreCrud->saveField($insertData);
 			if ($this->CoreCrud->fieldStatus($savedData)) {
 
-				return $savedData['id']; //Data Inserted
+				return true; //Data Inserted
 			} else {
 
 				return false; //Data Insert Failed
@@ -465,28 +312,6 @@ class Members extends CI_Controller
 			} else {
 
 				return false; //Data Insert Failed
-			}
-		}
-	}
-
-	/**
-	 * The function is used to delete data in the table
-	 * First parameter is the values to be passed in where clause N:B the data needed to be in an associative array form E.g $data = array('column' => 'value');
-	 * 
-	 */
-	public function delete($fieldValue)
-	{
-
-		if ($this->CoreLoad->auth($this->Route)) { //Authentication
-
-			//Deleted Data In The Table
-			$deleteData = $this->CoreCrud->deleteField($fieldValue);
-			if ($this->CoreCrud->fieldStatus($deleteData)) {
-
-				return true; //Data Deleted
-			} else {
-
-				return false; //Data Deletion Failed
 			}
 		}
 	}

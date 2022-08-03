@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Jul 27, 2022 at 08:59 PM
+-- Generation Time: Aug 03, 2022 at 03:55 PM
 -- Server version: 5.7.32
 -- PHP Version: 7.4.12
 
@@ -309,8 +309,8 @@ INSERT INTO `settings` (`setting_id`, `setting_title`, `setting_value`, `setting
 (37, 'child_theme', '', '2019-06-08 15:30:26', 'theme', 1),
 (38, 'child_theme_dir', '', '2019-06-08 15:30:29', 'theme', 1),
 (39, 'child_theme_assets', '', '2019-06-08 15:30:34', 'theme', 1),
-(40, 'site_url', 'http://localhost:8888/CoreCMS/CoreLite/', '2021-07-22 06:28:40', 'yes', 1),
-(41, 'api_url', 'http://localhost:8888/CoreCMS/CoreLite/', '2021-04-09 14:19:07', 'yes', 1),
+(40, 'site_url', 'http://localhost:8888/CoreCMS/CoreLite/', '2022-08-03 15:54:47', 'yes', 1),
+(41, 'api_url', 'http://localhost:8888/CoreCMS/CoreLite/', '2022-08-03 15:54:51', 'yes', 1),
 (42, 'string_variable', '#\\#{\\[(.*?)\\]\\}#', '2020-02-05 05:55:11', 'keys', 1),
 (43, 'session_key', '4OaXTFypxh', '2022-06-16 15:36:31', 'keys', 1),
 (44, 'token_name', 'Token', '2021-07-22 06:01:55', 'keys', 1),
@@ -322,8 +322,9 @@ INSERT INTO `settings` (`setting_id`, `setting_title`, `setting_value`, `setting
 (50, 'city', 'Nairobi', '2021-07-22 06:01:55', 'locale', 1),
 (51, 'country_code', '+254', '2021-07-22 06:01:55', 'locale', 1),
 (52, 'country_timezone', 'Africa/Nairobi', '2021-07-22 06:01:55', 'locale', 1),
-(53, 'field_menu', '{\"menu_path\":\"member/menu\",\"route\":{\"member\":\"Field/Members/index\",\"member/new\":\"Field/Members/open/add\", \"member/edit\":\"Field/Members/edit/edit\",\"member/save\":\"Field/Members/valid/save\",\"member/update\":\"Field/Members/valid/update\",\"member/delete\":\"Field/Members/valid/delete\", \"member/multiple\":\"Field/Members/valid/bulk\"}\r\n}', '2022-06-16 15:42:34', 'route', 1),
-(54, 'extension_menu', '{\"menu_path\":\"customer/menu\",\"route\":{\"customer\":\"Extension/Customers/index\",\"customer/new\":\"Extension/Customers/open/add\", \"customer/edit\":\"Extension/Customers/edit/edit\",\"customer/save\":\"Extension/Customers/valid/save\",\"customer/update\":\"Extension/Customers/valid/update\",\"customer/delete\":\"Extension/Customers/valid/delete\", \"customer/multiple\":\"Extension/Customers/valid/bulk\"}\r\n}', '2022-06-16 15:43:27', 'route', 1);
+(53, 'field_menu', '{\"menu_path\":\"member/menu\",\"route\":{\"member\":\"Field/Members/index\",\"member/new\":\"Field/Members/open/add\", \"member/edit\":\"Field/Members/edit/edit\",\"member/save\":\"Field/Members/valid/save\",\"member/update\":\"Field/Members/valid/update\",\"member/delete\":\"Field/Members/valid/delete\", \"member/multiple\":\"Field/Members/valid/bulk\"}\r\n}', '2022-08-03 15:55:17', 'route', 0),
+(54, 'extension_menu', '{\"menu_path\":\"customer/menu\",\"route\":{\"customer\":\"Extension/Customers/index\",\"customer/new\":\"Extension/Customers/open/add\", \"customer/edit\":\"Extension/Customers/edit/edit\",\"customer/save\":\"Extension/Customers/valid/save\",\"customer/update\":\"Extension/Customers/valid/update\",\"customer/delete\":\"Extension/Customers/valid/delete\", \"customer/multiple\":\"Extension/Customers/valid/bulk\"}\r\n}', '2022-08-03 15:55:21', 'route', 0),
+(55, 'extension_menu', '{\"menu_path\":\"migrate/menu\",\"route\":{\"migrate\":\"Extension/MigrateCMS/open/manage\",\"migrate/save\":\"Extension/MigrateCMS/valid/all\", \"migrate/multiple\":\"Extension/MigrateCMS/valid/bulk\", \"migrate/(:any)\":\"Extension/MigrateCMS/migrate/$1\"}\r\n}', '2022-06-16 15:43:27', 'migration', 0);
 
 -- --------------------------------------------------------
 
@@ -502,7 +503,7 @@ ALTER TABLE `pages`
 -- AUTO_INCREMENT for table `settings`
 --
 ALTER TABLE `settings`
-  MODIFY `setting_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
+  MODIFY `setting_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
 
 --
 -- AUTO_INCREMENT for table `tokens`

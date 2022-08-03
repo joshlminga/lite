@@ -270,6 +270,11 @@ class CoreForm extends CI_Model
 		$field_key = json_decode($fieldList[0]->keys, True); //All Inputs
 		$field_default = $fieldList[0]->default; //Default
 
+		// Trigger For Plain Helper
+		$this->load->model('CoreTrigger');
+		$plainHelper = $this->plural->singularize($field_title) . '_fieldPlain';
+		$formData = ((method_exists('CoreTrigger', $plainHelper))) ? $this->CoreTrigger->$plainHelper($formData) : $formData;
+
 		// Values For Plain
 		$newPlainDataValue = array();
 		if (is_array($field_key)) {
@@ -387,11 +392,12 @@ class CoreForm extends CI_Model
 		$resultList = $this->CoreCrud->selectCRUD($Module, $where, $columns);
 
 		//Table Select & Clause
-		$columns = array('id as id,filters as filters,keys as keys,default as default');
+		$columns = array('id as id,title as title,filters as filters,keys as keys,default as default');
 		$where = array('title' => $resultList[0]->title);
 		$fieldList = $this->CoreCrud->selectCRUD($customFieldTable, $where, $columns, 'like');
 
 		//FIlter List
+		$field_title = $fieldList[0]->title; //Title Title
 		$field_filter = json_decode($fieldList[0]->filters, True); //FIlter List
 		$field_key = json_decode($fieldList[0]->keys, True); //Show
 		$field_default = $fieldList[0]->default; //Default
@@ -405,6 +411,10 @@ class CoreForm extends CI_Model
 				$updateData[$key] = $value;
 			}
 		}
+		// Trigger For Plain Helper
+		$this->load->model('CoreTrigger');
+		$plainHelper = $this->plural->singularize($field_title) . '_fieldPlain';
+		$updateData = ((method_exists('CoreTrigger', $plainHelper))) ? $this->CoreTrigger->$plainHelper($updateData) : $updateData;
 
 		// Values For Show
 		$newPlainDataValue = array();
@@ -461,7 +471,7 @@ class CoreForm extends CI_Model
 		if (strtolower($unsetKey) == 'before') {
 			$updateData = $this->CoreCrud->unsetData($updateData, $unsetData); //Unset Data
 			foreach ($updateData as $key => $value) {
-				if($key != 'field_plain'){
+				if ($key != 'field_plain') {
 					$current_details["$key"] = $value;
 					/** Update -> Details */
 				}
@@ -469,7 +479,7 @@ class CoreForm extends CI_Model
 			$updateData["$details"] = json_encode($current_details);
 		} else {
 			foreach ($updateData as $key => $value) {
-				if($key != 'field_plain'){
+				if ($key != 'field_plain') {
 					$current_details["$key"] = $value;
 					/** Update -> Details */
 				}
@@ -974,7 +984,8 @@ class CoreForm extends CI_Model
 	 * 2: Pass CustomField Title/ID
 	 * 
 	 */
-	public function fieldFilterData($passedData,$titleID){
+	public function fieldFilterData($passedData, $titleID)
+	{
 		// Title
 		$title = $this->plural->singularize($titleID);
 		// Get Custom Field Title
@@ -987,14 +998,14 @@ class CoreForm extends CI_Model
 
 		// Get Filters
 		$filtersJson = $this->CoreCrud->selectSingleValue('customfields', 'filters', array('title' => $title));
-		if(!is_null($filtersJson)){
+		if (!is_null($filtersJson)) {
 			// Decode
 			$filters = json_decode($filtersJson, True);
 			// Array
 			$fromData = (!is_array($passedData)) ? json_decode($passedData, True) : $passedData;
 			// Loop
-			for ($l = 0; $l < count($filters); $l++){
-				if(array_key_exists($filters[$l], $fromData)){
+			for ($l = 0; $l < count($filters); $l++) {
+				if (array_key_exists($filters[$l], $fromData)) {
 					$key = $filters[$l]; // Key
 					$value = $fromData[$key]; // Value
 					// Set Values
