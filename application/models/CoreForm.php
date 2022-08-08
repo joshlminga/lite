@@ -278,14 +278,19 @@ class CoreForm extends CI_Model
 		// Values For Plain
 		$newPlainDataValue = array();
 		if (is_array($field_key)) {
-			// Loop $field_show
-			foreach ($field_key as $key => $value) {
-				$value = trim($value);
-				$key_value = "plain_" . $value;
-				if (array_key_exists($key_value, $formData) && !array_key_exists($value, $newPlainDataValue)) {
-					$newPlainDataValue[$value] = strip_tags(strtolower($formData[$key_value]));
-				} else {
-					$newPlainDataValue[$value] = strip_tags(stripcslashes(strtolower($formData[$value])));
+			// UsePlain
+			$usePlainHelper = $this->plural->singularize($field_title) . '_fieldUsePlain';
+			$usePlain = ((method_exists('CoreTrigger', $usePlainHelper))) ? $this->CoreTrigger->$usePlainHelper() : true;
+			if ($usePlain) {
+				// Loop $field_show
+				foreach ($field_key as $key => $value) {
+					$value = trim($value);
+					$key_value = "plain_" . $value;
+					if (array_key_exists($key_value, $formData) && !array_key_exists($value, $newPlainDataValue)) {
+						$newPlainDataValue[$value] = strip_tags(strtolower($formData[$key_value]));
+					} else {
+						$newPlainDataValue[$value] = strip_tags(stripcslashes(strtolower($formData[$value])));
+					}
 				}
 			}
 		}
@@ -320,6 +325,7 @@ class CoreForm extends CI_Model
 		$column_plain = strtolower($this->get_column_name($Module, 'plain'));
 		$tempo_plain = (count($newPlainDataValue) > 0) ? implode(' ', $newPlainDataValue) : null;
 		$tempo_plain = iconv('UTF-8', 'ASCII//TRANSLIT', $tempo_plain);
+		// Assign
 		$formData[$column_plain] = json_encode($tempo_plain);
 		/** Set Plain */
 
@@ -419,14 +425,19 @@ class CoreForm extends CI_Model
 		// Values For Show
 		$newPlainDataValue = array();
 		if (is_array($field_key)) {
-			// Loop $field_show
-			foreach ($field_key as $key => $value) {
-				$value = trim($value);
-				$key_value = "plain_" . $value;
-				if (array_key_exists($key_value, $updateData) && !array_key_exists($value, $newPlainDataValue)) {
-					$newPlainDataValue[$value] = strip_tags(strtolower($updateData[$key_value]));
-				} else {
-					$newPlainDataValue[$value] = strip_tags(stripcslashes(strtolower($updateData[$value])));
+			// UsePlain
+			$usePlainHelper = $this->plural->singularize($field_title) . '_fieldUsePlain';
+			$usePlain = ((method_exists('CoreTrigger', $usePlainHelper))) ? $this->CoreTrigger->$usePlainHelper() : true;
+			if ($usePlain) {
+				// Loop $field_show
+				foreach ($field_key as $key => $value) {
+					$value = trim($value);
+					$key_value = "plain_" . $value;
+					if (array_key_exists($key_value, $updateData) && !array_key_exists($value, $newPlainDataValue)) {
+						$newPlainDataValue[$value] = strip_tags(strtolower($updateData[$key_value]));
+					} else {
+						$newPlainDataValue[$value] = strip_tags(stripcslashes(strtolower($updateData[$value])));
+					}
 				}
 			}
 		}
@@ -457,6 +468,7 @@ class CoreForm extends CI_Model
 		$column_plain = strtolower($this->get_column_name($Module, 'plain'));
 		$tempo_plain = (count($newPlainDataValue) > 0) ? implode(' ', $newPlainDataValue) : null;
 		$tempo_plain = iconv('UTF-8', 'ASCII//TRANSLIT', $tempo_plain);
+		// Assign
 		$updateData[$column_plain] = json_encode($tempo_plain);
 		/** Set Plain */
 
