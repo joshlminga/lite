@@ -326,7 +326,8 @@ class CoreForm extends CI_Model
 		$tempo_plain = (count($newPlainDataValue) > 0) ? implode(' ', $newPlainDataValue) : null;
 		$tempo_plain = iconv('UTF-8', 'ASCII//TRANSLIT', $tempo_plain);
 		// Assign
-		$formData[$column_plain] = json_encode($tempo_plain);
+		$formData[$column_plain] = (!is_null($tempo_plain) && !empty($tempo_plain)) ? json_encode($tempo_plain) : null;
+
 		/** Set Plain */
 
 		//Details Column Update
@@ -469,7 +470,7 @@ class CoreForm extends CI_Model
 		$tempo_plain = (count($newPlainDataValue) > 0) ? implode(' ', $newPlainDataValue) : null;
 		$tempo_plain = iconv('UTF-8', 'ASCII//TRANSLIT', $tempo_plain);
 		// Assign
-		$updateData[$column_plain] = json_encode($tempo_plain);
+		$updateData[$column_plain] = (!is_null($tempo_plain) && !empty($tempo_plain)) ? json_encode($tempo_plain) : null;
 		/** Set Plain */
 
 		//Details Column Update
