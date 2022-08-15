@@ -199,8 +199,22 @@ class CMSMigrate extends CI_Model
 					$this->db->insert('migrates', ['migrate_table' => 'customfields', 'migrate_value' => $title]);
 				}
 
+				//load Field Migrate Helper
+				$this->load->model('CoreTrigger');
+				$customHelper = $this->plural->singularize($title) . '_fieldMigrateHelper';
+
 				// Migrate Field Data
-				$migrateFieldData = json_decode($this->selectFieldItem(['id' => $id])[0], True);
+				$migrateFieldData =	json_decode($this->selectFieldItem(['id' => $id])[0], True);
+				if (method_exists('CoreTrigger', $customHelper)) {
+
+					$uploaderData = $this->migratedb->select('journal_uploader')->where(['journal_field' => $id])->limit(1)->get('journals');
+					$checkUploader = $this->CoreCrud->checkResultFound($uploaderData); //Check If Value Found
+					$journal_uploader = ($checkUploader == true) ? $uploaderData->row()->journal_uploader : null;
+					$migrateFieldData['journal_uploader'] = $journal_uploader;
+
+					$migrateFieldData = $this->CoreTrigger->$customHelper($migrateFieldData);
+				}
+				// Prepaire Data
 				$savedData = $this->CoreForm->saveFormField($migrateFieldData, $title);
 
 				// Plain Input
@@ -543,23 +557,34 @@ class CMSMigrate extends CI_Model
 	/**
 	 * CustomField
 	 */
-	public function customfield($custom_found)
+	public function customfield($custom_field)
 	{
 		// Check Data
-		if (is_null($custom_found) || empty($custom_found)) {
+		if (is_null($custom_field) || empty($custom_field)) {
 			return false;
 		}
+
+		//load CustomField Migrate Helper
+		$customHelper = $this->plural->singularize($custom_field[0]->customfield_title) . '_customFieldMigrateHelper';
+		$this->load->model('CoreTrigger');
+		$custom_found = ((method_exists('CoreTrigger', $customHelper))) ? $this->CoreTrigger->$customHelper($custom_field) : $custom_field;
+
 		// Get Data
 		$customfield_id = $custom_found[0]->customfield_id;
 		$customfield_title = $custom_found[0]->customfield_title;
-		$customfield_required = json_decode($custom_found[0]->customfield_required);
-		$customfield_optional = json_decode($custom_found[0]->customfield_optional);
+
+		// Check if property 'customfield_required' exist
+		$customfield_required = (property_exists($custom_found[0], 'customfield_required')) ? json_decode($custom_found[0]->customfield_required) : [];
+		// Check if property 'customfield_options' exist
+		$customfield_optional = (property_exists($custom_found[0], 'customfield_optional')) ? json_decode($custom_found[0]->customfield_optional) : [];
 		$customfield_filters = json_decode($custom_found[0]->customfield_filters);
 		$customfield_stamp = $custom_found[0]->customfield_stamp;
 		$customfield_default = $custom_found[0]->customfield_default;
 		$customfield_flg = $custom_found[0]->customfield_flg;
 
-		$customfield_inputs = array_merge($customfield_required, $customfield_optional);
+		$customfield_inputs = (property_exists($custom_found[0], 'customfield_inputs')) ? json_decode($custom_found[0]->customfield_inputs) : array_merge($customfield_required, $customfield_optional);
+		$customfield_inputs = array_unique($customfield_inputs); // Remove Duplicate Keys
+		$customfield_inputs = array_values($customfield_inputs); // Re-index Array
 
 		// Remove Special Characteres
 		for ($k = 0; $k < count($customfield_inputs); $k++) {
@@ -581,6 +606,8 @@ class CMSMigrate extends CI_Model
 			$keys = strtolower(str_replace("-", "_", str_replace(" ", "_", $clean_input)));
 			$customfield_filters[$f] = $keys; // Keys
 		}
+		$customfield_filters = array_unique($customfield_filters); // Remove Duplicate Keys
+		$customfield_filters = array_values($customfield_filters); // Re-index Array
 
 		// New CustomField
 		$customfield = [
@@ -627,10 +654,6 @@ class CMSMigrate extends CI_Model
 			$this->db->query($sql);
 		}
 	}
-
-	/**
-	 * Check Table
-	 */
 }
 
 /* End of file CMSMigrate.php */

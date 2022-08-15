@@ -34,7 +34,7 @@
 				<div class="row">
 					<div class="col-md-12 col-sm-12">
 						<div class="form-group">
-							<button type="submit" class="btn btn-primary btn-lg waves-effect flt-right brd-20">Update</button>
+							<button type="submit" class="btn btn-primary btn-lg waves-effect flt-right brd-20">Migrate</button>
 						</div>
 					</div>
 				</div>
