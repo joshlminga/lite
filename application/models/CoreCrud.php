@@ -460,7 +460,7 @@ class CoreCrud extends CI_Model
 		$this->db->insert($table, $data);
 		if ($this->db->affected_rows() > 0) {
 			$entry_id = $this->db->insert_id();
-			if ($table !== 'metaterms') {
+			if ($table !== 'metaterms' && $table !== 'metaterms' && $table !== 'customfields') {
 
 				// Add Meta URL
 				$meta_url = $this->CoreForm->metaGetUrl($table, $entry_id, $url);
@@ -648,7 +648,7 @@ class CoreCrud extends CI_Model
 				$filter_columns = $this->CoreForm->getFilterColumns($field_title, $pushData, $esacapeData);
 
 				// InsertFilter
-				$field_filters = $this->CoreForm->fieldFilterData($insertData['field_data'],$field_title);
+				$field_filters = $this->CoreForm->fieldFilterData($insertData['field_data'], $field_title);
 				$insertFilter = $this->CoreForm->fieldFiltered($filter_columns, $field_filters);
 				$insertFilter['field'] = $fieldID;
 
@@ -719,7 +719,7 @@ class CoreCrud extends CI_Model
 					$filter_columns = $this->CoreForm->getFilterColumns($field_title, $pushData, $esacapeData);
 
 					// UpdateFilter
-					$field_filters = $this->CoreForm->fieldFilterData($updateData['field_data'],$field_title);
+					$field_filters = $this->CoreForm->fieldFilterData($updateData['field_data'], $field_title);
 					$updateFilter = $this->CoreForm->fieldFiltered($filter_columns, $field_filters);
 
 					// Get Columns Name

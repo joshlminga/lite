@@ -206,13 +206,7 @@ class CMSMigrate extends CI_Model
 				// Migrate Field Data
 				$migrateFieldData =	json_decode($this->selectFieldItem(['id' => $id])[0], True);
 				if (method_exists('CoreTrigger', $customHelper)) {
-
-					$uploaderData = $this->migratedb->select('journal_uploader')->where(['journal_field' => $id])->limit(1)->get('journals');
-					$checkUploader = $this->CoreCrud->checkResultFound($uploaderData); //Check If Value Found
-					$journal_uploader = ($checkUploader == true) ? $uploaderData->row()->journal_uploader : null;
-					$migrateFieldData['journal_uploader'] = $journal_uploader;
-
-					$migrateFieldData = $this->CoreTrigger->$customHelper($migrateFieldData);
+					$migrateFieldData = $this->CoreTrigger->$customHelper($migrateFieldData, $id);
 				}
 				// Prepaire Data
 				$savedData = $this->CoreForm->saveFormField($migrateFieldData, $title);
@@ -624,13 +618,6 @@ class CMSMigrate extends CI_Model
 		// Details
 		$customfield['customfield_details'] = json_encode($customfield);
 		return $customfield;
-	}
-
-	/**
-	 * Trancate Table
-	 */
-	public function truncateTable($table)
-	{
 	}
 
 	/**
