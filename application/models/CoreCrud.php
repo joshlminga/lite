@@ -460,7 +460,7 @@ class CoreCrud extends CI_Model
 		$this->db->insert($table, $data);
 		if ($this->db->affected_rows() > 0) {
 			$entry_id = $this->db->insert_id();
-			if ($table !== 'metaterms' && $table !== 'metaterms' && $table !== 'customfields') {
+			if ($table !== 'customfields' && $table !== 'metaterms' && $table !== 'settings') {
 
 				// Add Meta URL
 				$meta_url = $this->CoreForm->metaGetUrl($table, $entry_id, $url);

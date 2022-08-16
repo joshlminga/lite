@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class MigrateCMS extends CI_Controller
+class Ex_Migrate extends CI_Controller
 {
 
 	/**
@@ -42,7 +42,7 @@ class MigrateCMS extends CI_Controller
 		//Models
 		$this->load->model('CoreCrud');
 		$this->load->model('CoreForm');
-		$this->load->model('CMSMigrate', 'migrate');
+		$this->load->model('CoreMigrate', 'migrate');
 
 
 		// Your own constructor code
@@ -86,7 +86,7 @@ class MigrateCMS extends CI_Controller
 		//Module Name - For Forms Title
 		$data['ModuleName'] = $this->plural->pluralize($this->ModuleName);
 		$data['action'] = '';
-		$data['moduleList'] = ['metaterms', 'settings', 'levels', 'users', 'inheritances', 'autofields', 'blogs', 'pages', 'customfields', 'fields'];
+		$data['moduleList'] = ['settings', 'levels', 'users', 'inheritances', 'autofields', 'blogs', 'pages', 'customfields', 'fields'];
 
 
 		//Form Submit URLs

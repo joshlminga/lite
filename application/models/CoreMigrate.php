@@ -2,7 +2,7 @@
 
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class CMSMigrate extends CI_Model
+class CoreMigrate extends CI_Model
 {
 
 	/**
@@ -307,7 +307,7 @@ class CMSMigrate extends CI_Model
 
 		// Check Module
 		if (is_null($module) || empty($module)) {
-			$module = ['metaterms', 'settings', 'levels', 'users', 'inheritances', 'autofields', 'blogs', 'pages', 'customfields', 'fields'];
+			$module = ['settings', 'levels', 'users', 'inheritances', 'autofields', 'blogs', 'pages', 'customfields', 'fields'];
 		}
 
 		// Module Array
@@ -484,7 +484,7 @@ class CMSMigrate extends CI_Model
 				// MIgration
 				$migrationData = [
 					'setting_title' => 'extension_menu',
-					'setting_value' => '{"menu_path":"migrate/menu","route":{"migrate":"Extension/MigrateCMS/open/manage","migrate/save":"Extension/MigrateCMS/valid/all", "migrate/multiple":"Extension/MigrateCMS/valid/bulk", "migrate/(:any)":"Extension/MigrateCMS/migrate/$1"}}',
+					'setting_value' => '{"menu_path":"migrate/menu","route":{"migrate":"Extension/Ex_Migrate/open/manage","migrate/save":"Extension/Ex_Migrate/valid/all", "migrate/multiple":"Extension/Ex_Migrate/valid/bulk", "migrate/(:any)":"Extension/Ex_Migrate/migrate/$1"}}',
 					'setting_stamp' => date('Y-m-d H:i:s'),
 					'setting_default' => 'migration',
 					'setting_flg' => 1,
@@ -643,4 +643,4 @@ class CMSMigrate extends CI_Model
 	}
 }
 
-/* End of file CMSMigrate.php */
+/* End of file CoreMigrate.php */
