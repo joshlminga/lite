@@ -1383,6 +1383,41 @@ class CoreForm extends CI_Model
 		// Check If Exist
 		return $this->metaCheckUrl($meta_url, $id, true);
 	}
+
+
+	/**
+	 * Meta Get Item/Data URL
+	 * 
+	 * This method is used to retrive URL from the metaterm module for the passed id/item
+	 * - This method is useful when you wish to get url for the item with ease
+	 * - Also when using $this->CoreCrud->selectInheritanceMeta to get inheritance this method is used to add url for each inheritance
+	 *
+	 * 1: Pass type id which will be compaired against metaterms.metaterm_typeid 
+	 * 2: (optional) pass module (metaterms.metaterm_module) make user is alread pluralize/singularize
+	 * 3: (optional) pass type (metaterms.metaterm_type) 
+	 *
+	 * - By default url will be returned if is found or null will be returned if URL was not found.
+	 *
+	 * NB: THIS METHOD IS NOT SIMMILAR TO *metaGetUrl* The two serve different purpose.
+	 * + metaGetUrl -> will generate new or return existing current URL from given data (avoid using since it does not record URL into metaterms)
+	 * + metaFindUrl -> will return existing url or null 
+	 * + for inhertance data use ** $this->CoreCrud->selectInheritanceMeta() ** works the same as ** $this->CoreCrud->selectInheritanceItem() **
+	 * ++ but with benefit of returning additional key metaurl with your url
+	 *
+	 */
+	public function metaFindUrl($typeid, $module = null, $type = null)
+	{
+		// Get Meta Data
+		$search['typeid'] = $typeid;
+		($module) ? $search['module'] = $module : null;
+		($type) ? $search['type'] = $type : null;
+
+		// Get Meta Data
+		$meta_url = $this->CoreCrud->selectSingleValue('metaterms', 'url', $search);
+
+		// Return
+		return $meta_url;
+	}
 }
 
 /** End of file CoreForm.php */

@@ -354,15 +354,18 @@ class CoreCrud extends CI_Model
 			$where_column[$column] = $value; //Set Proper Column Name 
 		}
 
+		// ColumnID
+		$column_id = $this->CoreForm->get_column_name($module, 'id');
+
 		//Check If Clause specified
 		if (!is_null($clause)) {
 
-			$selectData = $this->db->select($select_column)->$clause($where_column)->limit(1)->get($table);
+			$selectData = $this->db->select($select_column)->$clause($where_column)->order_by($column_id, "desc")->limit(1)->get($table);
 			$checkData = $this->checkResultFound($selectData); //Check If Value Found
 			$value = ($checkData == true) ? $selectData->row()->$select_column : null;
 		} else {
 
-			$selectData = $this->db->select($select_column)->where($where_column)->limit(1)->get($table);
+			$selectData = $this->db->select($select_column)->where($where_column)->order_by($column_id, "desc")->limit(1)->get($table);
 			$checkData = $this->checkResultFound($selectData); //Check If Value Found
 			$value = ($checkData == true) ? $selectData->row()->$select_column : null;
 		}
