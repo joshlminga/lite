@@ -34,7 +34,7 @@
 	<link href="<?= base_url($assets); ?>/css/app.min.2.css" rel="stylesheet">
 
 	<!-- Custom -->
-	<link href="<?= base_url($assets); ?>/custom/custom.css" rel="stylesheet">
+	<link href="<?= base_url($assets); ?>/custom/custom.min.css" rel="stylesheet">
 
 	<!-- Font Awsome -->
 	<script src="<?= base_url($assets); ?>/js/fontawesome.js"></script>
@@ -211,6 +211,7 @@
 						<a class="core-sidebar-link" href="#" data-ma-action="submenu-toggle"><i class="zmdi zmdi-wrench red_less"></i> Settings </a>
 						<ul>
 							<li class="core-sub-item"><a class="core-sub-link" href="<?= site_url('general'); ?>">General</a></li>
+							<li class="core-sub-item"><a class="core-sub-link" href="<?= site_url('site'); ?>">Site</a></li>
 							<li class="core-sub-item"><a class="core-sub-link" href="<?= site_url('link'); ?>">Link</a></li>
 							<li class="core-sub-item"><a class="core-sub-link" href="<?= site_url('blog'); ?>">Page / Blog</a></li>
 							<li class="core-sub-item"><a class="core-sub-link" href="<?= site_url('mail'); ?>">Mail</a></li>

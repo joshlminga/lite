@@ -15,9 +15,10 @@
 						<div class="col-md-12 col-sm-12">
 							<p>Set up default link format. Core CMS uses Post ID number as a default URL format, URL change depends mostly with the use of the platform. Use Post ID if you are developing a system which will enable you to get the matched item ID.</p>
 						</div>
+					</div>
 
-						<?php $value = $resultList[0]->setting_value; ?>
-					    
+	            	<?php $value = $this->CoreCrud->selectSingleValue('settings','value',['title' => 'current_url']); ?>
+					<div class="row">
 					    <div class="col-md-12 col-sm-12">
 					        <div class="form-group">
 					            <div class="radio m-b-15">
@@ -34,7 +35,9 @@
 					            </div>
 					        </div>
 					    </div>
-
+					</div>
+					
+					<div class="row">
 					    <div class="col-md-12 col-sm-12">
 					        <div class="form-group">
 					            <div class="radio m-b-15">
@@ -51,7 +54,9 @@
 					            </div>
 					        </div>
 					    </div>
+				    </div>
 
+					<div class="row">
 					    <div class="col-md-12 col-sm-12">
 					        <div class="form-group">
 					            <div class="radio m-b-15">
@@ -69,7 +74,9 @@
 					            </div>
 					        </div>
 					    </div>
-						
+				    </div>
+
+					<div class="row">
 						<div class="col-md-12 col-sm-12">
 							<div class="form-group">
 								<div class="fg-line">
@@ -77,7 +84,9 @@
 								</div>
 							</div>
 						</div>
+				    </div>
 
+					<div class="row">
 					    <div class="col-md-12 col-sm-12">
 			                <div class="form-group">
 			                    <button type="submit" class="btn btn-primary btn-lg waves-effect flt-right brd-20">Update</button>

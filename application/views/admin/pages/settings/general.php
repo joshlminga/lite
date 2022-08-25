@@ -11,51 +11,57 @@
                 <?= (!is_null($notify) && !empty($notify))? $notify : ''; ?>
 				<?= form_open($form_general, '', ' autocomplete="off" '); ?>
 					<div class="row">
+					    <div class="col-md-7 col-sm-12">
+					        <div class="form-group">
+					            <div class="fg-line">
+					            	<label>Site Title  <i class="fa fa-asterisk"></i></label>
+					            	<?php $site_title = $this->CoreCrud->selectSingleValue('settings','value',['title' => 'site_title']); ?>
+					                <input type="text" class="form-control" name="site_title" autocomplete="off" value="<?= $site_title; ?>">
+					            </div>
+		                        <span class="error"><?= form_error("site_title") ?></span>
+					        </div>
+					    </div>
 
+					    <div class="col-md-3 col-sm-12">
+					        <div class="form-group">
+					            <div class="fg-line">
+					            	<label>Site Slogan  <i class="fa fa-asterisk"></i></label>
+					            	<?php $site_slogan = $this->CoreCrud->selectSingleValue('settings','value',['title' => 'site_slogan']); ?>
+					                <input type="text" class="form-control" name="site_slogan" autocomplete="off" value="<?= $site_slogan; ?>">
+					            </div>
+		                        <span class="error"><?= form_error("site_slogan") ?></span>
+					        </div>
+					    </div>
 
-						<?php foreach ($resultList as $row): ?>
-							<?php if ($row->setting_title == 'site_status'): ?>
-						    <div class="col-md-4 col-sm-12">
-						        <div class="form-group">
-						            <div class="fg-line">
-						            	<label><?= ucwords(str_replace("_", " ",$row->setting_title));?> <i class="fa fa-asterisk"></i></label>
-				                        <select class="selectpicker p-l-10" name="<?= $row->setting_title;?>">
-				                            <?php if (trim($row->setting_value) == trim('online')): ?>
-				                            <option value="online" selected=""><?= ucwords('online') ?></option>
-				                            <?php else: ?>
-				                            <option value="offline" selected=""><?= ucwords('offline') ?></option>
-				                            <?php endif ?>
-				                            <option value="<?= (trim($row->setting_value)=='online')? 'offline':'online'; ?>">
-				                            	<?= ucwords((trim($row->setting_value)=='online')? 'offline':'online') ?>
-				                            </option>
-				                        </select>
-						            </div>
-			                        <span class="error"><?= form_error("$row->setting_title") ?></span>
-						        </div>
-						    </div>
-	                        <?php elseif ($row->setting_title == 'offline_message'): ?>
-						    <div class="col-md-12 col-sm-12">
-						        <div class="form-group">
-						            <div class="fg-line">
-						            	<label><?= ucwords(str_replace("_", " ",$row->setting_title));?> <i class="fa fa-asterisk"></i></label>
-				                        <textarea class="form-control" name="<?= $row->setting_title;?>" autocomplete="off"><?= $row->setting_value; ?></textarea>
-						            </div>
-			                        <span class="error"><?= form_error("$row->setting_title") ?></span>
-						        </div>
-						    </div>
-	                        <?php else: ?>
-						    <div class="col-md-4 col-sm-12">
-						        <div class="form-group">
-						            <div class="fg-line">
-						            	<label><?= ucwords(str_replace("_", " ",$row->setting_title));?> <i class="fa fa-asterisk"></i></label>
-						                <input type="text" class="form-control" name="<?= $row->setting_title;?>" id="" autocomplete="off" 
-						                value="<?= $row->setting_value; ?>">
-						            </div>
-			                        <span class="error"><?= form_error("$row->setting_title") ?></span>
-						        </div>
-						    </div>
-							<?php endif ?>
-						<?php endforeach ?>
+					    <div class="col-md-2 col-sm-12">
+					        <div class="form-group">
+					            <div class="fg-line">
+					            	<label>Site Status <i class="fa fa-asterisk"></i></label>
+					            	<?php $site_status = $this->CoreCrud->selectSingleValue('settings','value',['title' => 'site_status']); ?>
+			                        <select class="selectpicker p-l-10" name="site_status">
+			                            <option value="online" <?= ('online' == $site_status) ? 'selected' :''; ?>><?= ucwords('online') ?></option>
+			                            <option value="offline" <?= ('offline' == $site_status) ? 'selected' :''; ?>><?= ucwords('offline') ?></option>
+			                        </select>
+					            </div>
+		                        <span class="error"><?= form_error("site_status") ?></span>
+					        </div>
+					    </div>
+				   	</div>
+
+				   	<div class="row">
+					    <div class="col-md-12 col-sm-12">
+					        <div class="form-group">
+					            <div class="fg-line">
+					            	<label>Offline Message  <i class="fa fa-asterisk"></i></label>
+					            	<?php $offline_message = $this->CoreCrud->selectSingleValue('settings','value',['title' => 'offline_message']); ?>
+			                        <textarea class="form-control auto-size" name="offline_message" autocomplete="off"><?= $offline_message; ?></textarea>
+					            </div>
+		                        <span class="error"><?= form_error("offline_message") ?></span>
+					        </div>
+					    </div>
+				   	</div>
+
+					<div class="row">
 					    <div class="col-md-12 col-sm-12">
 			                <div class="form-group">
 			                    <button type="submit" class="btn btn-primary btn-lg waves-effect flt-right brd-20">Update</button>

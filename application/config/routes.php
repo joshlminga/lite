@@ -138,6 +138,8 @@ $route["pages/multiple"] = "$Core_Folder/Pages/valid/bulk"; // Bulk Action
 //Settings
 $route["general"] = "$Core_Folder/Settings/open/general"; //General Settings
 $route["general/update"] = "$Core_Folder/Settings/valid/general"; //General Settings Update
+$route["site"] = "$Core_Folder/Settings/open/site"; //Site Config
+$route["site/update"] = "$Core_Folder/Settings/valid/site"; //Site Config Update
 $route["link"] = "$Core_Folder/Settings/open/link"; //URL Settings
 $route["link/update"] = "$Core_Folder/Settings/valid/link"; //URL Settings Update
 $route["mail"] = "$Core_Folder/Settings/open/mail"; //Mail Settings

@@ -19,6 +19,7 @@ class Settings extends CI_Controller
 	private $Route = null; //If you have different route Name to Module name State it here |This wont be pluralized | set it null to use default
 
 	private $General = 'general/update'; //Settings
+	private $Site = 'site/update'; //Site
 	private $Link = 'link/update'; //
 	private $Mail = 'mail/update'; //
 	private $Blog = 'blog/update'; //
@@ -88,11 +89,9 @@ class Settings extends CI_Controller
 		//Module Name - For Forms Title
 		$data['ModuleName'] = $this->plural->pluralize($this->ModuleName);
 
-		//Post
-		$data['posts'] = $this->CoreCrud->selectMultipleValue('pages', 'id,title', array('flg' => 1));
-
 		//Form Submit URLs
 		$data['form_general'] = $this->General;
+		$data['form_site'] = $this->Site;
 		$data['form_link'] = $this->Link;
 		$data['form_mail'] = $this->Mail;
 		$data['form_blog'] = $this->Blog;
@@ -174,9 +173,6 @@ class Settings extends CI_Controller
 		$pageID = (is_numeric($pageID)) ? $pageID : $this->plural->pluralize($this->Folder) . $this->SubFolder . "/" . $pageID;
 		$data = $this->load($pageID);
 
-		//Data
-		$data['resultList'] = $this->load_settings($pageID);
-
 		//Notification
 		$notify = $this->CoreNotify->notify();
 		$data['notify'] = $this->CoreNotify->$notify($message);
@@ -215,6 +211,35 @@ class Settings extends CI_Controller
 			$this->form_validation->set_rules("site_title", "Site Title", "trim|required|min_length[1]|max_length[800]");
 			$this->form_validation->set_rules("site_slogan", "Site Slogan", "trim|required|min_length[1]|max_length[800]");
 			$this->form_validation->set_rules("site_status", "Site Status", "trim|required|min_length[1]|max_length[10]");
+
+			//Form Validation
+			if ($this->form_validation->run() == TRUE) {
+				if ($this->update($updateData)) {
+					$this->session->set_flashdata('notification', 'success'); //Notification Type
+					$this->open($type); //Redirect to Page
+				} else {
+					$this->session->set_flashdata('notification', 'error'); //Notification Type
+					$this->open($type); //Open Page
+				}
+			} else {
+				$this->session->set_flashdata('notification', 'error'); //Notification Type
+				$message = 'Please check the fields, and try again'; //Notification Message				
+				$this->open($type, $message); //Open Page
+			}
+		} elseif ($type == 'site') {
+
+			$updateData = $this->CoreLoad->input(); //Input Data
+
+			//Form Validation Values
+			$this->form_validation->set_rules("site_url", "Site URL", "trim|required|min_length[1]|max_length[800]");
+			$this->form_validation->set_rules("api_url", "Api URL", "trim|required|min_length[1]|max_length[800]");
+
+			$this->form_validation->set_rules("session_key", "Session Key", "trim|required|min_length[9]|max_length[10]");
+
+			$this->form_validation->set_rules("token_name", "Token Name", "trim|required|min_length[1]|max_length[10]");
+			$this->form_validation->set_rules("token_length", "Token Length", "trim|required|less_than_equal_to[25]|integer");
+			$this->form_validation->set_rules("token_use", "Token Use", "trim|required|less_than_equal_to[60]|integer");
+			$this->form_validation->set_rules("token_time", "Token Time", "trim|required|integer");
 
 			//Form Validation
 			if ($this->form_validation->run() == TRUE) {
@@ -317,6 +342,7 @@ class Settings extends CI_Controller
 			$this->form_validation->set_rules("home_post", "Home Post", "trim|min_length[1]|max_length[50]");
 			$this->form_validation->set_rules("home_page", "Home Page", "trim|min_length[1]|max_length[50]");
 			$this->form_validation->set_rules("post_per_page", "Post Per Page", "trim|required|integer|min_length[1]|max_length[50]");
+			$this->form_validation->set_rules("page_pagination", "Page Pagination", "trim|required|integer|min_length[1]|max_length[50]");
 			$this->form_validation->set_rules("post_show", "Post Show", "trim|required|min_length[1]|max_length[50]");
 
 			//Form Validation
@@ -432,46 +458,6 @@ class Settings extends CI_Controller
 				return false; //Data Updated Failed
 			}
 		}
-	}
-
-	/**
-	 *
-	 * Check Which Settings Type To Open
-	 * Pass the Page Name
-	 */
-	public function load_settings($page_name)
-	{
-		//Set Condition
-		$where = array('setting_flg' => 1);
-		$page = explode('/', $page_name);
-
-		if (end($page) == 'general') {
-			$where_in = array('site_title', 'site_slogan', 'site_status', 'offline_message'); //General Update
-		} elseif (end($page) == 'link') {
-			$where_in = array('current_url'); //General Update
-		} elseif (end($page) == 'mail') {
-			$where_in = array(
-				'mail_protocol', 'smtp_host', 'smtp_user', 'smtp_pass', 'smtp_port', 'smtp_timeout', 'smtp_crypto',
-				'wordwrap', 'wrapchars', 'mailtype', 'charset'
-			); //General Update
-		} elseif (end($page) == 'blog') {
-			$where_in = array('home_display', 'home_post', 'home_page', 'post_per_page', 'post_show'); //General Update
-		} elseif (end($page) == 'seo') {
-			$where_in = array('seo_visibility', 'seo_keywords', 'seo_description ', 'seo_global', 'seo_meta_data'); //General Update
-		} elseif (end($page) == 'inheritance') {
-			$where_in = array('inheritance_data'); //Inheritance Data
-		} elseif (end($page) == 'module') {
-			$where_in = array('module_list'); //Inheritance Data
-		} else {
-			$where_in = array('none'); //General Update
-		}
-
-		//Search Data
-		$resultList = $this->db->select('setting_title,setting_value')->where($where)
-			->where_in('setting_title', $where_in)->get('settings');
-
-		//Data Returned
-		return $resultList->result();
 	}
 
 	/**
