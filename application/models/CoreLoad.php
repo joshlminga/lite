@@ -38,9 +38,9 @@ class CoreLoad extends CI_Model
 	{
 
 		//Loading Core CMS Version
-		$data['version'] = '5.345';
+		$data['version'] = '5.410';
 		$data['copyright_footer_1'] = "v" . $data['version'];
-		$data['copyright_footer_2'] = "Published 19-AUG-2022";
+		$data['copyright_footer_2'] = "Published 26-AUG-2022";
 
 		//Values Assets
 		$data['assets'] = $this->CoreCrud->selectSingleValue('settings', 'value', array('title' => 'assets', 'flg' => 1));
@@ -216,7 +216,7 @@ class CoreLoad extends CI_Model
 
 			if (in_array(strtolower($module), $modules)) {
 				return true; //Auth Allowed
-			} elseif (strtolower($level) == 'admin') {
+			} elseif (strtolower($level) == 'superadmin') {
 				return true; //Auth Allowed
 			} else {
 				return false; //Auth Not Allowed

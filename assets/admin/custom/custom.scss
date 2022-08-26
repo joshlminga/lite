@@ -142,9 +142,22 @@ $colors: (
             Body 
 -----------------------------*/
 body {
-	background-color: rgba(31, 30, 56, 0.78) !important;
+	// background-color: rgba(19, 86, 125, 0.94) !important;
+	background-color: rgba(0, 31, 64, 0.94) !important;
 }
 
+[data-ma-header="teal"]:before,
+[data-ma-header="teal"] #header {
+	// background-color: rgba(19, 86, 125, 0.94) !important;
+	// background-color: rgba(31, 30, 56, 0.78) !important;
+	// background-color: rgb(31, 31, 56) !important;
+	// background-color: rgba(0, 31, 64, 0.94) !important;
+	// background-color: #092f32 !important;
+	background-color: rgba(11, 2, 50, 0.95) !important;
+}
+#footer {
+	color: #fff !important;
+}
 /*----------------------------
             Header
 ----------------------------*/
@@ -154,20 +167,17 @@ body {
 	font-weight: 600 !important;
 }
 
-[data-ma-header="teal"]:before,
-[data-ma-header="teal"] #header {
-	background-color: rgba(19, 86, 125, 0.94) !important;
-}
-
 .palette-Blue-Grey.bg {
 	background-color: #607d8b !important;
+	// background-color: rgba(0, 31, 64, 0.94) !important;
 }
 
 /*-------------------------
             Visits
 --------------------------*/
 .ca-item {
-	background: rgba(31, 30, 56, 0.78) !important;
+	// background: rgba(31, 30, 56, 0.78) !important;
+	// background-color: rgb(31, 31, 56) !important;
 }
 
 /*-------------------------
@@ -175,7 +185,7 @@ body {
 --------------------------*/
 li.dashboard,
 li.dashboard > a {
-	color: rgba(255, 190, 0, 0.99) !important;
+	// color: rgba(255, 190, 0, 0.99) !important;
 }
 
 .main-menu a {
@@ -183,12 +193,17 @@ li.dashboard > a {
 }
 
 .main-menu a:hover {
-	color: #3a8dd4 !important;
-	background-color: rgba(31, 30, 56, 0.78) !important;
+	color: #0adf1ef2 !important; //#3a8dd4 !important;
+	// background-color: rgba(31, 30, 56, 0.78) !important;
+	// background-color: rgb(31, 31, 56) !important;
+	background-color: #525151 !important;
 }
 
 ul.main-menu {
-	background-color: #504f63 !important;
+	// background-color: #504f63 !important;
+	// background-color: rgba(19, 86, 125, 0.94) !important;
+	// background-color: rgba(31, 30, 56, 0.78) !important;
+	// background-color: rgba(0, 31, 64, 0.94) !important;
 }
 
 .sub-menu ul > li.active > a {
@@ -235,6 +250,14 @@ li.sub-menu ul > li ul {
 	transition: background-color;
 	-webkit-transition-duration: 250ms;
 	transition-duration: 250ms;
+}
+
+// New Menu
+section#main {
+	aside {
+		// background-color: rgba(19, 86, 125, 0.94) !important;
+		// background-color: rgb(31, 31, 56) !important;
+	}
 }
 
 /* icons */
@@ -500,11 +523,15 @@ tr.active > td {
 }
 
 [data-lbg="teal"] {
-	background-color: #504f63;
+	// background-color: #504f63;
+	// background-color: rgba(31, 30, 56, 0.78) !important;
+	background-color: rgb(31, 31, 56) !important;
 }
 
 .palette-Teal.bg {
-	background-color: #13567d;
+	// background-color: #13567d;
+	// background-color: rgba(31, 30, 56, 0.78) !important;
+	background-color: rgb(31, 31, 56) !important;
 }
 
 .palette-Teal.text {

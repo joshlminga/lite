@@ -18,6 +18,7 @@ class Members extends CI_Controller
 	private $AllowedFile = null; //Set Default allowed file extension, remember you can pass this upon upload to override default allowed file type. Allowed File Extensions Separated by | also leave null to validate using jpg|jpeg|png|doc|docx|pdf|xls|txt change this on validation function at the bottom
 
 	private $Route = 'member'; //If you have different route Name to Module name State it here |This wont be pluralized
+	private $Access = 'general'; // For Access Control | Matches ModuleList for Access Level
 
 	private $New = 'member/new'; //New 
 	private $Save = 'member/save'; //Add New 
@@ -112,7 +113,7 @@ class Members extends CI_Controller
 		//Check if site is online
 		if ($this->CoreLoad->site_status() == TRUE) {
 			//Chech allowed Access
-			if ($this->CoreLoad->auth($this->Route)) { //Authentication
+			if ($this->CoreLoad->auth($this->Access)) { //Authentication
 				//Layout
 				$this->load->view("admin/layouts/$layout", $data);
 			} else {
@@ -428,7 +429,7 @@ class Members extends CI_Controller
 	public function create($insertData, $unsetData = null)
 	{
 
-		if ($this->CoreLoad->auth($this->Route)) { //Authentication
+		if ($this->CoreLoad->auth($this->Access)) { //Authentication
 
 			//Save
 			$savedData = $this->CoreCrud->saveField($insertData);
@@ -455,7 +456,7 @@ class Members extends CI_Controller
 	public function update($updateData, $valueWhere, $unsetData = null)
 	{
 
-		if ($this->CoreLoad->auth($this->Route)) { //Authentication
+		if ($this->CoreLoad->auth($this->Access)) { //Authentication
 
 			//Updated
 			$updatedData = $this->CoreCrud->updateField($updateData, $valueWhere);
@@ -477,7 +478,7 @@ class Members extends CI_Controller
 	public function delete($fieldValue)
 	{
 
-		if ($this->CoreLoad->auth($this->Route)) { //Authentication
+		if ($this->CoreLoad->auth($this->Access)) { //Authentication
 
 			//Deleted Data In The Table
 			$deleteData = $this->CoreCrud->deleteField($fieldValue);
@@ -508,7 +509,7 @@ class Members extends CI_Controller
 			return true;
 		} elseif (is_null($this->CoreCrud->selectSingleValue($tableName, 'id', array($check => $str)))) {
 			return true;
-		} elseif ($this->CoreLoad->session('level') == 'admin') {
+		} elseif ($this->CoreLoad->session('level') == 'superadmin') {
 			return true;
 		} else {
 			$this->form_validation->set_message('lognamecheck', 'This {field} is already in use by another account');

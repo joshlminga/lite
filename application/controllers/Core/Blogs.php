@@ -17,6 +17,7 @@ class Blogs extends CI_Controller
 	private $AllowedFile = null; //Set Default allowed file extension, remember you can pass this upon upload to override default allowed file type. Allowed File Extensions Separated by | also leave null to validate using jpg|jpeg|png|doc|docx|pdf|xls|txt change this on validation function at the bottom
 
 	private $Route = 'blogs'; //If you have different route Name to Module name State it here |This wont be pluralized | set it null to use default
+	private $Access = 'blog'; // For Access Control | Matches ModuleList for Access Level
 
 	private $New = 'blogs/new'; //New customers
 	private $Save = 'blogs/save'; //Add New customers
@@ -113,7 +114,7 @@ class Blogs extends CI_Controller
 	public function pages($data, $layout = 'main')
 	{
 		//Chech allowed Access
-		if ($this->CoreLoad->auth($this->Module)) { //Authentication
+		if ($this->CoreLoad->auth($this->Access)) { //Authentication
 			//Layout
 			$this->load->view("admin/layouts/$layout", $data);
 		} else {
@@ -450,7 +451,7 @@ class Blogs extends CI_Controller
 	public function create($insertData, $unsetData = null)
 	{
 
-		if ($this->CoreLoad->auth($this->Module)) { //Authentication
+		if ($this->CoreLoad->auth($this->Access)) { //Authentication
 
 			//Session ID
 			$session_id = $this->CoreLoad->session('id');
@@ -511,7 +512,7 @@ class Blogs extends CI_Controller
 	public function update($updateData, $valueWhere, $unsetData = null)
 	{
 
-		if ($this->CoreLoad->auth($this->Module)) { //Authentication
+		if ($this->CoreLoad->auth($this->Access)) { //Authentication
 
 			//Session ID
 			$session_id = $this->CoreLoad->session('id');
@@ -578,7 +579,7 @@ class Blogs extends CI_Controller
 	public function delete($valueWhere)
 	{
 
-		if ($this->CoreLoad->auth($this->Module)) { //Authentication
+		if ($this->CoreLoad->auth($this->Access)) { //Authentication
 
 			//Pluralize Module
 			$tableName = $this->plural->pluralize($this->Module);

@@ -381,7 +381,7 @@ class Field_Members extends CI_Controller
 			return true;
 		} elseif (is_null($this->CoreCrud->selectSingleValue($tableName, 'id', array($check => $str)))) {
 			return true;
-		} elseif ($this->CoreLoad->session('level') == 'admin') {
+		} elseif ($this->CoreLoad->session('level') == 'superadmin') {
 			return true;
 		} else {
 			$this->form_validation->set_message('lognamecheck', 'This {field} is already in use by another account');

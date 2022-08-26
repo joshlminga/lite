@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Aug 16, 2022 at 09:20 AM
+-- Generation Time: Aug 26, 2022 at 09:57 AM
 -- Server version: 5.7.32
 -- PHP Version: 7.4.12
 
@@ -78,7 +78,7 @@ CREATE TABLE `blogs` (
 --
 
 INSERT INTO `blogs` (`blog_id`, `blog_category`, `blog_title`, `blog_url`, `blog_post`, `blog_control`, `blog_tag`, `blog_format`, `blog_show`, `blog_author`, `blog_seo`, `blog_data`, `blog_createdat`, `blog_editor`, `blog_editedat`, `blog_details`, `blog_stamp`, `blog_default`, `blog_flg`) VALUES
-(1, 'uncategorised', 'Welcome To Core', 'welcome-to-core', '<p>Welcome to core blog</p>', '{\"thumbnail\":\"[\\\"assets\\\\\\/media\\\\\\/2019\\\\\\/06\\\\\\/04\\\\\\/e7de94e294ec2c6d23ee957a93ba4145.png\\\"]\"}', '', 'default', 'public', 'admin', NULL, NULL, '2019-03-21 19:55:27', NULL, NULL, '{\"blog_title\":\"Welcome To Core\",\"blog_post\":\"<p>Welcome to core blog<\\/p>\",\"blog_category\":\"uncategorised\",\"blog_show\":\"public\",\"blog_format\":\"default\",\"blog_control\":\"{\\\"thumbnail\\\":\\\"[\\\\\\\"assets\\\\\\\\\\\\\\/media\\\\\\\\\\\\\\/2019\\\\\\\\\\\\\\/06\\\\\\\\\\\\\\/04\\\\\\\\\\\\\\/e7de94e294ec2c6d23ee957a93ba4145.png\\\\\\\"]\\\"}\",\"blog_tag\":\"\",\"blog_stamp\":\"2019-06-04 20:48:34\",\"blog_createdat\":\"2019-03-21 19:55:27\",\"blog_author\":\"admin\",\"blog_flg\":1,\"blog_url\":\"welcome-to-core\"}', '2019-06-04 20:48:34', 'yes', 1);
+(1, 'uncategorised', 'Welcome To Core', 'welcome-to-core', '<p>Welcome to core blog</p>', '{\"thumbnail\":\"[\\\"assets\\\\\\/media\\\\\\/2019\\\\\\/06\\\\\\/04\\\\\\/e7de94e294ec2c6d23ee957a93ba4145.png\\\"]\"}', '', 'default', 'public', 'superadmin', NULL, NULL, '2019-03-21 19:55:27', NULL, NULL, '{\"blog_title\":\"Welcome To Core\",\"blog_post\":\"<p>Welcome to core blog<\\/p>\",\"blog_category\":\"uncategorised\",\"blog_show\":\"public\",\"blog_format\":\"default\",\"blog_control\":\"{\\\"thumbnail\\\":\\\"[\\\\\\\"assets\\\\\\\\\\\\\\/media\\\\\\\\\\\\\\/2019\\\\\\\\\\\\\\/06\\\\\\\\\\\\\\/04\\\\\\\\\\\\\\/e7de94e294ec2c6d23ee957a93ba4145.png\\\\\\\"]\\\"}\",\"blog_tag\":\"\",\"blog_stamp\":\"2019-06-04 20:48:34\",\"blog_createdat\":\"2019-03-21 19:55:27\",\"blog_author\":\"admin\",\"blog_flg\":1,\"blog_url\":\"welcome-to-core\"}', '2019-06-04 20:48:34', 'yes', 1);
 
 -- --------------------------------------------------------
 
@@ -177,7 +177,7 @@ CREATE TABLE `levels` (
 --
 
 INSERT INTO `levels` (`level_id`, `level_name`, `level_module`, `level_details`, `level_stamp`, `level_default`, `level_flg`) VALUES
-(1, 'admin', 'main,blog,page,autofield,control,inheritance,customfield,user,level,setting,profile,member,customer', '{\"level_module\":\"main,blog,page,autofield,control,inheritance,customfield,user,level,setting,profile,member,customer\",\"level_stamp\":\"2022-01-07 14:49:21\",\"level_default\":\"yes\",\"level_flg\":1}', '2022-01-07 11:49:21', 'yes', 1),
+(1, 'superadmin', 'main,blog,page,autofield,control,inheritance,customfield,user,level,setting,profile,member,customer', '{\"level_module\":\"main,blog,page,autofield,control,inheritance,customfield,user,level,setting,profile,member,customer\",\"level_stamp\":\"2022-01-07 14:49:21\",\"level_default\":\"yes\",\"level_flg\":1}', '2022-01-07 11:49:21', 'yes', 1),
 (2, 'user', 'main,control,setting,profile', '{\"level_module\":\"main,control,setting,profile\",\"level_stamp\":\"2022-01-07 14:49:21\",\"level_default\":\"yes\",\"level_flg\":1}', '2022-01-07 11:49:21', 'yes', 1),
 (3, 'author', 'main,blog,page,autofield,control,inheritance,setting,profile', '{\"level_module\":\"main,blog,page,autofield,control,inheritance,setting,profile\",\"level_stamp\":\"2022-01-07 14:49:21\",\"level_default\":\"yes\",\"level_flg\":1}', '2022-01-07 11:49:21', 'yes', 1),
 (4, 'customer', 'main,profile', '{\"level_module\":\"main,profile\",\"level_stamp\":\"2022-01-07 14:49:21\",\"level_default\":\"no\",\"level_flg\":1}', '2022-01-07 11:49:21', 'no', 1);
@@ -210,11 +210,11 @@ INSERT INTO `metaterms` (`metaterm_id`, `metaterm_module`, `metaterm_type`, `met
 (5, 'inheritances', 'gender', 3, 'male', '2022-06-16 10:35:56', 1),
 (6, 'inheritances', 'gender', 4, 'female', '2022-06-16 10:36:03', 1),
 (7, 'pages', 'page', 1, 'home-page', '2019-03-21 13:55:27', 1),
-(8, 'levels', 'level', 1, 'admin', '2022-06-16 10:55:20', 1),
+(8, 'levels', 'level', 1, 'superadmin', '2022-06-16 10:55:20', 1),
 (9, 'levels', 'level', 2, 'user', '2022-06-16 10:55:48', 1),
 (10, 'levels', 'level', 3, 'author', '2022-06-16 10:55:48', 1),
 (11, 'levels', 'level', 4, 'customer', '2022-06-16 10:56:39', 1),
-(12, 'users', 'user', 1, 'admin', '2022-06-16 11:32:22', 1),
+(12, 'users', 'user', 1, 'superadmin', '2022-06-16 11:32:22', 1),
 (13, 'users', 'user', 2, 'janedoe', '2022-06-16 11:32:22', 1),
 (14, 'fields', 'member', 1, 'member', '2022-07-27 20:47:05', 1);
 
@@ -248,7 +248,7 @@ CREATE TABLE `pages` (
 --
 
 INSERT INTO `pages` (`page_id`, `page_title`, `page_url`, `page_post`, `page_control`, `page_show`, `page_author`, `page_seo`, `page_data`, `page_createdat`, `page_editor`, `page_editedat`, `page_details`, `page_stamp`, `page_default`, `page_flg`) VALUES
-(1, 'Home Page', 'home-page', '<p>Core CMS home page</p>', '{\"thumbnail\":null}', 'public', 'admin', NULL, NULL, '2019-03-21 19:55:57', NULL, NULL, '{\"page_title\":\"Home Page\",\"page_post\":\"<p>Core CMS home page<\\/p>\",\"page_show\":\"public\",\"page_control\":\"{\\\"thumbnail\\\":null}\",\"page_stamp\":\"2019-03-21 19:55:57\",\"page_createdat\":\"2019-03-21 19:55:57\",\"page_author\":\"admin\",\"page_flg\":1}', '2019-03-21 19:55:57', 'yes', 1);
+(1, 'Home Page', 'home-page', '<p>Core CMS home page</p>', '{\"thumbnail\":null}', 'public', 'superadmin', NULL, NULL, '2019-03-21 19:55:57', NULL, NULL, '{\"page_title\":\"Home Page\",\"page_post\":\"<p>Core CMS home page<\\/p>\",\"page_show\":\"public\",\"page_control\":\"{\\\"thumbnail\\\":null}\",\"page_stamp\":\"2019-03-21 19:55:57\",\"page_createdat\":\"2019-03-21 19:55:57\",\"page_author\":\"admin\",\"page_flg\":1}', '2019-03-21 19:55:57', 'yes', 1);
 
 -- --------------------------------------------------------
 
@@ -270,61 +270,61 @@ CREATE TABLE `settings` (
 --
 
 INSERT INTO `settings` (`setting_id`, `setting_title`, `setting_value`, `setting_stamp`, `setting_default`, `setting_flg`) VALUES
-(1, 'site_title', 'Core CMS Lite', '2020-12-07 15:15:13', 'yes', 1),
-(2, 'site_slogan', 'Develop Faster, Easier and Modular ', '2018-11-23 11:19:36', 'yes', 1),
-(3, 'theme_title', 'starter', '2018-11-23 11:19:36', 'yes', 1),
-(4, 'site_status', 'online', '2018-12-17 05:52:06', 'yes', 1),
-(5, 'offline_message', 'We are offline', '2018-12-17 05:50:58', 'yes', 1),
-(6, 'current_url', 'title', '2018-12-17 14:54:02', 'yes', 1),
-(7, 'mail_protocol', 'mail', '2019-09-21 08:34:13', 'yes', 1),
-(8, 'smtp_host', '', '2018-12-17 12:24:08', 'yes', 1),
-(9, 'smtp_user', '', '2018-12-17 12:24:29', 'yes', 1),
-(10, 'smtp_pass', '', '2018-12-17 12:24:29', 'yes', 1),
-(11, 'smtp_port', '25', '2018-12-17 12:27:45', 'yes', 1),
-(12, 'smtp_timeout', '5', '2018-12-17 12:27:21', 'yes', 1),
-(13, 'smtp_crypto', '', '2018-12-17 12:25:41', 'yes', 1),
-(14, 'wordwrap', 'TRUE', '2018-12-17 12:27:10', 'yes', 1),
-(15, 'wrapchars', '76', '2018-12-17 12:27:03', 'yes', 1),
-(16, 'mailtype', 'text', '2018-12-17 12:26:56', 'yes', 1),
-(17, 'charset', 'UTF-8', '2018-12-17 12:26:34', 'yes', 1),
-(18, 'home_display', 'blog', '2018-12-17 14:24:53', 'yes', 1),
-(19, 'home_post', 'latest_post', '2019-03-21 14:09:47', 'yes', 1),
-(20, 'home_page', '', '2018-12-17 13:03:08', 'yes', 1),
-(21, 'post_per_page', '10', '2018-12-17 13:11:11', 'yes', 1),
-(22, 'page_pagination', '4', '2018-12-17 13:11:11', 'yes', 1),
-(23, 'post_show', 'summary', '2019-03-21 13:53:57', 'yes', 1),
-(24, 'seo_visibility', 'noindex, nofollow', '2019-03-18 13:26:50', 'yes', 1),
-(25, 'seo_global', 'any', '2019-03-18 13:37:13', 'yes', 1),
-(26, 'seo_description', '', '2019-06-22 05:06:09', 'yes', 1),
-(27, 'seo_keywords', '', '2018-12-17 14:30:41', 'yes', 1),
-(28, 'seo_meta_data', '', '2018-12-17 13:10:23', 'yes', 1),
-(29, 'inheritance_data', 'default,category,tag,gender', '2021-07-22 06:44:17', 'yes', 1),
-(30, 'module_list', 'main,blog,page,autofield,control,inheritance,customfield,user,level,setting,profile,member,customer', '2021-07-22 06:32:48', 'yes', 1),
-(31, 'assets', 'assets/admin', '2019-06-08 12:22:55', 'yes', 1),
-(32, 'ext_dir', 'extend/', '2019-06-11 04:54:39', 'yes', 1),
-(33, 'ext_assets', 'assets/extend', '2019-06-08 14:25:52', 'yes', 1),
-(34, 'theme_name', 'starter', '2020-01-15 09:28:43', 'theme', 1),
-(35, 'theme_dir', 'themes/starter', '2019-06-11 04:54:50', 'theme', 1),
-(36, 'theme_assets', 'assets/themes/starter', '2019-06-08 15:30:02', 'theme', 1),
-(37, 'child_theme', '', '2019-06-08 15:30:26', 'theme', 1),
-(38, 'child_theme_dir', '', '2019-06-08 15:30:29', 'theme', 1),
-(39, 'child_theme_assets', '', '2019-06-08 15:30:34', 'theme', 1),
-(40, 'site_url', 'http://localhost:8888/CoreCMS/CoreLite/', '2022-08-03 15:54:47', 'yes', 1),
-(41, 'api_url', 'http://localhost:8888/CoreCMS/CoreLite/', '2022-08-03 15:54:51', 'yes', 1),
-(42, 'string_variable', '#\\#{\\[(.*?)\\]\\}#', '2020-02-05 05:55:11', 'keys', 1),
-(43, 'session_key', '4OaXTFypxh', '2022-06-16 15:36:31', 'keys', 1),
-(44, 'token_name', 'Token', '2021-07-22 06:01:55', 'keys', 1),
-(45, 'token_length', '25', '2021-07-22 06:01:55', 'keys', 1),
-(46, 'token_use', '3', '2021-07-22 06:01:55', 'keys', 1),
-(47, 'token_time', '300', '2021-07-22 06:01:55', 'keys', 1),
-(48, 'currency', 'Ksh', '2021-07-22 06:01:55', 'locale', 1),
-(49, 'country', 'Kenya', '2021-07-22 06:01:55', 'locale', 1),
-(50, 'city', 'Nairobi', '2021-07-22 06:01:55', 'locale', 1),
-(51, 'country_code', '+254', '2021-07-22 06:01:55', 'locale', 1),
-(52, 'country_timezone', 'Africa/Nairobi', '2021-07-22 06:01:55', 'locale', 1),
-(53, 'field_menu', '{\"menu_path\":\"member/menu\",\"route\":{\"member\":\"Field/Members/index\",\"member/new\":\"Field/Members/open/add\", \"member/edit\":\"Field/Members/edit/edit\",\"member/save\":\"Field/Members/valid/save\",\"member/update\":\"Field/Members/valid/update\",\"member/delete\":\"Field/Members/valid/delete\", \"member/multiple\":\"Field/Members/valid/bulk\"}\r\n}', '2022-08-03 15:55:17', 'route', 0),
-(54, 'extension_menu', '{\"menu_path\":\"customer/menu\",\"route\":{\"customer\":\"Extension/Customers/index\",\"customer/new\":\"Extension/Customers/open/add\", \"customer/edit\":\"Extension/Customers/edit/edit\",\"customer/save\":\"Extension/Customers/valid/save\",\"customer/update\":\"Extension/Customers/valid/update\",\"customer/delete\":\"Extension/Customers/valid/delete\", \"customer/multiple\":\"Extension/Customers/valid/bulk\"}\r\n}', '2022-08-03 15:55:21', 'route', 0),
-(55, 'extension_menu', '{\"menu_path\":\"migrate/menu\",\"route\":{\"migrate\":\"Extension/Ex_Migrate/open/manage\",\"migrate/save\":\"Extension/Ex_Migrate/valid/all\", \"migrate/multiple\":\"Extension/Ex_Migrate/valid/bulk\", \"migrate/(:any)\":\"Extension/Ex_Migrate/migrate/$1\"}}', '2022-08-16 08:58:42', 'migration', 0);
+(1, 'site_title', 'Core CMS Lite', '2020-12-07 12:15:13', 'yes', 1),
+(2, 'site_slogan', 'Develop Faster, Easier and Modular', '2022-08-25 08:53:26', 'yes', 1),
+(3, 'theme_title', 'starter', '2018-11-23 08:19:36', 'yes', 1),
+(4, 'site_status', 'online', '2018-12-17 02:52:06', 'yes', 1),
+(5, 'offline_message', 'We are offline', '2018-12-17 02:50:58', 'yes', 1),
+(6, 'current_url', 'title', '2018-12-17 11:54:02', 'yes', 1),
+(7, 'mail_protocol', 'mail', '2019-09-21 05:34:13', 'yes', 1),
+(8, 'smtp_host', '', '2018-12-17 09:24:08', 'yes', 1),
+(9, 'smtp_user', '', '2018-12-17 09:24:29', 'yes', 1),
+(10, 'smtp_pass', '', '2018-12-17 09:24:29', 'yes', 1),
+(11, 'smtp_port', '25', '2018-12-17 09:27:45', 'yes', 1),
+(12, 'smtp_timeout', '', '2022-08-25 09:36:09', 'yes', 1),
+(13, 'smtp_crypto', '', '2018-12-17 09:25:41', 'yes', 1),
+(14, 'wordwrap', 'TRUE', '2018-12-17 09:27:10', 'yes', 1),
+(15, 'wrapchars', '76', '2018-12-17 09:27:03', 'yes', 1),
+(16, 'mailtype', 'text', '2018-12-17 09:26:56', 'yes', 1),
+(17, 'charset', 'UTF-8', '2018-12-17 09:26:34', 'yes', 1),
+(18, 'home_display', 'blog', '2018-12-17 11:24:53', 'yes', 1),
+(19, 'home_post', 'latest_post', '2019-03-21 11:09:47', 'yes', 1),
+(20, 'home_page', '1', '2022-08-25 10:32:01', 'yes', 1),
+(21, 'post_per_page', '10', '2018-12-17 10:11:11', 'yes', 1),
+(22, 'page_pagination', '4', '2018-12-17 10:11:11', 'yes', 1),
+(23, 'post_show', 'summary', '2019-03-21 10:53:57', 'yes', 1),
+(24, 'seo_visibility', 'noindex, nofollow', '2019-03-18 10:26:50', 'yes', 1),
+(25, 'seo_global', 'any', '2019-03-18 10:37:13', 'yes', 1),
+(26, 'seo_description', '', '2019-06-22 02:06:09', 'yes', 1),
+(27, 'seo_keywords', '', '2018-12-17 11:30:41', 'yes', 1),
+(28, 'seo_meta_data', '', '2018-12-17 10:10:23', 'yes', 1),
+(29, 'inheritance_data', 'default,category,tag,gender', '2021-07-22 03:44:17', 'yes', 1),
+(30, 'module_list', 'main,blog,page,autofield,control,inheritance,customfield,user,level,setting,general,extend', '2022-08-26 06:20:01', 'yes', 1),
+(31, 'assets', 'assets/admin', '2019-06-08 09:22:55', 'yes', 1),
+(32, 'ext_dir', 'extend/', '2019-06-11 01:54:39', 'yes', 1),
+(33, 'ext_assets', 'assets/extend', '2019-06-08 11:25:52', 'yes', 1),
+(34, 'theme_name', 'starter', '2020-01-15 06:28:43', 'theme', 1),
+(35, 'theme_dir', 'themes/starter', '2019-06-11 01:54:50', 'theme', 1),
+(36, 'theme_assets', 'assets/themes/starter', '2019-06-08 12:30:02', 'theme', 1),
+(37, 'child_theme', '', '2019-06-08 12:30:26', 'theme', 1),
+(38, 'child_theme_dir', '', '2019-06-08 12:30:29', 'theme', 1),
+(39, 'child_theme_assets', '', '2019-06-08 12:30:34', 'theme', 1),
+(40, 'site_url', 'http://localhost:8888/CoreCMS/CoreLite/', '2022-08-03 12:54:47', 'yes', 1),
+(41, 'api_url', 'http://localhost:8888/CoreCMS/CoreLite/', '2022-08-03 12:54:51', 'yes', 1),
+(42, 'string_variable', '#\\#{\\[(.*?)\\]\\}#', '2020-02-05 02:55:11', 'keys', 1),
+(43, 'session_key', 'ywMp050i42', '2022-08-26 09:57:15', 'keys', 1),
+(44, 'token_name', 'Token', '2021-07-22 03:01:55', 'keys', 1),
+(45, 'token_length', '25', '2021-07-22 03:01:55', 'keys', 1),
+(46, 'token_use', '3', '2022-08-25 10:53:12', 'keys', 1),
+(47, 'token_time', '300', '2021-07-22 03:01:55', 'keys', 1),
+(48, 'currency', 'Ksh', '2021-07-22 03:01:55', 'locale', 1),
+(49, 'country', 'Kenya', '2021-07-22 03:01:55', 'locale', 1),
+(50, 'city', 'Nairobi', '2021-07-22 03:01:55', 'locale', 1),
+(51, 'country_code', '+254', '2021-07-22 03:01:55', 'locale', 1),
+(52, 'country_timezone', 'Africa/Nairobi', '2021-07-22 03:01:55', 'locale', 1),
+(53, 'field_menu', '{\"menu_path\":\"member/menu\",\"route\":{\"member\":\"Field/Members/index\",\"member/new\":\"Field/Members/open/add\", \"member/edit\":\"Field/Members/edit/edit\",\"member/save\":\"Field/Members/valid/save\",\"member/update\":\"Field/Members/valid/update\",\"member/delete\":\"Field/Members/valid/delete\", \"member/multiple\":\"Field/Members/valid/bulk\"}\r\n}', '2022-08-26 06:32:38', 'route', 0),
+(54, 'extension_menu', '{\"menu_path\":\"customer/menu\",\"route\":{\"customer\":\"Extension/Customers/index\",\"customer/new\":\"Extension/Customers/open/add\", \"customer/edit\":\"Extension/Customers/edit/edit\",\"customer/save\":\"Extension/Customers/valid/save\",\"customer/update\":\"Extension/Customers/valid/update\",\"customer/delete\":\"Extension/Customers/valid/delete\", \"customer/multiple\":\"Extension/Customers/valid/bulk\"}\r\n}', '2022-08-26 06:32:38', 'route', 0),
+(55, 'extension_menu', '{\"menu_path\":\"migrate/menu\",\"route\":{\"migrate\":\"Extension/Ex_Migrate/open/manage\",\"migrate/save\":\"Extension/Ex_Migrate/valid/all\", \"migrate/multiple\":\"Extension/Ex_Migrate/valid/bulk\", \"migrate/(:any)\":\"Extension/Ex_Migrate/migrate/$1\"}}', '2022-08-26 06:32:38', 'migration', 0);
 
 -- --------------------------------------------------------
 
@@ -371,7 +371,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`user_id`, `user_level`, `user_logname`, `user_password`, `user_name`, `user_email`, `user_details`, `user_stamp`, `user_default`, `user_flg`) VALUES
-(1, 'admin', 'admin', 'd033e22ae348aeb5660fc2140aec35850c4da997', 'John Doe', 'johndoe@core.com', '{\"user_name\":\"John Doe\",\"user_email\":\"johndoe@core.com\",\"user_level\":\"admin\",\"user_password\":\"d033e22ae348aeb5660fc2140aec35850c4da997\",\"user_stamp\":\"2021-07-22 13:41:26\",\"user_flg\":1,\"user_logname\":\"admin\"}', '2021-07-22 13:41:26', 'yes', 1),
+(1, 'superadmin', 'admin', 'd033e22ae348aeb5660fc2140aec35850c4da997', 'John Doe', 'johndoe@core.com', '{\"user_name\":\"John Doe\",\"user_email\":\"johndoe@core.com\",\"user_level\":\"superadmin\",\"user_password\":\"d033e22ae348aeb5660fc2140aec35850c4da997\",\"user_stamp\":\"2021-07-22 13:41:26\",\"user_flg\":1,\"user_logname\":\"admin\"}', '2021-07-22 13:41:26', 'yes', 1),
 (2, 'customer', 'janedoe', '06d213088a72f4c1ac947c6f3d9ddd321650ebfb', 'Jane Doe', 'janedoe@core.com', '{\"user_name\":\"Jane Doe\",\"user_email\":\"janedoe@core.com\",\"user_level\":\"customer\",\"user_logname\":\"janedoe\",\"user_password\":\"06d213088a72f4c1ac947c6f3d9ddd321650ebfb\",\"user_default\":\"no\",\"user_stamp\":\"2022-01-07 14:25:11\",\"user_flg\":1}', '2022-01-07 14:25:11', 'no', 1);
 
 --

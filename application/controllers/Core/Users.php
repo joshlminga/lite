@@ -17,6 +17,7 @@ class Users extends CI_Controller
 	private $AllowedFile = null; //Set Default allowed file extension, remember you can pass this upon upload to override default allowed file type. Allowed File Extensions Separated by | also leave null to validate using jpg|jpeg|png|doc|docx|pdf|xls|txt change this on validation function at the bottom
 
 	private $Route = null; //If you have different route Name to Module name State it here |This wont be pluralized | set it null to use default
+	private $Access = 'user'; // For Access Control | Matches ModuleList for Access Level
 
 	private $New = 'users/new'; //New User
 	private $Save = 'users/save'; //Add New User
@@ -109,7 +110,7 @@ class Users extends CI_Controller
 	public function pages($data, $layout = 'main')
 	{
 		//Chech allowed Access
-		if ($this->CoreLoad->auth($this->Module)) { //Authentication
+		if ($this->CoreLoad->auth($this->Access)) { //Authentication
 			//Layout
 			$this->load->view("admin/layouts/$layout", $data);
 		} else {
@@ -404,7 +405,7 @@ class Users extends CI_Controller
 	{
 
 		//Chech allowed Access
-		if ($this->CoreLoad->auth($this->Module)) { //Authentication
+		if ($this->CoreLoad->auth($this->Access)) { //Authentication
 
 			//Pluralize Module
 			$tableName = $this->plural->pluralize($this->Module);
@@ -454,7 +455,7 @@ class Users extends CI_Controller
 	{
 
 		//Chech allowed Access
-		if ($this->CoreLoad->auth($this->Module)) { //Authentication
+		if ($this->CoreLoad->auth($this->Access)) { //Authentication
 
 			//Pluralize Module
 			$tableName = $this->plural->pluralize($this->Module);
@@ -507,7 +508,7 @@ class Users extends CI_Controller
 	{
 
 		//Chech allowed Access
-		if ($this->CoreLoad->auth($this->Module)) { //Authentication
+		if ($this->CoreLoad->auth($this->Access)) { //Authentication
 
 			//Pluralize Module
 			$tableName = $this->plural->pluralize($this->Module);
@@ -678,7 +679,7 @@ class Users extends CI_Controller
 			return true;
 		} elseif (is_null($this->CoreCrud->selectSingleValue($tableName, 'id', array($check => $str)))) {
 			return true;
-		} elseif ($this->CoreLoad->session('level') == 'admin') {
+		} elseif ($this->CoreLoad->session('level') == 'superadmin') {
 			return true;
 		} else {
 			$this->form_validation->set_message('lognamecheck', 'This {field} is already in use by another account');

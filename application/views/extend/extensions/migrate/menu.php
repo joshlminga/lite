@@ -1,7 +1,7 @@
 <?php if ($this->CoreLoad->auth('migrate')) : ?>
 	<li class="sub-menu">
 		<!-- active -->
-		<a href="#" data-ma-action="submenu-toggle"><i class="zmdi zmdi-collection-item-9 zmdi-hc-fw red_less"></i> Migrate </a>
+		<a href="#" data-ma-action="submenu-toggle"><i class="zmdi zmdi-collection-item-9 zmdi-hc-fw color-yellow"></i> Migrate </a>
 		<ul>
 			<li class=""><a href="<?= site_url('migrate') ?>">All</a></li>
 			<li class=""><a href="<?= site_url('migrate/blog') ?>">Blog</a></li>

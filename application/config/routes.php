@@ -59,6 +59,9 @@ $Extension_Folder = "Extension";
 require_once(BASEPATH . "database/DB.php");
 $db = &DB();
 
+/**
+ * Todo: Default Routes
+ */
 $route["default_controller"] = "Home"; //Main (Home) Page
 $route["404"] = "HomeError"; //Theme Error Page For Front-end
 $route["404_override"] = "CoreErrors/index"; //Default Error Page
@@ -66,8 +69,10 @@ $route["404_override"] = "CoreErrors/index"; //Default Error Page
 //404
 $route["not-found"] = "CoreErrors/index"; //Default Error Page
 $route["not-allowed"] = "CoreErrors/open"; //Default Not Allowed Page
-/******** API *********/
 
+/**
+ * Todo: API Default Routes
+ */
 // Inheritance
 $route["coreapi/token"] = "$Api_Folder/CoreApi/getToken";
 $route["coreapi/find/inheritance"] = "$Api_Folder/CoreApi/getInheritance";
@@ -86,8 +91,17 @@ $route["coreapi/find/load"] = "$Api_Folder/CoreApi/getLoad";
 // Capture Erors - Any Wrong API Call
 $route["coreapi/(:any)"] = "$Api_Folder/CoreApi/failed";
 $route["coreapi/(.+)"] = "$Api_Folder/CoreApi/failed";
-
 /******** END API *********/
+
+/**
+ * Todo: Admin Routes
+ */
+
+//Login
+$route["admin"] = "$Core_Folder/Logs/index"; //Login Page
+$route["admin/login"] = "$Core_Folder/Logs/valid/login"; //Login Verification
+$route["admin/reset"] = "$Core_Folder/Logs/valid/reset"; //Reset Password
+$route["admin/logout"] = "$Core_Folder/Logs/valid/logout"; //Logout
 
 //Administrator
 $route["dashboard"] = "$Core_Folder/Dashboard/index"; //Dashboard
@@ -161,12 +175,6 @@ $route["level/update"] = "$Core_Folder/Levels/valid/update"; //Validate and Upda
 $route["level/delete"] = "$Core_Folder/Levels/valid/delete"; //Delete 
 $route["level/multiple"] = "$Core_Folder/Levels/valid/bulk"; //Bulk Action  
 
-//Login
-$route["admin"] = "$Core_Folder/Logs/index"; //Login Page
-$route["admin/login"] = "$Core_Folder/Logs/valid/login"; //Login Verification
-$route["admin/reset"] = "$Core_Folder/Logs/valid/reset"; //Reset Password
-$route["admin/logout"] = "$Core_Folder/Logs/valid/logout"; //Logout
-
 //Sub Profile
 $route["profile"] = "$Core_Folder/Profile/edit/profile"; //My Profile
 $route["profile/update"] = "$Core_Folder/Profile/valid/update"; //Validate and Update
@@ -179,6 +187,15 @@ $route["autofields/save"] = "$Core_Folder/AutoFields/valid/save"; // Validate an
 $route["autofields/update"] = "$Core_Folder/AutoFields/valid/update"; // Validate and Update
 $route["autofields/delete"] = "$Core_Folder/AutoFields/valid/delete"; // Delete 
 $route["autofields/multiple"] = "$Core_Folder/AutoFields/valid/bulk"; // Bulk Action 
+
+//Extends | For Extend Fields,Extensions & Conrtols
+$route["extends"] = "$Core_Folder/RouteExtends/index"; //List
+$route["extends/new"] = "$Core_Folder/RouteExtends/open/add"; //Create New
+$route["extends/edit"] = "$Core_Folder/RouteExtends/edit/edit"; // Edit 
+$route["extends/save"] = "$Core_Folder/RouteExtends/valid/save"; // Validate and Save
+$route["extends/update"] = "$Core_Folder/RouteExtends/valid/update"; // Validate and Update
+$route["extends/delete"] = "$Core_Folder/RouteExtends/valid/delete"; // Delete 
+$route["extends/multiple"] = "$Core_Folder/RouteExtends/valid/bulk"; // Bulk Action 
 
 //Custom Fields
 $route["customfields"] = "$Core_Folder/CustomFields/index"; //Manage
@@ -210,7 +227,41 @@ $route["api-members/update"] = "$Api_Folder/Field_Members/valid/update";
 $route["api-members/delete"] = "$Api_Folder/Field_Members/valid/delete";
 $route["api-members/get"] = "$Api_Folder/Field_Members/valid/get";
 
-/////////////////////////// EXTENSIONS //////////////////////
+/**
+ * Todo: route_menu Routes
+ */
+$query = $db->select("setting_value")->where(array("setting_title" => "route_menu", "setting_flg" => 1))->get("settings");
+$settValue = $query->result();
+
+// Routes
+$routeNames = null;
+for ($i = 0; $i < count($settValue); $i++) {
+	$setting_value = $settValue[$i]->setting_value; //Menu Data
+	$values = json_decode($setting_value, True);
+	if (array_key_exists("route", $values)) {
+		$routeNames[$i] = $values["route"]; // Menu Path
+	}
+}
+
+// Reset
+$routeNames = (is_array($routeNames)) ? array_values($routeNames) : $routeNames;
+
+// Values
+$routeNames = (is_array($routeNames)) ? array_values($routeNames) : null;
+if (is_array($routeNames)) {
+	for ($i = 0; $i < count($routeNames); $i++) {
+		$routeLine = $routeNames[$i];
+		foreach ($routeLine as $key => $value) {
+			$ky = trim($key);
+			$val = trim($value);
+			$route[$ky] = "$val"; // Assign Route
+		}
+	}
+}
+
+/**
+ * Todo: extension_menu Routes
+ */
 $query = $db->select("setting_value")->where(array("setting_title" => "extension_menu", "setting_flg" => 1))->get("settings");
 $settValue = $query->result();
 // Routes
@@ -239,7 +290,9 @@ if (is_array($routeNames)) {
 	}
 }
 
-/////////////////////////// FIELDS //////////////////////////
+/**
+ * Todo: field_menu Routes
+ */
 $query = $db->select("setting_value")->where(array("setting_title" => "field_menu", "setting_flg" => 1))->get("settings");
 $settValue = $query->result();
 
@@ -269,7 +322,9 @@ if (is_array($routeNames)) {
 	}
 }
 
-/////////////////////////// CONTROLS ///////////////////////
+/**
+ * Todo: control_menu Routes
+ */
 $query = $db->select("setting_value")->where(array("setting_title" => "control_menu", "setting_flg" => 1))->get("settings");
 $settValue = $query->result();
 
@@ -299,7 +354,9 @@ if (is_array($routeNames)) {
 	}
 }
 
-/////////////////////////// MENU //////////////////////////
+/**
+ * Todo: menu_menu Routes
+ */
 $query = $db->select("setting_value")->where(array("setting_title" => "menu_menu", "setting_flg" => 1))->get("settings");
 $settValue = $query->result();
 
@@ -330,7 +387,4 @@ if (is_array($routeNames)) {
 }
 
 $route['translate_uri_dashes'] = FALSE;
-
-
-/////////////////////////END IN-BUILT ROUTES ///////////////////
-
+/** END IN-BUILT ROUTES */

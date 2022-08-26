@@ -17,6 +17,7 @@ class CustomFields extends CI_Controller
 	private $AllowedFile = null; //Set Default allowed file extension, remember you can pass this upon upload to override default allowed file type. Allowed File Extensions Separated by | also leave null to validate using jpg|jpeg|png|doc|docx|pdf|xls|txt change this on validation function at the bottom
 
 	private $Route = 'customfields'; //If you have different route Name to Module name State it here |This wont be pluralized
+	private $Access = 'customfield'; // For Access Control | Matches ModuleList for Access Level
 
 	private $New = 'customfields/new'; //New 
 	private $Save = 'customfields/save'; //Add New 
@@ -108,7 +109,7 @@ class CustomFields extends CI_Controller
 		//Check if site is online
 		if ($this->CoreLoad->site_status() == TRUE) {
 			//Chech allowed Access
-			if ($this->CoreLoad->auth($this->Module)) { //Authentication
+			if ($this->CoreLoad->auth($this->Access)) { //Authentication
 				//Layout
 				$this->load->view("admin/layouts/$layout", $data);
 			} else {
@@ -452,7 +453,7 @@ class CustomFields extends CI_Controller
 	public function create($insertData, $unsetData = null)
 	{
 
-		if ($this->CoreLoad->auth($this->Module)) { //Authentication
+		if ($this->CoreLoad->auth($this->Access)) { //Authentication
 
 			//Pluralize Module
 			$tableName = $this->plural->pluralize($this->Module);
@@ -494,7 +495,7 @@ class CustomFields extends CI_Controller
 	public function update($updateData, $valueWhere, $unsetData = null)
 	{
 
-		if ($this->CoreLoad->auth($this->Module)) { //Authentication
+		if ($this->CoreLoad->auth($this->Access)) { //Authentication
 
 			//Pluralize Module
 			$tableName = $this->plural->pluralize($this->Module);
@@ -539,7 +540,7 @@ class CustomFields extends CI_Controller
 	public function delete($valueWhere)
 	{
 
-		if ($this->CoreLoad->auth($this->Module)) { //Authentication
+		if ($this->CoreLoad->auth($this->Access)) { //Authentication
 
 			//Pluralize Module
 			$tableName = $this->plural->pluralize($this->Module);

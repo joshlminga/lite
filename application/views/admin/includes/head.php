@@ -50,8 +50,8 @@
 	<header id="header" class="media">
 		<div class="pull-left h-logo">
 			<a href="<?= site_url('dashboard'); ?>" class="hidden-xs">
-				CORE
-				<small>The Lite</small>
+				V5
+				<small>Core CMS</small>
 			</a>
 
 			<div class="menu-collapse" data-ma-action="sidebar-open" data-ma-target="main-menu">
@@ -120,7 +120,7 @@
 			<ul class="main-menu">
 
 				<li class="dashboard">
-					<a class="core-sub-link" href="<?= site_url('dashboard') ?>"><i class="zmdi zmdi-input-composite"></i>
+					<a class="core-sub-link" href="<?= site_url('dashboard') ?>"><i class="zmdi zmdi-home color-purple"></i>
 						Dashboard
 					</a>
 				</li>
@@ -128,7 +128,7 @@
 					<li class="sub-menu">
 						<!-- active -->
 						<a href="#" data-ma-action="submenu-toggle">
-							<i class="zmdi zmdi-format-color-text green_less"></i> Blog
+							<i class="zmdi zmdi-collection-text zmdi-hc-fw"></i> Blog
 						</a>
 						<ul>
 							<li class=""><a href="<?= site_url('blogs/new') ?>">New</a></li>
@@ -138,11 +138,10 @@
 							<!--active -->
 						</ul>
 					</li>
-					<li class="" style="display: none;"><a href="#"><i class="zmdi zmdi-comment-list"></i> Blog Comments</a></li>
 				<?php endif ?>
 				<?php if ($this->CoreLoad->auth('page')) : ?>
 					<li class="sub-menu">
-						<a href="#" data-ma-action="submenu-toggle"><i class="zmdi zmdi-file-plus green_less"></i> Page </a>
+						<a href="#" data-ma-action="submenu-toggle"><i class="zmdi zmdi-border-color zmdi-hc-fw"></i> Page </a>
 						<ul>
 							<li class=""><a href="<?= site_url('pages/new') ?>">New</a></li>
 							<li class=""><a href="<?= site_url('pages') ?>">Manage</a></li>
@@ -154,11 +153,19 @@
 				<?php $this->load->view("admin/menus/extensions"); ?>
 				<!-- End Extensions Menu -->
 
-				<?php if ($this->CoreLoad->auth('autofield')) : ?>
-					<li class=""><a href="<?= site_url('autofields') ?>">
-							<i class="zmdi zmdi-folder-star zmdi-hc-fw"></i> Auto Fields</a>
+				<?php if ($this->CoreLoad->auth('tweaks')) : ?>
+					<li class="">
+						<a href="<?= site_url('autofields') ?>">
+							<i class="zmdi zmdi-filter-list zmdi-hc-fw color-green"></i> Auto Fields
+						</a>
+					</li>
+					<li class="">
+						<a href="<?= site_url('extends') ?>">
+							<i class="zmdi zmdi-code-setting zmdi-hc-fw color-yellow"></i> Extend
+						</a>
 					</li>
 				<?php endif ?>
+
 
 				<!-- Fields Menu -->
 				<?php $this->load->view("admin/menus/fields"); ?>
@@ -167,7 +174,7 @@
 				<?php if ($this->CoreLoad->auth('control')) : ?>
 					<li class="sub-menu">
 						<a class="core-sidebar-link" href="#" data-ma-action="submenu-toggle">
-							<i class="zmdi zmdi-settings red_less"></i> Controls </a>
+							<i class="zmdi zmdi-sort-desc zmdi-hc-fw color-red"></i> Controls </a>
 						<ul>
 							<?php if ($this->CoreLoad->auth('inheritance')) : ?>
 								<li class="core-sub-item"><a href="<?= site_url('inheritances') ?>">Inheritance</a></li>
@@ -192,9 +199,10 @@
 						</ul>
 					</li>
 				<?php endif ?>
+
 				<?php if ($this->CoreLoad->auth('user')) : ?>
 					<li class="sub-menu">
-						<a class="core-sidebar-link" href="#" data-ma-action="submenu-toggle"><i class="zmdi zmdi-accounts-alt"></i> User </a>
+						<a class="core-sidebar-link" href="#" data-ma-action="submenu-toggle"><i class="zmdi zmdi-accounts-list zmdi-hc-fw"></i> User </a>
 						<ul>
 							<li class="core-sub-item"><a class="core-sub-link" href="<?= site_url('users/new') ?>">New</a></li>
 							<li class="core-sub-item"><a class="core-sub-link" href="<?= site_url('users') ?>">Manage</a></li>
@@ -208,7 +216,7 @@
 
 				<?php if ($this->CoreLoad->auth('setting')) : ?>
 					<li class="sub-menu">
-						<a class="core-sidebar-link" href="#" data-ma-action="submenu-toggle"><i class="zmdi zmdi-wrench red_less"></i> Settings </a>
+						<a class="core-sidebar-link" href="#" data-ma-action="submenu-toggle"><i class="zmdi zmdi-widgets zmdi-hc-fw color-red"></i> Settings </a>
 						<ul>
 							<li class="core-sub-item"><a class="core-sub-link" href="<?= site_url('general'); ?>">General</a></li>
 							<li class="core-sub-item"><a class="core-sub-link" href="<?= site_url('site'); ?>">Site</a></li>
@@ -216,14 +224,14 @@
 							<li class="core-sub-item"><a class="core-sub-link" href="<?= site_url('blog'); ?>">Page / Blog</a></li>
 							<li class="core-sub-item"><a class="core-sub-link" href="<?= site_url('mail'); ?>">Mail</a></li>
 							<li class="core-sub-item"><a class="core-sub-link" href="<?= site_url('seo'); ?>">Seo</a></li>
-							<li class="core-sub-item"><a class="core-sub-link" href="<?= site_url('inheritance'); ?>">Set Inheritance</a></li>
+							<li class="core-sub-item"><a class="core-sub-link" href="<?= site_url('inheritance'); ?>">Inheritance</a></li>
 							<li class="core-sub-item"><a class="core-sub-link" href="<?= site_url('module'); ?>">Modules</a></li>
 						</ul>
 					</li>
 				<?php endif ?>
 
 				<li class=""><a href="<?= site_url('admin/logout') ?>">
-						<i class="zmdi zmdi-square-right zmdi-hc-fw"></i> Logout</a>
+						<i class="zmdi zmdi-power zmdi-hc-fw"></i> Logout</a>
 				</li>
 			</ul>
 

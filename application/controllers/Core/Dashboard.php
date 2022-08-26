@@ -17,6 +17,7 @@ class Dashboard extends CI_Controller
 	private $AllowedFile = null; //Set Default allowed file extension, remember you can pass this upon upload to override default allowed file type. Allowed File Extensions Separated by | also leave null to validate using jpg|jpeg|png|doc|docx|pdf|xls|txt change this on validation function at the bottom
 
 	private $Route = null; //If you have different route Name to Module name State it here |This wont be pluralized | set it null to use default
+	private $Access = 'main'; // For Access Control | Matches ModuleList for Access Level
 
 	private $New = 'route for add new item form'; //New User
 	private $Save = 'route for save new item'; //Add New User
