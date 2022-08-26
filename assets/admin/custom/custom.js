@@ -95,7 +95,6 @@ const removeField = (num = null) => {
 
 /*** END NEW CUSTOM FIELD ***/
 
-
 /*** NEW AUTO FIELD ***/
 
 // AutoField
@@ -207,6 +206,78 @@ const removeAutoData = (num = null) => {
 }
 
 /*** END NEW AUTO FIELD ***/
+
+/*** ROUTE FIELD ***/
+const routeInput = (num) => {
+    let fields = `
+        <div class="col-md-4 col-sm-12 col-xs-12 auto-key">
+            <div class="form-group">
+                <div class="fg-line">
+					<input type="text" name="route[]" class="form-control" value="" placeholder="example/(:any)" required>
+                </div>
+            </div>
+        </div>
+
+		<div class="col-md-7 col-sm-12 col-xs-12 auto-value">
+            <div class="form-group">
+                <div class="fg-line">
+					<input type="text" name="controller[]" class="form-control" value="" placeholder="Folder/ControllerName/Method/$1" required>
+                </div>
+            </div>
+        </div>
+
+		<div class="col-md-1 col-sm-12 col-xs-12 auto-action">
+            <div class="form-group">
+                <div class="fg-line">
+					<a onclick="removeRoute(this.getAttribute('action'))" action="${num}" class="btn btn-sm btn-danger">
+						<i class="fa fa-trash"></i>
+					</a>
+                </div>
+            </div>
+        </div>
+    `;
+
+    // AutoField
+    return fields;
+}
+
+// Add Route & Controller
+const route_field = (num) => {
+    let autofield = `
+        <div class="row auto_box" num="${num}">
+            ${routeInput(num)}
+        </div>
+    `;
+
+    // Label & Value
+    return autofield;
+}
+
+// create function addAutoData
+const addRoute = () => {
+    // Select all elements with div.auto_box class, count the count of elements and add 1
+    let auto_box = document.querySelectorAll(".auto_box");
+    let num = auto_box.length + 1;
+
+    // Add Lable & Answer
+    let autofield = route_field(num);
+
+    //Add new autofile inside auto_box_area
+    let auto_box_area = document.querySelector(".auto_box_area");
+    auto_box_area.insertAdjacentHTML('beforeend',autofield);
+}
+
+// create function removeAutoData
+const removeRoute = (num = null) => {
+    // Find the total elements with div.auto_box class, if they are more than 1 remove the element
+    let auto_box = document.querySelectorAll(".auto_box");
+    if (auto_box.length > 0) {
+		// Call function remove_auto_field
+		remove_auto_field(num);
+    }
+}
+
+/*** END ROUTE FIELD ***/
 
 $(document).ready(function(){
 

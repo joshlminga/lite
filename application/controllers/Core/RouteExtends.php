@@ -266,29 +266,60 @@ class RouteExtends extends CI_Controller
 			$formData = $this->CoreLoad->input(); //Input Data
 
 			//Form Validation Values
-			$this->form_validation->set_rules('level_default', 'Default Value', 'trim|required|min_length[1]|max_length[5]');
-			$this->form_validation->set_rules("level_name", "Access Name", "required|trim|min_length[1]|max_length[20]");
-			$this->form_validation->set_rules("level_module[]", "Modules", "required|trim|min_length[1]|max_length[20000]");
+			$this->form_validation->set_rules('setting_title', 'Default Value', 'trim|required|min_length[1]|max_length[50]');
+			$this->form_validation->set_rules('setting_flg', 'Default Value', 'trim|required|min_length[1]|max_length[2]|integer');
+			$this->form_validation->set_rules('setting_default', 'Default Value', 'trim|max_length[25]');
+			// Default
+			$formData['setting_default'] = (!is_null($formData['setting_default']) && !empty($formData['setting_default'])) ? $formData['setting_default'] : 'route';
 
-			$formData['level_name'] = preg_replace('/\s+/', '', strtolower($formData['level_name'])); //LevelName
-			$formData['level_module'] = implode(",", $formData['level_module']); //Module List
+			$this->form_validation->set_rules('name', 'Name', 'trim|required|max_length[50]');
+			$this->form_validation->set_rules('menu_path', 'Menu Path', 'trim|max_length[200]');
 
+			// Name
+			$route_more['name'] = $formData['name'];
+			// Route
+			$formData['route'] = $this->input->post('route');
+			$formData['controller'] = $this->input->post('controller');
+			if (!is_null($formData['route'][0]) && !empty($formData['route'][0])) {
+				//Set Up Data
+				for ($i = 0; $i < count($formData['route']); $i++) {
+					$route = strtolower(trim($formData['route'][$i]));
+					$controller = trim($formData['controller'][$i]);
+					$itemData[$route] = $controller;
+				}
+				$route_more['route'] = $itemData; // Set Data To Json
+			}
 			//Form Validation
 			if ($this->form_validation->run() == TRUE) {
-
+				// Path Name
+				(!is_null($formData['menu_path']) && !empty($formData['menu_path'])) ? $route_more['menu_path'] = $formData['menu_path'] : '';
+				// Additional
+				$additionaljson = $this->input->post('additionaljson');
+				if (!is_null($additionaljson) && !empty($additionaljson)) {
+					$additionaljson = json_decode($additionaljson, True);
+					// merge
+					$route_more = array_merge($route_more, $additionaljson);
+				}
+				// Value
+				$saveRoute = [
+					'setting_title' => $formData['setting_title'],
+					'setting_flg' => $formData['setting_flg'],
+					'setting_default' => $formData['setting_default'],
+					'setting_value' => json_encode($route_more),
+				];
 				//More Data
-				if ($this->create($formData)) {
+				if ($this->create($saveRoute)) {
 					$this->session->set_flashdata('notification', 'success'); //Notification Type
 					$message = 'Data was saved successful'; //Notification Message				
 					$this->index($message); //Open Page
 				} else {
 					$this->session->set_flashdata('notification', 'error'); //Notification Type
-					$this->index(); //Open Page
+					$this->open('add'); //Open Page
 				}
 			} else {
 				$this->session->set_flashdata('notification', 'error'); //Notification Type
 				$message = 'Please check the fields, and try again'; //Notification Message				
-				$this->index($message); //Open Page
+				$this->open('add', $message); //Open Page
 			}
 		} elseif ($type == 'bulk') {
 
@@ -310,8 +341,6 @@ class RouteExtends extends CI_Controller
 							$this->update(array($column_flg => 1), array($column_id => $value_id)); //Call Update Function
 						} elseif (strtolower($action) == 'deactivate') { //Item/Data Deactivation
 							$this->update(array($column_flg => 0), array($column_id => $value_id)); //Call Update Function
-						} elseif (strtolower($action) == 'delete') { //Item/Data Deletion
-							$this->delete(array($column_id => $value_id)); //Call Delete Function
 						} else {
 							$this->session->set_flashdata('notification', 'error'); //Notification Type
 							$message = 'Wrong data sequence received'; //Notification Message				
@@ -331,23 +360,71 @@ class RouteExtends extends CI_Controller
 			$updateData = $this->CoreLoad->input(); //Input Data
 
 			//Form Validation Values
-			$this->form_validation->set_rules('level_default', 'Default Value', 'trim|required|min_length[1]|max_length[5]');
-			$this->form_validation->set_rules("level_module[]", "Modules", "required|trim|min_length[1]|max_length[20000]");
+			$this->form_validation->set_rules('setting_title', 'Default Value', 'trim|required|min_length[1]|max_length[50]');
+			$this->form_validation->set_rules('setting_flg', 'Default Value', 'trim|required|min_length[1]|max_length[2]|integer');
+			$this->form_validation->set_rules('setting_default', 'Default Value', 'trim|max_length[25]');
+			// Default
+			$updateData['setting_default'] = (!is_null($updateData['setting_default']) && !empty($updateData['setting_default'])) ? $updateData['setting_default'] : 'route';
 
-			$updateData['level_module'] = implode(",", $updateData['level_module']); //Module List
+			$this->form_validation->set_rules('name', 'Name', 'trim|required|max_length[50]');
+			$this->form_validation->set_rules('menu_path', 'Menu Path', 'trim|max_length[200]');
 
 			$column_id = strtolower($this->CoreForm->get_column_name($this->Module, 'id')); //Column ID
 			$value_id = $this->CoreLoad->input('id'); //Input Value
 
 			//Select Value To Unset 
 			$unsetData = array('id');
-			/**valude To Unset*/
-
+			// Name
+			$route_more['name'] = $updateData['name'];
+			// Routes
+			$updateData['route'] = $this->input->post('route');
+			$updateData['controller'] = $this->input->post('controller');
+			if (is_array($updateData['route'])) {
+				//Set Up Data
+				for ($i = 0; $i < count($updateData['route']); $i++) {
+					$route = strtolower(trim($updateData['route'][$i]));
+					$controller = trim($updateData['controller'][$i]);
+					$itemData[$route] = $controller;
+				}
+				$route_more['route'] = $itemData; // Set Data To Json
+			}
 			//Form Validation
 			if ($this->form_validation->run() == TRUE) {
+				// Path Name
+				(!is_null($updateData['menu_path']) && !empty($updateData['menu_path'])) ? $route_more['menu_path'] = $updateData['menu_path'] : '';
+				// Asjson
+				$asjson = (array_key_exists('asjson', $updateData)) ? $updateData['asjson'] : null;
+				if (is_array($asjson)) {
+					$updateData['asjson'] = $this->input->post('asjson');
+					if (count($updateData['asjson']) > 0) {
+						for ($i = 0; $i < count($updateData['asjson']); $i++) {
+							$asjson = json_decode($updateData['asjson'][$i], True);
+							if (!is_null($asjson) && !empty($asjson)) {
+								foreach ($asjson as $key => $value) {
+									$route_more[$key] = $value;
+								}
+							}
+						}
+					}
+				}
+				// Additional
+				$additionaljson = $this->input->post('additionaljson');
+				if (!is_null($additionaljson) && !empty($additionaljson)) {
+					$additionaljson = json_decode($additionaljson, True);
+					// merge
+					$route_more = array_merge($route_more, $additionaljson);
+				}
+
+				// Value
+				$updateRoute = [
+					'setting_title' => $updateData['setting_title'],
+					'setting_flg' => $updateData['setting_flg'],
+					'setting_default' => $updateData['setting_default'],
+					'setting_value' => json_encode($route_more),
+				];
 
 				//Update Table
-				if ($this->update($updateData, array($column_id => $value_id), $unsetData)) {
+				if ($this->update($updateRoute, array($column_id => $value_id), $unsetData)) {
 					$this->session->set_flashdata('notification', 'success'); //Notification Type
 					$message = 'Data was updated successful'; //Notification Message				
 					$this->edit('edit', 'id', $value_id); //Open Page
@@ -398,14 +475,6 @@ class RouteExtends extends CI_Controller
 			//Column Stamp
 			$stamp = strtolower($this->CoreForm->get_column_name($this->Module, 'stamp'));
 			$insertData["$stamp"] = date('Y-m-d H:i:s', time());
-			//Column Flg
-			$flg = strtolower($this->CoreForm->get_column_name($this->Module, 'flg'));
-			$insertData["$flg"] = 1;
-
-			$insertData = $this->CoreCrud->unsetData($insertData, $unsetData); //Unset Data
-
-			$details = strtolower($this->CoreForm->get_column_name($this->Module, 'details'));
-			$insertData["$details"] = json_encode($insertData);
 
 			//Insert Data Into Table
 			$this->db->insert($tableName, $insertData);

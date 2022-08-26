@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Aug 26, 2022 at 09:57 AM
+-- Generation Time: Aug 26, 2022 at 09:34 PM
 -- Server version: 5.7.32
 -- PHP Version: 7.4.12
 
@@ -299,7 +299,7 @@ INSERT INTO `settings` (`setting_id`, `setting_title`, `setting_value`, `setting
 (27, 'seo_keywords', '', '2018-12-17 11:30:41', 'yes', 1),
 (28, 'seo_meta_data', '', '2018-12-17 10:10:23', 'yes', 1),
 (29, 'inheritance_data', 'default,category,tag,gender', '2021-07-22 03:44:17', 'yes', 1),
-(30, 'module_list', 'main,blog,page,autofield,control,inheritance,customfield,user,level,setting,general,extend', '2022-08-26 06:20:01', 'yes', 1),
+(30, 'module_list', 'main,blog,page,autofield,control,inheritance,customfield,user,level,setting,general,extend,helper', '2022-08-26 21:30:28', 'yes', 1),
 (31, 'assets', 'assets/admin', '2019-06-08 09:22:55', 'yes', 1),
 (32, 'ext_dir', 'extend/', '2019-06-11 01:54:39', 'yes', 1),
 (33, 'ext_assets', 'assets/extend', '2019-06-08 11:25:52', 'yes', 1),
@@ -322,9 +322,9 @@ INSERT INTO `settings` (`setting_id`, `setting_title`, `setting_value`, `setting
 (50, 'city', 'Nairobi', '2021-07-22 03:01:55', 'locale', 1),
 (51, 'country_code', '+254', '2021-07-22 03:01:55', 'locale', 1),
 (52, 'country_timezone', 'Africa/Nairobi', '2021-07-22 03:01:55', 'locale', 1),
-(53, 'field_menu', '{\"menu_path\":\"member/menu\",\"route\":{\"member\":\"Field/Members/index\",\"member/new\":\"Field/Members/open/add\", \"member/edit\":\"Field/Members/edit/edit\",\"member/save\":\"Field/Members/valid/save\",\"member/update\":\"Field/Members/valid/update\",\"member/delete\":\"Field/Members/valid/delete\", \"member/multiple\":\"Field/Members/valid/bulk\"}\r\n}', '2022-08-26 06:32:38', 'route', 0),
-(54, 'extension_menu', '{\"menu_path\":\"customer/menu\",\"route\":{\"customer\":\"Extension/Customers/index\",\"customer/new\":\"Extension/Customers/open/add\", \"customer/edit\":\"Extension/Customers/edit/edit\",\"customer/save\":\"Extension/Customers/valid/save\",\"customer/update\":\"Extension/Customers/valid/update\",\"customer/delete\":\"Extension/Customers/valid/delete\", \"customer/multiple\":\"Extension/Customers/valid/bulk\"}\r\n}', '2022-08-26 06:32:38', 'route', 0),
-(55, 'extension_menu', '{\"menu_path\":\"migrate/menu\",\"route\":{\"migrate\":\"Extension/Ex_Migrate/open/manage\",\"migrate/save\":\"Extension/Ex_Migrate/valid/all\", \"migrate/multiple\":\"Extension/Ex_Migrate/valid/bulk\", \"migrate/(:any)\":\"Extension/Ex_Migrate/migrate/$1\"}}', '2022-08-26 06:32:38', 'migration', 0);
+(53, 'field_menu', '{\"menu_path\":\"member\\/menu\",\"route\":{\"member\":\"Field\\/Members\\/index\",\"member\\/new\":\"Field\\/Members\\/open\\/add\",\"member\\/edit\":\"Field\\/Members\\/edit\\/edit\",\"member\\/save\":\"Field\\/Members\\/valid\\/save\",\"member\\/update\":\"Field\\/Members\\/valid\\/update\",\"member\\/delete\":\"Field\\/Members\\/valid\\/delete\",\"member\\/multiple\":\"Field\\/Members\\/valid\\/bulk\"},\"name\":\"Field Members\"}', '2022-08-26 20:48:32', 'route', 0),
+(54, 'extension_menu', '{\"menu_path\":\"customer\\/menu\",\"route\":{\"customer\":\"Extension\\/Customers\\/index\",\"customer\\/new\":\"Extension\\/Customers\\/open\\/add\",\"customer\\/edit\":\"Extension\\/Customers\\/edit\\/edit\",\"customer\\/save\":\"Extension\\/Customers\\/valid\\/save\",\"customer\\/update\":\"Extension\\/Customers\\/valid\\/update\",\"customer\\/delete\":\"Extension\\/Customers\\/valid\\/delete\",\"customer\\/multiple\":\"Extension\\/Customers\\/valid\\/bulk\"},\"name\":\"Customer Extension\"}', '2022-08-26 20:47:31', 'route', 0),
+(55, 'extension_menu', '{\"menu_path\":\"migrate\\/menu\",\"route\":{\"migrate\":\"Extension\\/Ex_Migrate\\/open\\/manage\",\"migrate\\/save\":\"Extension\\/Ex_Migrate\\/valid\\/all\",\"migrate\\/multiple\":\"Extension\\/Ex_Migrate\\/valid\\/bulk\",\"migrate\\/(:any)\":\"Extension\\/Ex_Migrate\\/migrate\\/$1\"},\"name\":\"Migrate\"}', '2022-08-26 20:48:02', 'migration', 0);
 
 -- --------------------------------------------------------
 

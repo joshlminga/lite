@@ -97,16 +97,16 @@ $route["coreapi/(.+)"] = "$Api_Folder/CoreApi/failed";
  * Todo: Admin Routes
  */
 
-//Login
+// Login
 $route["admin"] = "$Core_Folder/Logs/index"; //Login Page
 $route["admin/login"] = "$Core_Folder/Logs/valid/login"; //Login Verification
 $route["admin/reset"] = "$Core_Folder/Logs/valid/reset"; //Reset Password
 $route["admin/logout"] = "$Core_Folder/Logs/valid/logout"; //Logout
 
-//Administrator
+// Administrator
 $route["dashboard"] = "$Core_Folder/Dashboard/index"; //Dashboard
 
-//Users
+// Users
 $route["users"] = "$Core_Folder/Users/index"; //Manage
 $route["users/new"] = "$Core_Folder/Users/open/add"; //Create New
 $route["users/edit"] = "$Core_Folder/Users/edit/edit"; //Edit
@@ -115,7 +115,7 @@ $route["users/update"] = "$Core_Folder/Users/valid/update"; //Validate and Updat
 $route["users/delete"] = "$Core_Folder/Users/valid/delete"; //Delete 
 $route["users/multiple"] = "$Core_Folder/Users/valid/bulk"; //Bulk Action 
 
-//Blogs
+// Blogs
 $route["blogs"] = "$Core_Folder/Blogs/index"; //List
 $route["blogs/new"] = "$Core_Folder/Blogs/open/add"; //Open Create New Form
 $route["blogs/edit"] = "$Core_Folder/Blogs/edit/edit"; // Open Edit  Page
@@ -124,7 +124,7 @@ $route["blogs/update"] = "$Core_Folder/Blogs/valid/update"; // Validate and Upda
 $route["blogs/delete"] = "$Core_Folder/Blogs/valid/delete"; // Delete 
 $route["blogs/multiple"] = "$Core_Folder/Blogs/valid/bulk"; // Bulk Action 
 
-//Blog Tags
+// Blog Tags
 $route["blogtag"] = "$Core_Folder/BlogTags/index"; //Manage
 $route["blogtag/edit"] = "$Core_Folder/BlogTags/edit/edit"; //Edit 
 $route["blogtag/save"] = "$Core_Folder/BlogTags/valid/save"; //Validate and Save
@@ -132,7 +132,7 @@ $route["blogtag/update"] = "$Core_Folder/BlogTags/valid/update"; //Validate and 
 $route["blogtag/delete"] = "$Core_Folder/BlogTags/valid/delete"; //Delete 
 $route["blogtag/multiple"] = "$Core_Folder/BlogTags/valid/bulk"; //Bulk Action  
 
-//Blog Categories
+// Blog Categories
 $route["blogcategory"] = "$Core_Folder/BlogCategories/index"; //Manage
 $route["blogcategory/edit"] = "$Core_Folder/BlogCategories/edit/edit"; //Edit 
 $route["blogcategory/save"] = "$Core_Folder/BlogCategories/valid/save"; //Validate and Save
@@ -140,7 +140,7 @@ $route["blogcategory/update"] = "$Core_Folder/BlogCategories/valid/update"; //Va
 $route["blogcategory/delete"] = "$Core_Folder/BlogCategories/valid/delete"; //Delete 
 $route["blogcategory/multiple"] = "$Core_Folder/BlogCategories/valid/bulk"; //Bulk Action  
 
-//Pages
+// Pages
 $route["pages"] = "$Core_Folder/Pages/index"; //List
 $route["pages/new"] = "$Core_Folder/Pages/open/add"; //Open Create New Form
 $route["pages/edit"] = "$Core_Folder/Pages/edit/edit"; // Open Edit  Page
@@ -149,7 +149,7 @@ $route["pages/update"] = "$Core_Folder/Pages/valid/update"; // Validate and Upda
 $route["pages/delete"] = "$Core_Folder/Pages/valid/delete"; // Delete 
 $route["pages/multiple"] = "$Core_Folder/Pages/valid/bulk"; // Bulk Action 
 
-//Settings
+// Settings
 $route["general"] = "$Core_Folder/Settings/open/general"; //General Settings
 $route["general/update"] = "$Core_Folder/Settings/valid/general"; //General Settings Update
 $route["site"] = "$Core_Folder/Settings/open/site"; //Site Config
@@ -167,7 +167,7 @@ $route["inheritance/update"] = "$Core_Folder/Settings/valid/inheritance"; //Inhe
 $route["module"] = "$Core_Folder/Settings/open/module"; //ModuleSettings
 $route["module/update"] = "$Core_Folder/Settings/valid/module"; //Module Settings Update
 
-//Blog Categories
+// Blog Categories
 $route["level"] = "$Core_Folder/Levels/index"; //Manage
 $route["level/edit"] = "$Core_Folder/Levels/edit/edit"; //Edit 
 $route["level/save"] = "$Core_Folder/Levels/valid/save"; //Validate and Save
@@ -175,11 +175,11 @@ $route["level/update"] = "$Core_Folder/Levels/valid/update"; //Validate and Upda
 $route["level/delete"] = "$Core_Folder/Levels/valid/delete"; //Delete 
 $route["level/multiple"] = "$Core_Folder/Levels/valid/bulk"; //Bulk Action  
 
-//Sub Profile
+// Sub Profile
 $route["profile"] = "$Core_Folder/Profile/edit/profile"; //My Profile
 $route["profile/update"] = "$Core_Folder/Profile/valid/update"; //Validate and Update
 
-//AutoFields
+// AutoFields
 $route["autofields"] = "$Core_Folder/AutoFields/index"; //List
 $route["autofields/new"] = "$Core_Folder/AutoFields/open/add"; //Create New
 $route["autofields/edit"] = "$Core_Folder/AutoFields/edit/edit"; // Edit 
@@ -188,7 +188,7 @@ $route["autofields/update"] = "$Core_Folder/AutoFields/valid/update"; // Validat
 $route["autofields/delete"] = "$Core_Folder/AutoFields/valid/delete"; // Delete 
 $route["autofields/multiple"] = "$Core_Folder/AutoFields/valid/bulk"; // Bulk Action 
 
-//Extends | For Extend Fields,Extensions & Conrtols
+// Extends | For Extend Fields,Extensions & Conrtols
 $route["extends"] = "$Core_Folder/RouteExtends/index"; //List
 $route["extends/new"] = "$Core_Folder/RouteExtends/open/add"; //Create New
 $route["extends/edit"] = "$Core_Folder/RouteExtends/edit/edit"; // Edit 
@@ -197,7 +197,7 @@ $route["extends/update"] = "$Core_Folder/RouteExtends/valid/update"; // Validate
 $route["extends/delete"] = "$Core_Folder/RouteExtends/valid/delete"; // Delete 
 $route["extends/multiple"] = "$Core_Folder/RouteExtends/valid/bulk"; // Bulk Action 
 
-//Custom Fields
+// Custom Fields
 $route["customfields"] = "$Core_Folder/CustomFields/index"; //Manage
 $route["customfields/new"] = "$Core_Folder/CustomFields/open/add"; //Create New 
 $route["customfields/edit"] = "$Core_Folder/CustomFields/edit/edit"; //Edit 
@@ -206,7 +206,7 @@ $route["customfields/update"] = "$Core_Folder/CustomFields/valid/update"; //Vali
 $route["customfields/delete"] = "$Core_Folder/CustomFields/valid/delete"; //Delete 
 $route["customfields/multiple"] = "$Core_Folder/CustomFields/valid/bulk"; //Bulk Action  
 
-//Inheritance
+// Inheritance
 $route["inheritances"] = "$Core_Folder/Inheritances/index"; //Manage
 $route["inheritances/new"] = "$Core_Folder/Inheritances/open/add"; //Create New 
 $route["inheritances/edit"] = "$Core_Folder/Inheritances/edit/edit"; //Edit 
@@ -214,6 +214,15 @@ $route["inheritances/save"] = "$Core_Folder/Inheritances/valid/save"; //Validate
 $route["inheritances/update"] = "$Core_Folder/Inheritances/valid/update"; //Validate and Update
 $route["inheritances/delete"] = "$Core_Folder/Inheritances/valid/delete"; //Delete 
 $route["inheritances/multiple"] = "$Core_Folder/Inheritances/valid/bulk"; //Bulk Action 
+
+// Helpers
+$route["helpers"] = "$Core_Folder/Helpers/index"; //List
+$route["helpers/new"] = "$Core_Folder/Helpers/open/add"; //Create New
+$route["helpers/edit"] = "$Core_Folder/Helpers/edit/edit"; // Edit 
+$route["helpers/save"] = "$Core_Folder/Helpers/valid/save"; // Validate and Save
+$route["helpers/update"] = "$Core_Folder/Helpers/valid/update"; // Validate and Update
+$route["helpers/delete"] = "$Core_Folder/Helpers/valid/delete"; // Delete 
+$route["helpers/multiple"] = "$Core_Folder/Helpers/valid/bulk"; // Bulk Action 
 
 /** API - Customer Extension -> Users */
 $route["api-customer/add"] = "$Api_Folder/Extension_Customers/valid/save";
