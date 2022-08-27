@@ -486,7 +486,7 @@ class CoreMigrate extends CI_Model
 					'setting_title' => 'extension_menu',
 					'setting_value' => '{"menu_path":"migrate/menu","route":{"migrate":"Extension/Ex_Migrate/open/manage","migrate/save":"Extension/Ex_Migrate/valid/all", "migrate/multiple":"Extension/Ex_Migrate/valid/bulk", "migrate/(:any)":"Extension/Ex_Migrate/migrate/$1"}}',
 					'setting_stamp' => date('Y-m-d H:i:s'),
-					'setting_default' => 'migration',
+					'setting_default' => 'route',
 					'setting_flg' => 1,
 				];
 				$this->CoreCrud->insertData('settings', $migrationData);

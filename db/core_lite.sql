@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Aug 26, 2022 at 09:34 PM
+-- Generation Time: Aug 27, 2022 at 07:42 AM
 -- Server version: 5.7.32
 -- PHP Version: 7.4.12
 
@@ -324,7 +324,7 @@ INSERT INTO `settings` (`setting_id`, `setting_title`, `setting_value`, `setting
 (52, 'country_timezone', 'Africa/Nairobi', '2021-07-22 03:01:55', 'locale', 1),
 (53, 'field_menu', '{\"menu_path\":\"member\\/menu\",\"route\":{\"member\":\"Field\\/Members\\/index\",\"member\\/new\":\"Field\\/Members\\/open\\/add\",\"member\\/edit\":\"Field\\/Members\\/edit\\/edit\",\"member\\/save\":\"Field\\/Members\\/valid\\/save\",\"member\\/update\":\"Field\\/Members\\/valid\\/update\",\"member\\/delete\":\"Field\\/Members\\/valid\\/delete\",\"member\\/multiple\":\"Field\\/Members\\/valid\\/bulk\"},\"name\":\"Field Members\"}', '2022-08-26 20:48:32', 'route', 0),
 (54, 'extension_menu', '{\"menu_path\":\"customer\\/menu\",\"route\":{\"customer\":\"Extension\\/Customers\\/index\",\"customer\\/new\":\"Extension\\/Customers\\/open\\/add\",\"customer\\/edit\":\"Extension\\/Customers\\/edit\\/edit\",\"customer\\/save\":\"Extension\\/Customers\\/valid\\/save\",\"customer\\/update\":\"Extension\\/Customers\\/valid\\/update\",\"customer\\/delete\":\"Extension\\/Customers\\/valid\\/delete\",\"customer\\/multiple\":\"Extension\\/Customers\\/valid\\/bulk\"},\"name\":\"Customer Extension\"}', '2022-08-26 20:47:31', 'route', 0),
-(55, 'extension_menu', '{\"menu_path\":\"migrate\\/menu\",\"route\":{\"migrate\":\"Extension\\/Ex_Migrate\\/open\\/manage\",\"migrate\\/save\":\"Extension\\/Ex_Migrate\\/valid\\/all\",\"migrate\\/multiple\":\"Extension\\/Ex_Migrate\\/valid\\/bulk\",\"migrate\\/(:any)\":\"Extension\\/Ex_Migrate\\/migrate\\/$1\"},\"name\":\"Migrate\"}', '2022-08-26 20:48:02', 'migration', 0);
+(55, 'extension_menu', '{\"menu_path\":\"migrate\\/menu\",\"route\":{\"migrate\":\"Extension\\/Ex_Migrate\\/open\\/manage\",\"migrate\\/save\":\"Extension\\/Ex_Migrate\\/valid\\/all\",\"migrate\\/multiple\":\"Extension\\/Ex_Migrate\\/valid\\/bulk\",\"migrate\\/(:any)\":\"Extension\\/Ex_Migrate\\/migrate\\/$1\"},\"name\":\"Migrate\"}', '2022-08-27 07:42:24', 'route', 0);
 
 -- --------------------------------------------------------
 

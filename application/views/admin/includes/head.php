@@ -193,13 +193,6 @@
 									</a>
 								</li>
 							<?php endif ?>
-							<?php if ($this->CoreLoad->auth('helper')) : ?>
-								<li class="core-sub-item">
-									<a class="core-sub-link" href="<?= site_url('helpers') ?>">
-										Helpers
-									</a>
-								</li>
-							<?php endif ?>
 							<!-- Controls Menu -->
 							<?php $this->load->view("admin/menus/controls"); ?>
 							<!-- End Controls Menu -->
