@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Aug 27, 2022 at 07:42 AM
+-- Generation Time: Aug 31, 2022 at 07:43 PM
 -- Server version: 5.7.32
 -- PHP Version: 7.4.12
 
@@ -270,61 +270,62 @@ CREATE TABLE `settings` (
 --
 
 INSERT INTO `settings` (`setting_id`, `setting_title`, `setting_value`, `setting_stamp`, `setting_default`, `setting_flg`) VALUES
-(1, 'site_title', 'Core CMS Lite', '2020-12-07 12:15:13', 'yes', 1),
-(2, 'site_slogan', 'Develop Faster, Easier and Modular', '2022-08-25 08:53:26', 'yes', 1),
-(3, 'theme_title', 'starter', '2018-11-23 08:19:36', 'yes', 1),
-(4, 'site_status', 'online', '2018-12-17 02:52:06', 'yes', 1),
-(5, 'offline_message', 'We are offline', '2018-12-17 02:50:58', 'yes', 1),
-(6, 'current_url', 'title', '2018-12-17 11:54:02', 'yes', 1),
-(7, 'mail_protocol', 'mail', '2019-09-21 05:34:13', 'yes', 1),
-(8, 'smtp_host', '', '2018-12-17 09:24:08', 'yes', 1),
-(9, 'smtp_user', '', '2018-12-17 09:24:29', 'yes', 1),
-(10, 'smtp_pass', '', '2018-12-17 09:24:29', 'yes', 1),
-(11, 'smtp_port', '25', '2018-12-17 09:27:45', 'yes', 1),
-(12, 'smtp_timeout', '', '2022-08-25 09:36:09', 'yes', 1),
-(13, 'smtp_crypto', '', '2018-12-17 09:25:41', 'yes', 1),
-(14, 'wordwrap', 'TRUE', '2018-12-17 09:27:10', 'yes', 1),
-(15, 'wrapchars', '76', '2018-12-17 09:27:03', 'yes', 1),
-(16, 'mailtype', 'text', '2018-12-17 09:26:56', 'yes', 1),
-(17, 'charset', 'UTF-8', '2018-12-17 09:26:34', 'yes', 1),
-(18, 'home_display', 'blog', '2018-12-17 11:24:53', 'yes', 1),
-(19, 'home_post', 'latest_post', '2019-03-21 11:09:47', 'yes', 1),
-(20, 'home_page', '1', '2022-08-25 10:32:01', 'yes', 1),
-(21, 'post_per_page', '10', '2018-12-17 10:11:11', 'yes', 1),
-(22, 'page_pagination', '4', '2018-12-17 10:11:11', 'yes', 1),
-(23, 'post_show', 'summary', '2019-03-21 10:53:57', 'yes', 1),
-(24, 'seo_visibility', 'noindex, nofollow', '2019-03-18 10:26:50', 'yes', 1),
-(25, 'seo_global', 'any', '2019-03-18 10:37:13', 'yes', 1),
-(26, 'seo_description', '', '2019-06-22 02:06:09', 'yes', 1),
-(27, 'seo_keywords', '', '2018-12-17 11:30:41', 'yes', 1),
-(28, 'seo_meta_data', '', '2018-12-17 10:10:23', 'yes', 1),
-(29, 'inheritance_data', 'default,category,tag,gender', '2021-07-22 03:44:17', 'yes', 1),
-(30, 'module_list', 'main,blog,page,autofield,control,inheritance,customfield,user,level,setting,general,extend,helper', '2022-08-26 21:30:28', 'yes', 1),
-(31, 'assets', 'assets/admin', '2019-06-08 09:22:55', 'yes', 1),
-(32, 'ext_dir', 'extend/', '2019-06-11 01:54:39', 'yes', 1),
-(33, 'ext_assets', 'assets/extend', '2019-06-08 11:25:52', 'yes', 1),
-(34, 'theme_name', 'starter', '2020-01-15 06:28:43', 'theme', 1),
-(35, 'theme_dir', 'themes/starter', '2019-06-11 01:54:50', 'theme', 1),
-(36, 'theme_assets', 'assets/themes/starter', '2019-06-08 12:30:02', 'theme', 1),
-(37, 'child_theme', '', '2019-06-08 12:30:26', 'theme', 1),
-(38, 'child_theme_dir', '', '2019-06-08 12:30:29', 'theme', 1),
-(39, 'child_theme_assets', '', '2019-06-08 12:30:34', 'theme', 1),
-(40, 'site_url', 'http://localhost:8888/CoreCMS/CoreLite/', '2022-08-03 12:54:47', 'yes', 1),
-(41, 'api_url', 'http://localhost:8888/CoreCMS/CoreLite/', '2022-08-03 12:54:51', 'yes', 1),
-(42, 'string_variable', '#\\#{\\[(.*?)\\]\\}#', '2020-02-05 02:55:11', 'keys', 1),
-(43, 'session_key', 'ywMp050i42', '2022-08-26 09:57:15', 'keys', 1),
-(44, 'token_name', 'Token', '2021-07-22 03:01:55', 'keys', 1),
-(45, 'token_length', '25', '2021-07-22 03:01:55', 'keys', 1),
-(46, 'token_use', '3', '2022-08-25 10:53:12', 'keys', 1),
-(47, 'token_time', '300', '2021-07-22 03:01:55', 'keys', 1),
-(48, 'currency', 'Ksh', '2021-07-22 03:01:55', 'locale', 1),
-(49, 'country', 'Kenya', '2021-07-22 03:01:55', 'locale', 1),
-(50, 'city', 'Nairobi', '2021-07-22 03:01:55', 'locale', 1),
-(51, 'country_code', '+254', '2021-07-22 03:01:55', 'locale', 1),
-(52, 'country_timezone', 'Africa/Nairobi', '2021-07-22 03:01:55', 'locale', 1),
-(53, 'field_menu', '{\"menu_path\":\"member\\/menu\",\"route\":{\"member\":\"Field\\/Members\\/index\",\"member\\/new\":\"Field\\/Members\\/open\\/add\",\"member\\/edit\":\"Field\\/Members\\/edit\\/edit\",\"member\\/save\":\"Field\\/Members\\/valid\\/save\",\"member\\/update\":\"Field\\/Members\\/valid\\/update\",\"member\\/delete\":\"Field\\/Members\\/valid\\/delete\",\"member\\/multiple\":\"Field\\/Members\\/valid\\/bulk\"},\"name\":\"Field Members\"}', '2022-08-26 20:48:32', 'route', 0),
-(54, 'extension_menu', '{\"menu_path\":\"customer\\/menu\",\"route\":{\"customer\":\"Extension\\/Customers\\/index\",\"customer\\/new\":\"Extension\\/Customers\\/open\\/add\",\"customer\\/edit\":\"Extension\\/Customers\\/edit\\/edit\",\"customer\\/save\":\"Extension\\/Customers\\/valid\\/save\",\"customer\\/update\":\"Extension\\/Customers\\/valid\\/update\",\"customer\\/delete\":\"Extension\\/Customers\\/valid\\/delete\",\"customer\\/multiple\":\"Extension\\/Customers\\/valid\\/bulk\"},\"name\":\"Customer Extension\"}', '2022-08-26 20:47:31', 'route', 0),
-(55, 'extension_menu', '{\"menu_path\":\"migrate\\/menu\",\"route\":{\"migrate\":\"Extension\\/Ex_Migrate\\/open\\/manage\",\"migrate\\/save\":\"Extension\\/Ex_Migrate\\/valid\\/all\",\"migrate\\/multiple\":\"Extension\\/Ex_Migrate\\/valid\\/bulk\",\"migrate\\/(:any)\":\"Extension\\/Ex_Migrate\\/migrate\\/$1\"},\"name\":\"Migrate\"}', '2022-08-27 07:42:24', 'route', 0);
+(1, 'site_title', 'Core CMS Lite', '2020-12-07 06:15:13', 'yes', 1),
+(2, 'site_slogan', 'Develop Faster, Easier and Modular', '2022-08-25 02:53:26', 'yes', 1),
+(3, 'theme_title', 'starter', '2018-11-23 02:19:36', 'yes', 1),
+(4, 'site_status', 'online', '2018-12-16 20:52:06', 'yes', 1),
+(5, 'offline_message', 'We are offline', '2018-12-16 20:50:58', 'yes', 1),
+(6, 'current_url', 'title', '2018-12-17 05:54:02', 'yes', 1),
+(7, 'site_url', 'http://localhost:8888/CoreCMS/CoreLite/', '2022-08-03 06:54:47', 'yes', 1),
+(8, 'api_url', 'http://localhost:8888/CoreCMS/CoreLite/', '2022-08-03 06:54:51', 'yes', 1),
+(9, 'mail_protocol', 'mail', '2019-09-20 23:34:13', 'yes', 1),
+(10, 'smtp_host', '', '2018-12-17 03:24:08', 'yes', 1),
+(11, 'smtp_user', '', '2018-12-17 03:24:29', 'yes', 1),
+(12, 'smtp_pass', '', '2018-12-17 03:24:29', 'yes', 1),
+(13, 'smtp_port', '25', '2018-12-17 03:27:45', 'yes', 1),
+(14, 'smtp_timeout', '', '2022-08-25 03:36:09', 'yes', 1),
+(15, 'smtp_crypto', '', '2018-12-17 03:25:41', 'yes', 1),
+(16, 'wordwrap', 'TRUE', '2018-12-17 03:27:10', 'yes', 1),
+(17, 'wrapchars', '76', '2018-12-17 03:27:03', 'yes', 1),
+(18, 'mailtype', 'text', '2018-12-17 03:26:56', 'yes', 1),
+(19, 'charset', 'UTF-8', '2018-12-17 03:26:34', 'yes', 1),
+(20, 'home_display', 'blog', '2018-12-17 05:24:53', 'yes', 1),
+(21, 'home_post', 'latest_post', '2019-03-21 05:09:47', 'yes', 1),
+(22, 'home_page', '1', '2022-08-25 04:32:01', 'yes', 1),
+(23, 'post_per_page', '10', '2018-12-17 04:11:11', 'yes', 1),
+(24, 'page_pagination', '4', '2018-12-17 04:11:11', 'yes', 1),
+(25, 'post_show', 'summary', '2019-03-21 04:53:57', 'yes', 1),
+(26, 'seo_visibility', 'noindex, nofollow', '2019-03-18 04:26:50', 'yes', 1),
+(27, 'seo_global', 'any', '2019-03-18 04:37:13', 'yes', 1),
+(28, 'seo_description', '', '2019-06-21 20:06:09', 'yes', 1),
+(29, 'seo_keywords', '', '2018-12-17 05:30:41', 'yes', 1),
+(30, 'seo_meta_data', '', '2018-12-17 04:10:23', 'yes', 1),
+(31, 'setthelper', '[\"helper\",\"locale\"]', '2018-12-17 05:54:02', 'yes', 1),
+(32, 'inheritance_data', 'default,category,tag,gender', '2021-07-21 21:44:17', 'yes', 1),
+(33, 'module_list', 'main,blog,page,autofield,control,inheritance,customfield,user,level,setting,general,extend,helper', '2022-08-26 15:30:28', 'yes', 1),
+(34, 'assets', 'assets/admin', '2019-06-08 03:22:55', 'yes', 1),
+(35, 'ext_dir', 'extend/', '2019-06-10 19:54:39', 'yes', 1),
+(36, 'ext_assets', 'assets/extend', '2019-06-08 05:25:52', 'yes', 1),
+(37, 'theme_name', 'starter', '2020-01-15 00:28:43', 'theme', 1),
+(38, 'theme_dir', 'themes/starter', '2019-06-10 19:54:50', 'theme', 1),
+(39, 'theme_assets', 'assets/themes/starter', '2022-08-31 19:41:58', 'theme', 1),
+(40, 'child_theme', '', '2019-06-08 06:30:26', 'theme', 1),
+(41, 'child_theme_dir', '', '2019-06-08 06:30:29', 'theme', 1),
+(42, 'child_theme_assets', '', '2022-08-31 19:41:58', 'theme', 1),
+(43, 'string_variable', '#\\#{\\[(.*?)\\]\\}#', '2020-02-04 20:55:11', 'keys', 1),
+(44, 'session_key', 'ywMp050i42', '2022-08-26 03:57:15', 'keys', 1),
+(45, 'token_name', 'Token', '2021-07-21 21:01:55', 'keys', 1),
+(46, 'token_length', '25', '2021-07-21 21:01:55', 'keys', 1),
+(47, 'token_use', '3', '2022-08-25 04:53:12', 'keys', 1),
+(48, 'token_time', '300', '2021-07-21 21:01:55', 'keys', 1),
+(49, 'currency', 'Ksh', '2021-07-21 21:01:55', 'locale', 1),
+(50, 'country', 'Kenya', '2021-07-21 21:01:55', 'locale', 1),
+(51, 'city', 'Nairobi', '2021-07-21 21:01:55', 'locale', 1),
+(52, 'country_code', '+254', '2021-07-21 21:01:55', 'locale', 1),
+(53, 'country_timezone', 'Africa/Nairobi', '2021-07-21 21:01:55', 'locale', 1),
+(54, 'field_menu', '{\"menu_path\":\"member\\/menu\",\"route\":{\"member\":\"Field\\/Members\\/index\",\"member\\/new\":\"Field\\/Members\\/open\\/add\",\"member\\/edit\":\"Field\\/Members\\/edit\\/edit\",\"member\\/save\":\"Field\\/Members\\/valid\\/save\",\"member\\/update\":\"Field\\/Members\\/valid\\/update\",\"member\\/delete\":\"Field\\/Members\\/valid\\/delete\",\"member\\/multiple\":\"Field\\/Members\\/valid\\/bulk\"},\"name\":\"Field Members\"}', '2022-08-26 14:48:32', 'route', 0),
+(55, 'extension_menu', '{\"menu_path\":\"customer\\/menu\",\"route\":{\"customer\":\"Extension\\/Customers\\/index\",\"customer\\/new\":\"Extension\\/Customers\\/open\\/add\",\"customer\\/edit\":\"Extension\\/Customers\\/edit\\/edit\",\"customer\\/save\":\"Extension\\/Customers\\/valid\\/save\",\"customer\\/update\":\"Extension\\/Customers\\/valid\\/update\",\"customer\\/delete\":\"Extension\\/Customers\\/valid\\/delete\",\"customer\\/multiple\":\"Extension\\/Customers\\/valid\\/bulk\"},\"name\":\"Customer Extension\"}', '2022-08-26 14:47:31', 'route', 0),
+(56, 'extension_menu', '{\"menu_path\":\"migrate\\/menu\",\"route\":{\"migrate\":\"Extension\\/Ex_Migrate\\/open\\/manage\",\"migrate\\/save\":\"Extension\\/Ex_Migrate\\/valid\\/all\",\"migrate\\/multiple\":\"Extension\\/Ex_Migrate\\/valid\\/bulk\",\"migrate\\/(:any)\":\"Extension\\/Ex_Migrate\\/migrate\\/$1\"},\"name\":\"Migrate\"}', '2022-08-27 01:42:24', 'route', 0);
 
 -- --------------------------------------------------------
 
@@ -503,7 +504,7 @@ ALTER TABLE `pages`
 -- AUTO_INCREMENT for table `settings`
 --
 ALTER TABLE `settings`
-  MODIFY `setting_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
+  MODIFY `setting_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=57;
 
 --
 -- AUTO_INCREMENT for table `tokens`

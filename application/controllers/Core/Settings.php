@@ -27,6 +27,7 @@ class Settings extends CI_Controller
 	private $Seo = 'seo/update'; //
 	private $Inheritance = 'inheritance/update'; //
 	private $Modulelist = 'module/update'; //
+	private $Theme = 'theme/update'; //
 
 	private $ModuleName = 'settings'; //Module Nmae
 
@@ -99,6 +100,7 @@ class Settings extends CI_Controller
 		$data['form_seo'] = $this->Seo;
 		$data['form_inheritance'] = $this->Inheritance;
 		$data['form_module'] = $this->Modulelist;
+		$data['form_theme'] = $this->Theme;
 
 		return $data;
 	}
@@ -408,6 +410,33 @@ class Settings extends CI_Controller
 			$updateData = $this->CoreLoad->input(); //Input Data
 
 			$this->form_validation->set_rules("module_list", "Module List", "trim");
+
+			//Form Validation
+			if ($this->form_validation->run() == TRUE) {
+				if ($this->update($updateData)) {
+					$this->session->set_flashdata('notification', 'success'); //Notification Type
+					$this->open($type); //Redirect to Page
+				} else {
+					$this->session->set_flashdata('notification', 'error'); //Notification Type
+					$this->open($type); //Open Page
+				}
+			} else {
+				$this->session->set_flashdata('notification', 'error'); //Notification Type
+				$message = 'Please check the fields, and try again'; //Notification Message				
+				$this->open($type, $message); //Open Page
+			}
+		} elseif ($type == 'theme') {
+
+			$updateData = $this->CoreLoad->input(); //Input Data
+
+			//Form Validation Values
+			$this->form_validation->set_rules("theme_name", "Main Theme Name", "trim|required|min_length[1]|max_length[800]");
+			$this->form_validation->set_rules("theme_dir", "Main Theme Dir", "trim|required|min_length[1]|max_length[800]");
+			$this->form_validation->set_rules("theme_assets", "Main Theme Assets", "trim|required|min_length[1]|max_length[800]");
+
+			$this->form_validation->set_rules("child_theme", "Child Theme Name", "trim|max_length[800]");
+			$this->form_validation->set_rules("child_theme_dir", "Child Theme Dir", "trim|max_length[800]");
+			$this->form_validation->set_rules("child_theme_assets", "Child Theme Assets", "trim|max_length[800]");
 
 			//Form Validation
 			if ($this->form_validation->run() == TRUE) {

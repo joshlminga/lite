@@ -74,6 +74,8 @@
 														$type = $type[0];
 														?>
             											<td> <?= ucwords($type); ?> </td>
+            										<?php elseif ($key == 'default') : ?>
+            											<td> <?= $dataList[$i]->$key; ?> </td>
             										<?php elseif ($key == 'name') : ?>
             											<?php
 														$sett_value = $this->CoreCrud->selectSingleValue('settings', 'value', ['id' => $dataList[$i]->$key]);

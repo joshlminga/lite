@@ -153,12 +153,7 @@
 				<?php $this->load->view("admin/menus/extensions"); ?>
 				<!-- End Extensions Menu -->
 
-				<?php if ($this->CoreLoad->auth('tweaks')) : ?>
-					<li class="">
-						<a href="<?= site_url('autofields') ?>">
-							<i class="zmdi zmdi-filter-list zmdi-hc-fw color-green"></i> Auto Fields
-						</a>
-					</li>
+				<?php if ($this->CoreLoad->auth('extend')) : ?>
 					<li class="">
 						<a href="<?= site_url('extends') ?>">
 							<i class="zmdi zmdi-code-setting zmdi-hc-fw color-yellow"></i> Extend
@@ -166,6 +161,13 @@
 					</li>
 				<?php endif ?>
 
+				<?php if ($this->CoreLoad->auth('autofield')) : ?>
+					<li class="">
+						<a href="<?= site_url('autofields') ?>">
+							<i class="zmdi zmdi-filter-list zmdi-hc-fw"></i> Auto Fields
+						</a>
+					</li>
+				<?php endif ?>
 
 				<!-- Fields Menu -->
 				<?php $this->load->view("admin/menus/fields"); ?>
@@ -190,6 +192,13 @@
 								<li class="core-sub-item">
 									<a class="core-sub-link" href="<?= site_url('level') ?>">
 										Access Level
+									</a>
+								</li>
+							<?php endif ?>
+							<?php if ($this->CoreLoad->auth('helper')) : ?>
+								<li class="core-sub-item">
+									<a class="core-sub-link" href="<?= site_url('helpers') ?>">
+										Helper
 									</a>
 								</li>
 							<?php endif ?>
@@ -224,6 +233,7 @@
 							<li class="core-sub-item"><a class="core-sub-link" href="<?= site_url('blog'); ?>">Page / Blog</a></li>
 							<li class="core-sub-item"><a class="core-sub-link" href="<?= site_url('mail'); ?>">Mail</a></li>
 							<li class="core-sub-item"><a class="core-sub-link" href="<?= site_url('seo'); ?>">Seo</a></li>
+							<li class="core-sub-item"><a class="core-sub-link" href="<?= site_url('theme'); ?>">Themes</a></li>
 							<li class="core-sub-item"><a class="core-sub-link" href="<?= site_url('inheritance'); ?>">Inheritance</a></li>
 							<li class="core-sub-item"><a class="core-sub-link" href="<?= site_url('module'); ?>">Modules</a></li>
 						</ul>

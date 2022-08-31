@@ -138,7 +138,7 @@ class RouteExtends extends CI_Controller
 
 		//Table Select & Clause
 		$where_in = ['field_menu', 'extension_menu', 'control_menu', 'menu_menu', 'route_menu'];
-		$resultList = $this->db->select('setting_id as id,setting_title as type,setting_id as name,setting_id as path,setting_flg as status')->where_in('setting_title', $where_in)->get('settings');
+		$resultList = $this->db->select('setting_id as id,setting_title as type,setting_id as name,setting_id as path,setting_default as default,setting_flg as status')->where_in('setting_title', $where_in)->get('settings');
 		$data['dataList'] = $resultList->result();
 
 		//Notification
@@ -266,9 +266,9 @@ class RouteExtends extends CI_Controller
 			$formData = $this->CoreLoad->input(); //Input Data
 
 			//Form Validation Values
-			$this->form_validation->set_rules('setting_title', 'Default Value', 'trim|required|min_length[1]|max_length[50]');
-			$this->form_validation->set_rules('setting_flg', 'Default Value', 'trim|required|min_length[1]|max_length[2]|integer');
-			$this->form_validation->set_rules('setting_default', 'Default Value', 'trim|max_length[25]');
+			$this->form_validation->set_rules('setting_title', 'Type', 'trim|required|min_length[1]|max_length[50]');
+			$this->form_validation->set_rules('setting_flg', 'Status', 'trim|required|min_length[1]|max_length[2]|integer');
+			$this->form_validation->set_rules('setting_default', 'Default', 'trim|max_length[25]');
 			// Default
 			$formData['setting_default'] = (!is_null($formData['setting_default']) && !empty($formData['setting_default'])) ? $formData['setting_default'] : 'route';
 
@@ -300,11 +300,17 @@ class RouteExtends extends CI_Controller
 					// merge
 					$route_more = array_merge($route_more, $additionaljson);
 				}
+
+				// Default
+				$setting_default = str_replace(' ', '_', trim($formData['setting_default']));
+				$setting_default = preg_replace('/[^A-Za-z0-9\-]/', '_', $setting_default);
+				$setting_default = strtolower($setting_default);
+
 				// Value
 				$saveRoute = [
 					'setting_title' => $formData['setting_title'],
 					'setting_flg' => $formData['setting_flg'],
-					'setting_default' => $formData['setting_default'],
+					'setting_default' => $setting_default,
 					'setting_value' => json_encode($route_more),
 				];
 				//More Data
@@ -360,9 +366,9 @@ class RouteExtends extends CI_Controller
 			$updateData = $this->CoreLoad->input(); //Input Data
 
 			//Form Validation Values
-			$this->form_validation->set_rules('setting_title', 'Default Value', 'trim|required|min_length[1]|max_length[50]');
-			$this->form_validation->set_rules('setting_flg', 'Default Value', 'trim|required|min_length[1]|max_length[2]|integer');
-			$this->form_validation->set_rules('setting_default', 'Default Value', 'trim|max_length[25]');
+			$this->form_validation->set_rules('setting_title', 'Type', 'trim|required|min_length[1]|max_length[50]');
+			$this->form_validation->set_rules('setting_flg', 'Status', 'trim|required|min_length[1]|max_length[2]|integer');
+			$this->form_validation->set_rules('setting_default', 'Default', 'trim|max_length[25]');
 			// Default
 			$updateData['setting_default'] = (!is_null($updateData['setting_default']) && !empty($updateData['setting_default'])) ? $updateData['setting_default'] : 'route';
 
@@ -415,11 +421,16 @@ class RouteExtends extends CI_Controller
 					$route_more = array_merge($route_more, $additionaljson);
 				}
 
+				// Default
+				$setting_default = str_replace(' ', '_', trim($updateData['setting_default']));
+				$setting_default = preg_replace('/[^A-Za-z0-9\-]/', '_', $setting_default);
+				$setting_default = strtolower($setting_default);
+
 				// Value
 				$updateRoute = [
 					'setting_title' => $updateData['setting_title'],
 					'setting_flg' => $updateData['setting_flg'],
-					'setting_default' => $updateData['setting_default'],
+					'setting_default' => $setting_default,
 					'setting_value' => json_encode($route_more),
 				];
 
@@ -542,6 +553,7 @@ class RouteExtends extends CI_Controller
 			}
 		}
 	}
+
 	/**
 	 *
 	 * This Fuction is used to validate File Input Data

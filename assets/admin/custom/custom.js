@@ -279,6 +279,87 @@ const removeRoute = (num = null) => {
 
 /*** END ROUTE FIELD ***/
 
+/*** HELPERS FIELD ***/
+const helperInput = (num) => {
+    let fields = `
+
+		<div class="form-group">
+			<div class="fg-line">
+				<label>
+					Key
+					<a onclick="removeHelper(this.getAttribute('action'))" action="${num}" class="btn btn-sm btn-danger field-action">
+						<i class="fa fa-trash"></i>
+					</a>
+				</label>
+				<input type="text" class="form-control" name="general_key[]" autocomplete="off" value="">
+			</div>
+		</div>
+
+    `;
+
+    // AutoField
+    return fields;
+}
+
+// Add Helper
+const helper_field = (num) => {
+    let autofield = `
+		<div class="col-md-3 col-sm-12 field-key" num="${num}">
+            ${helperInput(num)}
+        </div>
+    `;
+
+    // Label & Value
+    return autofield;
+}
+
+// create function addAutoData
+const addHelper = () => {
+    // Select all elements with div.field-key class, count the count of elements and add 1
+    let auto_box = document.querySelectorAll(".field-key");
+    let num = auto_box.length + 1;
+
+    // Add Lable & Answer
+    let autofield = helper_field(num);
+
+    //Add new autofile inside helper_box_area
+    let auto_box_area = document.querySelector(".helper_box_area");
+    auto_box_area.insertAdjacentHTML('beforeend',autofield);
+}
+
+// create function removeAutoData
+const removeHelper = (num = null) => {
+    // Find the total elements with div.auto_box class, if they are more than 1 remove the element
+    let field_key = document.querySelectorAll(".field-key");
+    if (field_key.length > 0) {
+		// If num is null
+		if (num == null || num == undefined || num == "") {
+			field_key[field_key.length - 1].remove();
+		}else{
+			// Get attribute num from current field_key
+			let current_num = parseInt(field_key[num - 1].getAttribute("num"));
+			if(current_num == num){
+				// Remove field_key
+				field_key[num -1].remove();
+				// -> reorder
+    			let field_keyload = document.querySelectorAll(".field-key");
+				// Loop while set attribute num to new value x, x should start at 1
+				let x = 1;
+				for (let index = 0; index < field_keyload.length; index++) {
+					console.log('index', x);
+					field_keyload[index].setAttribute("num", x);
+					// Get a div.field-action inside field_key retrive a.btn-danger
+					let field_action = field_keyload[index].querySelector("label > a.field-action");
+					// Set attribute action to x
+					field_action.setAttribute("action", x);
+					x++;
+				}
+			}
+		}
+    }
+}
+/*** END HELPERS FIELD ***/
+
 $(document).ready(function(){
 
     var selected = $('#usePost').val();

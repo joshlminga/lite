@@ -166,8 +166,10 @@ $route["inheritance"] = "$Core_Folder/Settings/open/inheritance"; //Inheritance 
 $route["inheritance/update"] = "$Core_Folder/Settings/valid/inheritance"; //Inheritance Type Settings Update
 $route["module"] = "$Core_Folder/Settings/open/module"; //ModuleSettings
 $route["module/update"] = "$Core_Folder/Settings/valid/module"; //Module Settings Update
+$route["theme"] = "$Core_Folder/Settings/open/theme"; //Theme Settings
+$route["theme/update"] = "$Core_Folder/Settings/valid/theme"; //Theme Settings Update
 
-// Blog Categories
+// Access Levels
 $route["level"] = "$Core_Folder/Levels/index"; //Manage
 $route["level/edit"] = "$Core_Folder/Levels/edit/edit"; //Edit 
 $route["level/save"] = "$Core_Folder/Levels/valid/save"; //Validate and Save
