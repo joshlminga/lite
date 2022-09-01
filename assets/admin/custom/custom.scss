@@ -90,6 +90,7 @@ $colors: (
 	dark-gray-5: #c4c2c2,
 	light-gray-5: #f4f4f4,
 	dark-blue-5: #00008b,
+	dark-blue-6: #0c4f7d,
 	light-blue-5: #4be3ff,
 	dark-green-5: #006400,
 	light-green-5: #90ee90,
@@ -122,21 +123,6 @@ $colors: (
 @function color($color_name, $map: $colors) {
 	@return map-get($map, $color_name);
 }
-
-// Method colorsCode
-@mixin colorsCode($map: $colors) {
-	@each $name, $colorcode in $map {
-		.color-#{$name} {
-			color: $colorcode !important;
-		}
-	}
-}
-
-/**
-** Todo:
-** 1: Vormia Colors
-*/
-@include colorsCode();
 
 /*----------------------------
             Body 
@@ -797,3 +783,29 @@ h2.media-header {
 	background-color: #fdfdfd !important;
 	border: 1px solid #fdfdfd !important;
 }
+
+.l-block,
+.lb-header {
+	border-radius: 20px;
+}
+
+// Method colorsCode
+@mixin colorsCode($map: $colors) {
+	@each $name, $colorcode in $map {
+		.color-#{$name} {
+			color: $colorcode !important;
+		}
+	}
+
+	@each $name, $colorcode in $map {
+		.bg-color-#{$name} {
+			background-color: $colorcode !important;
+		}
+	}
+}
+
+/**
+** Todo:
+** 1: Vormia Colors
+*/
+@include colorsCode();
