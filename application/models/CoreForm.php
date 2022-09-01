@@ -312,18 +312,16 @@ class CoreForm extends CI_Model
 			}
 		}
 
-		// Loop to check unwanted extra values
-		foreach ($field_key as $key => $value) {
-			if (array_key_exists($value, $formData)) {
-				$saveData[$value] = $formData[$value];
+		// Loop to check missing $field_filter values
+		foreach ($field_filter as $key => $value) {
+			if (!array_key_exists($value, $formData)) {
+				$formData[$value] = "filter_key: $value is missing.";
 			}
 		}
 
-		// Loop to check missing $field_filter values
-		foreach ($field_filter as $key => $value) {
-			if (!array_key_exists($value, $saveData)) {
-				$saveData[$value] = "filter_key: $value is missing.";
-			}
+		// Loop to check unwanted extra values
+		foreach ($field_key as $key => $value) {
+			(array_key_exists($value, $formData)) ? $saveData[$value] = $formData[$value] : $saveData[$value] = null;
 		}
 
 		//Set Field Data
