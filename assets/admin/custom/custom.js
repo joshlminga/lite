@@ -286,7 +286,7 @@ const helperInput = (num) => {
 		<div class="form-group">
 			<div class="fg-line">
 				<label>
-					Key
+					Entry Value
 					<a onclick="removeHelper(this.getAttribute('action'))" action="${num}" class="btn btn-sm btn-danger field-action">
 						<i class="fa fa-trash"></i>
 					</a>

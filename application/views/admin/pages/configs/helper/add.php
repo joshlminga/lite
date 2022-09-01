@@ -36,7 +36,7 @@
 					<div class="col-md-7 col-sm-12 col-xs-12">
 						<div class="form-group">
 							<div class="fg-line">
-								<label>Data As String/Json (<small class="color-red">If you add data here will overide Key section</small>) </label>
+								<label>Data As String/Json (<small class="color-red">If you add data here will overide 'Entry Value' section</small>) </label>
 								<textarea name="general_value" class="form-control auto-size" placeholder='String or {"key":"value"} or ["value1","value2"]'><?= set_value('autofield_value'); ?></textarea>
 								<span class="error"><?= form_error('general_value') ?></span>
 							</div>
