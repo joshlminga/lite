@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Aug 31, 2022 at 07:43 PM
+-- Generation Time: Sep 01, 2022 at 02:17 PM
 -- Server version: 5.7.32
 -- PHP Version: 7.4.12
 
@@ -34,7 +34,7 @@ CREATE TABLE `autofields` (
   `autofield_data` longtext NOT NULL,
   `autofield_details` longtext,
   `autofield_stamp` datetime NOT NULL,
-  `autofield_default` varchar(5) DEFAULT 'yes',
+  `autofield_default` varchar(25) DEFAULT 'yes',
   `autofield_flg` int(1) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -69,7 +69,7 @@ CREATE TABLE `blogs` (
   `blog_editedat` datetime DEFAULT NULL,
   `blog_details` longtext NOT NULL,
   `blog_stamp` datetime NOT NULL,
-  `blog_default` varchar(5) DEFAULT 'yes',
+  `blog_default` varchar(25) DEFAULT 'yes',
   `blog_flg` int(1) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -94,7 +94,7 @@ CREATE TABLE `customfields` (
   `customfield_keys` longtext,
   `customfield_details` longtext,
   `customfield_stamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `customfield_default` varchar(5) DEFAULT 'no',
+  `customfield_default` varchar(25) DEFAULT 'no',
   `customfield_flg` int(11) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -118,7 +118,7 @@ CREATE TABLE `fields` (
   `field_plain` longtext,
   `field_details` longtext,
   `field_stamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `field_default` varchar(5) DEFAULT 'yes',
+  `field_default` varchar(25) DEFAULT 'yes',
   `field_flg` int(1) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -142,7 +142,7 @@ CREATE TABLE `inheritances` (
   `inheritance_title` varchar(500) NOT NULL,
   `inheritance_details` longtext,
   `inheritance_stamp` datetime NOT NULL,
-  `inheritance_default` varchar(5) DEFAULT 'yes',
+  `inheritance_default` varchar(25) DEFAULT 'yes',
   `inheritance_flg` int(1) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -168,7 +168,7 @@ CREATE TABLE `levels` (
   `level_module` longtext NOT NULL,
   `level_details` longtext,
   `level_stamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `level_default` varchar(5) DEFAULT 'yes',
+  `level_default` varchar(25) DEFAULT 'yes',
   `level_flg` int(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -239,7 +239,7 @@ CREATE TABLE `pages` (
   `page_editedat` datetime DEFAULT NULL,
   `page_details` longtext NOT NULL,
   `page_stamp` datetime NOT NULL,
-  `page_default` varchar(5) DEFAULT 'yes',
+  `page_default` varchar(25) DEFAULT 'yes',
   `page_flg` int(1) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -300,7 +300,7 @@ INSERT INTO `settings` (`setting_id`, `setting_title`, `setting_value`, `setting
 (28, 'seo_description', '', '2019-06-21 20:06:09', 'yes', 1),
 (29, 'seo_keywords', '', '2018-12-17 05:30:41', 'yes', 1),
 (30, 'seo_meta_data', '', '2018-12-17 04:10:23', 'yes', 1),
-(31, 'setthelper', '[\"helper\",\"locale\"]', '2018-12-17 05:54:02', 'yes', 1),
+(31, 'setthelper', '[\"helper\",\"locale\"]', '2022-09-01 10:25:13', 'yes', 1),
 (32, 'inheritance_data', 'default,category,tag,gender', '2021-07-21 21:44:17', 'yes', 1),
 (33, 'module_list', 'main,blog,page,autofield,control,inheritance,customfield,user,level,setting,general,extend,helper', '2022-08-26 15:30:28', 'yes', 1),
 (34, 'assets', 'assets/admin', '2019-06-08 03:22:55', 'yes', 1),
@@ -308,7 +308,7 @@ INSERT INTO `settings` (`setting_id`, `setting_title`, `setting_value`, `setting
 (36, 'ext_assets', 'assets/extend', '2019-06-08 05:25:52', 'yes', 1),
 (37, 'theme_name', 'starter', '2020-01-15 00:28:43', 'theme', 1),
 (38, 'theme_dir', 'themes/starter', '2019-06-10 19:54:50', 'theme', 1),
-(39, 'theme_assets', 'assets/themes/starter', '2022-08-31 19:41:58', 'theme', 1),
+(39, 'theme_assets', 'assey', '2022-09-01 13:12:36', 'theme', 1),
 (40, 'child_theme', '', '2019-06-08 06:30:26', 'theme', 1),
 (41, 'child_theme_dir', '', '2019-06-08 06:30:29', 'theme', 1),
 (42, 'child_theme_assets', '', '2022-08-31 19:41:58', 'theme', 1),
@@ -363,7 +363,7 @@ CREATE TABLE `users` (
   `user_email` varchar(50) DEFAULT NULL,
   `user_details` longtext,
   `user_stamp` datetime NOT NULL,
-  `user_default` varchar(5) DEFAULT 'yes',
+  `user_default` varchar(25) DEFAULT 'yes',
   `user_flg` int(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -504,7 +504,7 @@ ALTER TABLE `pages`
 -- AUTO_INCREMENT for table `settings`
 --
 ALTER TABLE `settings`
-  MODIFY `setting_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=57;
+  MODIFY `setting_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=58;
 
 --
 -- AUTO_INCREMENT for table `tokens`
