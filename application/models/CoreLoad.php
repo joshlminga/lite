@@ -38,7 +38,7 @@ class CoreLoad extends CI_Model
 	{
 
 		//Loading Core CMS Version
-		$data['version'] = '5.422';
+		$data['version'] = '5.43';
 		$data['copyright_footer_1'] = "v" . $data['version'];
 		$data['copyright_footer_2'] = "Published 01-SEP-2022";
 
@@ -331,7 +331,6 @@ class CoreLoad extends CI_Model
 	 * The function should only be used to the pages that require access level
 	 *
 	 * Remember you can do this direct by just checking with if statement $this->CoreLoad->session('level')
-	 * This function does not accept paramenters
 	 * 
 	 * 1: Pass Level/Access Name (Optional)
 	 */

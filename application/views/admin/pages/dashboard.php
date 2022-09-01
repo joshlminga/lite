@@ -1,39 +1,34 @@
 <section id="content">
 	<div class="container">
+		<div class="c-analytics row hidden-xs">
+			<div class="btn-group btn-group-justified" role="group" aria-label="...">
+				<div class="btn-group" role="group">
+					<a type="button" class="btn btn-default">Extend</a>
+				</div>
+				<div class="btn-group" role="group">
+					<a type="button" class="btn btn-info">Custom Built</a>
+				</div>
+				<div class="btn-group" role="group">
+					<a type="button" class="btn btn-warning">Contents</a>
+				</div>
+			</div>
+		</div>
 
-		<?php $level_name = $this->CoreCrud->selectSingleValue('users', 'level', array('id' => $this->CoreLoad->session('id'))); ?>
-
-		<?php if ($this->CoreLoad->auth('main') == true || $this->CoreLoad->auth('general') == true) : ?>
-			<div class="c-analytics row hidden-xs">
-				<div class="btn-group btn-group-justified" role="group" aria-label="...">
-					<div class="btn-group" role="group">
-						<a type="button" class="btn btn-default" href="<?= site_url('pages/new') ?>">New Page</a>
-					</div>
-					<div class="btn-group" role="group">
-						<a type="button" class="btn btn-info">Customization</a>
-					</div>
-					<div class="btn-group" role="group">
-						<a type="button" class="btn btn-warning" href="<?= site_url('') ?>" target="_blank">View Website</a>
+		<div class="row dash-margin">
+			<div class="col-md-3">
+				<div class="core-text">
+					<h1>Dashboard |</h1>
+				</div>
+			</div>
+			<div class="col-md-9">
+				<div class="" style="display: none;">
+					<div class="alert alert-info dash-notify" role="alert">
+						<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						Heads up! This alert needs your attention, but it's not super important.
 					</div>
 				</div>
 			</div>
-
-			<div class="row dash-margin">
-				<div class="col-md-3">
-					<div class="core-text">
-						<h1>Dashboard |</h1>
-					</div>
-				</div>
-				<div class="col-md-9">
-					<div class="" style="display: none;">
-						<div class="alert alert-info dash-notify" role="alert">
-							<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-							Heads up! This alert needs your attention, but it's not super important.
-						</div>
-					</div>
-				</div>
-			</div>
-		<?php endif ?>
+		</div>
 
 		<div>
 			<!-- Notification -->
