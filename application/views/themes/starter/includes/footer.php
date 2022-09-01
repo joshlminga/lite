@@ -1,5 +1,4 @@
 
-    <script src="<?= base_url($theme_assets); ?>/js/function.js"></script>
 	<script type="text/javascript">
         $(document).ready(function(){
         
