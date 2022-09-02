@@ -38,7 +38,7 @@ class CoreLoad extends CI_Model
 	{
 
 		//Loading Core CMS Version
-		$data['version'] = '5.43';
+		$data['version'] = '5.44';
 		$data['copyright_footer_1'] = "v" . $data['version'];
 		$data['copyright_footer_2'] = "Published 02-SEP-2022";
 

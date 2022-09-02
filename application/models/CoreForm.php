@@ -1377,7 +1377,7 @@ class CoreForm extends CI_Model
 			if (is_null($title) || empty($title)) {
 				//load ModelField
 				$helper = 'in' . ucfirst($filter);
-				$customeHelper = $helper . '_UrlHelper';
+				$customeHelper = $helper . '_urlhelper';
 				$this->load->model('CoreTrigger');
 				$title = ((method_exists('CoreTrigger', $customeHelper))) ? $this->CoreTrigger->$customeHelper($id) : $title;
 			}
@@ -1394,7 +1394,7 @@ class CoreForm extends CI_Model
 			// Check Title
 			if (is_null($title) || empty($title)) {
 				//load ModelField
-				$customeHelper = $this->plural->singularize($table_name) . '_UrlHelper';
+				$customeHelper = $this->plural->singularize($table_name) . '_urlhelper';
 				$this->load->model('CoreTrigger');
 				$title = ((method_exists('CoreTrigger', $customeHelper))) ? $this->CoreTrigger->$customeHelper($id) : $title;
 			}
