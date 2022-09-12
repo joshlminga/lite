@@ -38,7 +38,7 @@ class CoreLoad extends CI_Model
 	{
 
 		//Loading Core CMS Version
-		$data['version'] = '5.44';
+		$data['version'] = '5.45';
 		$data['copyright_footer_1'] = "v" . $data['version'];
 		$data['copyright_footer_2'] = "Published 02-SEP-2022";
 
@@ -50,7 +50,8 @@ class CoreLoad extends CI_Model
 		//Theme Assets
 		$data['theme_name'] = $this->CoreCrud->selectSingleValue('settings', 'value', array('title' => 'theme_name', 'flg' => 1));
 		$data['theme_dir'] = 'themes/'.$data['theme_name'];
-		$data['theme_assets'] = 'assets/themes/'.$data['theme_name'];
+		$data['theme_assets'] = 'application/views/'.$data['theme_dir'];
+
 
 		//Site Title
 		$data['site_title'] = $this->CoreCrud->selectSingleValue('settings', 'value', array('title' => 'site_title', 'flg' => 1));
