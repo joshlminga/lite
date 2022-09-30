@@ -50,8 +50,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
 |		my-controller/my-method	-> my_controller/my_method
 */
 // Directory
-$Api_Folder = "Api";
+
 $Core_Folder = "Core";
+$Api_Folder = "$Core_Folder/Api";
 $Field_Folder = "Field";
 $Extension_Folder = "Extension";
 
@@ -237,6 +238,13 @@ $route["api-members/add"] = "$Api_Folder/Field_Members/valid/save";
 $route["api-members/update"] = "$Api_Folder/Field_Members/valid/update";
 $route["api-members/delete"] = "$Api_Folder/Field_Members/valid/delete";
 $route["api-members/get"] = "$Api_Folder/Field_Members/valid/get";
+
+/**
+ * Todo: pages and blog routes
+ */
+// $query = $db->select("setting_value")->where(array("setting_title" => "route_menu", "setting_flg" => 1))->get("settings");
+// $settValue = $query->result();
+
 
 /**
  * Todo: route_menu Routes

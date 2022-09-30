@@ -92,6 +92,28 @@ class Blogs extends CI_Controller
 		//Module Name - For Forms Title
 		$data['ModuleName'] = $this->plural->pluralize($this->ModuleName);
 
+		// PHP read directory
+		$dir = "./application/views/" . $data['extRoute'];
+		// $files = array_diff(scandir($dir), array('.', '..'));
+		// separate files and folders
+		$folders = array();
+		$files = array();
+		foreach (scandir($dir) as $file) {
+			if (is_dir($dir . $file)) {
+				$folders[] = $file;
+			} else {
+				$files[] = $file;
+			}
+		}
+
+
+		echo '<pre>';
+		print_r($files);
+		echo '<br /> ----------------------- </br>';
+		print_r($folders);
+		echo '</pre>';
+		die;
+
 		//Form Submit URLs
 		$data['form_new'] = $this->New;
 		$data['form_save'] = $this->Save;
