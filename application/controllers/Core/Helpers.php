@@ -657,15 +657,15 @@ class Helpers extends CI_Controller
 		// Convert this object $reserved[index]->title to index based array 
 		$reserved = array_column($reserved, 'title');
 		// push mustnotbe
-		$mustnotbe = ['field_menu', 'extension_menu', 'control_menu', 'menu_menu', 'route_menu', 'yes', 'no', 'theme', 'keys', 'key'];
+		$mustnotbe = ['field_menu', 'extension_menu', 'control_menu', 'menu_menu', 'route_menu', 'yes', 'no', 'route', 'theme', 'keys', 'key'];
 		// merge mustnotbe and reserved
 		$mustnotbe = array_merge($mustnotbe, $reserved);
 		// remove duplicate values
-		$reserved = array_unique($reserved);
+		$reserved = array_unique($mustnotbe);
 
 		// Check if value is in array
 		if (in_array($setting_default, $reserved)) {
-			$this->form_validation->set_message('mustnotbe', "'$str' cannot be used as Type, you entered reserved value");
+			$this->form_validation->set_message('mustnotbe', "'$str' cannot be used as type. '$str' is a reserved value");
 			return false;
 		} else {
 			return true;
@@ -688,15 +688,15 @@ class Helpers extends CI_Controller
 		// Convert this object $reserved[index]->title to index based array 
 		$reserved = array_column($reserved, 'title');
 		// push mustnotbe
-		$mustnotbe = ['field_menu', 'extension_menu', 'control_menu', 'menu_menu', 'route_menu', 'yes', 'no', 'theme', 'keys', 'key'];
+		$mustnotbe = ['field_menu', 'extension_menu', 'control_menu', 'menu_menu', 'route_menu', 'yes', 'no', 'route', 'theme', 'keys', 'key'];
 		// merge mustnotbe and reserved
 		$mustnotbe = array_merge($mustnotbe, $reserved);
 		// remove duplicate values
-		$reserved = array_unique($reserved);
+		$reserved = array_unique($mustnotbe);
 
 		// Check if value is in array
 		if (in_array($setting_title, $reserved)) {
-			$this->form_validation->set_message('titlenot', "'$str' cannot be used, try another Title");
+			$this->form_validation->set_message('titlenot', "'$str' cannot be used. Try another Title");
 			return false;
 		} else {
 			return true;

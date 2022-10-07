@@ -38,9 +38,9 @@ class CoreLoad extends CI_Model
 	{
 
 		//Loading Core CMS Version
-		$data['version'] = '5.420';
+		$data['version'] = '5.45';
 		$data['copyright_footer_1'] = "v" . $data['version'];
-		$data['copyright_footer_2'] = "Published 31-AUG-2022";
+		$data['copyright_footer_2'] = "Published 02-SEP-2022";
 
 		//Values Assets
 		$data['assets'] = $this->CoreCrud->selectSingleValue('settings', 'value', array('title' => 'assets', 'flg' => 1));
@@ -49,8 +49,9 @@ class CoreLoad extends CI_Model
 
 		//Theme Assets
 		$data['theme_name'] = $this->CoreCrud->selectSingleValue('settings', 'value', array('title' => 'theme_name', 'flg' => 1));
-		$data['theme_dir'] = $this->CoreCrud->selectSingleValue('settings', 'value', array('title' => 'theme_dir', 'flg' => 1));
-		$data['theme_assets'] = $this->CoreCrud->selectSingleValue('settings', 'value', array('title' => 'theme_assets', 'flg' => 1));
+		$data['theme_dir'] = 'themes/'.$data['theme_name'];
+		$data['theme_assets'] = 'application/views/'.$data['theme_dir'];
+
 
 		//Site Title
 		$data['site_title'] = $this->CoreCrud->selectSingleValue('settings', 'value', array('title' => 'site_title', 'flg' => 1));
@@ -331,7 +332,6 @@ class CoreLoad extends CI_Model
 	 * The function should only be used to the pages that require access level
 	 *
 	 * Remember you can do this direct by just checking with if statement $this->CoreLoad->session('level')
-	 * This function does not accept paramenters
 	 * 
 	 * 1: Pass Level/Access Name (Optional)
 	 */

@@ -20,10 +20,7 @@
 	
     <!-- Favicon Load -->
     <link rel="shortcut icon" href="<?= base_url($theme_assets); ?>/favicon.ico" type="image/x-icon">
-
-    <!-- Load STyle -->
-    <link href="<?= base_url($theme_assets); ?>/css/style.css" rel="stylesheet">
-
+   
     <!-- Include Head -->
     <?php $this->load->view("$theme_dir/functions/incl_head"); ?>
     <!-- End Include Head -->

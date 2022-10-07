@@ -1,39 +1,37 @@
-
-
 <!DOCTYPE html>
 <!--[if IE 9 ]><html class="ie9"><![endif]-->
 <html lang="en">
-    
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title><?= $site_title; ?></title>
 
-        <meta name="author" content="Core CMS Lite Team">
-        <meta name="robots" content="noindex, nofollow">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title><?= $site_title; ?></title>
 
-        <!-- Vendor CSS -->
-        <link href="<?= base_url($assets); ?>/vendors/bower_components/animate.css/animate.min.css" rel="stylesheet">
-        <link href="<?= base_url($assets); ?>/vendors/bower_components/google-material-color/dist/palette.css" rel="stylesheet">
-        <link href="<?= base_url($assets); ?>/vendors/bower_components/material-design-iconic-font/dist/css/material-design-iconic-font.min.css" rel="stylesheet">
+	<meta name="author" content="Core CMS Lite Team">
+	<meta name="robots" content="noindex, nofollow">
 
-        <!-- CSS -->
-        <link href="<?= base_url($assets); ?>/css/app.min.1.css" rel="stylesheet">
-        <link href="<?= base_url($assets); ?>/css/app.min.2.css" rel="stylesheet"> 
+	<!-- Vendor CSS -->
+	<link href="<?= base_url($assets); ?>/vendors/bower_components/animate.css/animate.min.css" rel="stylesheet">
+	<link href="<?= base_url($assets); ?>/vendors/bower_components/google-material-color/dist/palette.css" rel="stylesheet">
+	<link href="<?= base_url($assets); ?>/vendors/bower_components/material-design-iconic-font/dist/css/material-design-iconic-font.min.css" rel="stylesheet">
 
-        <!-- Custom -->
-        <link href="<?= base_url($assets); ?>/custom/custom.css" rel="stylesheet"> 
-    </head>
-    
-    <body>
+	<!-- CSS -->
+	<link href="<?= base_url($assets); ?>/css/app.min.1.css" rel="stylesheet">
+	<link href="<?= base_url($assets); ?>/css/app.min.2.css" rel="stylesheet">
 
-        <!-- Main Page -->
-        <?php $this->load->view("admin/pages/$site_page"); ?>
-        <!-- End Main Page -->
+	<!-- Custom -->
+	<link href="<?= base_url($assets); ?>/custom/custom.min.css" rel="stylesheet">
+</head>
 
-        <!-- Older IE warning message -->
-        <!--[if lt IE 9]>
+<body>
+
+	<!-- Main Page -->
+	<?php $this->load->view("admin/pages/$site_page"); ?>
+	<!-- End Main Page -->
+
+	<!-- Older IE warning message -->
+	<!--[if lt IE 9]>
             <div class="ie-warning">
                 <h1 class="c-white">Warning!!</h1>
                 <p>You are using an outdated version of Internet Explorer, please upgrade <br/>to any of the following web browsers to access this website.</p>
@@ -75,18 +73,19 @@
             </div>
         <![endif]-->
 
-        <!-- Javascript Libraries -->
-        <script src="<?= base_url($assets); ?>/vendors/bower_components/jquery/dist/jquery.min.js"></script>
-        <script src="<?= base_url($assets); ?>/vendors/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-        <script src="<?= base_url($assets); ?>/vendors/bower_components/Waves/dist/waves.min.js"></script>
+	<!-- Javascript Libraries -->
+	<script src="<?= base_url($assets); ?>/vendors/bower_components/jquery/dist/jquery.min.js"></script>
+	<script src="<?= base_url($assets); ?>/vendors/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+	<script src="<?= base_url($assets); ?>/vendors/bower_components/Waves/dist/waves.min.js"></script>
 
-        <!-- Placeholder for IE9 -->
-        <!--[if IE 9 ]>
+	<!-- Placeholder for IE9 -->
+	<!--[if IE 9 ]>
             <script src="<?= base_url($assets); ?>/vendors/bower_components/jquery-placeholder/jquery.placeholder.min.js"></script>
         <![endif]-->
 
-        <script src="<?= base_url($assets); ?>/js/functions.js"></script>
-        <script src="<?= base_url($assets); ?>/custom/custom.js"></script>
-        
-    </body>
+	<script src="<?= base_url($assets); ?>/js/functions.js"></script>
+	<script src="<?= base_url($assets); ?>/custom/custom.js"></script>
+
+</body>
+
 </html>

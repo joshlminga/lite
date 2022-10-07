@@ -287,9 +287,16 @@ class CoreForm extends CI_Model
 					$value = trim($value);
 					$key_value = "plain_" . $value;
 					if (array_key_exists($key_value, $formData) && !array_key_exists($value, $newPlainDataValue)) {
-						$newPlainDataValue[$value] = strip_tags(strtolower($formData[$key_value]));
+						if (!is_array($formData[$key_value])) {
+							$newPlainDataValue[$value] = strip_tags(stripcslashes(strtolower($formData[$key_value])));
+						}
 					} else {
-						$newPlainDataValue[$value] = strip_tags(stripcslashes(strtolower($formData[$value])));
+						// Check If Key Exists
+						if (array_key_exists($value, $formData)) {
+							if (!is_array($formData[$value])) {
+								$newPlainDataValue[$value] = strip_tags(stripcslashes(strtolower($formData[$value])));
+							}
+						}
 					}
 				}
 			}
@@ -305,9 +312,21 @@ class CoreForm extends CI_Model
 			}
 		}
 
+		// Loop to check missing $field_filter values
+		foreach ($field_filter as $key => $value) {
+			if (!array_key_exists($value, $formData)) {
+				$formData[$value] = "filter_key: $value is missing.";
+			}
+		}
+
+		// Loop to check unwanted extra values
+		foreach ($field_key as $key => $value) {
+			(array_key_exists($value, $formData)) ? $saveData[$value] = $formData[$value] : $saveData[$value] = null;
+		}
+
 		//Set Field Data
 		$column_data = strtolower($this->get_column_name($Module, 'data'));
-		$formData[$column_data] = json_encode($formData); //Set Data
+		$formData[$column_data] = json_encode($saveData); //Set Data
 
 		//Prepaire Data To Store
 		foreach ($formData as $key => $value) {
@@ -352,7 +371,6 @@ class CoreForm extends CI_Model
 			$formData[$details] = json_encode($form_detail); //Details
 			$formData = $this->CoreCrud->unsetData($formData, $unsetData); //Unset Data
 		}
-
 
 		//Form Data
 		return $formData;
@@ -435,9 +453,16 @@ class CoreForm extends CI_Model
 					$value = trim($value);
 					$key_value = "plain_" . $value;
 					if (array_key_exists($key_value, $updateData) && !array_key_exists($value, $newPlainDataValue)) {
-						$newPlainDataValue[$value] = strip_tags(strtolower($updateData[$key_value]));
+						if (!is_array($updateData[$key_value])) {
+							$newPlainDataValue[$value] = strip_tags(stripcslashes(strtolower($updateData[$key_value])));
+						}
 					} else {
-						$newPlainDataValue[$value] = strip_tags(stripcslashes(strtolower($updateData[$value])));
+						// Check If Key Exists
+						if (array_key_exists($value, $updateData)) {
+							if (!is_array($updateData[$value])) {
+								$newPlainDataValue[$value] = strip_tags(stripcslashes(strtolower($updateData[$value])));
+							}
+						}
 					}
 				}
 			}
@@ -453,9 +478,16 @@ class CoreForm extends CI_Model
 			}
 		}
 
+		// Loop to check unwanted extra values
+		foreach ($field_key as $key => $value) {
+			if (array_key_exists($value, $updateData)) {
+				$editData[$value] = $updateData[$value];
+			}
+		}
+
 		//Set Field Data
 		$column_data = strtolower($this->get_column_name($Module, 'data'));
-		$updateData[$column_data] = json_encode($updateData); //Set Data
+		$updateData[$column_data] = json_encode($editData); //Set Data
 
 		//Prepaire Data To Store
 		foreach ($updateData as $key => $value) {
@@ -1345,7 +1377,7 @@ class CoreForm extends CI_Model
 			if (is_null($title) || empty($title)) {
 				//load ModelField
 				$helper = 'in' . ucfirst($filter);
-				$customeHelper = $helper . '_UrlHelper';
+				$customeHelper = $helper . '_urlhelper';
 				$this->load->model('CoreTrigger');
 				$title = ((method_exists('CoreTrigger', $customeHelper))) ? $this->CoreTrigger->$customeHelper($id) : $title;
 			}
@@ -1362,7 +1394,7 @@ class CoreForm extends CI_Model
 			// Check Title
 			if (is_null($title) || empty($title)) {
 				//load ModelField
-				$customeHelper = $this->plural->singularize($table_name) . '_UrlHelper';
+				$customeHelper = $this->plural->singularize($table_name) . '_urlhelper';
 				$this->load->model('CoreTrigger');
 				$title = ((method_exists('CoreTrigger', $customeHelper))) ? $this->CoreTrigger->$customeHelper($id) : $title;
 			}

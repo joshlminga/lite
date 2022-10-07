@@ -431,16 +431,21 @@ class Settings extends CI_Controller
 
 			//Form Validation Values
 			$this->form_validation->set_rules("theme_name", "Main Theme Name", "trim|required|min_length[1]|max_length[800]");
-			$this->form_validation->set_rules("theme_dir", "Main Theme Dir", "trim|required|min_length[1]|max_length[800]");
-			$this->form_validation->set_rules("theme_assets", "Main Theme Assets", "trim|required|min_length[1]|max_length[800]");
-
 			$this->form_validation->set_rules("child_theme", "Child Theme Name", "trim|max_length[800]");
-			$this->form_validation->set_rules("child_theme_dir", "Child Theme Dir", "trim|max_length[800]");
-			$this->form_validation->set_rules("child_theme_assets", "Child Theme Assets", "trim|max_length[800]");
+
+			// Lowercase , Escape
+			$theme_name = str_replace(' ', '_', trim($updateData['theme_name']));
+			$theme_name = preg_replace('/[^A-Za-z0-9\-]/', '_', $theme_name);
+			$themeData['theme_name'] = strtolower($theme_name);
+
+			// Lowercase , Escape
+			$child_theme = str_replace(' ', '_', trim($updateData['child_theme']));
+			$child_theme = preg_replace('/[^A-Za-z0-9\-]/', '_', $child_theme);
+			$themeData['child_theme'] = strtolower($child_theme);
 
 			//Form Validation
 			if ($this->form_validation->run() == TRUE) {
-				if ($this->update($updateData)) {
+				if ($this->update($themeData)) {
 					$this->session->set_flashdata('notification', 'success'); //Notification Type
 					$this->open($type); //Redirect to Page
 				} else {
