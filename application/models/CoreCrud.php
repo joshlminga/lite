@@ -222,7 +222,7 @@ class CoreCrud extends CI_Model
 
 		// Join
 		$inheritance_id = $this->CoreForm->get_column_name($module, 'id'); //Set Column name
-		$this->db->join("metaterms", 'inheritances.inheritance_id = metaterms.metaterm_typeid', 'metaterms.metaterm_module = inheritances', "left");
+		$this->db->join("metaterms", "inheritances.inheritance_id = metaterms.metaterm_typeid AND metaterms.metaterm_module = 'inheritances'", "left");
 
 		// Where
 		if (!is_null($where)) {
