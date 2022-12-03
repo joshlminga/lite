@@ -238,6 +238,11 @@ $route["api-members/update"] = "$Api_Folder/Field_Members/valid/update";
 $route["api-members/delete"] = "$Api_Folder/Field_Members/valid/delete";
 $route["api-members/get"] = "$Api_Folder/Field_Members/valid/get";
 
+
+$route['translate_uri_dashes'] = FALSE;
+/** END IN-BUILT ROUTES */
+
+
 /**
  * Todo: route_menu Routes
  */
@@ -397,5 +402,3 @@ if (is_array($routeNames)) {
 	}
 }
 
-$route['translate_uri_dashes'] = FALSE;
-/** END IN-BUILT ROUTES */
