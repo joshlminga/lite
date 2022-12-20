@@ -470,9 +470,9 @@ class CoreCrud extends CI_Model
 				// Meta Type
 				$meta_type = $this->plural->singularize($table);
 				if ($table == 'fields' || $table == 'autofields') {
-					$meta_type = $this->plural->singularize($this->CoreCrud->selectSingleValue($table, 'title', ['id' => $entry_id]));
+					$meta_type = $this->CoreCrud->selectSingleValue($table, 'title', ['id' => $entry_id]);
 				} elseif ($table == 'inheritances') {
-					$meta_type = $this->plural->singularize($this->CoreCrud->selectSingleValue($table, 'type', ['id' => $entry_id]));
+					$meta_type = $this->CoreCrud->selectSingleValue($table, 'type', ['id' => $entry_id]);
 				}
 				// Meta Data
 				$metaData = [
@@ -546,9 +546,9 @@ class CoreCrud extends CI_Model
 				$metaData['metaterm_url'] = $meta_url;
 				$meta_type = $this->plural->singularize($table);
 				if ($table == 'fields' || $table == 'autofields' && !is_null($entry_id)) {
-					$meta_type = $this->plural->singularize($this->CoreCrud->selectSingleValue($table, 'title', ['id' => $entry_id]));
+					$meta_type = $this->CoreCrud->selectSingleValue($table, 'title', ['id' => $entry_id]);
 				} elseif ($table == 'inheritances') {
-					$meta_type = $this->plural->singularize($this->CoreCrud->selectSingleValue($table, 'type', ['id' => $entry_id]));
+					$meta_type = $this->CoreCrud->selectSingleValue($table, 'type', ['id' => $entry_id]);
 				}
 				$metaData['metaterm_type'] = $meta_type;
 
@@ -600,8 +600,11 @@ class CoreCrud extends CI_Model
 					$entry_id = (is_numeric($value)) ? $value : null;
 					$meta_type = $this->plural->singularize($table);
 					if ($table == 'fields' || $table == 'autofields' && !is_null($entry_id)) {
-						$meta_type = $this->plural->singularize($this->CoreCrud->selectSingleValue($table, 'title', ['id' => $entry_id]));
+						$meta_type = $this->CoreCrud->selectSingleValue($table, 'title', ['id' => $entry_id]);
+					} elseif ($table == 'inheritances') {
+						$meta_type = $this->CoreCrud->selectSingleValue($table, 'type', ['id' => $entry_id]);
 					}
+
 					// Meta Data
 					$useUrlHelper = ((method_exists('CoreTrigger', 'urlMetaHelper'))) ? $this->CoreTrigger->urlMetaHelper(['module' => $table, 'type' => $meta_type]) : true;
 					if ($useUrlHelper) {
