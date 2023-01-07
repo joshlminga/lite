@@ -439,6 +439,101 @@ class CoreCrud extends CI_Model
 	}
 
 	/**
+	 * Select Where IN
+	 *
+	 * This function help you to select using where_in and retun multiple value
+	 * You can only select passed column value(s)
+	 *
+	 * In this function you pass
+	 *
+	 * 1: Module name / Table name
+	 *  -> This will be singularize and used to generate column Name
+	 *  -> Also pluralize for Table Name
+	 *
+	 * 2: Pass the selected column name(s)
+	 * 3: Pass the comparison values
+	 *  array('column'=>'value')
+	 *
+	 * 4: Pass where_in 
+	 * array('column'=>[z,y,z])
+	 * 
+	 * 5: Pass clause if you want to use where_in, or_where_in, where_not_in, or_where_not_in.
+	 *
+	 * NB: Full Column Name -- will be added by the function 
+	 * 
+	 */
+	public function selectInValues($module, $select, $where = null, $where_in = null, $clause = 'where_in')
+	{
+
+		// Check Where & Where In
+		if (is_null($where_in) && is_null($where)) {
+			return [];
+		}
+
+		// Check Where In
+		if (!is_array($where_in) && is_array($where)) {
+			return $this->selectMultipleValue($module, $select, $where); // Do normal Select Multiple
+		}
+
+		/**
+		 * Todo: Where In Select
+		 */
+
+		//Modules
+		$module = $this->plural->singularize($module);
+		$table = $this->plural->pluralize($module);
+
+		//Check if select passed is not an array
+		if (!is_array($select)) {
+			$select = explode(',', $select); //string to Array
+		}
+
+		//Set-Up Columns
+		for ($i = 0; $i < count($select); $i++) {
+
+			$column = $this->CoreForm->get_column_name($module, $select[$i]);
+			$select_column[$i] = $column; //Set Proper Column Name 
+		}
+
+		//Set the column array to string
+		if (is_array($select_column)) {
+			//Columns
+			$select_column = implode(',', $select_column); //Array to string
+		}
+
+		// Select
+		$this->db->select($select_column);
+		$this->db->from($table);
+		//Where - Comparison
+		if (is_array($where)) {
+			foreach ($where as $key => $value) {
+				$column = $this->CoreForm->get_column_name($module, $key);
+				$where_column[$column] = $value; //Set Proper Column Name 
+			}
+			$this->db->where($where_column);
+		}
+
+		// Where In
+		$where_in_key = array_keys($where_in);
+		$where_in_column = $where_in_find = null;
+		//$where_in_find = null;
+		foreach ($where_in_key as $key => $value) {
+			$where_in_column = $this->CoreForm->get_column_name($module, $value);
+			$where_in_find = $where_in[$value];
+			break;
+		}
+
+		// Check $where_in_column & $where_in_find
+		if (is_null($where_in_find) || is_null($where_in_column)) {
+			return [];
+		}
+
+		$this->db->$clause($where_in_column, $where_in_find);
+		// Query & Return
+		return $this->db->get()->result();
+	}
+
+	/**
 	 * Insert Data into Database
 	 * 
 	 * 1: Pass Table Name
@@ -1737,6 +1832,90 @@ class CoreCrud extends CI_Model
 
 		//Return Data
 		return (!is_null($data) && is_array($data)) ? $data : null;
+	}
+
+	/**
+	 *
+	 * Search Data In the Field Table
+	 * -> This function utilise power of Filter Search to find Field (customfields) related data
+	 * -> NB: Does not visulize the table like CoreSearch->filter_table($runquery = false) would do
+	 *
+	 * @param string $filter name
+	 * @param string $term / words searched
+	 * @param array $where default [] where ID > 0
+	 * @param array $limit default null 
+	 * @param array $sort default [] ID Desc 
+	 * 
+	 */
+	public function searchData($filter = 'member', $term = null, $where = ['field >' => 0], $limit = null, $sort = ['id' => 'DESC'])
+	{
+
+		// Load Model
+		$this->load->model('CoreSearch');
+
+		// WHERE
+		$where = (is_null($where) || !is_array($where) || empty($where)) ? ['field >' => 0] : $where;
+
+		// If Term is searched
+		if (!is_null($term) && !empty($term)) {
+
+			// Generate Temp Table for seaching from Field
+			$sql = $this->CoreSearch->filter_table($filter, $where, null, $sort, false);
+			// Generate Temp Table for seaching from Field
+			$found = (!is_null($limit)) ? $this->CoreSearch->search($sql['run'], $term, $limit) : $this->CoreSearch->search_nolimit($sql['run'], $term);
+		} else {
+			// Get Searched
+			$found = $this->CoreSearch->filter_table($filter, $where, $limit, $sort);
+		}
+
+		// Return
+		return (is_array($found)) ? $found : null;
+	}
+
+	/**
+	 * Count Searched Data
+	 * Todo:: Search And Count
+	 * 
+	 * @param string $title name
+	 * @param string $term / words searched
+	 * @param array $where default [] where ID > 0
+	 */
+	public function sumData($title = 'member', $term = null, $where = ['field >' => 0])
+	{
+		//Modules
+		$module = $this->plural->singularize($title);
+		$filterTables = $this->plural->pluralize($title);
+
+		// Total
+		$counted = 0;
+
+		// Load Model
+		$this->load->model('CoreSearch');
+
+		// Run SQL -> Using Select
+		$run_sql = "$filterTables ";
+
+		// Clause
+		$clause = $this->CoreSearch->filter_all_clause($module, $where, null, ['id' => 'DESC'], false);
+		// Full Query
+		$run_sql .= "$clause";
+
+		// Get SQL
+		$sql = $this->CoreSearch->filter_query_type($title, true, $run_sql);
+
+		// If Term is searched
+		if (!is_null($term) && !empty($term)) {
+
+			// Generate Temp Table for seaching from Field
+			$results = $this->CoreSearch->search_nolimit($sql, $term);
+		} else {
+			// Execute
+			$query = $this->db->query($sql);
+			$results = $query->result();
+		}
+
+		// Counted
+		return (is_array($results)) ? count($results) : $counted;
 	}
 }
 

@@ -223,7 +223,7 @@ class Pages extends CI_Controller
 		if (!is_null($inputTYPE) || !is_null($inputID)) {
 			//Table Select & Clause
 			$where = array($inputTYPE => $inputID);
-			$columns = array('id as id,title as title,url as url,post as post,control as control,data as data,show as visibility');
+			$columns = array('id as id,title as title,post as post,control as control,data as data,show as visibility');
 			$data['resultList'] = $this->CoreCrud->selectCRUD($module, $where, $columns);
 
 			//Notification
@@ -358,7 +358,7 @@ class Pages extends CI_Controller
 			$value_id = $this->CoreLoad->input('id'); //Input Value
 
 			//Select Value To Unset 
-			$unsetData = array('id', 'thumbnail');/*valude To Unset*/
+			$unsetData = array('id', 'thumbnail','page_url');/*valude To Unset*/
 
 			//Form Validation
 			if ($this->form_validation->run() == TRUE) {
@@ -377,7 +377,7 @@ class Pages extends CI_Controller
 				//Data Updated
 				$updateData['page_control'] = json_encode($page_control);
 				$updateData['page_post'] = $this->input->post('page_post');
-				$updateData['page_url'] = $this->CoreForm->metaCheckUrl($updateData['page_url'], $this->CoreLoad->input('id'), true); // Meta URL
+				$updateData['meta_url'] = $this->CoreForm->metaCheckUrl($updateData['page_url'], $this->CoreLoad->input('id'), true); // Meta URL
 
 				//Update Table
 				if ($this->update($updateData, array($column_id => $value_id), $unsetData)) {
@@ -431,13 +431,6 @@ class Pages extends CI_Controller
 			//Pluralize Module
 			$tableName = $this->plural->pluralize($this->Module);
 
-			//Column Stamp
-			$stamp = strtolower($this->CoreForm->get_column_name($this->Module, 'stamp'));
-			$insertData["$stamp"] = date('Y-m-d H:i:s', time());
-
-			$createdat = strtolower($this->CoreForm->get_column_name($this->Module, 'createdat'));
-			$insertData["$createdat"] = date('Y-m-d H:i:s', time());
-
 			//Site Status
 			$author_name = $this->db->select('user_logname')->where('user_id', $session_id)->get('users')->row()->user_logname;
 			$author = strtolower($this->CoreForm->get_column_name($this->Module, 'author'));
@@ -454,16 +447,7 @@ class Pages extends CI_Controller
 			$insertData["$details"] = json_encode($insertData);
 
 			//Insert Data Into Table
-			$input_id = $this->CoreCrud->insertData($tableName, $insertData);
-			if ($input_id > 0) {
-
-				//Columns
-				$column_url = strtolower($this->CoreForm->get_column_name($this->Module, 'url'));
-				$column_id = strtolower($this->CoreForm->get_column_name($this->Module, 'id'));
-
-				$page_url = $this->CoreForm->metaExistingUrl($tableName, $input_id); //Post URL
-				$this->db->update($tableName, array($column_url => $page_url), array($column_id => $input_id)); //Update URL
-
+			if ($this->CoreCrud->insertData($tableName, $insertData)) {
 				return true; //Data Inserted
 			} else {
 
@@ -492,12 +476,6 @@ class Pages extends CI_Controller
 
 			//Pluralize Module
 			$tableName = $this->plural->pluralize($this->Module);
-
-			//Column Stamp
-			$stamp = $this->CoreForm->get_column_name($this->Module, 'stamp');
-			$updateData["$stamp"] = date('Y-m-d H:i:s', time());
-			$editedat = strtolower($this->CoreForm->get_column_name($this->Module, 'editedat'));
-			$insertData["$editedat"] = date('Y-m-d H:i:s', time());
 
 			//Site Status
 			$editor_name = $this->db->select('user_logname')->where('user_id', $session_id)->get('users')->row()->user_logname;

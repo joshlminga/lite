@@ -38,9 +38,9 @@ class CoreLoad extends CI_Model
 	{
 
 		//Loading Core CMS Version
-		$data['version'] = '5.48';
+		$data['version'] = '5.50';
 		$data['copyright_footer_1'] = "v" . $data['version'];
-		$data['copyright_footer_2'] = "Published 20-DEC-2022";
+		$data['copyright_footer_2'] = "Published 07-JAN-2023";
 
 		//Values Assets
 		$data['assets'] = $this->CoreCrud->selectSingleValue('settings', 'value', array('title' => 'assets', 'flg' => 1));
@@ -627,6 +627,22 @@ class CoreLoad extends CI_Model
 	{
 		//Return Data Found
 		return $this->CoreCrud->loadJsonData($where, $return, $table, $select);
+	}
+
+	/**
+	 * Meta :-> meat_url
+	 *
+	 * meat_url has been more common than $this->CoreForm->metaFindUrl, we advice you use $this->CoreForm->metaFindUrl over meat_url
+	 *
+	 * However for popular demand we have added support for meat_url
+	 * - To understand what this method do kindly check $this->CoreForm->metaFindUrl()
+	 * - They are smae methods doing same thing.
+	 * 
+	 */
+	public function meat_url($typeid, $module = null, $type = null)
+	{
+		// Return
+		return $this->CoreForm->metaFindUrl($typeid, $module, $type);
 	}
 }
 

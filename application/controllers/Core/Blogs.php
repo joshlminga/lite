@@ -229,7 +229,7 @@ class Blogs extends CI_Controller
 		if (!is_null($inputTYPE) || !is_null($inputID)) {
 			//Table Select & Clause
 			$where = array($inputTYPE => $inputID);
-			$columns = array('id as id,category as category,title as title,url as url,post as post,control as control,tag as tag,format as format,show as visibility');
+			$columns = array('id as id,category as category,title as title,post as post,control as control,tag as tag,format as format,show as visibility');
 			$data['resultList'] = $this->CoreCrud->selectCRUD($module, $where, $columns);
 
 			//Notification
@@ -377,7 +377,7 @@ class Blogs extends CI_Controller
 			$value_id = $this->CoreLoad->input('id'); //Input Value
 
 			//Select Value To Unset 
-			$unsetData = array('id', 'thumbnail');/*valude To Unset*/
+			$unsetData = array('id', 'thumbnail','blog_url');/*valude To Unset*/
 
 			//Form Validation
 			if ($this->form_validation->run() == TRUE) {
@@ -397,7 +397,7 @@ class Blogs extends CI_Controller
 
 				//Data Updated
 				$updateData['blog_post'] = $this->input->post('blog_post');
-				$updateData['blog_url'] = $this->CoreForm->metaCheckUrl($updateData['blog_url'], $this->CoreLoad->input('id'), true); // Meta URL
+				$updateData['meta_url'] = $this->CoreForm->metaCheckUrl($updateData['blog_url'], $this->CoreLoad->input('id'), true); // Meta URL
 
 				// Tags
 				if (!empty($updateData['blog_tag'])) {
@@ -459,13 +459,6 @@ class Blogs extends CI_Controller
 			//Pluralize Module
 			$tableName = $this->plural->pluralize($this->Module);
 
-			//Column Stamp
-			$stamp = strtolower($this->CoreForm->get_column_name($this->Module, 'stamp'));
-			$insertData["$stamp"] = date('Y-m-d H:i:s', time());
-
-			$createdat = strtolower($this->CoreForm->get_column_name($this->Module, 'createdat'));
-			$insertData["$createdat"] = date('Y-m-d H:i:s', time());
-
 			//Site Status
 			$author_name = $this->db->select('user_logname')->where('user_id', $session_id)->get('users')->row()->user_logname;
 			$author = strtolower($this->CoreForm->get_column_name($this->Module, 'author'));
@@ -481,16 +474,7 @@ class Blogs extends CI_Controller
 			$insertData["$details"] = json_encode($insertData);
 
 			//Insert Data Into Table
-			$input_id = $this->CoreCrud->insertData($tableName, $insertData);
-			if ($input_id > 0) {
-
-				//Columns
-				$column_url = strtolower($this->CoreForm->get_column_name($this->Module, 'url'));
-				$column_id = strtolower($this->CoreForm->get_column_name($this->Module, 'id'));
-
-				$page_url = $this->CoreCrud->postURL($input_id, null, $tableName); //Post URL
-				$this->db->update($tableName, array($column_url => $page_url), array($column_id => $input_id)); //Update URL
-
+			if ($this->CoreCrud->insertData($tableName, $insertData)) {
 				return true; //Data Inserted
 			} else {
 
@@ -519,12 +503,6 @@ class Blogs extends CI_Controller
 
 			//Pluralize Module
 			$tableName = $this->plural->pluralize($this->Module);
-
-			//Column Stamp
-			$stamp = $this->CoreForm->get_column_name($this->Module, 'stamp');
-			$updateData["$stamp"] = date('Y-m-d H:i:s', time());
-			$editedat = strtolower($this->CoreForm->get_column_name($this->Module, 'editedat'));
-			$insertData["$editedat"] = date('Y-m-d H:i:s', time());
 
 			//Site Status
 			$editor_name = $this->db->select('user_logname')->where('user_id', $session_id)->get('users')->row()->user_logname;
