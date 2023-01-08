@@ -1897,9 +1897,6 @@ class CoreCrud extends CI_Model
 		// Load Model
 		$this->load->model('CoreSearch');
 
-		// Run SQL -> Using Select
-		$run_sql = "$filterTables ";
-
 		// Clause
 		$sql = $this->CoreSearch->filter_table($module, $where, null, ['id' => 'DESC'], false)['run'];
 
