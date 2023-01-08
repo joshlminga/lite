@@ -754,7 +754,7 @@ class CoreSearch extends CI_Model
 	 * 
 	 * @param string $module filter name
 	 * @param array $where The where clauses
-	 * @param array $limit Array or Integer or Null  [start from, max results] | Int max results
+	 * @param integer $limit Array or Integer or Null  [start from, max results] | Int max results
 	 * @param array $order The order by clauses [column, order]
 	 * @param string $get where, sort, limit
 	 */
@@ -768,25 +768,29 @@ class CoreSearch extends CI_Model
 
 		// Where
 		if ($get == "where") {
-			$where_column = null;
-			foreach ($where as $key => $value) {
-				$column = $this->CoreForm->get_column_name($module, $key);
-				$where_column[$column] = $value; //Set Proper Column Name 
-			}
-			if (is_array($where_column)) {
-				$where = implode(' AND ', $this->filter_where($where_column));
-				$filter_sql .= " WHERE $where";
+			if (is_array($where)) {
+				$where_column = null;
+				foreach ($where as $key => $value) {
+					$column = $this->CoreForm->get_column_name($module, $key);
+					$where_column[$column] = $value; //Set Proper Column Name 
+				}
+				if (is_array($where_column)) {
+					$where = implode(' AND ', $this->filter_where($where_column));
+					$filter_sql .= " WHERE $where";
+				}
 			}
 		}
 
 		// Order By
 		elseif ($get == "sort") {
-			$order_by = "";
-			foreach ($sort as $key => $value) {
-				$column = $this->CoreForm->get_column_name($module, $key);
-				$order_by = " ORDER BY `$column` $value "; //Set Proper Column Name 
+			if (is_array($sort)) {
+				$order_by = "";
+				foreach ($sort as $key => $value) {
+					$column = $this->CoreForm->get_column_name($module, $key);
+					$order_by = " ORDER BY `$column` $value "; //Set Proper Column Name 
+				}
+				$filter_sql .= $order_by;
 			}
-			$filter_sql .= $order_by;
 		}
 
 		// Check Limit
