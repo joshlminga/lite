@@ -1842,39 +1842,33 @@ class CoreCrud extends CI_Model
 	/**
 	 *
 	 * Search Data In the Field Table
-	 * -> This function utilise power of Filter Search to find Field (customfields) related data
+	 * -> This function utilise power of CoreSearch to find Field (customfields) related data
 	 * -> NB: Does not visulize the table like CoreSearch->filter_table($runquery = false) would do
 	 *
-	 * @param string $filter name
+	 * @param string $title name (field_title name)
 	 * @param string $term / words searched
 	 * @param array $where default [] where ID > 0
 	 * @param array $limit default null 
 	 * @param array $sort default [] ID Desc 
 	 * 
 	 */
-	public function searchData($filter = 'member', $term = null, $where = ['field >' => 0], $limit = null, $sort = ['id' => 'DESC'])
+	public function searchData($title, $term = null, $where = null, $limit = null, $sort = null)
 	{
-
 		// Load Model
 		$this->load->model('CoreSearch');
-
-		// WHERE
-		$where = (is_null($where) || !is_array($where) || empty($where)) ? ['field >' => 0] : $where;
-
 		// If Term is searched
 		if (!is_null($term) && !empty($term)) {
-
 			// Generate Temp Table for seaching from Field
-			$sql = $this->CoreSearch->filter_table($filter, $where, null, $sort, false);
+			$sql = $this->CoreSearch->filter_table($title, $where, null, $sort, false);
 			// Generate Temp Table for seaching from Field
 			$found = (!is_null($limit)) ? $this->CoreSearch->search($sql['run'], $term, $limit) : $this->CoreSearch->search_nolimit($sql['run'], $term);
 		} else {
 			// Get Searched
-			$found = $this->CoreSearch->filter_table($filter, $where, $limit, $sort);
+			$found = $this->CoreSearch->filter_table($title, $where, $limit, $sort);
 		}
-
 		// Return
-		return (is_array($found)) ? $found : null;
+		$found = (is_array($found)) ? $found : [];
+		return (count($found) > 0) ? $found : null;
 	}
 
 	/**
@@ -1885,24 +1879,12 @@ class CoreCrud extends CI_Model
 	 * @param string $term / words searched
 	 * @param array $where default [] where ID > 0
 	 */
-	public function sumData($title = 'member', $term = null, $where = ['field >' => 0])
+	public function sumData($title, $term = null, $where = null)
 	{
-		//Modules
-		$module = $this->plural->singularize($title);
-		$filterTables = $this->plural->pluralize($title);
-
-		// Total
-		$counted = 0;
-
 		// Load Model
 		$this->load->model('CoreSearch');
-
-		// Run SQL -> Using Select
-		$run_sql = "$filterTables ";
-
-		// Clause
-		$sql = $this->CoreSearch->filter_table($module, $where, null, ['id' => 'DESC'], false)['run'];
-
+		// Get SQL
+		$sql = $this->CoreSearch->filter_table($title, $where, null, null, false)['run'];
 		// If Term is searched
 		if (!is_null($term) && !empty($term)) {
 			// Generate Temp Table for seaching from Field
@@ -1912,9 +1894,79 @@ class CoreCrud extends CI_Model
 			$query = $this->db->query($sql);
 			$results = $query->result();
 		}
-
 		// Counted
-		return (is_array($results)) ? count($results) : $counted;
+		return (is_array($results)) ? count($results) : 0;
+	}
+
+	/**
+	 * Build Query Search
+	 * -> This function utilise power of CoreSearch to build a query to search in field
+	 * -> NB: This method will return sql query which you will need to execute separate
+	 *
+	 * @param string $title name
+	 * @param array $where default [] where ID > 0
+	 * @param array $sort default [] ID Desc 
+	 * 
+	 * => Use $this->CoreSearch->search() or $this->CoreSearch->search_nolimit() to execute the returned results
+	 */
+	public function buildQuery($title, $where = null, $sort = null)
+	{
+		// Load Model
+		$this->load->model('CoreSearch');
+		// Get SQL
+		$sql = $this->CoreSearch->filter_table($title, $where, null, $sort, false)['run'];
+		// Return
+		return $sql;
+	}
+
+	/**
+	 * Execute Build Query
+	 * 
+	 * -> This function utilise power of CoreSearch to execute a search query
+	 * -> NB: This method will return found results | to do count just use php count 
+	 * 
+	 * @param string $sql name (field_title name)
+	 * @param string $term / words searched
+	 * @param array $limit default null 
+	 * 
+	 */
+	public function executeQuery($sql, $term = null, $limit = null)
+	{
+		// Load Model
+		$this->load->model('CoreSearch');
+		// If Term is searched
+		if (!is_null($term) && !empty($term)) {
+			// Generate Temp Table for seaching from Field
+			$results = (!is_null($limit)) ? $this->CoreSearch->search($sql, $term, $limit) : $this->CoreSearch->search_nolimit($sql, $term);
+		} else {
+			// Limit
+			if (!is_array($limit)) {
+				if (strtolower(trim($limit)) != 'all') {
+					// Limit
+					$start_limit = 0;
+					$result_limit = $limit;
+					if (is_array($limit)) {
+						$start_limit = (array_key_exists('start', $limit)) ? $limit['start'] : 0;
+						$result_limit = (array_key_exists('limit', $limit)) ? $limit['limit'] : $limit;
+					}
+					// Default Max Limit
+					$result_limit = (!is_null($result_limit)) ? $result_limit : $this->CoreCrud->selectSingleValue('settings', 'value', array('title' => 'post_per_page', 'flg' => 1));
+					// Add Limit
+					$sql .= " LIMIT " . $start_limit . ", " . $result_limit;
+				}
+			} elseif (is_array($limit)) {
+				$start_limit = (array_key_exists('start', $limit)) ? $limit['start'] : 0;
+				$result_limit = (array_key_exists('limit', $limit)) ? $limit['limit'] : $limit;
+				// Add Limit
+				$sql .= " LIMIT " . $start_limit . ", " . $result_limit;
+			}
+			// Execute
+			$query = $this->db->query($sql);
+			$results = $query->result();
+		}
+		// Return
+		$found = (is_array($results)) ? $results : [];
+		return (count($found) > 0) ? $results : null;
 	}
 }
 
