@@ -515,16 +515,21 @@ class CoreCrud extends CI_Model
 
 		// Where In
 		$where_in_key = array_keys($where_in);
-		$where_in_column = $where_in_find = null;
-		//$where_in_find = null;
+		$where_in_column = null;
+		$where_in_find = [];
 		foreach ($where_in_key as $key => $value) {
 			$where_in_column = $this->CoreForm->get_column_name($module, $value);
 			$where_in_find = $where_in[$value];
 			break;
 		}
 
-		// Check $where_in_column & $where_in_find
-		if (is_null($where_in_find) || is_null($where_in_column)) {
+		// Check $where_in_column
+		if (is_null($where_in_column) || empty($where_in_column)) {
+			return [];
+		}
+
+		// Check $where_in_find
+		if (count($where_in_find) == 0) {
 			return [];
 		}
 
@@ -1896,16 +1901,10 @@ class CoreCrud extends CI_Model
 		$run_sql = "$filterTables ";
 
 		// Clause
-		$clause = $this->CoreSearch->filter_all_clause($module, $where, null, ['id' => 'DESC'], false);
-		// Full Query
-		$run_sql .= "$clause";
-
-		// Get SQL
-		$sql = $this->CoreSearch->filter_query_type($title, true, $run_sql);
+		$sql = $this->CoreSearch->filter_table($module, $where, null, ['id' => 'DESC'], false)['run'];
 
 		// If Term is searched
 		if (!is_null($term) && !empty($term)) {
-
 			// Generate Temp Table for seaching from Field
 			$results = $this->CoreSearch->search_nolimit($sql, $term);
 		} else {

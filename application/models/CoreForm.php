@@ -1416,7 +1416,6 @@ class CoreForm extends CI_Model
 		return $this->metaCheckUrl($meta_url, $id, true);
 	}
 
-
 	/**
 	 * Meta Get Item/Data URL
 	 * 
@@ -1450,7 +1449,6 @@ class CoreForm extends CI_Model
 		// Return
 		return $meta_url;
 	}
-
 }
 
 /** End of file CoreForm.php */
