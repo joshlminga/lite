@@ -22,11 +22,7 @@
                     <?= (!is_null($notify) && !empty($notify)) ? $notify : ''; ?>
                     <div id="blogPOST">
 
-                        <?php if (is_null($resultList[0]->url)) : ?>
-                            <?php $post_url = $this->CoreCrud->postURL($resultList[0]->title) ?>
-                        <?php else : ?>
-                            <?php $post_url = trim($resultList[0]->url) ?>
-                        <?php endif ?>
+                        <?php $post_url = $this->CoreForm->metaFindUrl($resultList[0]->id,'blogs','blog'); ?>
 
                         <?php $control = json_decode($resultList[0]->control, True); ?>
                         <?php if (!empty($control['thumbnail'])) : ?>

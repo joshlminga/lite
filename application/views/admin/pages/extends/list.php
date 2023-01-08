@@ -27,8 +27,9 @@
             								</button>
             								<ul class="dropdown-menu" role="menu">
             									<li><a onclick="actionBulk('activate');">Activate</a></li>
-            									<li><a onclick="actionBulk('deactivate');">Deactivate</a></li>
+            									<li><a onclick="actionBulk('duplicate');">Deactivate</a></li>
             									<li class="divider"></li>
+            									<li><a onclick="actionBulk('duplicate');">Duplicate</a></li>
             									<li><a onclick="actionBulk('edit');">Edit</a></li>
             								</ul>
             							</div>

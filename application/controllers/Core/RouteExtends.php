@@ -347,6 +347,17 @@ class RouteExtends extends CI_Controller
 							$this->update(array($column_flg => 1), array($column_id => $value_id)); //Call Update Function
 						} elseif (strtolower($action) == 'deactivate') { //Item/Data Deactivation
 							$this->update(array($column_flg => 0), array($column_id => $value_id)); //Call Update Function
+						} elseif (strtolower($action) == 'duplicate') {
+							// Select Data
+							$extnd = $this->CoreCrud->selectMultipleValue($this->Module, 'id as id,title as title,value as value,default as default', ['id' => $value_id]);
+							// Form
+							$saveRoute = [
+								'setting_title' => $extnd[0]->title,
+								'setting_flg' => 0,
+								'setting_default' => $extnd[0]->default,
+								'setting_value' => $extnd[0]->value,
+							];
+							$this->create($saveRoute);
 						} else {
 							$this->session->set_flashdata('notification', 'error'); //Notification Type
 							$message = 'Wrong data sequence received'; //Notification Message				
