@@ -276,6 +276,12 @@ class CoreMigrate extends CI_Model
 					// For Settings
 					if ($table == 'settings') {
 						$found['setting_flg'] = ($found['setting_title']  == 'field_menu' || $found['setting_title'] == 'extension_menu') ? 0 : 1;
+					} elseif ($table == 'blogs' || $table == 'pages') {
+						$column_url = $this->CoreForm->get_column_name($table, 'url');
+						$column_createdat = $this->CoreForm->get_column_name($table, 'createdat');
+						$column_editedat = $this->CoreForm->get_column_name($table, 'editedat');
+						// Unset
+						$found = $this->CoreCrud->unsetData($found, [$column_url, $column_createdat, $column_editedat]); //Unset Data
 					}
 
 					$field_found = $this->CoreCrud->selectSingleValue($table, 'id', ['id' => $id]);
