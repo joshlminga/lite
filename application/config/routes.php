@@ -208,6 +208,16 @@ $route["customfields/update"] = "$Core_Folder/CustomFields/valid/update"; //Vali
 $route["customfields/delete"] = "$Core_Folder/CustomFields/valid/delete"; //Delete 
 $route["customfields/multiple"] = "$Core_Folder/CustomFields/valid/bulk"; //Bulk Action  
 
+// Extension Custom Fields
+$route["customfieldext"] = "$Core_Folder/CustomFieldsExtension/index"; //Create New 
+$route["customfieldext/new"] = "$Core_Folder/CustomFieldsExtension/valid/add"; //Create New 
+$route["customfieldext/edit"] = "$Core_Folder/CustomFieldsExtension/edit/edit"; //Edit 
+$route["customfieldext/save"] = "$Core_Folder/CustomFieldsExtension/valid/save"; //Validate and Save
+$route["customfieldext/update"] = "$Core_Folder/CustomFieldsExtension/valid/update"; //Validate and Update
+$route["customfieldext/delete"] = "$Core_Folder/CustomFieldsExtension/valid/delete"; //Delete 
+$route["customfieldext/multiple"] = "$Core_Folder/CustomFieldsExtension/valid/bulk"; //Bulk Action  
+$route["customfieldext/(:any)"] = "$Core_Folder/CustomFieldsExtension/valid/$1"; //Bulk Action  
+
 // Inheritance
 $route["inheritances"] = "$Core_Folder/Inheritances/index"; //Manage
 $route["inheritances/new"] = "$Core_Folder/Inheritances/open/add"; //Create New 

@@ -346,7 +346,7 @@ class Members extends CI_Controller
 							$this->update($updatedData, $value_id); //Call Update Function
 						} elseif (strtolower($action) == 'deactivate') { //Item/Data Deactivation
 							$updatedData = $this->CoreForm->updateFormField(array('flg' => 0), $value_id);
-							$updatedData[$column_flg] = 1;
+							$updatedData[$column_flg] = 0;
 							$this->update($updatedData, $value_id); //Call Update Function
 						} elseif (strtolower($action) == 'delete') { //Item/Data Deletion
 							$this->delete($value_id); //Call Delete Function

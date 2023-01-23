@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class CustomFields extends CI_Controller
+class CustomFieldsExtension extends CI_Controller
 {
 
 	/**
@@ -10,20 +10,20 @@ class CustomFields extends CI_Controller
 	 * -> The controller require to login as Administrator
 	 */
 
-	private $Module = 'customfield'; //Module
+	private $Module = 'fields'; //Module
 	private $Folder = 'configs'; //Set Default Folder For html files and Front End Use
-	private $SubFolder = '/customfield'; //Set Default Sub Folder For html files and Front End Use Start with /
+	private $SubFolder = '/customfieldex'; //Set Default Sub Folder For html files and Front End Use Start with /
 
 	private $AllowedFile = null; //Set Default allowed file extension, remember you can pass this upon upload to override default allowed file type. Allowed File Extensions Separated by | also leave null to validate using jpg|jpeg|png|doc|docx|pdf|xls|txt change this on validation function at the bottom
 
-	private $Route = 'customfields'; //If you have different route Name to Module name State it here |This wont be pluralized
+	private $Route = 'customfieldext'; //If you have different route Name to Module name State it here |This wont be pluralized
 	private $Access = 'customfield'; // For Access Control | Matches ModuleList for Access Level
 
-	private $New = 'customfields/new'; //New 
-	private $Save = 'customfields/save'; //Add New 
-	private $Edit = 'customfields/update'; //Update 
+	private $New = 'customfieldext/new'; //New 
+	private $Save = 'customfieldext/save'; //Add New 
+	private $Edit = 'customfieldext/update'; //Update 
 
-	private $ModuleName = 'custom field'; //Module Nmae
+	private $ModuleName = 'custom field extension'; //Module Nmae
 
 	/** Functions
 	 * -> __construct () = Load the most required operations E.g Class Module
@@ -85,6 +85,9 @@ class CustomFields extends CI_Controller
 		//Module Name - For Forms Title
 		$data['ModuleName'] = $this->plural->pluralize($this->ModuleName);
 
+		//Module Name - Title
+		$data['actionTitle'] = '';
+
 		//Form Submit URLs
 		$data['form_new'] = $this->New;
 		$data['form_save'] = $this->Save;
@@ -134,22 +137,33 @@ class CustomFields extends CI_Controller
 	 */
 	public function index($notifyMessage = null)
 	{
-		//Pluralize Module
-		$module = $this->plural->pluralize($this->Module);
+
+		//Check Action
+		$title = $this->CoreLoad->input('title', 'GET');
+
+		if(is_null($this->CoreCrud->selectSingleValue('customfields', 'title', ['title' => $title]))){
+			$this->session->set_flashdata('notification', 'error'); //Notification Type
+			redirect("customfields", "refresh"); //Redirect Index Module
+		}
 
 		//Model Query
 		$data = $this->load($this->plural->pluralize($this->Folder) . $this->SubFolder . "/list");
 
 		//Table Select & Clause
-		$columns = array('id as id,title as title,title as table,flg as status');
-		$data['dataList'] = $this->CoreCrud->selectCRUD($module, null, $columns);
+		$data['dataList'] = $this->CoreCrud->selectCRUD($module, ['title' => $title], ['id as id,title as title,flg as status']);
+
+		// Action
+		$data['actionTitle'] = $title;
 
 		//Notification
-		$notify = $this->CoreNotify->notify();
-		$data['notify'] = $this->CoreNotify->$notify($notifyMessage);
+		$data['notify'] = $this->CoreNotify->blank();
+
+		//Module Name - For Forms Title
+		$data['ModuleName'] = $this->plural->pluralize($title).' Fields Data';
 
 		//Open Page
 		$this->pages($data);
+
 	}
 
 	/**
@@ -225,8 +239,14 @@ class CustomFields extends CI_Controller
 		if (!is_null($inputTYPE) || !is_null($inputID)) {
 			//Table Select & Clause
 			$where = array($inputTYPE => $inputID);
-			$columns = array('id as id,title as title,inputs as inputs,filters as filters,keys as keys,default as default,flg as status');
-			$data['resultList'] = $this->CoreCrud->selectCRUD($module, $where, $columns);
+			$columns = array('id as id,title as title,data as data');
+			$resultList = $this->CoreCrud->selectCRUD($module, $where, $columns);
+
+			$data['resultList'] = $resultList;
+			//Table Select & Clause
+			$columns = array('id as id,inputs as inputs,filters as filters,keys as keys,default as default');
+			$where = array('title' => $resultList[0]->title);
+			$data['fieldList'] = $this->CoreCrud->selectCRUD('customfields', $where, $columns, 'like');
 
 			//Notification
 			$notify = $this->CoreNotify->notify();
@@ -270,59 +290,31 @@ class CustomFields extends CI_Controller
 
 			$formData = $this->CoreLoad->input(); //Input Data
 
-			$this->form_validation->set_rules("customfield_title", "Custom Field Title", "trim|is_unique[customfields.customfield_title]");
+			$this->form_validation->set_rules('title', 'Custom Field Title', 'trim|required|min_length[1]|max_length[50]');
 
 			//Form Validation
 			if ($this->form_validation->run() == TRUE) {
 
-				// Filters
-				$filter_inputs = [];
-				for ($f = 0; $f < count($formData['customfield_inputs']); $f++) {
-					// Remove Special Characteres
-					$clean = preg_replace("/[^ \w-]/", "", trim($formData['customfield_inputs'][$f]));
-					$clean_input = preg_replace('/-+/', '-', $clean);
+				//Input ID
+				$title = $this->CoreLoad->input('title');
 
-					// Loop
-					$v = $f + 1;
-					$filter_var = "filter_$v";
-					$filter_set = (array_key_exists($filter_var, $formData)) ? $formData[$filter_var] : null;
-					if (!is_null($filter_set)) {
-						// Replace - & space with _
-						$filter_inputs[$f] = strtolower(str_replace("-", "_", str_replace(" ", "_", $clean_input)));
-					}
-					//Unset Key filter_
-					$formData = $this->CoreCrud->unsetData($formData, ["$filter_var"]);
-					// Set Clean Inputs
-					$formData['customfield_inputs'][$f] =  $clean;
-					// Replace - & space with _
-					$keys = strtolower(str_replace("-", "_", str_replace(" ", "_", $clean_input)));
-					$formData['customfield_keys'][$f] = $keys; // Keys
-				}
-				// Reset Values
-				$formData['customfield_filters'] = array_values($filter_inputs);
+				//Unset Data
+				$formData = $this->CoreCrud->unsetData($formData, array('title'));
+				// Save Data
+				$savedData = $this->CoreForm->saveFormField($formData, $title);
 
-				// Encode Data
-				$customfield_title = preg_replace('/\s+/', '', strtolower($formData['customfield_title'])); // Set Title
-				$formData['customfield_title'] = preg_replace('/[^ \w-]/', '', $customfield_title); // Set Title
-				$formData['customfield_inputs'] = json_encode($formData['customfield_inputs']); //Set Inputs
-				$formData['customfield_filters'] = json_encode($formData['customfield_filters']); //Set Filters
-				$formData['customfield_keys'] = json_encode($formData['customfield_keys']); //Set All Keys
-
-				$column_default = strtolower($this->CoreForm->get_column_name($this->Module, 'default'));
-				$formData[$column_default] = 'yes'; //Set Default	
-
-				if ($this->create($formData)) {
+				if ($this->create($savedData)) {
 					$this->session->set_flashdata('notification', 'success'); //Notification Type
 					$message = 'Data was saved successful'; //Notification Message				
-					redirect($this->New, 'refresh'); //Redirect to Page
+					redirect("customfieldext/$title", "refresh"); //Redirect Index Module
 				} else {
 					$this->session->set_flashdata('notification', 'error'); //Notification Type
-					$this->open('add'); //Open Page
+					redirect("customfieldext/$title", "refresh"); //Redirect Index Module
 				}
 			} else {
 				$this->session->set_flashdata('notification', 'error'); //Notification Type
 				$message = 'Please check the fields, and try again'; //Notification Message				
-				$this->open('add', $message); //Open Page
+				$this->index($message); //Open Page
 			}
 		} elseif ($type == 'bulk') {
 
@@ -341,16 +333,15 @@ class CustomFields extends CI_Controller
 					for ($i = 0; $i < count($selectedData); $i++) { //Loop through all submitted elements
 						$value_id = $selectedData[$i]; //Select Value To Update with
 						if (strtolower($action) == 'activate') { //Item/Data Activation
-							$this->update(array($column_flg => 1), array($column_id => $value_id)); //Call Update Function
+							$updatedData = $this->CoreForm->updateFormField(array('flg' => 1), $value_id);
+							$updatedData[$column_flg] = 1;
+							$this->update($updatedData, $value_id); //Call Update Function
 						} elseif (strtolower($action) == 'deactivate') { //Item/Data Deactivation
-							$this->update(array($column_flg => 0), array($column_id => $value_id)); //Call Update Function
+							$updatedData = $this->CoreForm->updateFormField(array('flg' => 0), $value_id);
+							$updatedData[$column_flg] = 0;
+							$this->update($updatedData, $value_id); //Call Update Function
 						} elseif (strtolower($action) == 'delete') { //Item/Data Deletion
-							$this->delete(array($column_id => $value_id)); //Call Delete Function
-						} elseif (strtolower($action) == 'addfield') { 
-							$this->session->set_flashdata('notification', 'success'); //Notification Type
-							// Get Title
-							$title = $this->CoreCrud->selectSingleValue('customfields', 'title', ['id' => $value_id]);
-							redirect("customfieldext/$title", "refresh"); //Redirect Index Module
+							$this->delete($value_id); //Call Delete Function
 						} else {
 							$this->session->set_flashdata('notification', 'error'); //Notification Type
 							$message = 'Wrong data sequence received'; //Notification Message				
@@ -368,80 +359,98 @@ class CustomFields extends CI_Controller
 		} elseif ($type == 'update') {
 
 			$updateData = $this->CoreLoad->input(); //Input Data		
-			$column_password = strtolower($this->CoreForm->get_column_name($this->Module, 'password')); //Column Password
-			$column_id = strtolower($this->CoreForm->get_column_name($this->Module, 'id')); //Column ID
-			$value_id = $this->CoreLoad->input('id'); //Input Value
+			//Input ID
+			$inputID = $this->CoreLoad->input('id');
 
-			$unsetData = array('id');
-			/**value To Unset*/
-
-			$this->form_validation->set_rules("customfield_title", "Custom Field Title", "trim");
+			$this->form_validation->set_rules('id', 'Field ID', 'trim|required|min_length[1]|max_length[20]');
 
 			//Form Validation
 			if ($this->form_validation->run() == TRUE) {
 
-				// Filters
-				$filter_inputs = [];
-				for ($f = 0; $f < count($updateData['customfield_inputs']); $f++) {
-					// Remove Special Characteres
-					$clean = preg_replace("/[^ \w-]/", "", trim($updateData['customfield_inputs'][$f]));
-					$clean_input = preg_replace('/-+/', '-', $clean);
 
-					// Loop
-					$v = $f + 1;
-					$filter_var = "filter_$v";
-					$filter_set = (array_key_exists($filter_var, $updateData)) ? $updateData[$filter_var] : null;
-					if (!is_null($filter_set)) {
-						// Replace - & space with _
-						$filter_inputs[$f] = strtolower(str_replace("-", "_", str_replace(" ", "_", $clean_input)));
-					}
-					//Unset Key filter_
-					$updateData = $this->CoreCrud->unsetData($updateData, ["$filter_var"]);
-					// Set Clean Inputs
-					$updateData['customfield_inputs'][$f] =  $clean;
-					// Replace - & space with _
-					$keys = strtolower(str_replace("-", "_", str_replace(" ", "_", $clean_input)));
-					$updateData['customfield_keys'][$f] = $keys; // Keys
-				}
-				// Reset Values
-				$updateData['customfield_filters'] = array_values($filter_inputs);
-
-				// Encode Data
-				$updateData['customfield_inputs'] = json_encode($updateData['customfield_inputs']); //Set Inputs
-				$updateData['customfield_filters'] = json_encode($updateData['customfield_filters']); //Set Filters
-				$updateData['customfield_keys'] = json_encode($updateData['customfield_keys']); //Set All Keys
-
-				$column_default = strtolower($this->CoreForm->get_column_name($this->Module, 'default'));
-				$updateData[$column_default] = 'yes'; //Set Default					
+				// Upload Data
+				$updatedData = $this->CoreForm->updateFormField($updateData, $inputID);
 
 				//Update Table
-				if ($this->update($updateData, [$column_id => $value_id], $unsetData)) {
+				if ($this->update($updatedData, $inputID)) {
 					$this->session->set_flashdata('notification', 'success'); //Notification Type
 					$message = 'Data was updated successful'; //Notification Message				
-					$this->edit('edit', 'id', $value_id); //Open Page
+					$this->edit('edit', 'id', $inputID, $message); //Open Page
 				} else {
 					$this->session->set_flashdata('notification', 'error'); //Notification Type
-					$this->edit('edit', 'id', $value_id); //Open Page
+					$message = "Data wasn't updated or you did not make any new updates"; //Notification Message				
+					$this->edit('edit', 'id', $inputID, $message); //Open Page
 				}
 			} else {
 				$this->session->set_flashdata('notification', 'error'); //Notification Type
 				$message = 'Please check the fields, and try again'; //Notification Message				
-				$this->edit('edit', 'id', $value_id, $message); //Open Page
+				$this->edit('edit', 'id', $inputID, $message); //Open Page
 			}
 		} elseif ($type == 'delete') {
 			$value_id = $this->input->get('inputID'); //Get Selected Data
 			$column_id = strtolower($this->CoreForm->get_column_name($this->Module, 'id'));
 
-			if ($this->delete(array($column_id => $value_id)) == TRUE) { //Call Delete Function
+			if ($this->delete($value_id) == TRUE) { //Call Delete Function
 				$this->session->set_flashdata('notification', 'success'); //Notification Type
 				redirect($routeURL, 'refresh'); //Redirect Index Module
 			} else {
 				$this->session->set_flashdata('notification', 'error'); //Notification Type
 				redirect($routeURL, 'refresh'); //Redirect Index Module
 			}
+		}elseif ($type == 'add') {
+
+			// Title
+			$title =  strtolower(trim($this->CoreLoad->input('title', 'GET')));
+			if(is_null($this->CoreCrud->selectSingleValue('customfields', 'title', ['title' => $title]))){
+				$this->session->set_flashdata('notification', 'error'); //Notification Type
+				redirect("customfields", "refresh"); //Redirect Index Module
+			}
+
+			//Model Query
+			$data = $this->load($this->plural->pluralize($this->Folder) . $this->SubFolder . "/add");
+
+			//Table Select & Clause
+			$columns = array('id as id,title as title,inputs as inputs,filters as filters,keys as keys,default as default');
+			$data['fieldList'] = $this->CoreCrud->selectCRUD('customfields', ['title' => $title], $columns, 'like');
+
+			// Action
+			$data['actionTitle'] = $title;
+
+			//Notification
+			$data['notify'] = $this->CoreNotify->blank();
+
+			//Module Name - For Forms Title
+			$data['ModuleName'] = $this->plural->pluralize($title);
+
+			//Open Page
+			$this->pages($data);
 		} else {
-			$this->session->set_flashdata('notification', 'notify'); //Notification Type
-			redirect($routeURL, 'refresh'); //Redirect Index Module
+
+			// Get Title
+			$title = $this->CoreCrud->selectSingleValue('customfields', 'title', ['title' => $type]);
+
+			if(!is_null($title)){
+				//Model Query
+				$data = $this->load($this->plural->pluralize($this->Folder) . $this->SubFolder . "/list");
+
+				//Table Select & Clause
+				$data['dataList'] = $this->CoreCrud->selectCRUD($module, ['title' => $title], ['id as id,title as title,flg as status']);
+
+				// Action
+				$data['actionTitle'] = $title;
+
+				//Notification
+				$data['notify'] = $this->CoreNotify->blank();
+
+				//Module Name - For Forms Title
+				$data['ModuleName'] = $this->plural->pluralize($title).' Fields Data';
+
+				//Open Page
+				$this->pages($data);
+			}else{
+				$this->session->set_flashdata('notification', 'notify'); //Notification Type
+				redirect($routeURL, 'refresh'); //Redirect Index Module
+			}
 		}
 	}
 
@@ -460,26 +469,11 @@ class CustomFields extends CI_Controller
 
 		if ($this->CoreLoad->auth($this->Access)) { //Authentication
 
-			//Pluralize Module
-			$tableName = $this->plural->pluralize($this->Module);
+			//Save
+			$savedData = $this->CoreCrud->saveField($insertData);
+			if ($this->CoreCrud->fieldStatus($savedData)) {
 
-			//Column Stamp
-			$stamp = strtolower($this->CoreForm->get_column_name($this->Module, 'stamp'));
-			$insertData["$stamp"] = date('Y-m-d H:i:s', time());
-			//Column Flg
-			$flg = strtolower($this->CoreForm->get_column_name($this->Module, 'flg'));
-			$insertData["$flg"] = 1;
-
-			$insertData = $this->CoreCrud->unsetData($insertData, $unsetData); //Unset Data
-
-			$details = strtolower($this->CoreForm->get_column_name($this->Module, 'details'));
-			$insertData["$details"] = json_encode($insertData);
-
-			//Insert Data Into Table
-			$this->db->insert($tableName, $insertData);
-			if ($this->db->affected_rows() > 0) {
-
-				return true; //Data Inserted
+				return $savedData['id']; //Data Inserted
 			} else {
 
 				return false; //Data Insert Failed
@@ -502,37 +496,14 @@ class CustomFields extends CI_Controller
 
 		if ($this->CoreLoad->auth($this->Access)) { //Authentication
 
-			//Pluralize Module
-			$tableName = $this->plural->pluralize($this->Module);
+			//Updated
+			$updatedData = $this->CoreCrud->updateField($updateData, $valueWhere);
+			if ($this->CoreCrud->fieldStatus($updatedData)) {
 
-			//Column Stamp
-			$stamp = $this->CoreForm->get_column_name($this->Module, 'stamp');
-			$updateData["$stamp"] = date('Y-m-d H:i:s', time());
-
-			$updateData = $this->CoreCrud->unsetData($updateData, $unsetData); //Unset Data
-
-			//Details Column Update
-			$details = strtolower($this->CoreForm->get_column_name($this->Module, 'details'));
-			foreach ($valueWhere as $key => $value) {
-				$whereData = array($key => $value);
-				/** Where Clause */
-			}
-
-			$current_details = json_decode($this->db->select($details)->where($whereData)->get($tableName)->row()->$details, true);
-			foreach ($updateData as $key => $value) {
-				$current_details["$key"] = $value;
-				/** Update -> Details */
-			}
-			$updateData["$details"] = json_encode($current_details);
-
-			//Update Data In The Table
-			$this->db->update($tableName, $updateData, $valueWhere);
-			if ($this->db->affected_rows() > 0) {
-
-				return true; //Data Updated
+				return true; //Data Inserted
 			} else {
 
-				return false; //Data Updated Failed
+				return false; //Data Insert Failed
 			}
 		}
 	}
@@ -542,17 +513,14 @@ class CustomFields extends CI_Controller
 	 * First parameter is the values to be passed in where clause N:B the data needed to be in an associative array form E.g $data = array('column' => 'value');
 	 * 
 	 */
-	public function delete($valueWhere)
+	public function delete($fieldValue)
 	{
 
 		if ($this->CoreLoad->auth($this->Access)) { //Authentication
 
-			//Pluralize Module
-			$tableName = $this->plural->pluralize($this->Module);
-
 			//Deleted Data In The Table
-			$this->db->delete($tableName, $valueWhere);
-			if ($this->db->affected_rows() > 0) {
+			$deleteData = $this->CoreCrud->deleteField($fieldValue);
+			if ($this->CoreCrud->fieldStatus($deleteData)) {
 
 				return true; //Data Deleted
 			} else {
@@ -701,5 +669,5 @@ class CustomFields extends CI_Controller
 	}
 }
 
-/** End of file CustomFields.php */
-/** Location: ./application/controllers/CustomFields.php */
+/** End of file CustomFieldsExtension.php */
+/** Location: ./application/controllers/CustomFieldsExtension.php */

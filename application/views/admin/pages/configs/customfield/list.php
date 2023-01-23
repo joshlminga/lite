@@ -30,6 +30,8 @@
                                             <li><a onclick="actionBulk('deactivate');">Deactivate</a></li>
                                             <li><a onclick="actionBulk('edit');">Edit</a></li>
                                             <li class="divider"></li>
+                                            <li><a onclick="actionBulk('addfield');">Add Field</a></li>
+                                            <li class="divider"></li>
                                             <li><a onclick="actionBulk('delete');">Delete</a></li>
                                         </ul>
                                     </div>
