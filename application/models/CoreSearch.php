@@ -461,6 +461,16 @@ class CoreSearch extends CI_Model
 		$column_default = $this->CoreForm->get_column_name($title, 'default');
 		$column_flg = $this->CoreForm->get_column_name($title, 'flg');
 
+		// Use JSON_UNQUOTE
+		$unquote_use = true;
+		if (strpos($mysql_check[0]->version, 'MariaDB') === false) {
+			// Explode
+			$version = explode('-', $mysql_check[0]->version);
+			$version = (float) $version[0];
+			// Set unquote_use
+			$unquote_use = ($version >= 5.8) ? $unquote_use : false;
+		}
+
 		// SQL
 		$sql = "SELECT field_id,field_id as `$column_field`,field_id as `$column_id`,field_title,field_plain,";
 		// Pre Select
@@ -471,7 +481,11 @@ class CoreSearch extends CI_Model
 			// Get Column Name
 			$column_name = $this->CoreForm->get_column_name($title, $column);
 			// sql_string
-			$sql_string = " JSON_UNQUOTE(JSON_EXTRACT(`field_data`, '$.$column')) AS $column_name ";
+			if ($unquote_use) {
+				$sql_string = " JSON_UNQUOTE(JSON_EXTRACT(`field_data`, '$.$column')) AS $column_name ";
+			} else {
+				$sql_string = "REPLACE(REPLACE(SUBSTRING_INDEX(SUBSTRING_INDEX(`field_data`, '\"$column\":\"', -1), '\"', 1), '\\\"', '\"'), '\\\', '') AS $column_name ";
+			}
 			// Check if is not the last column & Add to SQL
 			$sql .= ($column != end($columns)) ? " $sql_string," : " $sql_string";
 		}
