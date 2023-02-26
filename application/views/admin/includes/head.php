@@ -34,7 +34,7 @@
 	<link href="<?= base_url($assets); ?>/css/app.min.2.css" rel="stylesheet">
 
 	<!-- Custom -->
-	<link href="<?= base_url($assets); ?>/custom/custom.min.css" rel="stylesheet">
+	<link href="<?= base_url($assets); ?>/custom/custom.min.css?v5.5" rel="stylesheet">
 
 	<!-- Font Awsome -->
 	<script src="<?= base_url($assets); ?>/js/fontawesome.js"></script>
