@@ -49,8 +49,8 @@ class CoreLoad extends CI_Model
 
 		//Theme Assets
 		$data['theme_name'] = $this->CoreCrud->selectSingleValue('settings', 'value', array('title' => 'theme_name', 'flg' => 1));
-		$data['theme_dir'] = 'themes/'.$data['theme_name'];
-		$data['theme_assets'] = 'application/views/'.$data['theme_dir'];
+		$data['theme_dir'] = 'themes/' . $data['theme_name'];
+		$data['theme_assets'] = 'application/views/' . $data['theme_dir'];
 
 
 		//Site Title
