@@ -602,12 +602,10 @@ class CoreForm extends CI_Model
 		$formData[$stamp_column] = $stamp;
 
 		//Check Default
-		$default = (array_key_exists('field_default', $formCheck)) ? $formCheck['field_default'] : null;
-		$formData[$default_column] = $default;
+		(array_key_exists('field_default', $formCheck)) ? $formData[$default_column] = $formCheck['field_default'] : null;
 
 		//Check Flg
-		$flg = (array_key_exists('field_flg', $formCheck)) ? $formCheck['field_flg'] : null;
-		$formData[$flg_column] = $flg;
+		(array_key_exists('field_flg', $formCheck)) ? $formData[$flg_column] = $formCheck['field_flg'] : null;
 
 		// ? Check Field Type
 		$acceptNull = false;
@@ -618,7 +616,7 @@ class CoreForm extends CI_Model
 
 				//load ModelField
 				$this->load->model('CoreTrigger');
-				$acceptNull = ((method_exists('CoreTrigger', 'customFieldAcceptNull'))) ? $this->CoreTrigger->customFieldAcceptNull($field_title) : false;
+				((method_exists('CoreTrigger', 'customFieldAcceptNull'))) ? $acceptNull = $this->CoreTrigger->customFieldAcceptNull($field_title) : $acceptNull = false;
 			}
 		}
 
@@ -632,7 +630,7 @@ class CoreForm extends CI_Model
 		//Return Data
 		return $formData;
 	}
-
+	
 	/**
 	 *
 	 * Get Form and Set Data into Field Format
