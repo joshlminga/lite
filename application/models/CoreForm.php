@@ -609,9 +609,24 @@ class CoreForm extends CI_Model
 		$flg = (array_key_exists('field_flg', $formCheck)) ? $formCheck['field_flg'] : null;
 		$formData[$flg_column] = $flg;
 
+		// ? Check Field Type
+		$acceptNull = false;
+		if (array_key_exists('field_details', $formCheck)) {
+			$field_details = json_decode($formCheck['field_details'], true);
+			if (array_key_exists('field_title', $field_details)) {
+				$field_title = $field_details['field_title'];
+
+				//load ModelField
+				$this->load->model('CoreTrigger');
+				$acceptNull = ((method_exists('CoreTrigger', 'customFieldAcceptNull'))) ? $this->CoreTrigger->customFieldAcceptNull($field_title) : false;
+			}
+		}
+
 		//Remove Null Values
-		foreach ($formData as $key => $value) {
-			$formData = (is_null($value)) ? $this->CoreCrud->unsetData($formData, array($key)) : $formData;
+		if ($acceptNull == false) {
+			foreach ($formData as $key => $value) {
+				$formData = (is_null($value)) ? $this->CoreCrud->unsetData($formData, array($key)) : $formData;
+			}
 		}
 
 		//Return Data
